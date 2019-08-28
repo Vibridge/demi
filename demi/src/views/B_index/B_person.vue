@@ -144,7 +144,7 @@
                                         <span class="vita_info" v-if="interview.vita.education === 5">本科/</span>
                                         <span class="vita_info" v-if="interview.vita.education === 6">硕士/</span>
                                         <span class="vita_info" v-if="interview.vita.education === 7">博士/</span>
-                                        <span class="vita_info">{{interview.work.work_name}}</span>
+                                        <span class="vita_info">{{interview.work && interview.work.work_name}}</span>
                                     </p>
                                     <p style="color: #999999;font-size: 12px">面试时间：{{interview.time}} <span v-if="interview.status === 3">[等待同意]</span>
                                         <span v-if="interview.status === 1">[已取消]</span>
