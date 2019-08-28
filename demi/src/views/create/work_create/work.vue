@@ -116,6 +116,26 @@
 
             </el-dialog>
         </div>
+        <div class="area_dialog">
+            <el-dialog
+                    title="请选择职类"
+                    :visible.sync="work_dialog"
+                    width="850px">
+                <div class="search">
+                    <div id="container"></div>
+                    <div class="info">
+                        <div class="input-item">
+                            <div class="input-item-prepend">
+                                <span class="input-item-text" style="width:8rem;">请输入关键字</span>
+                            </div>
+                            <input id='tipinput' type="text">
+                        </div>
+                    </div>
+                </div>
+
+            </el-dialog>
+        </div>
+
 
     </div>
 </template>
@@ -124,8 +144,10 @@
     /* eslint-disable */
     /*import AMap from 'AMap'
     var map*/
+
     import http from '../../../libs/http'
     import {getType} from '../../../libs/http'
+    import {forEach} from "../../../libs/tools";
     import {forEach} from "../../../libs/tools";
 
     export default {
@@ -197,6 +219,15 @@
                 }
                 this.work_dialog = false;
             },
+            init(){
+                var map = new AMap.Map("container", {
+                    resizeEnable: true
+                });
+
+                var auto = new AMap.Autocomplete({
+                    input: "tipinput"
+                });
+            }
         },
         mixins:[http]
     }
