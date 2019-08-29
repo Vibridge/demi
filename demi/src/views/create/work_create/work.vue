@@ -10,7 +10,7 @@
                     <span class="icon"></span>
                     <p>请填写基本信息</p>
                 </div>
-                <div class="info">
+                <div class="basic_info">
                     <p class="note">
                         注意：带 * 的内容，在确认发布后将不能修改
                     </p>
@@ -119,20 +119,15 @@
         <div class="area_dialog">
             <el-dialog
                     title="请选择职类"
-                    :visible.sync="work_dialog"
+                    :visible.sync="area_dialog"
                     width="850px">
                 <div class="search">
-                    <div id="container"></div>
                     <div class="info">
                         <div class="input-item">
-                            <div class="input-item-prepend">
-                                <span class="input-item-text" style="width:8rem;">请输入关键字</span>
-                            </div>
-                            <input id='tipinput' type="text">
+                            <input id='tipinput' type="text" @input="init">
                         </div>
                     </div>
                 </div>
-
             </el-dialog>
         </div>
 
@@ -144,11 +139,10 @@
     /* eslint-disable */
     /*import AMap from 'AMap'
     var map*/
-
     import http from '../../../libs/http'
     import {getType} from '../../../libs/http'
     import {forEach} from "../../../libs/tools";
-    import {forEach} from "../../../libs/tools";
+    import {handleMap} from '../../../libs/Amap'
 
     export default {
         name: 'work',
@@ -172,6 +166,7 @@
             }
         },
         mounted(){
+            handleMap();
             if(getType){
                 this.apiGet('/labels?id=967&mode=tree').then((res) => {
                     this.$store.commit('loading', true);
@@ -220,13 +215,17 @@
                 this.work_dialog = false;
             },
             init(){
-                var map = new AMap.Map("container", {
-                    resizeEnable: true
-                });
-
+                var key = document.getElementById('tipinput').value
                 var auto = new AMap.Autocomplete({
-                    input: "tipinput"
+                    citylimit:true,
+                    city:'广州',
+                    input:'tipinput'
                 });
+                auto.search(key, function(status, result) {
+                    // 搜索成功时，result即是对应的匹配数据
+                    console.log(result)
+                    console.log(status)
+                })
             }
         },
         mixins:[http]
@@ -268,7 +267,7 @@
                         color: #4D4D4D;
                     }
                 }
-                .info{
+                .basic_info{
                     padding-left: 13px;
                     font-size: 14px;
                     color: #4D4D4D;
@@ -411,9 +410,41 @@
                 }
             }
         }
-
+        .area_dialog{
+            .el-dialog{
+                margin-top: 20vh!important;
+                .el-input__suffix{
+                    display: none;
+                }
+                .el-dialog__header{
+                    text-align: left;
+                    .el-dialog__title{
+                        font-size: 16px;
+                        color: #4D4D4D;
+                        text-align: left;
+                    }
+                }
+                .el-dialog__body{
+                    padding-top: 0;
+                    padding-bottom: 25px;
+                    .search{
+                        text-align: left;
+                        margin-bottom: 10px;
+                    }
+                    .el-cascader-menu__wrap{
+                        height: 350px;
+                    }
+                    .el-cascader-menu{
+                        min-width: 269px;
+                    }
+                }
+            }
+        }
     }
     .el-popper[x-placement^=bottom]{
         margin-top: 10px!important;
+    }
+    .amap-sug-result{
+        z-index: 99999999;
     }
 </style>
