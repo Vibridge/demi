@@ -346,13 +346,17 @@
 					float: right;
 					height: 100%;
 					padding-top: 10px;
+					display: flex;
 					img{
 						width:30px;
 						height: 30px;
 						border-radius: 50%;
 						cursor: pointer;
+						align-self: flex-start;
 					}
 					span{
+						align-self: flex-start;
+						height: 100%;
 						color: #D9D9D9;
 						font-size: 14px;
 						margin-right: 12px;

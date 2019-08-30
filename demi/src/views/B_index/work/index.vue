@@ -5,7 +5,7 @@
             <span>职位管理</span>
         </div>
         <div class="work_main">
-            <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+            <el-tabs v-model="activeName" type="card">
                 <el-tab-pane label="全职职位" name="work">
                     <div class="work_wrap_operate">
                         <button @click="handleWork">发布全职职位</button>
@@ -36,7 +36,7 @@
                                         </div>
                                     </div>
                                     <div class="work_operate">
-                                        <span>编辑</span>
+                                        <span @click="handleWorkEdit(work)">编辑</span>
                                         <span>下线</span>
                                         <span>删除</span>
                                     </div>
@@ -130,7 +130,9 @@
 <script>
     /* eslint-disable */
     import http from '../../../libs/http'
+    import createWork from '../../create/work_create/work'
     export default {
+        components:{ createWork },
         name: 'work',
         data() {
             return {
@@ -147,7 +149,8 @@
                     page: 1,
                     total: 0,
                     per_page: 15
-                }
+                },
+                area_dialog:false
             };
         },
         created(){
@@ -158,16 +161,12 @@
             this.handleTask_Work_list();
         },
         methods: {
-            handleClick(tab, event) {
-                console.log(tab, event);
-            },
             handleWork_list(){
                 this.$store.commit('loading', true);
                 this.apiGet('/api/user/info').then((res) =>{
                     if(res.type===2){
                         this.apiGet('/api/work/paginate?user_id=' + res.user_id,this.workParams).then((res) => {
                             this.work_list = res.data;
-                            console.log(this.work_list)
                             this.workParams.page = parseInt(res.current_page);
                             this.workParams.total = parseInt(res.total);
                             this.workParams.per_page = parseInt(res.per_page);
@@ -217,10 +216,18 @@
                 this.$router.push({
                     name: "create_work",
                 });
+            },
+            handleWorkEdit(data){
+                var work_data = JSON.stringify(data)
+                this.$router.push({
+                    name: "create_work",
+                    params:{
+                        work:work_data
+                    }
+                });
             }
         },
-        watch:{
-        },
+
         mixins:[http]
     }
 </script>
@@ -321,6 +328,9 @@
                                 }
                             }
                         }
+                        .work_list_info:hover{
+                            background: #FAFAFA;
+                        }
                         .line{
                             margin: 0 auto;
                             width:648px;
@@ -328,7 +338,7 @@
                         }
                     }
                 }
-
+                
             }
             .all-wrap>.work_list:nth-last-child(2){
                 width: 100%;
