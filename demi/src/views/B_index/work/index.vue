@@ -8,7 +8,7 @@
             <el-tabs v-model="activeName" type="card">
                 <el-tab-pane label="全职职位" name="work">
                     <div class="work_wrap_operate">
-                        <button @click="handleWork">发布全职职位</button>
+                        <button @click="handleRelease(1)">发布全职职位</button>
                     </div>
                     <div class="all-wrap">
                         <div class="work_list" v-for="work in work_list" :key="work.work_id" v-show="work_list.length > 0">
@@ -36,9 +36,9 @@
                                         </div>
                                     </div>
                                     <div class="work_operate">
-                                        <span @click="handleWorkEdit(work)">编辑</span>
+                                        <span @click="handleEdit(1,work)">编辑</span>
                                         <span>下线</span>
-                                        <span>删除</span>
+                                        <span @click="deleteWork(work)">删除</span>
                                     </div>
                                 </div>
                                 <div class="line"></div>
@@ -70,7 +70,7 @@
                 </el-tab-pane>
                 <el-tab-pane label="兼职职位" name="task_work">
                     <div class="work_wrap_operate">
-                        <button>发布兼职职位</button>
+                        <button @click="handleRelease(2)">发布兼职职位</button>
                     </div>
                     <div class="all-wrap">
                         <div class="work_list" v-show="task_list.length>0" v-for="task in task_list" :key="task.task_id">
@@ -90,7 +90,7 @@
                                         </div>
                                     </div>
                                     <div class="work_operate">
-                                        <span>编辑</span>
+                                        <span @click="handleEdit(2,task)">编辑</span>
                                         <span>下线</span>
                                         <span>删除</span>
                                     </div>
@@ -212,19 +212,57 @@
                     return this.activeName
                 }
             },
-            handleWork(){
-                this.$router.push({
-                    name: "create_work",
-                });
+            handleRelease(index){
+                if(index===1){
+                    this.$router.push({
+                        name: "create_work",
+                    });
+                }else{
+                    this.$router.push({
+                        name: "create_task",
+                    });
+                }
+
             },
-            handleWorkEdit(data){
-                var work_data = JSON.stringify(data)
-                this.$router.push({
-                    name: "create_work",
-                    params:{
-                        work:work_data
+            handleEdit(index,data){
+                if(index === 1){
+                    var work_data = JSON.stringify(data)
+                    this.$router.push({
+                        name: "create_work",
+                        params:{
+                            work:work_data
+                        }
+                    });
+                }
+
+            },
+            deleteWork(work){
+                this.$confirm('该操作将彻底删除该数据切无法恢复，确定要继续吗?', '提示', {
+                    distinguishCancelAndClose: false,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    beforeClose: (action, instance, done) => {
+                        if (action === 'confirm') {
+                            instance.confirmButtonLoading = true;
+                            instance.confirmButtonText = '请稍等...';
+                            this.apiDelete('/api/work/delete/' + work.id).then((res) => {
+                                if (res !== false){
+                                    done();
+                                }
+                                instance.confirmButtonLoading = false;
+                                instance.confirmButtonText = '确定';
+                            }).catch(()=>{
+                                instance.confirmButtonLoading = false;
+                                instance.confirmButtonText = '确定';
+                            });
+                        } else {
+                            done();
+                            instance.confirmButtonLoading = false;
+                            instance.confirmButtonText = '确定';
+                        }
                     }
-                });
+                }).catch(()=>{});
             }
         },
 

@@ -205,27 +205,16 @@
                 latitude:'',
                 tpl:[],
                 index:0,
-                work_edit:{}
+                work_edit:null
             }
         },
         mounted(){
-            handleMap();
-            this.getRouterData();
-            this.work_edit = JSON.parse(sessionStorage.getItem('work'));
-            console.log(this.work_edit)
-            if(this.work_edit){
-                this.form.name = this.work_edit.work_name;
-                this.label_id = this.work_edit.work_label_id;
-                this.form.area = this.work_edit.address;
-                this.label_name[0] = this.work_edit.work_label_id;
-                this.form.describes = this.work_edit.description;
-                this.form.education = this.work_edit.education.toString();
-                this.city_id = this.work_edit.city.city_id;
-                this.longitude = this.work_edit.longitude;
-                this.latitude = this.work_edit.latitude;
-                this.form.salary = this.work_edit.salary_min + '-' + this.work_edit.salary_max;
-                this.form.experience = this.work_edit.work_experience_min + '-' + this.work_edit.work_experience_max;
-            }
+            this.$nextTick(() =>{
+                handleMap();
+                this.getRouterData();
+                this.work_edit = JSON.parse(sessionStorage.getItem('work'));
+            })
+
         },
         methods:{
             handleCity(){
@@ -356,64 +345,12 @@
                 }else{
                     this.$message.error('请先选择职位！');
                 }
-
-
-
             },
             handleSubmit(){
-                if(!this.form.name){
-                    this.$message({
-                        showClose: true,
-                        message: '请填写职位名称',
-                        type: 'error',
-                        duration:500
-                    })
-                }else if(!this.form.work){
-                    this.$message({
-                        showClose: true,
-                        message: '请选择职位类型',
-                        type: 'error',
-                        duration:500
-                    })
-                }else if(!this.form.area){
-                    this.$message({
-                        showClose: true,
-                        message: '请完善地址',
-                        type: 'error',
-                        duration:500
-                    })
-                }else if(!this.form.experience){
-                    this.$message({
-                        showClose: true,
-                        message: '请完善工作要求',
-                        type: 'error',
-                        duration:500
-                    })
-                }else if(!this.form.education) {
-                    this.$message({
-                        showClose: true,
-                        message: '请完善工作要求',
-                        type: 'error',
-                        duration: 500
-                    })
-                }else if(!this.form.salary) {
-                    this.$message({
-                        showClose: true,
-                        message: '请完善工作要求',
-                        type: 'error',
-                        duration: 500
-                    })
-                }else if(!this.form.describes) {
-                    this.$message({
-                        showClose: true,
-                        message: '请完善工作要求',
-                        type: 'error',
-                        duration: 500
-                    })
-                }else {
-                    var work_experience_min, work_experience_max, salary_min, salary_max;
+                if(this.work_edit !== null){
+                    let work_experience_min, work_experience_max, salary_min, salary_max;
                     if (this.form.experience) {
-                        var real_experience = this.form.experience.split('-');
+                        let real_experience = this.form.experience.split('-');
                         if (real_experience.length > 1) {
                             work_experience_min = real_experience[0];
                             work_experience_max = real_experience[1];
@@ -423,7 +360,7 @@
                         }
                     }
                     if (this.form.salary) {
-                        var real_salary = this.form.salary.split('-');
+                        let real_salary = this.form.salary.split('-');
                         if (real_salary.length > 1) {
                             salary_min = real_salary[0];
                             salary_max = real_salary[1];
@@ -447,8 +384,8 @@
                         latitude:this.latitude,
                         status:1,
                     };
-                    this.apiPost('/api/work/create', data).then((res)=>{
-                        sessionStorage.removeItem('work')
+                    this.apiPost('/api/work/update/' + this.work_edit.work_id, data).then((res)=>{
+                        sessionStorage.removeItem('work');
                         this.$router.push({
                             name: "work",
                             params:{
@@ -456,6 +393,104 @@
                             }
                         });
                     })
+                } else {
+                    if (!this.form.name) {
+                        this.$message({
+                            showClose: true,
+                            message: '请填写职位名称',
+                            type: 'error',
+                            duration: 500
+                        })
+                    } else if (!this.form.work) {
+                        this.$message({
+                            showClose: true,
+                            message: '请选择职位类型',
+                            type: 'error',
+                            duration: 500
+                        })
+                    } else if (!this.form.area) {
+                        this.$message({
+                            showClose: true,
+                            message: '请完善地址',
+                            type: 'error',
+                            duration: 500
+                        })
+                    } else if (!this.form.experience) {
+                        this.$message({
+                            showClose: true,
+                            message: '请完善工作要求',
+                            type: 'error',
+                            duration: 500
+                        })
+                    } else if (!this.form.education) {
+                        this.$message({
+                            showClose: true,
+                            message: '请完善工作要求',
+                            type: 'error',
+                            duration: 500
+                        })
+                    } else if (!this.form.salary) {
+                        this.$message({
+                            showClose: true,
+                            message: '请完善工作要求',
+                            type: 'error',
+                            duration: 500
+                        })
+                    } else if (!this.form.describes) {
+                        this.$message({
+                            showClose: true,
+                            message: '请完善工作要求',
+                            type: 'error',
+                            duration: 500
+                        })
+                    } else {
+                        var work_experience_min, work_experience_max, salary_min, salary_max;
+                        if (this.form.experience) {
+                            var real_experience = this.form.experience.split('-');
+                            if (real_experience.length > 1) {
+                                work_experience_min = real_experience[0];
+                                work_experience_max = real_experience[1];
+                            } else {
+                                work_experience_max = null;
+                                work_experience_min = null;
+                            }
+                        }
+                        if (this.form.salary) {
+                            var real_salary = this.form.salary.split('-');
+                            if (real_salary.length > 1) {
+                                salary_min = real_salary[0];
+                                salary_max = real_salary[1];
+                            } else {
+                                salary_min = real_salary[0];
+                                salary_max = null;
+                            }
+                        }
+                        let data = {
+                            city_id: this.city_id,
+                            work_label_id: this.label_id,
+                            work_name: this.form.name,
+                            education: this.form.education,
+                            work_experience_max: work_experience_max,
+                            work_experience_min: work_experience_min,
+                            salary_min: salary_min,
+                            salary_max: salary_max,
+                            description: this.form.describes,
+                            address: this.form.area,
+                            longitude: this.longitude,
+                            latitude: this.latitude,
+                            status: 1,
+                        };
+                        this.apiPost('/api/work/create', data).then((res) => {
+                            sessionStorage.removeItem('work')
+                            this.$router.push({
+                                name: "work",
+                                params: {
+                                    activeName: 'work'
+                                }
+                            });
+                        })
+
+                    }
                 }
             },
             getRouterData() {
@@ -468,6 +503,32 @@
             work_dialog(){
                 if(this.work_dialog){
                     this.handleLabel();
+                }
+            },
+            work_edit(){
+                if(this.work_edit){
+                    this.form.name = this.work_edit.work_name;
+                    this.label_id = this.work_edit.work_label_id;
+                    if(this.work_edit){
+                        this.apiGet('/labels?id=967').then((res) => {
+                            forEach(res, item => {
+                                if (item.level === 2) {
+                                    if(this.label_id === item.label_id){
+                                        this.form.work = item.name
+                                    }
+                                }
+                            });
+                            this.$store.commit('loading', false);
+                        });
+                    }
+                    this.form.area = this.work_edit.address;
+                    this.form.describes = this.work_edit.description;
+                    this.form.education = this.work_edit.education.toString();
+                    this.city_id = this.work_edit.city.city_id;
+                    this.longitude = this.work_edit.longitude;
+                    this.latitude = this.work_edit.latitude;
+                    this.form.salary = this.work_edit.salary_min + '-' + this.work_edit.salary_max;
+                    this.form.experience = this.work_edit.work_experience_min + '-' + this.work_edit.work_experience_max;
                 }
             },
             area_dialog(){
@@ -567,6 +628,7 @@
                         .el-textarea__inner{
                             border-radius: 0;
                             border-color: #D5DADF;
+                            padding: 15px 16px;
                         }
                         .el-textarea__inner:focus{
                             border-color:#24BFFF

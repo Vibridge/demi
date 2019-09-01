@@ -85,6 +85,12 @@ const router = new Router({
                     meta: {title: 'create_work'},
                     component: () => import('./views/create/work_create/work.vue')
                 },
+                {
+                    path: '/B_index/B_person/create/task',
+                    name: 'create_task',
+                    meta: {title: 'create_task'},
+                    component: () => import('./views/create/task_create/index.vue')
+                },
 
 
             ],

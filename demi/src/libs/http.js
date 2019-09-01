@@ -9,7 +9,7 @@ let config = {
 /* eslint-disable */
 const service = axios.create({
     baseURL: config.baseUrl,
-    timeout: 5000,
+    timeout: 10000,
 });
 
 service.interceptors.request.use(function (config) {
