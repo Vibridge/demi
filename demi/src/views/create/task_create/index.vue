@@ -312,7 +312,7 @@
                     this.real_video_path = res
                 })
             },
-            //base64解码
+            //base64解码，解码视频第一帧
             base64ToBlob(urlData) {
                 var arr = urlData.split(',');
                 var mime = arr[0].match(/:(.*?);/)[1] || 'image/png';
@@ -417,8 +417,7 @@
                         video_cover: cover_path,
                     };
                     this.apiPost('/api/task/create', data).then((res) => {
-                        /*sessionStorage.removeItem('task')*/;
-                        console.log(res)
+                        /*sessionStorage.removeItem('task')*/
                         this.$router.push({
                             name: "task",
                             params: {
