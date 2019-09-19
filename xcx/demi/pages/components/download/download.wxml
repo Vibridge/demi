@@ -1,0 +1,16 @@
+<cover-view class="res">
+  <cover-view class="res_detail">
+    <cover-view class="main">
+      <cover-view class="title">如何打开app</cover-view>
+      <cover-view class="line"></cover-view>
+      <cover-view class="note">复制页面链接URL</cover-view>
+       <cover-view class="note">{{http}}</cover-view>
+      <cover-view class="note">在手机浏览器中访问链接</cover-view>
+    </cover-view>
+    <cover-view class="button">
+      <cover-view class="first" bindtap="backIndex">返回</cover-view>
+      <cover-view class="second">|</cover-view>
+      <cover-view class="third" bindtap="copy">复制链接</cover-view>
+    </cover-view>
+  </cover-view>
+</cover-view>

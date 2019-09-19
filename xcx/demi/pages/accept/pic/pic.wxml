@@ -1,0 +1,13 @@
+<toolTag prop-b="true" title="图片作品" />
+<view class="contain">
+  <image mode="cover" src="../../asset/img/accretion@2x.png" bind:tap="chooseImg"></image>
+  <view wx:for="{{pic_list}}" wx:for-item="item" wx:key="{{index}}">
+    <image src="{{item}}"></image>
+    <icon class="icon" size="20" type="cancel" data-index="{{index}}" bind:tap="handleRemove"/>
+  </view>
+</view>
+<cover-view class="bottom">
+  <cover-view bind:tap="handlePic">
+    保存
+  </cover-view>
+</cover-view>

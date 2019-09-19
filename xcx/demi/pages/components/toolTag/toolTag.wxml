@@ -1,0 +1,11 @@
+<view class="toolTag" wx:if="{{isCustom}}" style="{{_navBarStyle}}{{_androidStyle}}">
+  <view class="one" wx:if="{{isIndex}}">
+    <text>{{title}}</text>
+  </view>
+  <view class="second" wx:if="{{isSecond}}">
+    <view bindtap="back">
+      <image mode="aspectFit" src="../../asset/img/icon_return@2x.png"></image>
+    </view>
+    <view class="title">{{title}}</view>
+  </view>
+</view>

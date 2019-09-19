@@ -1,0 +1,39 @@
+.toolTag{
+  width: auto;
+  background-color: rgba(255,255,255);
+  font-size: 32rpx;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index:1000
+}
+.second{
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 10rpx;
+}
+.second view{
+  align-self: center
+}
+.second image{
+  padding-left: 20rpx;
+  padding-top: 25rpx;
+  padding-right: 15rpx;
+  width:30rpx;
+  height:40rpx
+}
+.title{
+  margin-left:15rpx;
+  margin-top:-8rpx;
+  font-size:32rpx;
+  font-weight:bold;
+}
+.one{
+  margin-left:20rpx;
+  font-size:32rpx;
+  font-weight:bold;
+}
+
+

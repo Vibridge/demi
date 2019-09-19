@@ -1,0 +1,63 @@
+<!--index.wxml-->
+<toolTag prop-b="true" title="{{company_name}}"/>
+<view class="container">
+  <view class="task_info_wrap">
+    <view class="task_info">
+      <text class="task_title">{{task_name}}</text>
+      <view class="task_price">
+        <text>{{moeny}}</text>
+        <text>元/单</text>
+      </view>
+      <rich-text nodes="{{nodes}}"></rich-text>
+    </view>
+  </view>
+  <scroll-view scroll-y class="message" bindscrolltoupper="lower" scroll-top="{{scrollTop}}">
+    <view class="msgflow" wx:for="{{message}}" wx:for-item="item" wx:key="item.ID">
+      <view class="time">{{item.time}}</view>
+      <view class="onemsg" wx:if="{{item.flow === 'in'}}">
+        <view class="msghead">
+          <image mode="cover" src="{{task_avatar}}"></image>
+          <view class="name">{{task_username}}</view>
+        </view>
+        <view class="msgbody">
+          <view wx:if="{{item.type === 'TIMTextElem'}}">{{item.payload.text}}</view>
+          <view wx:if="{{item.type === 'TIMImageElem'}}" data-url="{{item.payload.imageInfoArray[2].url}}" bindtap="handleBigImage"><image mode="widthFix" src="{{item.payload.imageInfoArray[2].url}}"></image></view>
+        </view>
+      </view>
+      <view class="sendmsg" wx:if="{{item.flow === 'out'}}">
+        <view class="msgbody">
+          <view wx:if="{{item.type === 'TIMTextElem'}}">{{item.payload.text}}</view>
+          <view wx:if="{{item.type === 'TIMImageElem'}}" data-url="{{item.payload.imageInfoArray[2].url}}" bindtap="handleBigImage"><image mode="widthFix" src="{{item.payload.imageInfoArray[2].url}}"></image></view>
+        </view>
+        <view class="msghead">
+          <!-- <image mode="cover" src="{{useravatar}}"></image>
+          <view class="name">{{username}}</view> -->
+          <view class="avatar">
+            <open-data type="userAvatarUrl"></open-data>
+          </view>
+          <view class="username">
+            <open-data type="userNickName"></open-data>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <view class="send" style="bottom:{{height}}px">
+    <view class="input">
+      <textarea maxlength='-1' adjust-position="{{show}}" bindfocus="handleHight" bindblur="clearHeight" fixed="true" auto-height value="{{value}}" placeholder="说点什么" show-confirm-bar="{{show}}" bindinput="handleValue" placeholder-class="input-placeholder"/>
+    <!-- <input placeholder="说点什么" maxlength='-1' value="{{value}}" confirm-type="send" bindconfirm="handleSend" /> -->
+    </view>
+    <form bindsubmit="handleSend" data-value="{{value}}" bindreset="formReset" report-submit="true">
+      <button form-type="submit" class="real_send">发送</button>
+      <!-- <view class="real_send" data-value="{{value}}" bindtap="handleSend">发送</view> -->
+    </form>
+  </view>
+  <view class="res" wx:if="{{bigImg}}">
+    <view class="bg" catchtap="backIndex"></view>
+    <view class="res_detail" catchtap="backIndex">
+      <view class="main">
+        <image mode="widthFix" src="{{bigImg_url}}"></image>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,104 @@
+<toolTag prop-b="true" />
+<download wx:if="{{download}}" prop-b="true"/>
+<cover-view class="res" wx:if="{{login}}">
+  <cover-view class="res_detail">
+    <cover-view class="main">
+      <cover-view class="title">注册成功</cover-view>
+      <cover-image mode="widthFix" src="../asset/img/triumph@2x.png"></cover-image>
+      <cover-view class="note">发布任务简历即可申请该任务</cover-view>
+    </cover-view>
+    <cover-view class="button">
+      <cover-view class="first" bindtap="backIndex">返回</cover-view>
+      <cover-view class="second">|</cover-view>
+      <cover-view class="third" bindtap="setAbility">发布简历</cover-view>
+    </cover-view>
+  </cover-view>
+</cover-view>
+<cover-view class="res" wx:if="{{accept}}">
+  <cover-view class="res_detail">
+  <cover-view class="main">
+      <cover-view class="title">任务申请成功</cover-view>
+      <cover-image mode="widthFix" src="../asset/img/triumph@2x.png"></cover-image>
+      <cover-view class="note">打开得米APP即可查看详情</cover-view>
+    </cover-view>
+    <cover-view class="button">
+      <cover-view class="first" bindtap="backIndex">返回</cover-view>
+      <cover-view class="second">|</cover-view>
+      <button open-type="launchApp" id="open" app-parameter="task_id:{{task_id}}" binderror="launchAppError">
+        <cover-view class="open">打开APP</cover-view>
+      </button>
+    </cover-view>
+  </cover-view>
+</cover-view>
+<view class="contain">
+  <view class="header">
+    <view class="title">任务简历</view>
+    <image src="{{avatar}}" bindtap="handleAvatar"></image>
+    <view class="sex">
+      <view data-sex="1" id="{{sex === 1 ? 'active' : ''}}" bindtap="handleSex">男</view>
+      <view data-sex="2" id="{{sex === 2 ? 'active' : ''}}" bindtap="handleSex">女</view>
+    </view>
+    <view class="name">
+      <text>姓名</text>
+      <input placeholder="请输入姓名" bindinput="handleName"/>
+    </view>
+  </view>
+  <view class="city">
+    <text>城市地域</text>
+    <view id="foot" bindtap="GoToCity">
+      <text>{{city_name}}</text>
+      <view>
+        <image mode="widthFix" src="../asset/img/icon_return2@2x.png"></image>      
+      </view>
+    </view>
+  </view>
+  <view class="work">
+    <text>任务类型</text>
+    <view id="work" bindtap="GoToWork">
+      <text>{{work_name}}</text>
+      <view>
+        <image mode="widthFix" src="../asset/img/icon_return2@2x.png"></image>      
+      </view>
+    </view>
+  </view>
+  <view class="industry">
+    <text>理想行业</text>
+    <view id="industry" bindtap="GoToInd">
+      <text>{{industry}}</text>
+      <view>
+        <image mode="widthFix" src="../asset/img/icon_return2@2x.png"></image>      
+      </view>
+    </view>
+  </view>
+  <view class="pic" bindtap="GoToPic">
+    <text>图片作品（选填）</text>
+    <view id="pic">
+      <text>{{pic}}</text>
+      <view>
+        <image mode="widthFix" src="../asset/img/icon_return2@2x.png"></image>      
+      </view>
+    </view>
+  </view>
+  <view class="vid" bindtap="GoToVid">
+    <text>视频简历（选填）</text>
+    <view id="vid">
+      <text>{{video}}</text>
+      <view>
+        <image mode="widthFix" src="../asset/img/icon_return2@2x.png"></image>      
+      </view>
+    </view>
+  </view>
+  <view class="des">
+    <text>工作描述</text>
+    <view id="des">
+      <textarea maxlength="500" placeholder-class="input"	 placeholder=" 可描述你的工作技能、岗位职责、特长等等.." bindinput="bindTextAreainput"/>
+      <view class="limit">
+        <text id="limit_cursor">{{cursor}}</text>
+        <text id="limit_length">/500</text>
+      </view>
+    </view>
+  </view>
+  <cover-view class="bottom" bindtap="handleAbility">
+    <button>确认发布</button>
+  </cover-view>
+</view>

@@ -1,0 +1,7 @@
+{
+  "usingComponents":{
+    "toolTag": "../components/toolTag/toolTag"
+  },
+  "navigationStyle": "custom",
+  "disableScroll":true
+}

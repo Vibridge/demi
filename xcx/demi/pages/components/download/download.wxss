@@ -1,0 +1,78 @@
+.res{
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background:rgba(0,0,0,.5);
+  z-index:100;
+}
+.res_detail{
+  position: fixed;
+  top:50%;
+  left:50%;
+  width: 670rpx;
+  background: white;
+  transform: translate3d(-50%,-50%,0);
+  border-radius:20rpx;
+}
+.main{
+  padding: 43rpx 51rpx 0 43rpx;
+}
+.title{
+  font-size:30rpx;
+  font-family:Microsoft YaHei;
+  font-weight:400;
+  color:rgba(77,77,77,1);
+  padding-bottom: 43rpx;
+  border-bottom:1rpx solid #E6E6E6;
+}
+.note{
+  font-size:28rpx;
+  font-family:Microsoft YaHei;
+  font-weight:400;
+  color:black;
+  margin: 43rpx 0;
+}
+cover-image{
+  width:95rpx;
+  margin:60rpx auto 33rpx;
+}
+.button{
+  display: flex;
+  justify-content: space-between;
+  border-top:1rpx solid #E6E6E6;
+}
+.first{
+  width:49%;
+  color:rgba(128,128,128,1);
+}
+.second{
+  width:1px;
+  height:38rpx;
+  color:rgba(230,230,230,1);
+}
+.third{
+  width:49%;
+  color:rgba(36,191,255,1);
+}
+.button cover-view{
+  align-self: center;
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 28rpx
+}
+.button #open{
+  align-self: center;
+  text-align: center;
+  font-size: 28rpx;
+  width:49%;
+  background: none;
+  height: auto;
+  line-height: 38rpx;
+  border: none;
+  color:rgba(128,128,128,1);
+}
+.button #open::after {
+  border: none;
+}

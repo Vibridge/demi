@@ -1,0 +1,45 @@
+.contain {
+  margin: 148rpx auto 0 auto;
+  border-top:1rpx solid #E6E6E6;
+  padding: 40rpx 30rpx 40rpx 40rpx;
+  box-sizing: content-box
+}
+image{
+  width: 216rpx;
+  height: 216rpx;
+  display: inline-block;
+  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+}
+.contain view{
+  display: inline-block;
+  position: relative
+}
+.icon{
+  position: absolute;
+  top:-10rpx;
+  right:-10rpx;
+  color: red
+}
+.bottom{
+  position: fixed;
+  left:0;
+  bottom: 0;
+  width: 100%;
+  height: 172rpx;
+  text-align: center;
+  line-height: 172rpx;
+  border-top:1rpx solid #E6E6E6
+}
+.bottom cover-view{
+  width:671rpx;
+  height:82rpx;
+  background:rgba(36,191,255,1);
+  border-radius:41rpx;
+  margin: 45rpx auto;
+  font-size:28rpx;
+  font-family:SimHei;
+  font-weight:400;
+  color:rgba(255,255,255,1);
+  line-height: 82rpx
+}

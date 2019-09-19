@@ -47,6 +47,8 @@ export const getType = ()=>{
     return this.apiGet('/api/user/info').then((res) =>{
         if(res.type === 2){
             return true
+        }else{
+            return false
         }
     })
 }

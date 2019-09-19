@@ -1,0 +1,45 @@
+<toolTag prop-a="true" title="{{ability_info.user.nickname}}" />
+<download wx:if="{{download}}" bindmyevent="onMyEvent"/>
+<view class="contain">
+  <view class="header"></view>
+  <image class="avatar" mode="aspectFit" src="{{ability_info.user.avatar}}"></image>
+  <view class="info">
+    <view>{{ability_info.user.nickname}}</view>
+    <image wx:if="{{ability_info.real.sex == 1}}" mode="widthFix" src="../asset/img/boy@2x.png"></image>
+    <image wx:if="{{ability_info.real.sex == 2}}"mode="widthFix" src="../asset/img/girl@2x.png"></image>
+  </view>
+  <view class="note">
+    <text>{{ability_info.type_label.name}}</text>
+    <text>|</text>
+    <text wx:if="{{ability_info.city}}">{{ability_info.city.city_name}}</text>
+    <text wx:if="{{ability_info.city == null}}">不限</text>
+  </view>
+  <view class="main">
+    <view class="video" wx:if="{{ability_info.video != null}}">
+      <video initial-time="0.01" src="{{ability_info.video.file_path}}"></video>
+    </view>
+    <view class="forword">
+      <view class="title">求职意向</view>
+      <view class="work">
+        <view class="work_title">适合行业：</view>
+        <view class="work_info">
+          <view wx:for="{{ability_info.industry}}" wx:for-item="ind" wx:key="{{ind.label_id}}">{{ind.name}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="des">
+      <view class="title">自我描述</view>
+      <view class="detail">{{ability_info.description}}
+      </view>
+    </view>
+    <view class="pic">
+      <view class="title">图片作品</view>
+      <image wx:for="{{ability_info.images}}" wx:for-item="img" wx:key="{{img.file_id}}" mode="widthFix" src="{{img.file_path}}"></image>
+    </view>
+  </view>
+  <view class="footer">
+    <button open-type="launchApp" id="open" app-parameter="ability_id:{{id}}" binderror="launchAppError">
+      <view>打开APP</view>
+    </button>
+  </view>
+</view>

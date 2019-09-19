@@ -1,0 +1,47 @@
+.contain {
+  margin: 148rpx auto 0 auto;
+  border-top:1rpx solid #E6E6E6;
+  box-sizing: content-box;
+  text-align: center;
+  position: relative;
+  height: 1134rpx;
+}
+image{
+  width:518rpx;
+  margin-top: 183rpx;
+}
+video{
+  margin-top: 183rpx;
+}
+.button{
+  position: absolute;
+  bottom: 200rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width:585rpx;
+  height:94rpx;
+  background:rgba(59,199,255,1);
+  border-radius:47rpx;
+  color: white;
+  line-height: 94rpx;
+}
+.bottom{
+  position: absolute;
+  bottom:78rpx;
+  left:0;
+  text-align: center;
+  width:100%;
+}
+.bottom view:nth-child(1){
+  font-size:24rpx;
+  font-family:PingFang SC;
+  font-weight:bold;
+  color:rgba(204,204,204,1);
+  margin-bottom: 18rpx;
+}
+.bottom view:nth-child(2){
+  font-size:24rpx;
+  font-family:PingFang SC;
+  font-weight:bold;
+  color:rgba(31,191,255,1);
+}

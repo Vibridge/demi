@@ -1,0 +1,22 @@
+<toolTag prop-b="true" title="选择行业" select_id="{{industry_id}}" select="{{industry_select}}"/>
+<view class="contain">
+  <view class="header">
+    <view class="title"><text>已选行业</text></view>
+    <view class="none" wx:if="{{length < 1}}">请选择，最多可选3个行业</view>
+    <view class="select" wx:if="{{length > 0}}" wx:for="{{industry_select}}" wx:for-item="name" wx:key="{{index}}">
+      <view>{{name}}</view>
+      <icon class="icon" size="15" type="cancel" data-index="{{index}}" bind:tap="handleRemove"/>
+    </view>
+  </view>
+  <view class="line"></view>
+  <view class="option">
+    <view class="main" wx:for="{{industry_list}}" wx:for-item="item" wx:key="{{item.label_id}}">
+      <view class="first">{{item.name}}</view>
+      <view class="show">
+        <view wx:for="{{item.children}}" wx:for-item="child" wx:key="{{child.label_id}}" data-index="{{index}}" data-name="{{child.name}}" data-id="{{child.label_id}}" bind:tap="handleIndustry" class="label {{industry_item === child.label_id && length > 0 ?'active_industry':''}} ">
+          <view class="detail">{{child.name}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

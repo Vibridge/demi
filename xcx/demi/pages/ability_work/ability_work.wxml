@@ -1,0 +1,92 @@
+<toolTag prop-a="true" title="{{task_info.task_title}}"/>
+<login wx:if="{{login}}" prop-a="{{select}}" bindmyevent="onMyEvent" />
+<view class="contain">
+  <view class="header">
+    <view class="header_title">
+      <view class="name">{{task_info.company.company_name}}</view>
+    </view>
+    <view class="logo">
+      <image mode="cover" src="{{task_info.company.logo_path}}"></image>
+    </view>
+  </view>
+  <view class="task_info">
+    <view>
+      <text class="num">{{task_info.payment_money}}</text>
+      <text class="unit">RMB</text>
+    </view>
+    <view class="task_title">{{task_info.task_title}}</view>
+    <view class="note">
+      <text wx:if="{{task_info.payment_method !== '1'}}">完工结/</text>
+      <text wx:if="{{task_info.payment_method === '1'}}">即时结/</text>
+      <text wx:if="{{task_info.front_money !== '0'}}">有定金 /</text>
+      <text>签合同</text>
+    </view>
+  </view>
+  <view class="task_des">
+    <view>任务描述</view>
+    <view>招募人数：
+      <text>{{task_info.quantity_max}}人</text>
+    </view>
+    <view>工作城市：
+      <text wx:if="{{task_info.city !== null}}">{{task_info.city.city_name}}</text>
+      <text wx:if="{{task_info.city === null}}">不限</text>
+    </view>
+    <view>适合行业：
+      <text class="decorate" wx:for="{{task_info.industry}}" wx:for-item="item" wx:key="{{item.label_id}}">{{item.name}}<text>/</text></text>
+    </view>
+  </view>
+  <view class="line"></view>
+  <view wx:if="{{task_info.video !== null}}">
+    <view class="video">
+      <view>视频介绍</view>
+      <video id="myVideo" src="{{task_info.video.video_path}}" initial-time="0.01"></video>
+    </view>
+    <view class="line" style="height:2rpx"></view>
+  </view>
+  <view wx:if="{{task_info.goods === null}}">
+    <view class="work_des">
+      <view>工作描述</view>
+      <view>{{task_info.description}}</view>
+    </view>
+  </view>
+  <view wx:if="{{task_info.goods !== null}}">
+    <view class="goods_des">
+      <view>产品描述</view>
+      <view>产品名称：{{task_info.goods.goods_title}}</view>
+      <view>产品价格：{{task_info.goods.goods_price}}元</view>
+      <view>{{task_info.goods.description}}</view>
+    </view>
+  </view>
+  <view class="line" style="height:2rpx"></view>
+  <view wx:if="{{task_info.images.length > 0}}">
+    <view class="pic">
+      <view wx:if="{{task_info.goods === null}}"> 图片介绍</view>
+      <view wx:if="{{task_info.goods !== null}}">产品图片</view>
+      <view>
+        <image mode="widthFix" wx:for="{{task_info.images}}" wx:for-item="pic" wx:key="{{pic.file_id}}" src="{{pic.file_path}}"></image>
+      </view>
+    </view>
+    <view class="line" style="height:2rpx"></view>
+  </view>
+  <view wx:if="{{task_info.goods === null}}">
+    <view class="address">
+      <view>工作地址</view>
+      <view>
+        <image style="width:26rpx" mode="widthFix" src="../asset/img/didian2@2x.png"></image>
+        <text wx:if="{{task_info.city !== null}}">{{task_info.city.city_name}}<text wx:if="{{task_info.address !== ''}}">-</text> {{task_info.address}}</text>
+        <text wx:if="{{task_info.city === null}}">不限</text>
+      </view>
+    </view>
+  </view>
+  <view class="space"></view>
+  <view class="footer">
+    <form bindsubmit="chat" bindreset="formReset" report-submit="true">
+      <button form-type="submit">咨询雇主</button>
+    </form>
+    <form bindsubmit="open" bindreset="formReset" report-submit="true">
+      <button form-type="submit">立即申请</button>
+    </form>
+    <!-- <view bindtap="chat">咨询雇主</view>
+    <view bindtap="open">立即申请</view> -->
+  </view>
+</view>

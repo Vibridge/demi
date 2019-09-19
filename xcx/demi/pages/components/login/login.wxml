@@ -1,0 +1,24 @@
+<view class="res">
+  <view class="bg" bindtap="backIndex"></view>
+  <view class="res_detail">
+    <view class="main">
+      <image class="logo" mode="widthFix" src="../../asset/img/demi@2x.png"></image>
+      <view class="wrap">
+        <view><image class="icon" mode="widthFix" src="../../asset/img/phone@2x.png"></image></view>
+        <view><input class="phone" placeholder="请输入手机号" placeholder-class="placeholder" confirm-type ="done" bindinput="handlePhone"></input></view>
+      </view>
+      <view class="line"></view>
+      <view class="wrap">
+        <view><image class="icon" mode="widthFix" src="../../asset/img/verification_code@2x.png"></image></view>
+        <view><input class="yzm" placeholder="验证码" placeholder-class="placeholder" confirm-type ="done" bindinput="handleYzm"></input></view>
+        <view class="get" bind:tap="getYzm">{{text}}</view>
+      </view>
+    </view>
+    <form bindsubmit="handleSumbit" bindreset="formReset" report-submit="true">
+      <button class="button" form-type="submit">登录</button>
+    </form>
+    <!-- <view class="button" bindtap="handleSumbit">
+      <view>登录</view>
+    </view> -->
+  </view>
+</view>

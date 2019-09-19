@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "toolTag": "../components/toolTag/toolTag",
+    "download": "../components/download/download"
+  },
+  "navigationStyle": "custom"
+}

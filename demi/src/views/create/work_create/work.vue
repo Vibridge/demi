@@ -214,7 +214,6 @@
                 this.getRouterData();
                 this.work_edit = JSON.parse(sessionStorage.getItem('work'));
             })
-
         },
         methods:{
             handleCity(){

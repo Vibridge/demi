@@ -1,0 +1,91 @@
+<toolTag prop-a="true" title="{{job_info.user.nickname}}" />
+<download wx:if="{{download}}" bindmyevent="onMyEvent" />
+<view class="contain">
+  <view class="header"></view>
+  <image class="avatar" mode="aspectFit" src="{{job_info.user.avatar}}"></image>
+  <view class="info">
+    <view>{{job_info.user.nickname}}</view>
+    <image wx:if="{{job_info.real.sex === 1}}" mode="widthFix" src="../asset/img/boy@2x.png"></image>
+    <image  wx:if="{{job_info.real.sex === 2}}"mode="widthFix" src="../asset/img/girl@2x.png"></image>
+  </view>
+  <view class="note">
+    <text>{{job_info.work_year}}工作经验 ·</text>
+    <text wx:if="{{job_info.vita.education == 1}}">初中及以下</text>
+    <text wx:if="{{job_info.vita.education == 2}}">中专/中技</text>
+    <text wx:if="{{job_info.vita.education == 3}}">高中</text>
+    <text wx:if="{{job_info.vita.education == 4}}">大专</text>
+    <text wx:if="{{job_info.vita.education == 5}}">本科</text>
+    <text wx:if="{{job_info.vita.education == 6}}">硕士</text>
+    <text wx:if="{{job_info.vita.education == 7}}">博士</text>
+    <text>{{job_info.city_name}}</text>
+  </view>
+  <view class="main">
+    <view class="work_info">
+      <view class="title">
+        <view></view>
+        <text>求职意向</text>
+      </view>
+      <view class="detail">
+        <view class="detail_title">
+          <view>期望职位：</view>
+          <view>求职状态：</view>
+          <view>参加工作时间：</view>
+          <view>薪资要求：</view>
+        </view>
+        <view class="detail_value">
+          <view>{{job_info.work.name}}</view>
+          <view>{{job_info.vita.status}}</view>
+          <view>{{job_info.vita.work_date}}</view>
+          <view>{{job_info.salary_min/1000}}-{{job_info.salary_max/1000}}k</view>
+        </view>
+      </view>
+    </view>
+    <view class="video" wx:if="{{job_info.video != null}}">
+      <view class="title">
+        <view></view>
+        <text>视频简历</text>
+      </view>
+      <view>
+        <video initial-time="0.01" src="{{job_info.video.file_path}}"></video>
+      </view>
+    </view>
+    <view class="work">
+      <view>工作经历</view>
+      <view class="work_detail" wx:for="{{job_info.experiences}}" wx:for-item="ex" wx:key="{{ex.experience_id}}">
+        <view>{{ex.company.company_name}}</view>
+        <view>{{ex.work.name}}</view>
+        <view>{{ex.start_date}} -- <text wx:if="{{ex.end_data !== null}}">{{ex.end_data}}</text><text wx:if="{{ex.end_data == null}}">至今</text></view>
+        <view>{{ex.description}}
+        </view>
+        <view class="line"></view>
+      </view>
+    </view>
+    <view class="des">
+      <view>自我描述</view>
+      <view class="note">{{job_info.vita.description}}</view>
+    </view>
+    <view class="line"></view>
+    <view class="edc" wx:if="{{job_info.education.length > 0}}">
+      <view>教育经历</view>
+      <view class="edc_info" wx:for="{{job_info.education}}" wx:for-item="ed" wx:key="{{ed.education_id}}">
+        <view>{{ed.school.school_name}}</view>
+        <view class="edc_detail">
+          <text><text wx:if="{{ed.education == 1}}">初中及以下</text>
+    <text wx:if="{{ed.education == 2}}">中专/中技</text>
+    <text wx:if="{{ed.education == 3}}">高中</text>
+    <text wx:if="{{ed.education == 4}}">大专</text>
+    <text wx:if="{{ed.education == 5}}">本科</text>
+    <text wx:if="{{ed.education == 6}}">硕士</text>
+    <text wx:if="{{ed.education == 7}}">博士</text> / 计算机应用</text>
+          <text>{{ed.s_date}} -- {{ed.e_date}}</text>
+        </view>
+        <view class="line"></view>
+      </view>
+    </view>
+  </view>
+  <view class="footer">
+    <button open-type="launchApp" id="open" app-parameter="job_id:{{id}}" binderror="launchAppError">
+      <view>打开APP</view>
+    </button>
+  </view>
+</view>

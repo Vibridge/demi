@@ -1,0 +1,23 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/ability_work/ability_work",
+    "pages/ability_info/ability_info",
+    "pages/work_info/work_info",
+    "pages/person/person",
+    "pages/accept/accept",
+    "pages/IM/IM",
+    "pages/accept/city/city",
+    "pages/accept/work/work",
+    "pages/accept/industry/industry",
+    "pages/accept/pic/pic",
+    "pages/accept/video/video"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json"
+}

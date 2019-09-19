@@ -1,0 +1,237 @@
+/**index.wxss**/
+
+.container {
+  background: rgba(247, 247, 247, 1);
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  margin: 140rpx auto 0 auto;
+  height: 1134rpx;
+}
+.task_info_wrap{
+  width: 100%;
+  background: rgba(247, 247, 247, 1);
+  /* z-index: 1111; */
+  padding: 44rpx 39rpx;
+  box-sizing: border-box;
+}
+.task_info {
+  margin: 0 auto;
+  width: 678rpx;
+  background: rgba(255, 255, 255, 1);
+  border: 1rpx solid rgba(217, 217, 217, 1);
+  box-shadow: 0px 4rpx 10rpx 0px rgba(0, 95, 133, 0.1);
+  border-radius: 20rpx;
+  box-sizing: border-box;
+  padding: 40rpx 39rpx;
+}
+
+.task_title {
+  display: block;
+  font-size: 36rpx;
+  font-family: PingFang-SC-Bold;
+  font-weight: bold;
+  color: rgba(72, 72, 72, 1);
+  line-height: 31rpx;
+}
+
+.task_price {
+  margin: 39rpx 0;
+  line-height: 31rpx;
+}
+
+.task_price text:nth-child(1) {
+  font-size: 50rpx;
+  color: rgba(255, 78, 77, 1);
+  margin-right: 21rpx;
+}
+
+.task_price text:nth-child(2) {
+  font-size: 24rpx;
+  color: rgba(153, 153, 153, 1);
+}
+
+.label {
+  list-style: none;
+  margin-left: -80rpx;
+  margin-top: -15rpx;
+}
+
+.label_li {
+  height: 32rpx;
+  display: inline-block;
+  background: rgba(255, 255, 255, 1);
+  border: 1px solid rgba(204, 204, 204, 1);
+  border-radius: 5rpx;
+  margin-right: 20rpx;
+  font-size: 24rpx;
+  color: rgba(153, 153, 153, 1);
+  padding: 5rpx 18rpx;
+}
+
+.message {
+  width: 100%;
+  height: 750rpx;
+  padding: 0 39rpx;
+  box-sizing: border-box;
+  background: #f5f5f5;
+}
+.msgflow{
+  margin: 36rpx 0;
+}
+.time{
+  font-size:26rpx;
+  font-family:PingFang SC;
+  font-weight:500;
+  color:rgba(180,186,194,1);
+  text-align: center;
+  margin-bottom: 36rpx
+}
+.onemsg,.sendmsg{
+  width: 100%;
+  display: flex;  
+}
+.sendmsg{
+  justify-content: flex-end
+}
+.sendmsg .msghead{
+  margin-left: 32rpx;
+}
+.sendmsg .msgbody{
+  border-radius:18rpx 0rpx 18rpx 18rpx;
+}
+.sendmsg .msghead .avatar{
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 50%;
+}
+.sendmsg .msghead .username{
+  font-size:26rpx;
+  color: #24BFFF;
+  margin-top: 10rpx;
+  text-align: center
+}
+.msghead{
+  margin-right: 32rpx;
+  align-self: flex-start
+}
+.msghead image{
+  width: 84rpx;
+  height: 84rpx;
+}
+.name{
+  font-size:26rpx;
+  color: #24BFFF;
+  margin-top: 10rpx;
+  text-align: center
+}
+.msgbody{
+  align-self: flex-start;
+  background: #fff;
+  border-radius:0 18rpx 18rpx 18rpx;
+  padding: 0 26rpx;
+  box-sizing: border-box;
+  min-height: 83rpx;
+  max-width: 473rpx;
+  border:1rpx solid rgba(215, 215, 217, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.msgbody view{
+  width: 100%;
+  align-self: center;
+  word-wrap:break-word;
+  font-size:30rpx;
+  font-family:PingFang SC;
+  font-weight:500;
+  color:rgba(77,77,77,1);
+}
+.msgbody image{
+  max-width: 421rpx;
+  vertical-align: middle;
+  margin: 26rpx 0;
+}
+.send {
+  width: 100%;
+  min-height: 58rpx;
+  background: #fff;
+  padding: 22rpx 30rpx;
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+}
+.send .input{
+  align-self: center;
+  display: flex;
+}
+.input button{
+  background: none;
+  height: 60rpx;
+  border: none;
+  width: 56rpx;
+  text-align: left;
+  padding: 0;
+  margin-right: 20rpx;
+  line-height: 60rpx;
+}
+.input button::after{
+  border:none;
+}
+.send textarea {
+  font-size: 30rpx;
+  width:500rpx;
+  align-self: center;
+  max-height: 100rpx;
+}
+.send image{
+  width:56rpx;
+  align-self: center;
+  margin-right: 30rpx;
+  height:auto;
+}
+.send .real_send{
+  width:110rpx;
+  height:58rpx;
+  line-height: 58rpx;
+  background:rgba(59,199,255,1);
+  border-radius:10rpx;
+  font-size:26rpx;
+  font-family:PingFang SC;
+  font-weight:500;
+  text-align: center;
+  color: #fff
+}
+.input-placeholder {
+  font-size: 34rpx;
+  color: rgba(204, 204, 204, 1);
+  font-weight: normal;
+  line-height: 32rpx;
+}
+.bg{
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background:rgba(0,0,0,.5);
+  z-index:100;
+}
+.res_detail{
+  position: fixed;
+  top:50%;
+  left:50%;
+  width: 670rpx;
+  background: white;
+  transform: translate3d(-50%,-50%,0);
+  z-index:100;
+  text-align: center;
+}
+.main image{
+  width: 100%;
+  height:auto;
+}
+
+

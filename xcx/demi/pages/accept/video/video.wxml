@@ -1,0 +1,14 @@
+<toolTag prop-b="true" title="视频简历" />
+<view class="contain">
+  <image wx:if="{{length < 1}}" mode="widthFix" src="../../asset/img/my_videos_2@2x.png"></image>
+  <view wx:if="{{length > 0}}">
+    <video src="{{video}}" initial-time="0.01"></video>
+  </view>
+  <view class="button" bind:tap="chooseVideo">
+    <view>上传视频</view>
+  </view>
+  <view class="bottom">
+    <view>亲，只能上传一个视频哦</view>
+    <view>为了给你更好的体验强烈建议竖屏拍摄！</view>
+  </view>
+</view>

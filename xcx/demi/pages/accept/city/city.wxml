@@ -1,0 +1,15 @@
+<toolTag prop-b="true" title="选择城市"/>
+<view class="contain">
+  <view class="main">
+    <view class="left">
+      <view class="province" wx:for="{{province}}" wx:for-item="pro" wx:key="{{pro.city_id}}">
+        <view data-index="{{index}}" data-city-name="{{pro.city_name}}" data-id="{{pro.city_id}}" bind:tap="handleSecondCity" class="link items {{province_item === index?'active_pro':' '}}">{{pro.city_name}}</view>
+      </view>
+    </view>
+    <view class="right" wx:if="{{second}}">
+      <view class="city" wx:for="{{real_city_list}}" wx:for-item="city" wx:key="{{city.city_id}}">
+        <view data-index="{{index}}" data-city-name="{{city.city_name}}" data-id="{{city.city_id}}" bind:tap="handleCity" class="items {{city_item === index?'active_city':' '}}">{{city.city_name}}</view>
+      </view>
+    </view>
+  </view>
+</view>

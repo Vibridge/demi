@@ -1,0 +1,16 @@
+<toolTag prop-b="true" title="选择任务类型" />
+<view class="contain">
+  <view class="header"></view>
+  <view class="container">
+    <view class="main" wx:for="{{work_list}}" wx:for-item="item" wx:key="{{item.label_id}}">
+      <view class="first_label">
+        <view>{{item.name}}</view>
+      </view>
+      <view class="second_label">
+        <view wx:for="{{item.children}}" wx:for-item="child" wx:key="child.label_id" data-index="{{index}}" data-name="{{child.name}}" data-id="{{child.label_id}}" bind:tap="handleWork" class="label {{work_item === child.label_id?'active_label':''}}">
+            <view>{{child.name}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

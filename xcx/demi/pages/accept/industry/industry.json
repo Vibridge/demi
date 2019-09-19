@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "toolTag": "../components/toolTag/toolTag"
+  },
+  "navigationStyle": "custom"
+}

@@ -1,0 +1,64 @@
+<toolTag prop-a="true" title="{{work_info.work_name}}" />
+<download wx:if="{{download}}" bindmyevent="onMyEvent"/>
+<view class="contain">
+  <view class="header">
+    <view class="header_title">
+      <view class="name">{{work_info.company.company_name}}</view>
+    </view>
+    <view class="logo">
+      <image mode="cover" src="{{work_info.company.logo_path}}"></image>
+    </view>
+  </view>
+  <view class="task_info">
+    <view>
+      <text class="num">{{work_info.salary_min/1000}}-{{work_info.salary_max/1000}}k</text>
+    </view>
+    <view class="task_title">{{work_info.work_name}}</view>
+    <view class="note">
+      <text>{{work_info.work_experience_min}}-{{work_info.work_experience_max}}年/</text>
+      <text wx:if="{{work_info.education == 1}}">初中及以下</text>
+      <text wx:if="{{work_info.education == 2}}">中专/中技</text>
+      <text wx:if="{{work_info.education == 3}}">高中</text>
+      <text wx:if="{{work_info.education == 4}}">大专</text>
+      <text wx:if="{{work_info.education == 5}}">本科</text>
+      <text wx:if="{{work_info.education == 6}}">硕士</text>
+      <text wx:if="{{work_info.education == 7}}">博士</text>
+      <text>{{work_info.city.city_name}}</text>
+    </view>
+  </view>
+  <view class="task_des">
+    <view class="title">职位描述</view>
+    <view class="detail">{{work_info.description}}
+    </view>
+  </view>
+  <view class="line"></view>
+  <!-- wx:if="{{task_info.video !== null}}" -->
+  <view>
+    <view class="video" wx:if="{{work_info.video != null}}">
+      <view>视频介绍</view>
+      <video id="myVideo" src="{{work_info.video.video_path}}" initial-time="0.01"></video>
+    </view>
+  </view>
+  <view class="company_info">
+    <view class="title">公司介绍</view>
+    <view class="detail" wx:if="{{work_info.company.description != ''}}">{{work_info.company.description}}
+    </view>
+    <view class="detail" wx:if="{{work_info.company.description == ''}}">该公司还没有介绍自己哦
+    </view>
+  </view>
+  <view class="room" wx:if="{{work_info.files.length < 1}}"></view>
+  <view class="pic" wx:if="{{work_info.files.length > 0}}">
+    <swiper indicator-dots="true" autoplay="true" indicator-active-color="#00B6FF" circular="true">
+      <block wx:for="{{work_info.files}}" wx:for-item="pic" wx:key="index">
+        <swiper-item>
+          <image src="{{pic.file_path}}" class="slide-image" mode="widthFix"/>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+  <view class="footer">
+    <button open-type="launchApp" id="open" app-parameter="work_id:{{id}}" binderror="launchAppError">
+      <view>打开APP</view>
+    </button>
+  </view>
+</view>
