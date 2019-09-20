@@ -1,5 +1,6 @@
 <toolTag prop-b="true" title="选择行业" select_id="{{industry_id}}" select="{{industry_select}}"/>
-<view class="contain">
+<loading wx:if="{{loading}}" calss="loading"/>
+<view class="contain" wx:if="{{!loading}}">
   <view class="header">
     <view class="title"><text>已选行业</text></view>
     <view class="none" wx:if="{{length < 1}}">请选择，最多可选3个行业</view>

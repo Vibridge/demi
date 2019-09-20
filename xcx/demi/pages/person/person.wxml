@@ -1,8 +1,9 @@
 <toolTag prop-a="true" title="{{job_info.user.nickname}}" />
 <download wx:if="{{download}}" bindmyevent="onMyEvent" />
-<view class="contain">
+<loading wx:if="{{loading}}" class="loading"/>
+<view class="contain" wx:if="{{!loading}}">
   <view class="header"></view>
-  <image class="avatar" mode="aspectFit" src="{{job_info.user.avatar}}"></image>
+  <image class="avatar" mode="aspectFill" src="{{job_info.user.avatar}}"></image>
   <view class="info">
     <view>{{job_info.user.nickname}}</view>
     <image wx:if="{{job_info.real.sex === 1}}" mode="widthFix" src="../asset/img/boy@2x.png"></image>
@@ -10,13 +11,13 @@
   </view>
   <view class="note">
     <text>{{job_info.work_year}}工作经验 ·</text>
-    <text wx:if="{{job_info.vita.education == 1}}">初中及以下</text>
-    <text wx:if="{{job_info.vita.education == 2}}">中专/中技</text>
-    <text wx:if="{{job_info.vita.education == 3}}">高中</text>
-    <text wx:if="{{job_info.vita.education == 4}}">大专</text>
-    <text wx:if="{{job_info.vita.education == 5}}">本科</text>
-    <text wx:if="{{job_info.vita.education == 6}}">硕士</text>
-    <text wx:if="{{job_info.vita.education == 7}}">博士</text>
+    <text wx:if="{{job_info.vita.education == 1}}">初中及以下/</text>
+    <text wx:if="{{job_info.vita.education == 2}}">中专/中技/</text>
+    <text wx:if="{{job_info.vita.education == 3}}">高中/</text>
+    <text wx:if="{{job_info.vita.education == 4}}">大专/</text>
+    <text wx:if="{{job_info.vita.education == 5}}">本科/</text>
+    <text wx:if="{{job_info.vita.education == 6}}">硕士/</text>
+    <text wx:if="{{job_info.vita.education == 7}}">博士/</text>
     <text>{{job_info.city_name}}</text>
   </view>
   <view class="main">

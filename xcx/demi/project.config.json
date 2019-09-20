@@ -4,7 +4,7 @@
 		"ignore": []
 	},
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"enhance": false,
 		"postcss": true,
@@ -55,9 +55,9 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "pages/ability_work/ability_work",
-					"pathName": "pages/ability_work/ability_work",
-					"query": "id=51",
+					"name": "pages/work_info/work_info",
+					"pathName": "pages/work_info/work_info",
+					"query": "id=12",
 					"scene": null
 				}
 			]

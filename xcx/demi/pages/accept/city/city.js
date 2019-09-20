@@ -12,7 +12,8 @@ Page({
     second:false,
     province_item: null,
     city_item: null,
-    real_city_list:null
+    real_city_list:null,
+    loading:true
   },
 
   /**
@@ -53,7 +54,8 @@ Page({
       }
       this.setData({
         province: province,
-        city_list: city
+        city_list: city,
+        loading:false
       })
     }.bind(this))
   },

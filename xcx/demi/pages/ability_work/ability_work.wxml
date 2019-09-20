@@ -1,6 +1,7 @@
 <toolTag prop-a="true" title="{{task_info.task_title}}"/>
 <login wx:if="{{login}}" prop-a="{{select}}" bindmyevent="onMyEvent" />
-<view class="contain">
+<loading wx:if="{{loading}}" class="loading"/>
+<view class="contain" wx:if="{{!loading}}">
   <view class="header">
     <view class="header_title">
       <view class="name">{{task_info.company.company_name}}</view>
@@ -39,7 +40,7 @@
   <view wx:if="{{task_info.video !== null}}">
     <view class="video">
       <view>视频介绍</view>
-      <video id="myVideo" src="{{task_info.video.video_path}}" initial-time="0.01"></video>
+      <video id="myVideo" src="{{task_info.video.file_path}}" initial-time="0.01"></video>
     </view>
     <view class="line" style="height:2rpx"></view>
   </view>

@@ -1,5 +1,6 @@
 <toolTag prop-b="true" title="选择任务类型" />
-<view class="contain">
+<loading wx:if="{{loading}}" class="loading"/>
+<view class="contain" wx:if="{{!loading}}">
   <view class="header"></view>
   <view class="container">
     <view class="main" wx:for="{{work_list}}" wx:for-item="item" wx:key="{{item.label_id}}">

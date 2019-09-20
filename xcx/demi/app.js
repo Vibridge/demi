@@ -17,6 +17,7 @@ App({
         var code = res.code
           common.http(util.baseUrl + '/api/login', "post", function (res) {
             data = res;
+            console.log(res)
             that.globalData.data = data;
             if (res.sign_id){
               that.globalData.sign_id = res.sign_id;

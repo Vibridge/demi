@@ -1,5 +1,6 @@
 <toolTag prop-b="true" title="选择城市"/>
-<view class="contain">
+<loading wx:if="{{loading}}" class="loading"/>
+<view class="contain" wx:if="{{!loading}}">
   <view class="main">
     <view class="left">
       <view class="province" wx:for="{{province}}" wx:for-item="pro" wx:key="{{pro.city_id}}">

@@ -1,6 +1,7 @@
 <toolTag prop-a="true" title="{{work_info.work_name}}" />
 <download wx:if="{{download}}" bindmyevent="onMyEvent"/>
-<view class="contain">
+<loading wx:if="{{loading}}" class="loading"/>
+<view class="contain" wx:if="{{!loading}}">
   <view class="header">
     <view class="header_title">
       <view class="name">{{work_info.company.company_name}}</view>
@@ -15,14 +16,15 @@
     </view>
     <view class="task_title">{{work_info.work_name}}</view>
     <view class="note">
-      <text>{{work_info.work_experience_min}}-{{work_info.work_experience_max}}年/</text>
-      <text wx:if="{{work_info.education == 1}}">初中及以下</text>
-      <text wx:if="{{work_info.education == 2}}">中专/中技</text>
-      <text wx:if="{{work_info.education == 3}}">高中</text>
-      <text wx:if="{{work_info.education == 4}}">大专</text>
-      <text wx:if="{{work_info.education == 5}}">本科</text>
-      <text wx:if="{{work_info.education == 6}}">硕士</text>
-      <text wx:if="{{work_info.education == 7}}">博士</text>
+      <text wx:if="{{work_info.work_experience_max > 0}}">{{work_info.work_experience_min}}-{{work_info.work_experience_max}}年/</text>
+      <text wx:if="{{work_info.work_experience_max == 0}}">不限/</text>
+      <text wx:if="{{work_info.education == 1}}">初中及以下/</text>
+      <text wx:if="{{work_info.education == 2}}">中专/中技/</text>
+      <text wx:if="{{work_info.education == 3}}">高中/</text>
+      <text wx:if="{{work_info.education == 4}}">大专/</text>
+      <text wx:if="{{work_info.education == 5}}">本科/</text>
+      <text wx:if="{{work_info.education == 6}}">硕士/</text>
+      <text wx:if="{{work_info.education == 7}}">博士/</text>
       <text>{{work_info.city.city_name}}</text>
     </view>
   </view>
@@ -36,7 +38,7 @@
   <view>
     <view class="video" wx:if="{{work_info.video != null}}">
       <view>视频介绍</view>
-      <video id="myVideo" src="{{work_info.video.video_path}}" initial-time="0.01"></video>
+      <video id="myVideo" src="{{work_info.video.file_path}}" initial-time="0.01"></video>
     </view>
   </view>
   <view class="company_info">

@@ -9,35 +9,31 @@ Page({
   data: {
     work_list: null,
     work_item:null,
+    loading:true
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (option) {
-    common.http(util.baseUrl + '/labels?id=1027&mode=tree', "get", function (res) {
-      this.setData({
-        work_list: res
-      })
-    }.bind(this))
     var id = parseInt(option.id)
     this.setData({
       work_item: id
     })
   },
-
+  onShow(){
+    common.http(util.baseUrl + '/labels?id=1027&mode=tree', "get", function (res) {
+      this.setData({
+        work_list: res,
+        loading:false
+      })
+    }.bind(this))
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
 
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-    
   },
 
   handleWork: function (event) {

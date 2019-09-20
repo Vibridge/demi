@@ -5,7 +5,6 @@ const tim = require('../../utils/im.js')
 const TIM = require('../../utils/im.js').TIM
 const COS = require('../../utils/im.js').COS
 
-
 //获取应用实例
 const app = getApp()
 Page({
@@ -54,8 +53,8 @@ Page({
     bigImg: false,
     show: false,
     height: 0,
+    loading:true
   },
-
   onLoad: function(option) {
     this.setData({
       userID: option.user_id,
@@ -68,76 +67,85 @@ Page({
     })
   },
 
-  onShow: function () {
+  onShow: function() {
     // 页面出现在前台时执行
     this.login();
   },
 
-  login(){
+  login() {
     var that = this
     var id = app.globalData.data.user_id + 'a'
     var userSig = app.globalData.userSig
     var token = wx.getStorageSync('token')
-
     //im登录
     tim.tim.login({
       userID: id, //登录人账号
       userSig: userSig
-    }).then(function (imResponse) {
+    }).then(function(imResponse) {
       var recipient = that.data.userID //聊天对象id
       var foreign_key = that.data.task_id //创建对话详情的任务id
-      common.http(util.baseUrl + '/converse/create', "post", function (res) { //创建对话详情
-        var chat = "C2C" + recipient + 'b' //聊天对象账号
-        //获取某会话的消息列表
-        tim.tim.getMessageList({
-          conversationID: chat, //会话 ID
-          count: 15 //需要拉取的消息数量，最大值为15
-        }).then(function (imResponse) {
-          const messageList = imResponse.data.messageList; // 消息列表。
-          const nextReqMessageID = imResponse.data.nextReqMessageID; // 用于续拉，分页续拉时需传入该字段。
-          const isCompleted = imResponse.data.isCompleted; // 表示是否已经拉完所有消息。
-          messageList.forEach(item => {
-            if (typeof item.time === 'number') {
-              item.time = util.formatTimeTwo(item.time, 'Y/M/D h:m:s')
-            }
-          }) //时间格式转换，用于页面渲染时
+      var name = null
+      tim.tim.on(TIM.EVENT.SDK_READY, function (event) {
+        // 收到离线消息和会话列表同步完毕通知，接入侧可以调用 login 等 API
+        // event.name - TIM.EVENT.SDK_READY
+        name = event.name
+        if(name){
+          common.http(util.baseUrl + '/converse/create', "post", function (res) { //创建对话详情
+            var chat = "C2C" + recipient + 'b' //聊天对象账号
+            //获取某会话的消息列表
+            tim.tim.getMessageList({
+              conversationID: chat, //会话 ID
+              count: 15 //需要拉取的消息数量，最大值为15
+            }).then(function (imResponse) {
+              const messageList = imResponse.data.messageList; // 消息列表。
+              const nextReqMessageID = imResponse.data.nextReqMessageID; // 用于续拉，分页续拉时需传入该字段。
+              const isCompleted = imResponse.data.isCompleted; // 表示是否已经拉完所有消息。
+              messageList.forEach(item => {
+                if (typeof item.time === 'number') {
+                  item.time = util.formatTimeTwo(item.time, 'Y/M/D h:m:s')
+                }
+              }) //时间格式转换，用于页面渲染时
 
-          //实时接受消息
-          tim.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function (event) {
-            // event.data - 存储 Message 对象的数组 - [Message]
-            event.data.forEach(item => {
-              item.time = util.formatTimeTwo(item.time, 'Y/M/D h:m:s')
-            }) //时间格式转换，用于页面渲染时
-            messageList.push(event.data[0])
-            let newLength = messageList.length;
-            that.setData({
-              message: messageList,
-              scrollTop: 1000 * newLength //键盘出现时将输入框顶起
-            })
-          }.bind(that));
-
-          var length = messageList.length;
-          if (nextReqMessageID) {
-            that.setData({
-              nextReqMessageID: nextReqMessageID,
-              message: messageList,
-              over: imResponse.data.isCompleted,
-              scrollTop: 1000 * length
-            })
-          }
-        }.bind(that));
-
-        //将某会话下的未读消息状态设置为已读
-        tim.tim.setMessageRead({
-          conversationID: chat
-        });
-
-      }, {
-          type: 2,
-          recipient: recipient,
-          foreign_key: foreign_key
-        }, token)
-    }.bind(that)).catch(function (imError) {
+              //实时接受消息
+              tim.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function (event) {
+                // event.data - 存储 Message 对象的数组 - [Message]
+                event.data.forEach(item => {
+                  if (typeof item.time === 'number') {
+                    item.time = util.formatTimeTwo(item.time, 'Y/M/D h:m:s')
+                  }
+                }) //时间格式转换，用于页面渲染时
+                messageList.push(event.data[0])
+                let newLength = messageList.length;
+                that.setData({
+                  message: messageList,
+                  scrollTop: 1000 * newLength //键盘出现时将输入框顶起
+                })
+              }.bind(that));
+              var length = messageList.length;
+              if (nextReqMessageID) {
+                that.setData({
+                  nextReqMessageID: nextReqMessageID,
+                  message: messageList,
+                  over: imResponse.data.isCompleted,
+                  scrollTop: 1000 * length,
+                  loading:false
+                })
+              }
+            }.bind(that));
+            //将某会话下的未读消息状态设置为已读
+            tim.tim.setMessageRead({
+              conversationID: chat
+            });
+          }, {
+              type: 2,
+              recipient: recipient,
+              foreign_key: foreign_key
+            }, token)
+        }
+      });
+      
+      
+    }.bind(that)).catch(function(imError) {
       wx.showToast({
         title: imError,
         duration: 2000,
@@ -174,9 +182,11 @@ Page({
     var token = wx.getStorageSync('token')
     if (event.detail.formId) {
       if (event.detail.formId != "the formId is a mock one") {
-        common.http(util.baseUrl + '/api/user/formid/create', 'post', function (res) {
+        common.http(util.baseUrl + '/api/user/formid/create', 'post', function(res) {
           console.log(res)
-        }, { formid: event.detail.formId }, token)
+        }, {
+          formid: event.detail.formId
+        }, token)
       }
     }
 
@@ -194,7 +204,7 @@ Page({
     tim.tim.sendMessage(message).then(function(imResponse) {
       // 发送成功
       var array = this.data.message;
-      imResponse.data.message.time = util.formatTimeTwo(imResponse.data.message.time, 'Y/M/D h:m:s');//时间格式转换，用于页面渲染时
+      imResponse.data.message.time = util.formatTimeTwo(imResponse.data.message.time, 'Y/M/D h:m:s'); //时间格式转换，用于页面渲染时
       array.push(imResponse.data.message)
       this.setData({
         message: array,
@@ -271,21 +281,21 @@ Page({
   },
 
 
-  onHide: function () {
+  onHide: function() {
     // 页面从前台变为后台时执行
     this.loginout();
   },
-  onUnload: function () {
+  onUnload: function() {
     // 页面销毁时执行
     this.loginout();
   },
 
   //退出im
-  loginout(){
+  loginout() {
     let promise = tim.tim.logout();
-    promise.then(function (imResponse) {
+    promise.then(function(imResponse) {
       console.log(imResponse.data); // 登出成功
-    }).catch(function (imError) {
+    }).catch(function(imError) {
       console.warn('logout error:', imError);
     });
   }

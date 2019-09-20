@@ -1,7 +1,8 @@
 {
   "usingComponents": {
     "toolTag": "../components/toolTag/toolTag",
-    "login":"../components/login/login"
+    "login":"../components/login/login",
+    "loading": "../components/loading/loading"
   },
   "navigationStyle": "custom"
 }

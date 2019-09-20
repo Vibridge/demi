@@ -1,6 +1,7 @@
 {
   "usingComponents":{
-    "toolTag": "../components/toolTag/toolTag"
+    "toolTag": "../components/toolTag/toolTag",
+    "loading": "../components/loading/loading"
   },
   "navigationStyle": "custom",
   "disableScroll":true

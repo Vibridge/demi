@@ -1,7 +1,8 @@
 {
   "usingComponents": {
     "toolTag": "../components/toolTag/toolTag",
-    "download": "../components/download/download"
+    "download": "../components/download/download",
+    "loading": "../components/loading/loading"
   },
   "navigationStyle": "custom"
 }

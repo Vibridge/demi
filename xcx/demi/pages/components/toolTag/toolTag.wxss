@@ -25,15 +25,23 @@
   height:40rpx
 }
 .title{
+  width: 300rpx;
   margin-left:15rpx;
   margin-top:-8rpx;
   font-size:32rpx;
   font-weight:bold;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 .one{
+  width: 300rpx;
   margin-left:20rpx;
   font-size:32rpx;
   font-weight:bold;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 
 

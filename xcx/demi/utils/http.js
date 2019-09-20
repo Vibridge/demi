@@ -15,9 +15,6 @@ function http(url, method, callback, data = null, token = null){
           data: res.header.Authorization
         })
       }
-      console.log(res)
-      console.log(res.header.Authorization)
-      console.log(wx.getStorageSync('token'))
       if(res.statusCode === 200){
         if (res.data.code === 200) {
           if (res.data.data) {
@@ -27,12 +24,55 @@ function http(url, method, callback, data = null, token = null){
           }
         } else {
           let title = res.data.message
-          if (title == "不存在的任务招募信息"){
-            wx.showToast({
-              title: "您来晚了，该任务已下线",
-              icon: 'none',
-              duration: 2000
-            })
+          console.log(title)
+          if (title != "执行成功"){
+            if (title == "不存在的任务招募信息" || title == "你要查看的岗位信息不存在") {
+              wx.showToast({
+                title: "您来晚了，该任务 / 职位已下线",
+                icon: 'none',
+                duration: 2000,
+                success() {
+                  let timer = setTimeout(
+                    function () {
+                      wx.navigateTo({
+                        url: "../index/index",
+                        success: function (res) {
+                          console.log(res)
+                          clearTimeout(timer)
+                        }
+                      })
+                    },
+                    1500
+                  )
+                }
+              })
+            }else if(title == '你已经申请了该任务'){
+              wx.showToast({
+                title: title,
+                icon: 'none',
+                duration: 2000
+              })
+            }else{
+              wx.showToast({
+                title: title,
+                icon: 'none',
+                duration: 2000,
+                success() {
+                  let timer = setTimeout(
+                    function () {
+                      wx.navigateTo({
+                        url: "../index/index",
+                        success: function (res) {
+                          console.log(res)
+                          clearTimeout(timer)
+                        }
+                      })
+                    },
+                    1500
+                  )
+                }
+              })
+            }
           }else{
             wx.showToast({
               title: title,

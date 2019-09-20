@@ -8,7 +8,8 @@ Page({
     login: false,
     task_info: null,
     select: null,
-    title: null
+    title: null,
+    loading:true
   },
   onLoad: function(options) {
     for (var i in options) {
@@ -16,14 +17,19 @@ Page({
         id: options[i]
       })
     }
-    common.http(util.baseUrl + '/api/task/info/' + this.data.id, "get", function(res) {
+    
+
+  },
+  onShow(){
+    common.http(util.baseUrl + '/api/task/info/' + this.data.id, "get", function (res) {
+      console.log(res)
       this.setData({
         task_info: res,
-        title: res.task_title
+        title: res.task_title,
+        loading:false
       })
     }.bind(this))
   },
-
   //没有绑定手机号的情况
   onMyEvent: function(e) {
     // 自定义组件触发事件时提供的detail对象
@@ -77,7 +83,15 @@ Page({
     let payment_money = this.data.task_info.payment_money
     let user_name = this.data.task_info.user.nickname
     let avatar = this.data.task_info.user.avatar
-    if (app.globalData.data === null || !token || app.globalData.data.type != 1) {
+    console.log(app.globalData.data)
+    if (app.globalData.data === null || !token || app.globalData.data.type == 2) {
+      if (app.globalData.data.type == 2){
+        wx.showToast({
+          title: '当前身份不正确，请在app上切换为个人身份',
+          icon:'none',
+          duration:2000,
+        })
+      }
       this.setData({
         login: true,
         select: 1
@@ -112,7 +126,14 @@ Page({
     }
 
     let task_id = this.data.task_info.task_id
-    if (!token || app.globalData.data.type != 1) {
+    if (!token || app.globalData.data.type == 2) {
+      if (app.globalData.data.type == 2) {
+        wx.showToast({
+          title: '当前身份不正确，请在app上切换为个人身份',
+          icon: 'none',
+          duration: 2000,
+        })
+      }
       this.setData({
         login: true,
         select: 2

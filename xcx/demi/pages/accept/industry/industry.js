@@ -12,7 +12,7 @@ Page({
     industry_select:[],
     industry_item:null,
     length: 0,
-  
+    loading:true
   },
 
   /**
@@ -34,10 +34,12 @@ Page({
         length: 0
       })
     }
-    
+  },
+  onShow(){
     common.http(util.baseUrl + '/labels?id=1025&mode=tree', "get", function (res) {
       this.setData({
         industry_list: res,
+        loading:false
       })
     }.bind(this))
   },

@@ -11,6 +11,7 @@
       <rich-text nodes="{{nodes}}"></rich-text>
     </view>
   </view>
+  <loading class="loading" wx:if="{{loading}}"/>
   <scroll-view scroll-y class="message" bindscrolltoupper="lower" scroll-top="{{scrollTop}}">
     <view class="msgflow" wx:for="{{message}}" wx:for-item="item" wx:key="item.ID">
       <view class="time">{{item.time}}</view>
@@ -45,7 +46,6 @@
   <view class="send" style="bottom:{{height}}px">
     <view class="input">
       <textarea maxlength='-1' adjust-position="{{show}}" bindfocus="handleHight" bindblur="clearHeight" fixed="true" auto-height value="{{value}}" placeholder="说点什么" show-confirm-bar="{{show}}" bindinput="handleValue" placeholder-class="input-placeholder"/>
-    <!-- <input placeholder="说点什么" maxlength='-1' value="{{value}}" confirm-type="send" bindconfirm="handleSend" /> -->
     </view>
     <form bindsubmit="handleSend" data-value="{{value}}" bindreset="formReset" report-submit="true">
       <button form-type="submit" class="real_send">发送</button>

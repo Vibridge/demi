@@ -1,12 +1,13 @@
 <toolTag prop-a="true" title="{{ability_info.user.nickname}}" />
 <download wx:if="{{download}}" bindmyevent="onMyEvent"/>
-<view class="contain">
+<loading wx:if="{{loading}}" class="loading"/>
+<view class="contain" wx:if="{{!loading}}">
   <view class="header"></view>
-  <image class="avatar" mode="aspectFit" src="{{ability_info.user.avatar}}"></image>
-  <view class="info">
+  <image class="avatar" mode="aspectFill" src="{{ability_info.user.avatar}}"></image>
+  <view class="{{ability_info.real.sex ? 'info' : 'no_real' }}">
     <view>{{ability_info.user.nickname}}</view>
     <image wx:if="{{ability_info.real.sex == 1}}" mode="widthFix" src="../asset/img/boy@2x.png"></image>
-    <image wx:if="{{ability_info.real.sex == 2}}"mode="widthFix" src="../asset/img/girl@2x.png"></image>
+    <image wx:if="{{ability_info.real.sex == 2}}" mode="widthFix" src="../asset/img/girl@2x.png"></image>
   </view>
   <view class="note">
     <text>{{ability_info.type_label.name}}</text>

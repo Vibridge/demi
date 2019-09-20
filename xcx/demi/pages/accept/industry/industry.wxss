@@ -1,3 +1,8 @@
+.loading{
+  width: 100rpx;
+  height: 100rpx;
+  margin-top: 80%
+}
 .contain {
   margin: 140rpx auto 0 auto;
   border-top: 1rpx solid #e6e6e6;

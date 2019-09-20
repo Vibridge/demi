@@ -9,7 +9,8 @@ Page({
   data: {
     id:null,
     ability_info:null,
-    download:false
+    download:false,
+    loading:true
   },
 
   /**
@@ -23,14 +24,17 @@ Page({
         id: id
       })
     }
+    
+  },
+  onShow(){
     common.http(util.baseUrl + '/api/ability/info/' + this.data.id, "get", function (res) {
       console.log(res)
       this.setData({
-        ability_info: res
+        ability_info: res,
+        loading:false
       })
     }.bind(this))
   },
-
   onMyEvent: function (e) {
     var download = e.detail.download;
     this.setData({

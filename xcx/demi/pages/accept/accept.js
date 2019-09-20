@@ -26,12 +26,12 @@ Page({
     video_path: null,
     show_video: null,
     video: "上传视频简历",
-    download:false
+    download:false,
   },
   onLoad: function(option) {
     console.log(option)
     this.setData({
-      task_id: option.task_id,
+      task_id: option.task_id
     })
     if (app.globalData.data.ability_count < 1) {
       this.setData({

@@ -66,6 +66,7 @@ tim.on(TIM.EVENT.SDK_READY, function (event) {
 tim.on(TIM.EVENT.SDK_NOT_READY, function (event) {
   // 收到 SDK 进入 not ready 状态通知，此时 SDK 无法正常工作
   // event.name - TIM.EVENT.SDK_NOT_READY
+  console.log(event.name)
 });
 
 tim.on(TIM.EVENT.KICKED_OUT, function (event) {

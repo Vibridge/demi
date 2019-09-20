@@ -9,7 +9,8 @@ Page({
   data: {
     id: null,
     work_info: null,
-    download: false
+    download: false,
+    loading:true
   },
 
   /**
@@ -23,14 +24,17 @@ Page({
         id: id
       })
     }
+    
+  },
+  onShow(){
     common.http(util.baseUrl + '/api/work/info/' + this.data.id, "get", function (res) {
       console.log(res)
       this.setData({
-        work_info: res
+        work_info: res,
+        loading:false
       })
     }.bind(this))
   },
-
   launchAppError(e) {
     console.log(e.detail.errMsg)
     wx.showToast({
