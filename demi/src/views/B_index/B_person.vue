@@ -234,48 +234,43 @@
     mounted(){
       this.apiGet('/api/user/info').then((res) => {
         if (res.type === 2) {
+          //钱包
           this.user_info.available_amount_b = res.available_amount_b;
           this.user_info.unusable_amount_b = res.unusable_amount_b;
           this.$store.commit('loading', true);
-          this.apiGet('/api/work/paginate?user_id=' + res.user_id).then((res) => {
-            this.work_list3 = [];
-            if (res.data.length > 3) {
-              this.work_list3.push(res.data[0]);
-              this.work_list3.push(res.data[1]);
-              this.work_list3.push(res.data[2])
-            } else {
-              this.work_list3 = res.data
-            }
+
+          //只岗位显示三条数据
+          this.apiGet('/api/work/paginate?user_id=' + res.user_id + '&per_page = 3&page = 1').then((res) => {
+            this.work_list3 = res.data;
             this.$store.commit('loading', false);
           });
-          this.apiGet('/api/task/paginate?user_id=' + res.user_id).then((res) => {
-            this.task_list3 = [];
-            if (res.data.length > 3) {
-              this.task_list3.push(res.data[0]);
-              this.task_list3.push(res.data[1]);
-              this.task_list3.push(res.data[2])
-            } else {
-              this.task_list3 = res.data
-            }
+
+          //只任务显示三条数据
+          this.apiGet('/api/task/paginate?user_id=' + res.user_id + '&per_page=3&page = 1').then((res) => {
+            this.task_list3 = res.data;
             this.$store.commit('loading', false);
           });
+
+          //我的任务状态总数
           this.apiGet('/api/task/order/paginate?status=0').then((res) => {
             this.task_status[0].num = res.total;
             this.$store.commit('loading', false);
           });
-          this.apiGet('/api/task/order/paginate?status=1&status=3').then((res) => {
+          this.apiGet('/api/task/order/paginate?status[0]=1&status[1]=3').then((res) => {
             this.task_status[1].num = res.total;
             this.$store.commit('loading', false);
           });
-          this.apiGet('/api/task/order/paginate?status=2&status=4').then((res) => {
+          this.apiGet('/api/task/order/paginate?status[0]=2&status[1]=4').then((res) => {
             this.task_status[2].num = res.total;
             this.$store.commit('loading', false);
           });
+
+          //我的订单状态总数
           this.apiGet('/api/order/paginate?status=2').then((res) => {
             this.order_status[0].num = res.total;
             this.$store.commit('loading', false);
           });
-          this.apiGet('/api/order/paginate?status=0&status=1').then((res) => {
+          this.apiGet('/api/order/paginate?status[0]=0&status[1]=1').then((res) => {
             this.order_status[1].num = res.total;
             this.$store.commit('loading', false);
           });
@@ -283,28 +278,20 @@
             this.order_status[2].num = res.total;
             this.$store.commit('loading', false);
           });
-          this.apiGet('/api/work/interview/lists').then((res) => {
-            this.interview_list3 = [];
+
+          //面试记录三条
+          this.apiGet('/api/work/interview/lists?per_page=3&page = 1').then((res) => {
             forEach(res.data, item => {
               if(item.vita.work_start_date){
                 item.vita.work_start_date = new Date().getFullYear() - parseInt(item.vita.work_start_date.split('-')[0]);
               }
             });
-            if (res.data.length > 3) {
-              this.interview_list3.push(res.data[0]);
-              this.interview_list3.push(res.data[1]);
-              this.interview_list3.push(res.data[2]);
-            } else {
-              this.interview_list3 = res.data;
-              console.log(this.interview_list3);
-            }
+            console.log(res.data)
+            this.interview_list3 = res.data;
             this.$store.commit('loading', false);
           });
         }
       })
-    },
-    computed:{
-
     },
     methods:{
       handleTask(activeName){

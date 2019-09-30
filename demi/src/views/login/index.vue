@@ -24,7 +24,7 @@
       <div class="right">
         <div class="right_wrap">
           <div style="width: 20%; border:1px solid rgba(230, 230, 230, 1);border-radius:6px;margin-right: 3%;padding: 1%">
-            <img src="../../assets/img/wx.png" alt="" @click="dialogVisible = true">
+            <img src="../../assets/img/download.png" alt="" @click="dialogVisible = true">
           </div>
           <div style="align-self: flex-end;width: 30%">
             <div class="download"><span><img src="../../assets/img/Iphone@2x.png" alt=""></span><p>iphone</p><span><img src="../../assets/img/download@2x.png"></span></div>

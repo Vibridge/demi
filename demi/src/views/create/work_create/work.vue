@@ -1,7 +1,8 @@
 <template>
     <div class="create_work_wrap">
-        <div class="title">
-            <p>发布新职位</p>
+        <div class="title" @click="backWork">
+            <p><span v-if="!isHistory">职位管理 - </span><span v-if="isHistory">历史模板 -</span><span
+                    v-if="!work_edit">发布新职位</span><span v-if="work_edit">编辑新职位</span></p>
         </div>
         <div class="line"></div>
         <div class="contain">
@@ -119,7 +120,9 @@
                     ></el-autocomplete>
                 </div>
                 <div>
-                    <el-cascader-panel v-model="label_name" ref="tree" :show-all-levels="false" @change="handleChange2" :options="work_tree" :props="{ label:'name', value:'label_id'}"></el-cascader-panel>
+                    <el-cascader-panel v-model="label_name" ref="tree" :show-all-levels="false" @change="handleChange2"
+                                       :options="work_tree"
+                                       :props="{ label:'name', value:'label_id'}"></el-cascader-panel>
                 </div>
             </el-dialog>
         </div>
@@ -139,13 +142,14 @@
                                 @change="handleProvince"
                                 ref="city"
                                 :show-all-levels="false"
-                                ></el-cascader>
+                        ></el-cascader>
                     </div>
                     <div class="info">
                         <div class="input_key">
                             <p>*详细地址：</p>
                             <div class="input-item">
-                                <el-input id='tipinput' v-model="address" type="text" @input="init" autocomplete="off" placeholder="输入行政区、街道、写字楼" :disabled="this.cityName === ''"></el-input>
+                                <el-input id='tipinput' v-model="address" type="text" @input="init" autocomplete="off"
+                                          placeholder="输入行政区、街道、写字楼" :disabled="this.cityName === ''"></el-input>
                             </div>
                         </div>
                         <div id="show" v-show="over"></div>
@@ -157,7 +161,8 @@
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="area_dialog = false">取 消</el-button>
-                    <el-button type="primary" @click="handeleAddress" :disabled="this.real_address === ''">确 定</el-button>
+                    <el-button type="primary" @click="handeleAddress"
+                               :disabled="this.real_address === ''">确 定</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -175,53 +180,58 @@
 
     export default {
         name: 'work',
-        data(){
-            return{
-                work_dialog:false,
-                area_dialog:false,
-                form:{
-                    name:'',
-                    work:'',
-                    area:'',
-                    experience:"",
-                    education:'',
-                    salary:'',
-                    describes:''
+        data() {
+            return {
+                work_dialog: false,
+                area_dialog: false,
+                form: {
+                    name: '',
+                    work: '',
+                    area: '',
+                    experience: "",
+                    education: '',
+                    salary: '',
+                    describes: ''
                 },
-                work_tree:[],
-                work_list:[],
-                search:'',
-                label_id:null,
-                label_name:[],
-                over:false,
-                city:'',
-                cityName:'',
-                city_tree:[],
-                address:'',
-                room:'',
-                real_address:'',
-                city_id:'',
-                longitude:'',
-                latitude:'',
-                tpl:[],
-                index:0,
-                work_edit:null
+                work_tree: [],
+                work_list: [],
+                search: '',
+                label_id: null,
+                label_name: [],
+                over: false,
+                city: '',
+                cityName: '',
+                city_tree: [],
+                address: '',
+                room: '',
+                real_address: '',
+                city_id: '',
+                longitude: '',
+                latitude: '',
+                tpl: [],
+                index: 0,
+                isHistory:false,
+                work_edit: null
             }
         },
-        mounted(){
-            this.$nextTick(() =>{
+        mounted() {
+            this.$nextTick(() => {
                 handleMap();
                 this.getRouterData();
-                this.work_edit = JSON.parse(sessionStorage.getItem('work'));
+                var data = sessionStorage.getItem('work')
+                if(data){
+                    this.work_edit = JSON.parse(data).info;
+                    this.isHistory = JSON.parse(data).isHistory;
+                }
             })
         },
-        methods:{
-            handleCity(){
-                if(getType) {
+        methods: {
+            handleCity() {
+                if (getType) {
                     this.apiGet('/city/lists?mode=tree').then((res) => {
                         this.$store.commit('loading', true);
                         forEach(res, item => {
-                            if(item.municipalities !== 0){
+                            if (item.municipalities !== 0) {
                                 let muniCity = [{
                                     "city_name": item.city_name,
                                     "city_id": item.city_id
@@ -229,7 +239,7 @@
                                 item.children = muniCity
                             }
                             forEach(item.children, item1 => {
-                                if(item1.children){
+                                if (item1.children) {
                                     delete item1.children
                                 }
                             });
@@ -239,8 +249,8 @@
                     })
                 }
             },
-            handleLabel(){
-                if(getType) {
+            handleLabel() {
+                if (getType) {
                     this.$store.commit('loading', true);
                     this.apiGet('/labels?id=967&mode=tree').then((res) => {
                         this.work_tree = res;
@@ -272,84 +282,133 @@
                 let dataRecieve = this.$refs.tree.getCheckedNodes();
                 this.form.work = dataRecieve[0].label;
                 let length = val.length;
-                this.label_id = val[length-1];
+                this.label_id = val[length - 1];
                 this.work_dialog = false;
-                console.log(this.label_name)
-                if(this.label_name){
+                console.log(this.form.work)
+                if (this.label_name) {
                     this.search = '';
                 }
             },
             handleSelect(item) {
                 this.label_id = item.label_id;
                 this.form.work = item.name;
-                if(this.search){
+                if (this.search) {
                     this.label_name = [];
                 }
                 this.work_dialog = false;
             },
-            init(){
-                var auto = new AMap.Autocomplete({
-                    citylimit:true,
-                    city: this.cityName,
-                    output:'show',
-                    input:'tipinput',
-                    datatype:'poi'
-                });
-                AMap.event.addListener(auto, "select", function(e) {
-                    //开始搜索对应的poi名称
-                    this.over = true;
-                    auto.search(e.poi.name, function(status, results) {
-                        this.over = false;
-                        if(this.address){
-                            this.real_address = results.tips[0].district + results.tips[0].address + results.tips[0].name
-                            if(results.tips[0]){
-                                this.latitude = results.tips[0].location.lat;
-                                this.longitude = results.tips[0].location.lng;
-                            }
-                            if(results.tips[0].district){
-                                let city = results.tips[0].district.split('市')[1]
-                                this.apiGet('/city/location?city_name=' + city).then((res) =>{
-                                    this.city_id=res.city_id
+            init() {
+                AMap.plugin('AMap.Autocomplete', function () {
+                    // 实例化Autocomplete
+                    var autoOptions = {
+                        citylimit: true,
+                        city: this.cityName,
+                        output: 'show',
+                        input: 'tipinput',
+                        datatype: 'poi'
+                    };
+                    var autoComplete = new AMap.Autocomplete(autoOptions);
+                    autoComplete.search(this.form.address, function (status, result) {
+                        // 搜索成功时，result即是对应的匹配数据
+                        AMap.event.addListener(autoComplete, 'select', function (results) {
+                            //获取当前选中的结果数据 console.log(results.selected.data); });
+                            this.over = false;
+                            if (this.address) {
+                                this.real_address = results.poi.district + results.poi.address + results.poi.name
+                                this.latitude = results.poi.location.lat;
+                                this.longitude = results.poi.location.lng;
+                                let city = results.poi.district.split('市')[1]
+                                this.apiGet('/city/location?city_name=' + city).then((res) => {
+                                    this.city_id = res.city_id
                                 })
+                            } else {
+                                this.real_address = '';
                             }
-                        }else{
-                            this.real_address = '';
-                        }
-                    }.bind(this));
-                }.bind(this));
+                        }.bind(this))
+                    }.bind(this))
+                }.bind(this))
             },
-            handleProvince(value){
+            handleProvince(value) {
                 let dataRecieve = this.$refs.city.getCheckedNodes();
                 this.cityName = dataRecieve[0].label
             },
-            handeleAddress(){
+            handeleAddress() {
                 this.area_dialog = false;
                 this.form.area = this.real_address + this.room;
             },
-            handleTpl(index){
-                if(this.label_id){
+            handleTpl(index) {
+                if (this.label_id) {
                     var length = this.tpl.length;
-                    if(length < 1){
+                    if (length < 1) {
                         this.apiGet('/tpl/paginate?type=2&foreign_key=' + this.label_id).then((res) => {
                             this.form.describes = res.data[0].template;
                             this.tpl = res.data;
                         })
-                    }else{
+                    } else {
                         this.index = index + 1;
-                        if(this.index > (length-1)){
+                        if (this.index > (length - 1)) {
                             this.index = 0
                         }
                         this.form.describes = this.tpl[this.index].template;
                     }
-                }else{
+                } else {
                     this.$message.error('请先选择职位！');
                 }
             },
-            handleSubmit(){
-                if(this.work_edit !== null){
-                    let work_experience_min, work_experience_max, salary_min, salary_max;
+            handleSubmit() {
+                if (!this.form.name) {
+                    this.$message({
+                        showClose: true,
+                        message: '请填写职位名称',
+                        type: 'error',
+                        duration: 500
+                    })
+                } else if (!this.form.work) {
+                    this.$message({
+                        showClose: true,
+                        message: '请选择职位类型',
+                        type: 'error',
+                        duration: 500
+                    })
+                } else if (!this.form.area) {
+                    this.$message({
+                        showClose: true,
+                        message: '请完善地址',
+                        type: 'error',
+                        duration: 500
+                    })
+                } else if (!this.form.experience) {
+                    this.$message({
+                        showClose: true,
+                        message: '请完善工作要求',
+                        type: 'error',
+                        duration: 500
+                    })
+                } else if (!this.form.education) {
+                    this.$message({
+                        showClose: true,
+                        message: '请完善工作要求',
+                        type: 'error',
+                        duration: 500
+                    })
+                } else if (!this.form.salary) {
+                    this.$message({
+                        showClose: true,
+                        message: '请完善工作要求',
+                        type: 'error',
+                        duration: 500
+                    })
+                } else if (!this.form.describes) {
+                    this.$message({
+                        showClose: true,
+                        message: '请完善工作要求',
+                        type: 'error',
+                        duration: 500
+                    })
+                } else {
+                    var work_experience_min, work_experience_max, salary_min, salary_max;
                     if (this.form.experience) {
-                        let real_experience = this.form.experience.split('-');
+                        var real_experience = this.form.experience.split('-');
                         if (real_experience.length > 1) {
                             work_experience_min = real_experience[0];
                             work_experience_max = real_experience[1];
@@ -359,7 +418,7 @@
                         }
                     }
                     if (this.form.salary) {
-                        let real_salary = this.form.salary.split('-');
+                        var real_salary = this.form.salary.split('-');
                         if (real_salary.length > 1) {
                             salary_min = real_salary[0];
                             salary_max = real_salary[1];
@@ -370,149 +429,72 @@
                     }
                     let data = {
                         city_id: this.city_id,
-                        work_label_id:this.label_id,
-                        work_name:this.form.name,
+                        work_label_id: this.label_id,
+                        work_name: this.form.name,
                         education: this.form.education,
-                        work_experience_max:work_experience_max,
-                        work_experience_min:work_experience_min,
-                        salary_min:salary_min,
-                        salary_max:salary_max,
-                        description:this.form.describes,
-                        address:this.form.area,
-                        longitude:this.longitude,
-                        latitude:this.latitude,
-                        status:1,
+                        work_experience_max: work_experience_max,
+                        work_experience_min: work_experience_min,
+                        salary_min: salary_min,
+                        salary_max: salary_max,
+                        description: this.form.describes,
+                        address: this.form.area,
+                        longitude: this.longitude,
+                        latitude: this.latitude,
+                        status: 1,
                     };
-                    this.apiPost('/api/work/update/' + this.work_edit.work_id, data).then((res)=>{
-                        sessionStorage.removeItem('work');
-                        this.$router.push({
-                            name: "work",
-                            params:{
-                                activeName: 'work'
+                    if (this.work_edit !== null && !this.isHistory) {
+                        this.apiPost('/api/work/update/' + this.work_edit.work_id, data).then((res) => {
+                            if(res){
+                                sessionStorage.removeItem('work');
+                                this.$router.push({
+                                    name: "work",
+                                    params: {
+                                        activeName: 'work'
+                                    }
+                                });
                             }
-                        });
-                    })
-                } else {
-                    if (!this.form.name) {
-                        this.$message({
-                            showClose: true,
-                            message: '请填写职位名称',
-                            type: 'error',
-                            duration: 500
                         })
-                    } else if (!this.form.work) {
-                        this.$message({
-                            showClose: true,
-                            message: '请选择职位类型',
-                            type: 'error',
-                            duration: 500
-                        })
-                    } else if (!this.form.area) {
-                        this.$message({
-                            showClose: true,
-                            message: '请完善地址',
-                            type: 'error',
-                            duration: 500
-                        })
-                    } else if (!this.form.experience) {
-                        this.$message({
-                            showClose: true,
-                            message: '请完善工作要求',
-                            type: 'error',
-                            duration: 500
-                        })
-                    } else if (!this.form.education) {
-                        this.$message({
-                            showClose: true,
-                            message: '请完善工作要求',
-                            type: 'error',
-                            duration: 500
-                        })
-                    } else if (!this.form.salary) {
-                        this.$message({
-                            showClose: true,
-                            message: '请完善工作要求',
-                            type: 'error',
-                            duration: 500
-                        })
-                    } else if (!this.form.describes) {
-                        this.$message({
-                            showClose: true,
-                            message: '请完善工作要求',
-                            type: 'error',
-                            duration: 500
-                        })
-                    } else {
-                        var work_experience_min, work_experience_max, salary_min, salary_max;
-                        if (this.form.experience) {
-                            var real_experience = this.form.experience.split('-');
-                            if (real_experience.length > 1) {
-                                work_experience_min = real_experience[0];
-                                work_experience_max = real_experience[1];
-                            } else {
-                                work_experience_max = null;
-                                work_experience_min = null;
-                            }
-                        }
-                        if (this.form.salary) {
-                            var real_salary = this.form.salary.split('-');
-                            if (real_salary.length > 1) {
-                                salary_min = real_salary[0];
-                                salary_max = real_salary[1];
-                            } else {
-                                salary_min = real_salary[0];
-                                salary_max = null;
-                            }
-                        }
-                        let data = {
-                            city_id: this.city_id,
-                            work_label_id: this.label_id,
-                            work_name: this.form.name,
-                            education: this.form.education,
-                            work_experience_max: work_experience_max,
-                            work_experience_min: work_experience_min,
-                            salary_min: salary_min,
-                            salary_max: salary_max,
-                            description: this.form.describes,
-                            address: this.form.area,
-                            longitude: this.longitude,
-                            latitude: this.latitude,
-                            status: 1,
-                        };
+                    }else{
                         this.apiPost('/api/work/create', data).then((res) => {
-                            sessionStorage.removeItem('work')
-                            this.$router.push({
-                                name: "work",
-                                params: {
-                                    activeName: 'work'
-                                }
-                            });
+                            if (res) {
+                                this.backWork();
+                            }
                         })
-
                     }
+
                 }
             },
             getRouterData() {
-                if(this.$route.params.work){
-                    sessionStorage.setItem('work',this.$route.params.work);
+                if (this.$route.params.work) {
+                    sessionStorage.setItem('work', this.$route.params.work);
                 }
             },
+            backWork() {
+                sessionStorage.removeItem('work')
+                this.$router.push({
+                    name: "work",
+                    params: {
+                        activeName: 'work'
+                    }
+                });
+            }
         },
-        watch:{
-            work_dialog(){
-                if(this.work_dialog){
+        watch: {
+            work_dialog() {
+                if (this.work_dialog) {
                     this.handleLabel();
                 }
             },
-            work_edit(){
-                if(this.work_edit){
+            work_edit() {
+                if (this.work_edit) {
+                    console.log(this.work_edit)
                     this.form.name = this.work_edit.work_name;
                     this.label_id = this.work_edit.work_label_id;
-                    if(this.work_edit){
+                    if (this.work_edit) {
                         this.apiGet('/labels?id=967').then((res) => {
                             forEach(res, item => {
                                 if (item.level === 2) {
-                                    if(this.label_id === item.label_id){
+                                    if (this.label_id === item.label_id) {
                                         this.form.work = item.name
                                     }
                                 }
@@ -530,124 +512,164 @@
                     this.form.experience = this.work_edit.work_experience_min + '-' + this.work_edit.work_experience_max;
                 }
             },
-            area_dialog(){
-                if(this.area_dialog){
+            area_dialog() {
+                if (this.area_dialog) {
                     this.handleCity();
                 }
             }
         },
-        mixins:[http]
+        mixins: [http]
     }
 </script>
 
 <style lang="less" type="text/less">
-    .create_work_wrap{
+    .create_work_wrap {
         margin: 12px auto;
         width: 1000px;
         font-family: MicrosoftYaHei;
-        .title{
+
+        .title {
             padding: 20px 0;
             text-align: left;
-            color: #4D4D4D;
             font-size: 16px;
-        }
-        .line{
-            width:1000px;
-            height:1px;
-            background:rgba(213,218,223,1);
-        }
-        .contain{
-            padding:50px 0 0 117px;
-            box-sizing: border-box;
-            .basic{
+
+            p {
+                color: #4D4D4D;
+                margin: 0 auto;
                 text-align: left;
-                .basic_title{
+                width: 1000px;
+                cursor: pointer;
+            }
+
+            span:nth-child(2) {
+                color: #24BFFF;
+            }
+        }
+
+        .line {
+            width: 1000px;
+            height: 1px;
+            background: rgba(213, 218, 223, 1);
+        }
+
+        .contain {
+            padding: 50px 0 0 117px;
+            box-sizing: border-box;
+
+            .basic {
+                text-align: left;
+
+                .basic_title {
                     display: flex;
-                    .icon{
-                        width:3px;
-                        height:16px;
-                        background:rgba(36,191,255,1);
-                        border-radius:2px;
+
+                    .icon {
+                        width: 3px;
+                        height: 16px;
+                        background: rgba(36, 191, 255, 1);
+                        border-radius: 2px;
                         margin-right: 11px;
+                        align-self: center;
                     }
-                    p{
+
+                    p {
                         font-size: 16px;
                         color: #4D4D4D;
+                        margin: 0;
                     }
                 }
-                .basic_info{
+
+                .basic_info {
                     padding-left: 13px;
                     font-size: 14px;
                     color: #4D4D4D;
-                    .note{
+
+                    .note {
                         margin-top: 12px;
                         color: #B3B3B3;
-                        font-size:12px;
+                        font-size: 12px;
                         margin-bottom: 50px;
                     }
-                    .el-form-item{
+
+                    .el-form-item {
                         margin-bottom: 28px;
                     }
-                    .el-form-item:nth-last-child(1){
+
+                    .el-form-item:nth-last-child(1) {
                         margin-bottom: 50px;
                     }
-                    .el-form-item__label{
+
+                    .el-form-item__label {
                         padding: 0 11px 0 0;
                         box-sizing: border-box;
                     }
-                    .el-input{
+
+                    .el-input {
                         width: 468px;
                     }
-                    .el-input__inner{
+
+                    .el-input__inner {
                         border-radius: 0;
                         border-color: #D5DADF;
                     }
-                    .el-input.is-active .el-input__inner, .el-input__inner:focus{
-                        border-color:#24BFFF
+
+                    .el-input.is-active .el-input__inner, .el-input__inner:focus {
+                        border-color: #24BFFF
                     }
-                    .line{
-                        width:573px;
-                        height:1px;
-                        border-top:1px dashed rgba(213,218,223,1);
+
+                    .line {
+                        width: 573px;
+                        height: 1px;
+                        border-top: 1px dashed rgba(213, 218, 223, 1);
                         background: none;
                         margin-bottom: 50px;
                     }
                 }
-                .ask{
+
+                .ask {
                     margin-top: 50px;
-                    .el-form{
+
+                    .el-form {
                         margin-left: 13px;
-                        .el-select,.el-textarea{
+
+                        .el-select, .el-textarea {
                             width: 468px;
                         }
-                        .el-input__inner{
+
+                        .el-input__inner {
                             border-radius: 0;
                             border-color: #D5DADF;
                         }
-                        .el-textarea__inner{
+
+                        .el-textarea__inner {
                             border-radius: 0;
                             border-color: #D5DADF;
                             padding: 15px 16px;
                         }
-                        .el-textarea__inner:focus{
-                            border-color:#24BFFF
+
+                        .el-textarea__inner:focus {
+                            border-color: #24BFFF
                         }
-                        .el-select .el-input .el-select__caret{
-                            font-size:16px;
+
+                        .el-select .el-input .el-select__caret {
+                            font-size: 16px;
                             color: #CCCCCC;
-                            transform:rotateZ(90deg)
+                            transform: rotateZ(90deg)
                         }
-                        .el-select .el-input .el-select__caret.is-reverse{
-                            transform:rotateZ(180deg);
+
+                        .el-select .el-input .el-select__caret.is-reverse {
+                            transform: rotateZ(180deg);
                         }
-                        .el-form-item:nth-last-child(1){
-                            .el-form-item__content{
+
+                        .el-form-item:nth-last-child(1) {
+                            .el-form-item__content {
                                 display: flex;
-                                .write{
+
+                                .write {
                                     margin-left: 16px;
                                     font-size: 12px;
-                                    div:nth-child(1){
-                                        div{
+
+                                    div:nth-child(1) {
+                                        div {
                                             width: 75px;
                                             height: 25px;
                                             line-height: 25px;
@@ -661,12 +683,14 @@
                                             background-image: url('../../../assets/img/1@2x.png');
                                             color: #24BFFF;
                                         }
-                                        div:hover{
+
+                                        div:hover {
                                             background-image: url('../../../assets/img/2@2x.png');
                                             color: white;
                                         }
                                     }
-                                    div:nth-child(2){
+
+                                    div:nth-child(2) {
                                         width: 75px;
                                         height: 25px;
                                         line-height: 25px;
@@ -683,211 +707,255 @@
                             }
                         }
                     }
-                    p{
+
+                    p {
                         margin-left: 338px;
                         margin-top: 21px;
                         margin-bottom: 21px;
                         text-align: left;
                         color: #808080;
                         font-size: 14px;
-                        span{
+
+                        span {
                             color: #24BFFF;
                         }
                     }
-                    button{
+
+                    button {
                         margin-left: 450px;
-                        width:125px;
-                        height:30px;
-                        background:rgba(36,191,255,1);
-                        border-radius:15px;
+                        width: 125px;
+                        height: 30px;
+                        background: rgba(36, 191, 255, 1);
+                        border-radius: 15px;
                         color: white;
-                        border:none;
+                        border: none;
                         margin-bottom: 283px;
                     }
                 }
             }
         }
+
         ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-            font-size:14px;
-            font-family:MicrosoftYaHei;
-            font-weight:500;
-            color:#B3B3B3;
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            font-weight: 500;
+            color: #B3B3B3;
         }
+
         :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-            font-size:14px;
-            font-family:MicrosoftYaHei;
-            font-weight:500;
-            color:#B3B3B3;
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            font-weight: 500;
+            color: #B3B3B3;
         }
+
         ::-moz-placeholder { /* Mozilla Firefox 19+ */
-            font-size:14px;
-            font-family:MicrosoftYaHei;
-            font-weight:500;
-            color:#B3B3B3;
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            font-weight: 500;
+            color: #B3B3B3;
         }
+
         :-ms-input-placeholder { /* Internet Explorer 10-11 */
-            font-size:14px;
-            font-family:MicrosoftYaHei;
-            font-weight:500;
-            color:#B3B3B3;
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            font-weight: 500;
+            color: #B3B3B3;
         }
-        .work_dialog{
-            .el-dialog{
+
+        .work_dialog {
+            .el-dialog {
                 position: absolute;
-                top:50%;
+                top: 50%;
                 left: 50%;
-                transform: translate3d(-50%,-50%,0);
-                margin-top: 0!important;
-                .el-input__suffix{
+                transform: translate3d(-50%, -50%, 0);
+                margin-top: 0 !important;
+
+                .el-input__suffix {
                     display: none;
                 }
-                .el-dialog__header{
+
+                .el-dialog__header {
                     text-align: left;
-                    .el-dialog__title{
+
+                    .el-dialog__title {
                         font-size: 16px;
                         color: #4D4D4D;
                         text-align: left;
                     }
                 }
-                .el-dialog__body{
+
+                .el-dialog__body {
                     padding-top: 0;
                     padding-bottom: 25px;
-                    .search{
+
+                    .search {
                         text-align: left;
                         margin-bottom: 10px;
                     }
-                    .el-cascader-menu__wrap{
+
+                    .el-cascader-menu__wrap {
                         height: 350px;
                     }
-                    .el-cascader-menu{
+
+                    .el-cascader-menu {
                         min-width: 269px;
                     }
                 }
             }
         }
-        .area_dialog{
-            .el-dialog__wrapper{
+
+        .area_dialog {
+            .el-dialog__wrapper {
                 overflow-y: hidden;
             }
-            .el-dialog{
+
+            .el-dialog {
                 position: absolute;
-                top:50%;
+                top: 50%;
                 left: 50%;
-                transform: translate3d(-50%,-80%,0);
-                margin-top: 0!important;
-                .el-input__suffix{
+                transform: translate3d(-50%, -80%, 0);
+                margin-top: 0 !important;
+
+                .el-input__suffix {
                     display: none;
                 }
-                .el-dialog__header{
+
+                .el-dialog__header {
                     text-align: left;
-                    .el-dialog__title{
+
+                    .el-dialog__title {
                         font-size: 16px;
                         color: #4D4D4D;
                         text-align: left;
                     }
                 }
-                .el-dialog__body{
+
+                .el-dialog__body {
                     padding-top: 0;
                     padding-bottom: 10px;
-                    .search{
+
+                    .search {
                         text-align: left;
                         margin-bottom: 10px;
-                        .note{
+
+                        .note {
                             color: #B3B3B3;
-                            font-size:12px;
+                            font-size: 12px;
                             margin-bottom: 20px;
                         }
-                        .block{
+
+                        .block {
                             display: flex;
                             margin-bottom: 20px;
-                            p{
+
+                            p {
                                 align-self: center;
                                 width: 107px;
                                 text-align: right;
                                 margin-right: 10px;
                             }
-                            .el-cascader{
+
+                            .el-cascader {
                                 align-self: center;
-                                .el-input{
+
+                                .el-input {
                                     width: 200px;
                                 }
-                                .el-cascader-menu{
+
+                                .el-cascader-menu {
                                     min-width: 120px;
                                 }
-                                .el-cascader-node{
+
+                                .el-cascader-node {
                                     text-align: center;
                                 }
                             }
 
                         }
-                        .info{
+
+                        .info {
                             position: relative;
-                            .input_key{
+
+                            .input_key {
                                 display: flex;
-                                p{
+
+                                p {
                                     align-self: center;
                                     width: 107px;
                                     text-align: right;
                                     margin-right: 10px;
                                 }
-                                .input-item{
+
+                                .input-item {
                                     align-self: center;
-                                    .el-input{
+
+                                    .el-input {
                                         width: 500px;
                                     }
                                 }
                             }
-                            #show{
+
+                            #show {
                                 position: absolute;
                                 border: 1px solid #DCDFE6;
                                 margin-left: 117px;
                                 margin-top: 10px;
-                                width: 480px!important;
+                                width: 480px !important;
                                 border-radius: 4px;
                                 padding: 10px;
                                 background-color: #FFF;
-                                top:40px!important;
-                                left: 0!important;
+                                top: 40px !important;
+                                left: 0 !important;
                                 z-index: 99999999;
-                                .auto-item{
+
+                                .auto-item {
                                     font-size: 14px;
                                     height: 20px;
                                     line-height: 20px;
                                 }
                             }
                         }
-                        .room{
+
+                        .room {
                             display: flex;
                             margin-top: 20px;
-                            p{
+
+                            p {
                                 align-self: center;
                                 width: 107px;
                                 text-align: right;
                                 margin-right: 10px;
                             }
-                            .el-input{
+
+                            .el-input {
                                 width: 500px;
                             }
                         }
                     }
-                    .el-cascader-menu__wrap{
+
+                    .el-cascader-menu__wrap {
                         height: 350px;
                     }
-                    .el-cascader-menu{
+
+                    .el-cascader-menu {
                         min-width: 269px;
                     }
                 }
-                .el-dialog__footer{
+
+                .el-dialog__footer {
                     padding-top: 0;
                     padding-bottom: 20px;
                 }
             }
         }
     }
-    .el-popper[x-placement^=bottom]{
-        margin-top: 10px!important;
+
+    .el-popper[x-placement^=bottom] {
+        margin-top: 10px !important;
     }
-    .amap-sug-result{
+
+    .amap-sug-result {
         z-index: 99999999;
     }
 

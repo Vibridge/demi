@@ -1,6 +1,7 @@
 <template>
 	<div class="B_index_wrapper" v-show="this.start" v-loading="$store.state.app.loading"
 		 element-loading-spinner="el-icon-loading" element-loading-customClass="el-loading">
+		<!--//头部导航-->
 		<div class="header">
 			<div class="header_wrap">
 				<div class="logo">
@@ -26,8 +27,10 @@
 		</div>
 		<div class="person-wrap" v-show="this.IsShow">
 			<div class="content">
+				<!--//左部导航-->
 				<div class="left">
-					<div class="person_header">
+					<!--//公司信息-->
+					<div class="person_header" @click="handleCompany">
 						<img v-if="company_info.logo_path" :src="company_info.logo_path" alt="">
 						<img v-if="!company_info.logo_path" src="../../assets/img/toxiang@2x.png" alt="">
 						<p v-text="company_info.company_name ? company_info.company_name : 'xxxxxx有限公司'"></p>
@@ -73,6 +76,12 @@
 									<span slot="title">订单列表</span>
 									<img src="../../assets/img/xuangzhong@2x.png">
 								</el-menu-item>
+								<el-menu-item class="nav_label" index="/B_index/B_person/collect">
+									<img src="../../assets/img/enshrine@2x.png" alt="">
+									<img src="../../assets/img/enshrine_in@2x.png" alt="">
+									<span slot="title">人才收藏</span>
+									<img src="../../assets/img/xuangzhong@2x.png">
+								</el-menu-item>
 								<el-menu-item class="nav_label" index="/B_index/B_person/wallet">
 									<img src="../../assets/img/burse@2x.png" alt="">
 									<img src="../../assets/img/burse_on@2x.png" alt="">
@@ -95,12 +104,17 @@
 						</el-col>
 					</el-row>
 				</div>
+				<!--//右边内容渲染-->
 				<div class="right" v-show="this.showRight">
 					<router-view :user_info="user_info" />
 				</div>
 			</div>
 		</div>
+
+		<!--//头部导航内容渲染-->
 		<router-view v-if="!IsShow"/>
+
+		<!--//底部内容渲染-->
 		<bottom v-show="this.IsShow"></bottom>
 	</div>
 </template>
@@ -128,8 +142,11 @@
 			}
 		},
 		mounted() {
+			//回到顶部
 			this.scrollTop();
 			this.initialize();
+
+			//左边导航默认选中
 			this.active_left = this.$route.fullPath;
 			if(this.active_left){
 				this.handleOpen(this.active_left)
@@ -150,6 +167,8 @@
 			scrollTop(){
 				document.getElementsByClassName('B_index_wrapper')[0].scrollIntoView();
 			},
+
+			//左边导航选中状态
 			handleOpen(key, keyPath) {
 				var lis = document.getElementsByClassName('nav_label');
 				this.scrollTop();
@@ -198,7 +217,7 @@
 					lis[4].getElementsByTagName('img')[1].style.display = 'none';
 					lis[4].getElementsByTagName('img')[2].style.display = 'none';
 				}
-				if(key === '/B_index/B_person/wallet'){
+				if(key === '/B_index/B_person/collect'){
 					lis[5].getElementsByTagName('img')[0].style.display = 'none';
 					lis[5].getElementsByTagName('img')[1].style.display = 'inline-block';
 					lis[5].getElementsByTagName('img')[2].style.display = 'block';
@@ -207,7 +226,7 @@
 					lis[5].getElementsByTagName('img')[1].style.display = 'none';
 					lis[5].getElementsByTagName('img')[2].style.display = 'none';
 				}
-				if(key === '/B_index/B_person/real'){
+				if(key === '/B_index/B_person/wallet'){
 					lis[6].getElementsByTagName('img')[0].style.display = 'none';
 					lis[6].getElementsByTagName('img')[1].style.display = 'inline-block';
 					lis[6].getElementsByTagName('img')[2].style.display = 'block';
@@ -216,7 +235,7 @@
 					lis[6].getElementsByTagName('img')[1].style.display = 'none';
 					lis[6].getElementsByTagName('img')[2].style.display = 'none';
 				}
-				if(key === '/B_index/B_person/VIP'){
+				if(key === '/B_index/B_person/real'){
 					lis[7].getElementsByTagName('img')[0].style.display = 'none';
 					lis[7].getElementsByTagName('img')[1].style.display = 'inline-block';
 					lis[7].getElementsByTagName('img')[2].style.display = 'block';
@@ -225,9 +244,29 @@
 					lis[7].getElementsByTagName('img')[1].style.display = 'none';
 					lis[7].getElementsByTagName('img')[2].style.display = 'none';
 				}
+				if(key === '/B_index/B_person/VIP'){
+					lis[8].getElementsByTagName('img')[0].style.display = 'none';
+					lis[8].getElementsByTagName('img')[1].style.display = 'inline-block';
+					lis[8].getElementsByTagName('img')[2].style.display = 'block';
+				}else {
+					lis[8].getElementsByTagName('img')[0].style.display = 'inline-block';
+					lis[8].getElementsByTagName('img')[1].style.display = 'none';
+					lis[8].getElementsByTagName('img')[2].style.display = 'none';
+				}
 			},
+
+			//跳转公司详情
+			handleCompany(){
+				this.$router.push({
+					name: "company_info",
+					query:{
+						id : this.user_info.company_id
+					}
+				});
+			}
 		},
 		computed:{
+			//是否是左边导航
 			IsShow(){
 				if(this.$route.meta['parent'] !== 'B_person'){
 					return false
@@ -235,6 +274,8 @@
 					return true
 				}
 			},
+
+			//判断用户类型
 			start(){
 				if(this.user_info.company_id && this.user_info.user_id){
 					if(getType){
@@ -253,6 +294,8 @@
 					}
 				}
 			},
+
+			//判断是否为左边导航内容
 			showRight(){
 				this.active_left = this.$route.fullPath;
 				if(this.active_left){
@@ -373,7 +416,7 @@
 				display: flex;
 				.left {
 					width: 260px;
-					height: 778px;
+					height: 837px;
 					margin-right: 17px;
 					background: #fff;
 					border: 1px solid rgba(235, 235, 235, 1);

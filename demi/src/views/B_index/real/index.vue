@@ -8,6 +8,16 @@
       <div class="real_wrap" v-show="status === 0">
         <p>身份证正面</p>
         <el-upload
+                action=""
+                class="avatar-uploader"
+                :on-change="handleChange"
+                :before-upload="beforePicUpload"
+                :http-request="uploadFile"
+        >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <img v-else class="el-icon-plus avatar-uploader-icon" src="../../../assets/img/real_1.png">
+        </el-upload>
+       <!-- <el-upload
                 class="avatar-uploader"
                 action="http://app.jmzhipin.com/api/tools/ocr/idcard"
                 :show-file-list="false"
@@ -15,9 +25,20 @@
                 :auto-upload="false">
           <img v-if="imageUrl" :src="imageUrl" class="avatar">
           <img v-else class="el-icon-plus avatar-uploader-icon" src="../../../assets/img/real_1.png">
-        </el-upload>
+        </el-upload>-->
         <p>身份证背面</p>
         <el-upload
+                action=""
+                class="avatar-uploader"
+                :on-change="handleChange"
+                :before-upload="beforePicUpload"
+                :http-request="uploadFile"
+                :limit='1'
+        >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <img v-else class="el-icon-plus avatar-uploader-icon" src="../../../assets/img/real_2.png">
+        </el-upload>
+        <!--<el-upload
                 class="avatar-uploader"
                 action="http://app.jmzhipin.com/api/tools/ocr/idcard"
                 :show-file-list="false"
@@ -25,13 +46,13 @@
                 :auto-upload="false">
           <img v-if="imageUrl" :src="imageUrl" class="avatar">
           <img v-else class="el-icon-plus avatar-uploader-icon" src="../../../assets/img/real_2.png">
-        </el-upload>
+        </el-upload>-->
         <div class="demo-input-suffix">
           <div class="real_info" style="margin-top: 40px">
             <span>姓&nbsp;&nbsp;&nbsp;名：</span>
             <el-input
                     placeholder="证件姓名须与简历姓名一致"
-                    v-model="input1">
+                    v-model="name">
             </el-input>
           </div>
           <div style="width:100%;height:1px;background:rgba(230,230,230,1);"></div>
@@ -39,7 +60,7 @@
             <span>证件号：</span>
             <el-input
                     placeholder="与证件一致"
-                    v-model="input2">
+                    v-model="card_number">
             </el-input>
           </div>
           <button>确认无误</button>
@@ -61,20 +82,54 @@
     data() {
       return {
         imageUrl: '',
-        input1: '',
-        input2: '',
-        status:null
+        name: '',
+        card_number: '',
+        status:null,
+        files:null,
       };
     },
     mounted(){
       this.$store.commit('loading', true);
       this.apiGet('/api/user/info').then((res) => {
-        this.status = res.status;
+        if(res.type === 2){
+          this.status = res.status;
+        }else{
+          this.$message({
+            showClose: true,
+            message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+            duration:1000
+          })
+        }
         this.$store.commit('loading', false);
       })
     },
     methods: {
-      showReal(file, fileList) {
+      handleChange(file, fileList) {
+        this.files = fileList;
+      },
+      beforePicUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isPNG = file.type === 'image/png';
+        if (!isJPG && !isPNG) {
+          this.$message.error('上传图片只限 JPG,PNG 格式!');
+        }else{
+          this.imageUrl = URL.createObjectURL(file.raw);
+        }
+        return isJPG || isPNG;
+      },
+      uploadFile() {
+        // 创建表单对象
+        let form = new FormData();
+        // 后端接受参数 ，可以接受多个参数
+        let length = this.files.length;
+        for (let i = 0; i < length; i++) {
+          form.append('files[]', this.files[i].raw)
+        }
+        this.apiPost('/file/uploads', form).then((res) => {
+          console.log(res)
+        })
+      },
+      /*showReal(file, fileList) {
         const isJPG = file.raw.type === 'image/jpeg';
         const isPNG = file.raw.type === 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
@@ -86,7 +141,7 @@
           this.imageUrl = URL.createObjectURL(file.raw);
         }
         console.log(fileList)
-      },
+      },*/
     },
     mixins:[http]
   }
@@ -101,6 +156,7 @@
       box-sizing: border-box;
       text-align: left;
       font-family: MicrosoftYaHei;
+      display: flex;
       span:nth-child(1){
         width: 4px;
         height: 22px;
@@ -118,7 +174,7 @@
     .real_main{
       margin-left: 1px;
       width: 100%;
-      height: 707px;
+      height: 766px;
       background: #FFFFFF;
       border-radius:8px;
       border:1px solid rgba(235, 235, 235, 1);

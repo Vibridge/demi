@@ -6,207 +6,265 @@
         </div>
         <div class="order_main">
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+
+                <!--全部-->
                 <el-tab-pane label="全部" name="all">
                     <div class="all-wrap">
                         <div class="second_nav">
                             <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
                         </div>
-                        <div class="no_line" v-show="!a"></div>
-                        <div class="order_list" v-show="a">
+                        <div class="no_line" v-show="order_list.length < 1"></div>
+                        <div class="order_list" v-show="order_list.length > 0" v-for="order in order_list" :key="order.order_id">
                             <div class="line"></div>
                             <div class="order_list_wrap">
-                                <div class="order_title">销售：邻好冻</div>
+                                <div class="order_title">
+                                    <p>销售：{{order.referrer.nickname}}</p>
+                                    <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
+                                </div>
                                 <div class="order_info">
                                     <div class="order_info_main">
-                                        <img src="../../../assets/img/snail@2x.png" alt="">
-                                        <p>梅西夏季透气网鞋男子轻跑鞋休闲跑步鞋...</p>
-                                        <span style="margin-right: 81px;">¥199</span>
-                                        <span style="margin-right: 82px;">×2</span>
-                                        <span>¥398</span>
+                                        <div><img :src="order.snapshot.images[0].file_path" alt=""></div>
+                                        <p>{{order.snapshot.goods.goods_title}}</p>
+                                        <span style="margin-right: 81px;">¥{{order.goods_price}}</span>
+                                        <span style="margin-right: 82px;">×{{order.buy_quantity}}</span>
+                                        <span>¥{{order.pay_amount}}</span>
                                     </div>
-                                    <div class="status">
-                                        <button>去发货</button>
+                                    <div class="status" v-if="order.status === 0 && !order.pay_amount">
+                                        <!--<button>待支付</button>-->
+                                        <img src="../../../assets/img/arrearage@2x.png" alt="">
+                                    </div>
+                                    <div class="status" v-if="order.status === 1">
+                                        <!--<button>已取消</button>-->
+                                        <img src="../../../assets/img/arrearage@2x.png" alt="">
+                                    </div>
+                                    <div class="status" v-if="order.status === 2">
+                                        <button>确认发货</button>
+                                    </div>
+                                    <div class="status" v-if="order.status === 3">
+                                        <!--<button>去发货</button>-->
+                                        <img src="../../../assets/img/delivered@2x.png" alt="">
                                     </div>
                                 </div>
                                 <div class="order_buyer">
                                     <div class="order_buyer_info">
                                         <img src="../../../assets/img/address_site.png" alt="">
-                                        <span>戴小美</span>
-                                        <span>13078855273</span>
-                                        <span style="color: #999">广东省广州市番禺区大学城小围菊街道互投帮创业园3楼302b</span>
+                                        <span>{{order.contact_name}}</span>
+                                        <span>{{order.contact_phone}}</span>
+                                        <span style="color: #999">{{order.city.name_relation.join('') + order.city.city_name + order.contact_address}}</span>
                                     </div>
-                                    <p style="margin-left: 27px">备注：麻烦老板给我发一个黑色的和一个白色的，还要一个红色的谢谢老板</p>
+                                    <p style="margin-left: 27px">备注：{{order.remark}}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="none_list" v-show="!a">
+                        <div class="none_list" v-show="order_list.length < 1">
                             <div>
                                 <img src="../../../assets/img/snail@2x.png" alt="">
                                 <p>暂无数据</p>
                             </div>
                         </div>
                     </div>
-                    <div class="paging" v-show="a">
+                    <div class="paging" v-show="order_list.length > 0">
                         <el-pagination
                                 background
+                                :hide-on-single-page="true"
                                 layout="prev, pager, next"
                                 prev-text="上一页"
                                 next-text="下一页"
-                                :pager-count = '5'
-                                :total="1000">
+                                :pager-count='5'
+                                :total="searchParams.total"
+                                :current-page="searchParams.page"
+                                :page-size="searchParams.per_page"
+                                @size-change="handleSizeChange()"
+                                @current-change="handleCurrentPageChange()">
                         </el-pagination>
                     </div>
                 </el-tab-pane>
+
+                <!--已付款-->
                 <el-tab-pane label="已付款" name="paid">
                     <div class="all-wrap">
                         <div class="second_nav">
                             <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
                         </div>
-                        <div class="no_line" v-show="!a"></div>
-                        <div class="order_list" v-show="a">
+                        <div class="no_line" v-show="order_list.length < 1"></div>
+                        <div class="order_list" v-show="order_list.length > 0" v-for="order in order_list" :key="order.order_id">
                             <div class="line"></div>
                             <div class="order_list_wrap">
-                                <div class="order_title">销售：邻好冻</div>
+                                <div class="order_title">
+                                    <p>销售：{{order.referrer.nickname}}</p>
+                                    <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
+                                </div>
                                 <div class="order_info">
                                     <div class="order_info_main">
-                                        <img src="../../../assets/img/snail@2x.png" alt="">
-                                        <p>梅西夏季透气网鞋男子轻跑鞋休闲跑步鞋...</p>
-                                        <span style="margin-right: 81px;">¥199</span>
-                                        <span style="margin-right: 82px;">×2</span>
-                                        <span>¥398</span>
+                                        <div><img :src="order.snapshot.images[0].file_path" alt=""></div>
+                                        <p>{{order.snapshot.goods.goods_title}}</p>
+                                        <span style="margin-right: 81px;">¥{{order.goods_price}}</span>
+                                        <span style="margin-right: 82px;">×{{order.buy_quantity}}</span>
+                                        <span>¥{{order.pay_amount}}</span>
                                     </div>
-                                    <div class="status">
-                                        <button>去发货</button>
+                                    <div class="status" v-if="order.status === 2">
+                                        <button>确认发货</button>
                                     </div>
                                 </div>
                                 <div class="order_buyer">
                                     <div class="order_buyer_info">
                                         <img src="../../../assets/img/address_site.png" alt="">
-                                        <span>戴小美</span>
-                                        <span>13078855273</span>
-                                        <span style="color: #999">广东省广州市番禺区大学城小围菊街道互投帮创业园3楼302b</span>
+                                        <span>{{order.contact_name}}</span>
+                                        <span>{{order.contact_phone}}</span>
+                                        <span style="color: #999">{{order.city.name_relation.join('') + order.city.city_name + order.contact_address}}</span>
                                     </div>
-                                    <p style="margin-left: 27px">备注：麻烦老板给我发一个黑色的和一个白色的，还要一个红色的谢谢老板</p>
+                                    <p style="margin-left: 27px">备注：{{order.remark}}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="none_list" v-show="!a">
+                        <div class="none_list" v-show="order_list.length < 1">
                             <div>
                                 <img src="../../../assets/img/snail@2x.png" alt="">
                                 <p>暂无数据</p>
                             </div>
                         </div>
                     </div>
-                    <div class="paging" v-show="a">
+                    <div class="paging" v-show="order_list.length > 0">
                         <el-pagination
                                 background
+                                :hide-on-single-page="true"
                                 layout="prev, pager, next"
                                 prev-text="上一页"
                                 next-text="下一页"
-                                :pager-count = '5'
-                                :total="1000">
+                                :pager-count='5'
+                                :total="searchParams.total"
+                                :current-page="searchParams.page"
+                                :page-size="searchParams.per_page"
+                                @size-change="handleSizeChange(2)"
+                                @current-change="handleCurrentPageChange(2)">
                         </el-pagination>
                     </div>
                 </el-tab-pane>
+
+                <!--未付款-->
                 <el-tab-pane label="未付款" name="unpaid">
                     <div class="all-wrap">
                         <div class="second_nav">
                             <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
                         </div>
-                        <div class="no_line" v-show="!a"></div>
-                        <div class="order_list" v-show="a">
+                        <div class="no_line" v-show="order_list.length < 1"></div>
+                        <div class="order_list" v-show="order_list.length > 0" v-for="order in order_list" :key="order.order_id">
                             <div class="line"></div>
                             <div class="order_list_wrap">
-                                <div class="order_title">销售：邻好冻</div>
+                                <div class="order_title">
+                                    <p>销售：{{order.referrer.nickname}}</p>
+                                    <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
+                                </div>
                                 <div class="order_info">
                                     <div class="order_info_main">
-                                        <img src="../../../assets/img/snail@2x.png" alt="">
-                                        <p>梅西夏季透气网鞋男子轻跑鞋休闲跑步鞋...</p>
-                                        <span style="margin-right: 81px;">¥199</span>
-                                        <span style="margin-right: 82px;">×2</span>
-                                        <span>¥398</span>
+                                        <div><img :src="order.snapshot.images[0].file_path" alt=""></div>
+                                        <p>{{order.snapshot.goods.goods_title}}</p>
+                                        <span style="margin-right: 81px;">¥{{order.goods_price}}</span>
+                                        <span style="margin-right: 82px;">×{{order.buy_quantity}}</span>
+                                        <span>¥{{order.pay_amount}}</span>
                                     </div>
-                                    <div class="status" style="text-align: right">
-                                        <img src="../../../assets/img/no_pay.png" alt="" style="width: 58px">
+                                    <div class="status" v-if="order.status === 0 && !order.pay_amount">
+                                        <!--<button>待支付</button>-->
+                                        <img src="../../../assets/img/arrearage@2x.png" alt="">
+                                    </div>
+                                    <div class="status" v-if="order.status === 1">
+                                        <!--<button>已取消</button>-->
+                                        <img src="../../../assets/img/arrearage@2x.png" alt="">
                                     </div>
                                 </div>
                                 <div class="order_buyer">
                                     <div class="order_buyer_info">
                                         <img src="../../../assets/img/address_site.png" alt="">
-                                        <span>戴小美</span>
-                                        <span>13078855273</span>
-                                        <span style="color: #999">广东省广州市番禺区大学城小围菊街道互投帮创业园3楼302b</span>
+                                        <span>{{order.contact_name}}</span>
+                                        <span>{{order.contact_phone}}</span>
+                                        <span style="color: #999">{{order.city.name_relation.join('') + order.city.city_name + order.contact_address}}</span>
                                     </div>
-                                    <p style="margin-left: 27px">备注：麻烦老板给我发一个黑色的和一个白色的，还要一个红色的谢谢老板</p>
+                                    <p style="margin-left: 27px">备注：{{order.remark}}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="none_list" v-show="!a">
+                        <div class="none_list" v-show="order_list.length < 1">
                             <div>
                                 <img src="../../../assets/img/snail@2x.png" alt="">
                                 <p>暂无数据</p>
                             </div>
                         </div>
                     </div>
-                    <div class="paging" v-show="a">
+                    <div class="paging" v-show="order_list.length > 0">
                         <el-pagination
                                 background
+                                :hide-on-single-page="true"
                                 layout="prev, pager, next"
                                 prev-text="上一页"
                                 next-text="下一页"
-                                :pager-count = '5'
-                                :total="1000">
+                                :pager-count='5'
+                                :total="searchParams.total"
+                                :current-page="searchParams.page"
+                                :page-size="searchParams.per_page"
+                                @size-change="handleSizeChange(0,1)"
+                                @current-change="handleCurrentPageChange(0,1)">
                         </el-pagination>
                     </div>
                 </el-tab-pane>
+
+                <!--已发货-->
                 <el-tab-pane label="已发货" name="shipped">
                     <div class="all-wrap">
                         <div class="second_nav">
                             <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
                         </div>
-                        <div class="no_line" v-show="!a"></div>
-                        <div class="order_list" v-show="a">
+                        <div class="no_line" v-show="order_list.length < 1"></div>
+                        <div class="order_list" v-show="order_list.length > 0" v-for="order in order_list" :key="order.order_id">
                             <div class="line"></div>
                             <div class="order_list_wrap">
-                                <div class="order_title">销售：邻好冻</div>
+                                <div class="order_title">
+                                    <p>销售：{{order.referrer.nickname}}</p>
+                                    <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
+                                </div>
                                 <div class="order_info">
                                     <div class="order_info_main">
-                                        <img src="../../../assets/img/snail@2x.png" alt="">
-                                        <p>梅西夏季透气网鞋男子轻跑鞋休闲跑步鞋...</p>
-                                        <span style="margin-right: 81px;">¥199</span>
-                                        <span style="margin-right: 82px;">×2</span>
-                                        <span>¥398</span>
+                                        <div><img :src="order.snapshot.images[0].file_path" alt=""></div>
+                                        <p>{{order.snapshot.goods.goods_title}}</p>
+                                        <span style="margin-right: 81px;">¥{{order.goods_price}}</span>
+                                        <span style="margin-right: 82px;">×{{order.buy_quantity}}</span>
+                                        <span>¥{{order.pay_amount}}</span>
                                     </div>
-                                    <div class="status" style="text-align: right">
-                                        <img src="../../../assets/img/pay.png" alt="" style="width: 58px">
+                                    <div class="status" v-if="order.status === 3">
+                                        <!--<button>去发货</button>-->
+                                        <img src="../../../assets/img/delivered@2x.png" alt="">
                                     </div>
                                 </div>
                                 <div class="order_buyer">
                                     <div class="order_buyer_info">
                                         <img src="../../../assets/img/address_site.png" alt="">
-                                        <span>戴小美</span>
-                                        <span>13078855273</span>
-                                        <span style="color: #999">广东省广州市番禺区大学城小围菊街道互投帮创业园3楼302b</span>
+                                        <span>{{order.contact_name}}</span>
+                                        <span>{{order.contact_phone}}</span>
+                                        <span style="color: #999">{{order.city.name_relation.join('') + order.city.city_name + order.contact_address}}</span>
                                     </div>
-                                    <p style="margin-left: 27px">备注：麻烦老板给我发一个黑色的和一个白色的，还要一个红色的谢谢老板</p>
+                                    <p style="margin-left: 27px">备注：{{order.remark}}</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="none_list" v-show="!a">
+                        <div class="none_list" v-show="order_list.length < 1">
                             <div>
                                 <img src="../../../assets/img/snail@2x.png" alt="">
                                 <p>暂无数据</p>
                             </div>
                         </div>
                     </div>
-                    <div class="paging" v-show="a">
+                    <div class="paging" v-show="order_list.length > 0">
                         <el-pagination
                                 background
+                                :hide-on-single-page="true"
                                 layout="prev, pager, next"
                                 prev-text="上一页"
                                 next-text="下一页"
-                                :pager-count = '5'
-                                :total="1000">
+                                :pager-count='5'
+                                :total="searchParams.total"
+                                :current-page="searchParams.page"
+                                :page-size="searchParams.per_page"
+                                @size-change="handleSizeChange(3)"
+                                @current-change="handleCurrentPageChange(3)">
                         </el-pagination>
                     </div>
                 </el-tab-pane>
@@ -217,6 +275,8 @@
 
 <script>
     /* eslint-disable */
+    import {getType} from "../../../libs/http";
+    import http from '../../../libs/http'
     export default {
         name: 'order',
         props:{
@@ -225,7 +285,11 @@
         data() {
             return {
                 activeName: 'all',
-                a:true,
+                searchParams: {
+                    page: 1,
+                    total: 0,
+                    per_page: 15
+                },
                 second_nav:[
                     {id:'1',name:'销售'},
                     {id:'2',name:'商品'},
@@ -233,16 +297,79 @@
                     {id:'4',name:'数量'},
                     {id:'5',name:'实付'},
                     {id:'6',name:'状态'},
-                ]
+                ],
+                order_list:[],
             };
+        },
+        mounted(){
+            if(getType){
+                this.initialize();
+            }
         },
         created(){
             this.getRouterData();
         },
+        computed:{
+
+        },
         methods: {
+            // 切换状态导航
             handleClick(tab, event) {
-                console.log(tab, event);
+                if (tab.index === '0') {
+                    this.initialize();
+                }
+                if (tab.index === '1') {
+                    this.initialize(2);
+                }
+                if (tab.index === '2') {
+                    this.initialize(0, 1);
+                }
+                if (tab.index === '3') {
+                    this.initialize(3);
+                }
             },
+
+            //数据接口
+            initialize(status1,status2){
+                if (status1 || status1 === 0) {
+                    if (status2) {
+                        this.apiGet('/api/order/paginate' + '?status[0]=' + status1 + '&status[1]=' + status2, this.searchParams).then((res) => {
+                            this.order_list = res.data;
+                            this.searchParams.page = parseInt(res.current_page);
+                            this.searchParams.total = parseInt(res.total);
+                            this.searchParams.per_page = parseInt(res.per_page);
+                            console.log(this.order_list)
+                        });
+                    } else {
+                        this.apiGet('/api/order/paginate' + '?status=' + status1, this.searchParams).then((res) => {
+                            this.order_list = res.data;
+                            this.searchParams.page = parseInt(res.current_page);
+                            this.searchParams.total = parseInt(res.total);
+                            this.searchParams.per_page = parseInt(res.per_page);
+                            console.log(this.order_list)
+                        });
+                    }
+                } else {
+                    this.apiGet('/api/order/paginate', this.searchParams).then((res) => {
+                        this.order_list = res.data;
+                        this.searchParams.page = parseInt(res.current_page);
+                        this.searchParams.total = parseInt(res.total);
+                        this.searchParams.per_page = parseInt(res.per_page);
+                        console.log(this.order_list)
+                    })
+                }
+            },
+
+            handleSizeChange(status1, status2, per_page) {
+                this.searchParams.per_page = per_page;
+                this.initialize(status1, status2);
+                console.log(this.searchParams.per_page);
+            },
+            handleCurrentPageChange(status1, status2, page) {
+                this.searchParams.page = page;
+                this.initialize(status1, status2);
+            },
+
             getRouterData() {
                 if(this.$route.params.activeName){
                     this.activeName = this.$route.params.activeName;
@@ -251,6 +378,7 @@
                 }
             }
         },
+        mixins:[http]
 
     }
 </script>
@@ -264,6 +392,7 @@
             box-sizing: border-box;
             text-align: left;
             font-family: MicrosoftYaHei;
+            display: flex;
             span:nth-child(1){
                 width: 4px;
                 height: 22px;
@@ -321,7 +450,7 @@
                     }
                     .order_list_wrap{
                         width: 100%;
-                        padding: 25px 38px;
+                        padding: 25px 11px 25px 38px;
                         font-size: 13px;
                         color: #4D4D4D;
                         text-align: left;
@@ -331,6 +460,8 @@
                         .order_title{
                             color: #24BFFF;
                             margin-bottom: 20px;
+                            display: flex;
+                            justify-content: space-between;
                         }
                         .order_info{
                             display: flex;
@@ -339,31 +470,46 @@
                             .order_info_main{
                                 align-self: center;
                                 width: 566px;
+                                display: flex;
                                 img{
+                                    align-self: center;
                                     width:60px;
                                     border-radius:4px;
                                     margin-right: 16px;
                                 }
                                 p{
+                                    align-self: center;
                                     display: inline-block;
                                     width: 143px;
                                     word-break: break-word;
                                     margin-right: 53px;
                                     line-height: 17px;
                                 }
+                                span{
+                                    align-self: center;
+                                }
                             }
                             .status{
                                 align-self: center;
-                                width: 82px;
+                                width: 136px;
+                                text-align: right;
                                 button{
+                                    background:rgba(255,255,255,1);
+                                    border:1px solid rgba(235, 235, 235, 1);
+                                    border-radius:8px;
                                     width: 100%;
                                     height: 100%;
                                     line-height: 27px;
-                                    border: none;
-                                    color: #fff;
-                                    background: #24BFFF;
-                                    border-radius:14px;
+                                    color:rgba(36,191,255,1);
                                     font-size: 12px;
+                                }
+                                botton:hover{
+                                    background:rgba(36,191,255,1);
+                                    color: white;
+                                }
+                                img{
+                                    width: 58px;
+                                    margin-right: 27px;
                                 }
                             }
                         }

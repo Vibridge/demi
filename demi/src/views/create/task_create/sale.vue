@@ -1,7 +1,7 @@
 <template>
-    <div class="sale">
-        <div class="title">
-            <p>发布销售代理任务</p>
+    <div class="sale" v-if="isShow">
+        <div class="title" @click="handleBack">
+            <p><span v-if="!isHistory">职位管理 - </span><span v-if="isHistory">历史模板 -</span><span v-if="!isUpdata">发布销售代理任务</span><span v-if="isUpdata">编辑销售代理任务</span></p>
         </div>
         <div class="contain">
             <div class="basic">
@@ -32,13 +32,20 @@
                             <el-cascader ref="label" :options="type_list" :show-all-levels="false"
                                          v-model="form.industry"
                                          :props="{ label:'name', value:'label_id',multiple: true,}"
-                                         placeholder="请选择行业" @focus="handleType"
+                                         :placeholder="edit" @focus="handleType"
                                          @change="handleLabel"></el-cascader>
+                            <p class="edit_show" v-if="isUpdata && industry_arr.length < 1 || isHistory"><span style="color: #808080"
+                                                                                                  v-for="item in form.industry"
+                                                                                                  :key="item.label_id">{{item.name}}/</span>
+                            </p>
+
                         </el-form-item>
                         <el-form-item label="发布城市：">
                             <el-cascader :options="city_tree" v-model="form.city" :show-all-levels="false"
-                                         :props="{ label:'city_name', value:'city_id'}" placeholder="请选择城市"
+                                         :props="{ label:'city_name', value:'city_id'}" :placeholder="edit"
                                          @focus="handleCity"></el-cascader>
+                            <p class="edit_show" v-if="isUpdata && !city_tree || isHistory">{{this.cityName}}</p>
+
                         </el-form-item>
                     </el-form>
                     <div class="line"></div>
@@ -74,21 +81,31 @@
                         <el-form-item label="产品图片：">
                             <div class="picture">
                                 <p>必填</p>
+                                <div class="show_pic" v-if="(isUpdata && show_pic) || (isHistory && show_pic)">
+                                    <div @mouseover="show_icon = true" @mouseleave="show_icon = false" v-for="(item,index) in show_pic" :key="item.file_id">
+                                        <img :src="item.file_path" alt="">
+                                        <span v-if="show_icon">
+                                            <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
+                                            <i class="icon el-icon-delete" @click="handleRemove(index,show_pic)"></i>
+                                        </span>
+                                    </div>
+                                </div>
                                 <el-upload
                                         action=""
                                         list-type="picture-card"
                                         :multiple="true"
-                                        :on-preview="handlePictureCardPreview"
-                                        :on-remove="handleRemove"
                                         :on-change="handleChange"
                                         :before-upload="beforePicUpload"
                                         :http-request="uploadFile"
                                         :limit='9'
                                         :on-exceed="handleSum"
-                                >
+                                        :on-preview="handlePictureCardPreview"
+                                        :on-remove="handleRemove"
+                                        :on-success="handleSuccess"
+                                        v-loading="loading">
                                     <i class="el-icon-plus"></i>
                                 </el-upload>
-                                <el-dialog :visible.sync="dialogVisible">
+                                <el-dialog :visible.sync="dialogVisible" custom-class="bigPic">
                                     <img width="100%" :src="dialogImageUrl" alt="">
                                 </el-dialog>
                             </div>
@@ -96,13 +113,24 @@
                         <el-form-item label="产品视频：">
                             <div class="video">
                                 <p>选填</p>
+                                <div class="operation" v-if="form.video_path">
+                                    <div class="delect" @click="form.video_path = ''">删除</div>
+                                    <el-upload action=""
+                                               :show-file-list="false"
+                                               :before-upload="beforeVidUpload"
+                                               :http-request="uploadVidFile"
+                                               :on-change="handleVidChange"
+                                               >重新上传
+                                    </el-upload>
+                                </div>
                                 <el-upload
                                         class="avatar-uploader"
                                         action=""
                                         :show-file-list="false"
                                         :before-upload="beforeVidUpload"
                                         :http-request="uploadVidFile"
-                                        :on-change="handleVidChange">
+                                        :on-change="handleVidChange"
+                                        v-loading="loading">
                                     <video id="video" class="avatar" :src="this.form.video_path"
                                            v-show="form.video_path !== ''" controls></video>
                                     <img src="../../../assets/img/my_videos@2x.png" v-show="form.video_path === ''"
@@ -114,7 +142,7 @@
                     </el-form>
                     <div class="line"></div>
                     <p>我已阅读并同意<span> 《得米平台服务协议》</span></p>
-                    <button @click="handleSubmit">确认发布</button>
+                    <button class="submit" @click="handleSubmit">确认发布</button>
                 </div>
             </div>
         </div>
@@ -128,6 +156,12 @@
 
     export default {
         name: 'sale',
+        props: {
+            isShow: {type: Boolean, default: false},
+            isUpdata: {type: Boolean, default: false},
+            isHistory:{type:Boolean,default:false},
+            isHistoryId:{type:Number,default:null}
+        },
         data() {
             return {
                 form: {
@@ -143,6 +177,7 @@
                     goods_price: '',
                     image_arr: []
                 },
+                edit: '请选择',
                 industry_arr: [],
                 files: [],
                 video: null,
@@ -150,11 +185,28 @@
                 cover: "",
                 type_list: null,
                 city_tree: null,
+                cityName:null,
                 dialogImageUrl: '',
-                dialogVisible: false
+                dialogVisible: false,
+                show_icon:false,
+                show_pic:[],
+                loading:false
             }
         },
         methods: {
+            handleBack(){
+                if(this.isUpdata){
+                    sessionStorage.removeItem('task');
+                    this.$router.push({
+                        name: "work",
+                        params: {
+                            activeName: 'task_work'
+                        }
+                    });
+                }else{
+                    this.$emit('show-sale', false ,'sale')
+                }
+            },
             handleType() {
                 if (getType) {
                     this.apiGet('/labels?id=1025&mode=tree').then((res) => {
@@ -170,6 +222,10 @@
                     showLabel.push(res[1]);
                     showLabel.push(res[2]);
                     this.form.industry = showLabel;
+                    this.industry_arr = [];
+                    forEach(showLabel, item => {
+                        this.industry_arr.push(item[1])
+                    });
                     this.$message({
                         showClose: true,
                         message: '最多只能选3个',
@@ -185,6 +241,14 @@
             },
             handleCity() {
                 if (getType) {
+                    let first_city = {
+                        "city_name": '不限',
+                        "city_id": 0,
+                        children: [{
+                            "city_name": '不限',
+                            "city_id": 0,
+                        }]
+                    };
                     this.apiGet('/city/lists?mode=tree').then((res) => {
                         this.$store.commit('loading', true);
                         forEach(res, item => {
@@ -202,13 +266,20 @@
                             });
                         });
                         this.city_tree = res;
+                        this.city_tree.unshift(first_city)
                         this.$store.commit('loading', false);
                     })
                 }
             },
             handleChange(file, fileList) {
-                if (this.form.image_arr.length < 9) {
-                    this.files = fileList;
+                if(this.show_pic){
+                    if (this.form.image_arr.length < 9 - this.show_pic.length) {
+                        this.files = fileList;
+                    }
+                }else{
+                    if (this.form.image_arr.length < 9) {
+                        this.files = fileList;
+                    }
                 }
             },
             beforePicUpload(file) {
@@ -218,7 +289,6 @@
                     this.$message.error('上传图片只限 JPG,PNG 格式!');
                 }
                 return isJPG || isPNG;
-
             },
             handleSum(file, fileList) {
                 this.$message({
@@ -237,15 +307,39 @@
                     form.append('files[]', this.files[i].raw)
                 }
                 this.apiPost('/file/uploads', form).then((res) => {
-                    this.form.image_arr = res;
-                })
+                    if(res){
+                        this.form.image_arr = res;
+                    }else{
+                        this.form.image_arr = []
+                    }
+                    if(this.show_pic){
+                        let length = this.show_pic.length;
+                        for(let i = 0;i<length;i++){
+                            var path = this.show_pic[i].file_path.split('com')[1];
+                            this.form.image_arr.unshift(path);
+                        }
+                    }
+                });
             },
             handleRemove(file, fileList) {
+                if(typeof file == "number") {
+                    this.apiDelete('/api/task/delete/file/' + fileList[file].file_id).then((res) =>{
+                        if(res){
+                            fileList.splice(file, 1);
+                        }
+                    });
+                }
                 this.files = fileList;
                 this.uploadFile();
             },
+            handleSuccess(){
+                this.loading = false
+            },
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
+                if(file.file_path){
+                    this.dialogImageUrl = file.file_path;
+                }
                 this.dialogVisible = true;
             },
             beforeVidUpload(file) {
@@ -304,6 +398,7 @@
                 });
             },
             handleSubmit() {
+                console.log(this.industry_arr)
                 if (!this.form.task_title) {
                     this.$message({
                         showClose: true,
@@ -353,7 +448,7 @@
                         type: 'error',
                         duration: 500
                     })
-                } else if (!this.form.describes) {
+                } else if (!this.form.goods_desc) {
                     this.$message({
                         showClose: true,
                         message: '请完善产品描述',
@@ -368,22 +463,28 @@
                         duration: 500
                     })
                 } else {
-                    let fileImg = this.base64ToBlob(this.cover);
-                    var form = new FormData();
-                    var cover_path;
-                    form.append("files", fileImg, 'image.jpg');
-                    this.apiPost('/file/uploads', form).then((res) => {
-                        cover_path = res;
-                    });
+                    if(this.cover){
+                        let fileImg = this.base64ToBlob(this.cover);
+                        var form = new FormData();
+                        var cover_path;
+                        form.append("files", fileImg, 'image.jpg');
+                        this.apiPost('/file/uploads', form).then((res) => {
+                            cover_path = res;
+                        });
+                    }
+                    if(this.form.city === '不限'){
+                        this.form.city = [0,0]
+                    }
                     var data;
-
                     data = {
+                        type_label_id:1091,
+                        quantity_max:this.form.quantity_max,
                         task_title: this.form.task_title,
                         payment_method: 1,
                         unit: '元',
                         payment_money: this.form.payment_money,
                         industry_arr: this.industry_arr,
-                        city_id: this.form.city_id[1],
+                        city_id: this.form.city[1],
                         goods_title: this.form.goods_title,
                         goods_price: this.form.goods_price,
                         goods_desc: this.form.goods_desc,
@@ -392,23 +493,82 @@
                         video_path: this.real_video_path,
                         video_cover: cover_path,
                     };
-
-
-                    this.apiPost('/api/task/create', data).then((res) => {
-                        /*sessionStorage.removeItem('task')*/
-                        this.$router.push({
-                            name: "task",
-                            params: {
-                                activeName: 'task'
+                    console.log(data)
+                    if (this.isUpdata) {
+                        console.log('aaa')
+                        var task_edit = JSON.parse(sessionStorage.getItem('task'));
+                        this.apiPost('/api/task/update/' + task_edit.id).then((res) => {
+                            if(res){
+                                sessionStorage.removeItem('task');
+                                this.$router.push({
+                                    name: "work",
+                                    params: {
+                                        activeName: 'task_work'
+                                    }
+                                });
                             }
-                        });
-                    })
 
+                        })
+                    }else{
+                        this.apiPost('/api/task/create', data).then((res) => {
+                            if(res){
+                                sessionStorage.removeItem('task');
+                                this.$router.push({
+                                    name: "work",
+                                    params: {
+                                        activeName: 'task_work'
+                                    }
+                                });
+                            }
+
+                        })
+                    }
+                }
+            },
+            handleEdit(id){
+                this.apiGet('/api/task/info/' + id).then((res) => {
+                    console.log(res)
+                    this.form.task_title = res.task_title;
+                    this.form.payment_money = res.payment_money;
+                    this.form.quantity_max = res.quantity_max;
+                    if(res.city){
+                        this.form.city = [0]
+                        this.form.city.push(res.city.city_id);
+                        this.cityName = res.city.city_name;
+                    }else{
+                        this.form.city = "不限"
+                    }
+                    if(res.images.length > 0){
+                        this.show_pic = res.images;
+                    }
+                    if(res.video){
+                        this.form.video_path = res.video.file_path
+                    }
+                    this.form.industry = res.industry;
+                    forEach(res.industry,item => {
+                        this.industry_arr.push(item.label_id)
+                    });
+                    this.form.goods_desc = res.goods.description;
+                    this.form.goods_title = res.goods.goods_title;
+                    this.form.goods_price = res.goods.goods_price;
+                });
+            }
+        },
+        watch: {
+            isUpdata() {
+                if (this.isUpdata && this.isShow) {
+                    this.edit = '';
+                    var task_edit = JSON.parse(sessionStorage.getItem('task'));
+                    this.handleEdit(task_edit.id)
+                }
+            },
+            isHistory(){
+                if(this.isHistory && this.isHistoryId && this.isShow){
+                    this.edit = '';
+                    this.handleEdit(this.isHistoryId)
                 }
             }
-
         },
-        watch: {},
         mixins: [http]
     }
 </script>
@@ -422,14 +582,19 @@
             height: 79px;
             background: rgba(247, 248, 250, 1);
             box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+            font-size: 16px;
 
             p {
-                font-size: 16px;
                 color: #4D4D4D;
                 margin: 0 auto;
                 padding: 31px;
                 text-align: left;
                 width: 1000px;
+                cursor: pointer;
+            }
+
+            span:nth-child(2) {
+                color: #24BFFF;
             }
         }
 
@@ -451,11 +616,13 @@
                         background: rgba(36, 191, 255, 1);
                         border-radius: 2px;
                         margin-right: 11px;
+                        align-self: center;
                     }
 
                     p {
                         font-size: 16px;
                         color: #4D4D4D;
+                        margin: 0;
                     }
                 }
 
@@ -485,8 +652,8 @@
                             justify-content: flex-start;
 
                             p {
-                                margin-left: -26px;
                                 z-index: 2;
+                                margin: 0 0 0 -26px;
                             }
                         }
                     }
@@ -623,7 +790,39 @@
                         padding: 13px;
                         box-sizing: border-box;
                         margin-bottom: 50px;
-
+                        video{
+                            width: 100%;
+                        }
+                        .operation{
+                            display: flex;
+                            margin-bottom: 18px;
+                            .delect{
+                                width:80px;
+                                height:30px;
+                                line-height: 30px;
+                                background:rgba(247,253,255,1);
+                                border:1px solid rgba(36, 191, 255, 1);
+                                border-radius:15px;
+                                margin-right: 12px;
+                                text-align: center;
+                                font-size:14px;
+                                font-family:Microsoft YaHei;
+                                font-weight:400;
+                                color:rgba(36,191,255,1);
+                            }
+                            div:nth-child(2){
+                                width:125px;
+                                height:32px;
+                                line-height: 32px;
+                                background:rgba(36,191,255,1);
+                                border-radius:15px;
+                                font-size:14px;
+                                font-family:Microsoft YaHei;
+                                font-weight:400;
+                                color:rgba(255,255,255,1);
+                                text-align: center;
+                            }
+                        }
                         p {
                             margin: 0 0 18px 0;
                             text-align: left;
@@ -674,7 +873,7 @@
                         }
                     }
 
-                    button {
+                    .submit {
                         margin-left: 450px;
                         width: 125px;
                         height: 30px;
@@ -689,6 +888,72 @@
         }
     }
 
+    .edit_show {
+        position: absolute;
+        z-index: 2;
+        top: -45%;
+        left: 15px;
+        transform: translateY(50%);
+        margin: 0 !important;
+        height: 38px;
+        line-height: 38px;
+        color: #808080;
+    }
+    .show_pic{
+        position: relative;
+        float: left;
+        div{
+            width:140px;
+            height: 140px;
+            display: inline-block;
+            margin-right: 8px;
+            img{
+                width: 100%;
+                height: 100%;
+            }
+            span{
+                position: absolute;
+                top:0;
+                left: 0;
+                width: 140px;
+                height: 140px;
+                background: rgba(0,0,0,.3);
+                display: flex;
+                justify-content: center;
+                .icon{
+                    align-self: center;
+                    color: white;
+                    font-size: 20px;
+                    margin-right: 20px;
+                    cursor: pointer;
+                }
+                .icon:nth-last-child(1){
+                    margin: 0;
+                }
+            }
+
+        }
+    }
+    .bigPic{
+        .el-dialog__header{
+            padding: 0;
+            .el-dialog__headerbtn{
+                background: #24BFFF;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
+                .el-icon{
+                    color: white;
+
+                }
+            }
+        }
+        .el-dialog__body{
+            padding: 0;
+            line-height: 0;
+        }
+    }
     ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
         font-size: 14px;
         font-family: MicrosoftYaHei;

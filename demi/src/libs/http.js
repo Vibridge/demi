@@ -1,17 +1,13 @@
 import axios from 'axios';
 import coolies from 'js-cookie';
+import config from '../config';
 import {encode, decode, uuid} from "./tools";
-let config = {
-    baseUrl: 'http://produce.jmzhipin.com',
-    cookieExpires: 90,
-    suffixUrl: '/dominator',
-};
-/* eslint-disable */
+import { Message } from 'element-ui';
+
 const service = axios.create({
     baseURL: config.baseUrl,
-    timeout: 10000,
+    timeout: 30000,
 });
-
 service.interceptors.request.use(function (config) {
     const token = getToken();
     config.headers['x-access-sign'] = '585c84aca67b58e000364309783e31e6';
@@ -32,6 +28,7 @@ const resetCommonParams = (params)=>{
         sessionStorage.setItem(uuid(config.baseUrl), encode(params.authorization));
         service.defaults.headers['Authorization'] = decode(getToken());
     }
+
 };
 
 export const delToken = ()=>{
@@ -48,7 +45,11 @@ export const getType = ()=>{
         if(res.type === 2){
             return true
         }else{
-            return false
+            this.$message({
+                showClose: true,
+                message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                duration:1000
+            })
         }
     })
 }

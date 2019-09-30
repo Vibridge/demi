@@ -1,34 +1,49 @@
 <template>
     <div class="create_task_wrap">
         <div v-show="!sale & !common" class="before">
-            <div class="title">
-                <p>选择发布类型</p>
+            <div class="title" @click="backWork">
+                <p>职位管理 - <span>选择发布类型</span></p>
             </div>
             <div class="line"></div>
             <div class="contain">
                 <div class="select">
-                    <div class="select_wrap" @click="sale=true;common=false">
+                    <div class="select_wrap" @click="handleSale">
                         <div></div>
                         <p>发布销售代理任务</p>
                     </div>
-                    <div class="select_wrap" @click="sale=false;common=true">
+                    <div class="select_wrap" @click="handleCommon">
                         <div></div>
                         <p>发布普通任务</p>
                     </div>
                 </div>
                 <div class="history">
-                    <p>使用历史模板</p>
-                    <div class="history_wrap">
-                        <div class="none">
-                            <img src="../../../assets/img/snail @2x.png" alt="">
-                            <p>你还没有发布过任务哦</p>
+                    <p class="title">使用历史模板</p>
+                    <div class="history_wrap" v-for="item in history_list" :key="item.task_id" @click="handleCopy(item.task_id,item.payment_method)">
+                            <div class="history_list">
+                                <p class="title">{{item.task_title}}</p>
+                                <div class="history_info">
+                                    <div class="price_info">{{item.payment_money.split('.')[0]}}<span>{{item.unit}}/单</span></div>
+                                    <div class="icon">
+                                        <img src="../../../assets/img/icon_return@2x.png" alt="">
+                                    </div>
+                                </div>
+                                <p class="label">
+                                    <span v-if="item.payment_method === 1">即结</span>
+                                    <span v-if="item.payment_method !== 1">完工结</span>
+                                    <span v-if="item.city">{{item.city.city_name}}</span>
+                                    <span v-if="!item.city">不限地区</span>
+                                </p>
+                            </div>
                         </div>
+                    <div class="none" v-if="false">
+                        <img src="../../../assets/img/snail @2x.png" alt="">
+                        <p>你还没有发布过任务哦</p>
                     </div>
                 </div>
             </div>
         </div>
-        <sale v-show="sale"></sale>
-        <common v-show="common"></common>
+        <sale :is-show="sale" @show-sale="handleBack" :is-updata="is_Edit" :is-history="history" :is-history-id="history_id"></sale>
+        <common :is-show="common" v-on:show-common="handleBack" :is-updata="is_Edit" :is-history="history" :is-history-id="history_id"></common>
     </div>
 </template>
 
@@ -45,13 +60,92 @@
         data() {
             return {
                 sale:false,
-                common:false
+                common:false,
+                history:false,
+                task_edit:{},
+                is_Edit:false,
+                history_list:{},
+                history_id:null,
             }
         },
         mounted() {
-
+            this.$nextTick(() =>{
+                this.getRouterData();
+                this.task_edit = JSON.parse(sessionStorage.getItem('task'));
+                console.log(this.task_edit)
+                if(this.task_edit){
+                    if(this.task_edit.isHistory){
+                        this.history = true;
+                        this.history_id = this.task_edit.id;
+                        if(this.task_edit.payment_method !== 1){
+                            this.common = true;
+                        }else{
+                            this.sale = true;
+                        }
+                    }else{
+                        console.log('aaa')
+                        this.is_Edit = true;
+                        if(this.task_edit.payment_method !== 1){
+                            this.common = true;
+                        }else{
+                            this.sale = true;
+                        }
+                    }
+                }
+            });
+            this.apiGet('/api/user/info').then((res) => {
+                if (res.type === 2) {
+                    this.apiGet('/api/task/paginate?user_id=' + res.user_id,).then((res) => {
+                        console.log(res)
+                        this.history_list = res.data
+                    })
+                }
+            })
         },
         methods: {
+            handleBack(data,type){
+                if(type === 'sale'){
+                    this.sale = data;
+                    this.$emit('show-sale');
+                }else{
+                    this.common = data
+                    this.$emit('show-common');
+                }
+            },
+            backWork(){
+                sessionStorage.removeItem('task');
+                this.$router.push({
+                    name: "work",
+                    params: {
+                        activeName: 'task_work'
+                    }
+                });
+            },
+            handleSale(){
+                sessionStorage.removeItem('task');
+                this.sale=true;
+                this.common=false
+            },
+            handleCommon(){
+                sessionStorage.removeItem('task');
+                this.sale=false;
+                this.common=true
+            },
+            handleCopy(item,method){
+                this.history_id = item;
+                if(method !== 1){
+                    this.common = true;
+                    this.history = true;
+                }else{
+                    this.sale = true;
+                    this.history = true;
+                }
+            },
+            getRouterData() {
+                if(this.$route.params.task){
+                    sessionStorage.setItem('task',this.$route.params.task);
+                }
+            },
 
         },
         watch: {},
@@ -64,14 +158,24 @@
         font-family: MicrosoftYaHei;
         background: #FFF;
         .before {
-            margin: 12px auto;
+            padding: 12px auto;
+            margin: 0 auto;
             width: 1000px;
-
             .title {
                 padding: 20px 0;
                 text-align: left;
                 color: #4D4D4D;
                 font-size: 16px;
+                p {
+                    color: #4D4D4D;
+                    margin: 0 auto;
+                    text-align: left;
+                    width: 1000px;
+                    cursor: pointer;
+                }
+                span{
+                    color: #24BFFF;
+                }
             }
 
             .line {
@@ -151,37 +255,98 @@
                 }
 
                 .history {
+                    width: 100%;
                     margin-top: 19px;
                     text-align: left;
-
-                    p {
+                    padding-bottom: 200px;
+                    .title{
                         color: rgba(153, 153, 153, 1);
                         font-size: 16px;
                         margin-bottom: 20px;
                     }
+                    .none {
+                        width: 100%;
+                        height: 500px;
+                        text-align: center;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+
+                        img {
+                            align-self: center;
+                            width: 178px;
+                        }
+
+                        p {
+                            margin-top: 39px;
+                            font-size: 14px;
+                            color: rgba(153, 153, 153, 1);
+                        }
+                    }
 
                     .history_wrap {
                         width: 100%;
-
-                        .none {
-                            width: 100%;
-                            height: 500px;
-                            text-align: center;
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: center;
-
-                            img {
-                                align-self: center;
-                                width: 178px;
+                        display: inline;
+                        .history_list:hover{
+                            background:rgba(247,247,247,1);
+                        }
+                        .history_list{
+                            width:326px;
+                            height:160px;
+                            background:rgba(255,255,255,1);
+                            border:1px solid rgba(230, 230, 230, 1);
+                            border-radius:8px;
+                            display: inline-block!important;
+                            margin-right: 7px;
+                            margin-bottom: 7px;
+                            padding: 23px 22px;
+                            box-sizing: border-box;
+                            .title{
+                                margin-bottom: 21px;
+                                margin-top: 0;
+                                padding: 0;
+                                font-size:16px;
+                                font-weight:bold;
+                                color:#4D4D4D;
                             }
-
-                            p {
-                                margin-top: 39px;
-                                font-size: 14px;
-                                color: rgba(153, 153, 153, 1);
+                            .history_info{
+                                display: flex;
+                                justify-content: space-between;
+                                margin-bottom: 20px;
+                                .price_info{
+                                    font-size:26px;
+                                    color:rgba(255,78,77,1);
+                                    line-height: 20px;
+                                    align-self: center;
+                                    span{
+                                        font-size:12px;
+                                        color:rgba(153,153,153,1);
+                                        margin-left: 6px;
+                                    }
+                                }
+                                .icon{
+                                    width: 8px;
+                                    align-self: center;
+                                    img{
+                                        width: 100%;
+                                    }
+                                }
+                            }
+                            .label{
+                                margin: 0;
+                                span{
+                                    height:21px;
+                                    background:rgba(255,255,255,1);
+                                    border:1px solid rgba(230, 230, 230, 1);
+                                    border-radius:4px;
+                                    margin-right: 4px;
+                                    padding: 4px 10px;
+                                    font-size:12px;
+                                    color:rgba(153,153,153,1);
+                                }
                             }
                         }
+
                     }
                 }
             }

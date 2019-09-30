@@ -6,13 +6,19 @@
         </div>
         <div class="interview_main">
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+                <!--已邀请-->
                 <el-tab-pane label="已邀请" name="first">
                     <div class="all-wrap">
                         <div class="interview_list" v-show="interview_list.length>0">
                             <div class="interview_list_wrap" v-for="interview in interview_list" :key="interview.interview_id">
                                 <div class="interview_time">
-                                    <span>面试时间：{{interview.time}}</span>
-                                    <span>[已面试]</span>
+                                    <span :class="interview.status === 2 || interview.status === 1 ? 'active_over' : ''">面试时间：{{interview.time}}</span>
+                                    <span v-if="interview.status === 0">[等待同意]</span>
+                                    <span v-if="interview.status === 1" :class="interview.status === 1 ? 'active_over' : ''">[已取消]</span>
+                                    <span v-if="interview.status === 2" :class="interview.status === 2 ? 'active_over' : ''">[对方已拒绝]</span>
+                                    <span v-if="interview.status === 3">[待面试]</span>
+                                    <span v-if="interview.status === 4">[已面试]</span>
+                                    <span v-if="interview.status === 5">[已反馈]</span>
                                 </div>
                                 <div class="interview_list_info">
                                     <div class="interview_title">
@@ -36,9 +42,16 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="interview_operate">
-                                        <button>确认录用</button>
-                                        <button>不合适</button>
+                                    <div class="interview_operate" v-if="interview.status === 0">
+                                        <button>和他聊聊</button>
+                                        <button>取消面试</button>
+                                    </div>
+                                    <div class="interview_operate" v-if="interview.status === 3">
+                                        <button>和他聊聊</button>
+                                        <button>等待面试</button>
+                                    </div>
+                                    <div class="interview_operate" v-if="interview.status === 1 || interview.status === 2">
+                                        <img src="../../../assets/img/countermand@2x.png" alt="" style="width:46px;height:46px;margin-right: 23px;">
                                     </div>
                                 </div>
                                 <div class="line"></div>
@@ -68,13 +81,16 @@
                         </el-pagination>
                     </div>
                 </el-tab-pane>
+
+                <!--已面试-->
                 <el-tab-pane label="已面试" name="second">
                     <div class="all-wrap">
                         <div class="interview_list" v-show="interview_list.length>0">
                             <div class="interview_list_wrap" v-for="interview in interview_list" :key="interview.interview_id">
                                 <div class="interview_time">
                                     <span>面试时间：{{interview.time}}</span>
-                                    <span>[已面试]</span>
+                                    <span v-if="interview.status === 4">[已面试]</span>
+                                    <span v-if="interview.status === 5">[已反馈]</span>
                                 </div>
                                 <div class="interview_list_info">
                                     <div class="interview_title">
@@ -99,8 +115,10 @@
                                         </div>
                                     </div>
                                     <div class="interview_operate">
-                                        <button>确认录用</button>
-                                        <button>不合适</button>
+                                        <div v-if="interview.status === 4">
+                                            <button>确认录用</button>
+                                            <button>不合适</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="line"></div>
@@ -139,13 +157,12 @@
     /* eslint-disable */
     import http from '../../../libs/http'
     import {forEach} from "../../../libs/tools";
-
+    import {getType} from "../../../libs/http";
     export default {
         name: 'interview',
         data() {
             return {
                 activeName: 'first',
-                a:false,
                 interview_list:[],
                 searchParams: {
                     page: 1,
@@ -155,20 +172,29 @@
             };
         },
         mounted(){
-            this.initialize(3);
+            if(getType){
+                this.initialize(3);
+            }
         },
         methods: {
+
+            //切换导航
             handleClick(tab, event) {
                 if(tab.index === '0'){
+                    //已邀请
                     this.initialize(3);
                 }else{
+                    //已面试
                     this.initialize();
                 }
             },
+
+
             initialize(status){
+                this.$store.commit('loading', true);
+                //已邀请参数
                 if(status){
-                    this.$store.commit('loading', true);
-                    this.apiGet('/api/work/interview/lists' + '?status[0]=' + status, this.searchParams ).then((res) => {
+                    this.apiGet('/api/work/interview/lists' + '?status[0]=0&status[1]=1&status[2]=2&status[3]=' + status, this.searchParams ).then((res) => {
                         this.interview_list = res.data;
                         console.log(res)
                         this.searchParams.page = parseInt(res.current_page);
@@ -177,16 +203,15 @@
                         this.$store.commit('loading', false);
                     })
                 }else{
-                    this.$store.commit('loading', true);
-                    const status = [1,2,4,5]
-                    this.apiGet('/api/work/interview/lists?' + status, this.searchParams ).then((res) => {
+                    //已面试需要多个参数
+                    this.apiGet('/api/work/interview/lists?status[0]=4&status[1]=5', this.searchParams ).then((res) => {
                         forEach(res.data, item => {
                             if(item.vita.work_start_date){
                                 item.vita.work_start_date = new Date().getFullYear() - parseInt(item.vita.work_start_date.split('-')[0]);
                             }
                         });
                         this.interview_list = res.data;
-                        console.log(res)
+                        console.log(res);
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
@@ -220,6 +245,7 @@
             box-sizing: border-box;
             text-align: left;
             font-family: MicrosoftYaHei;
+            display: flex;
             span:nth-child(1){
                 width: 4px;
                 height: 22px;
@@ -329,21 +355,14 @@
                         }
                     }
                     .interview_list_wrap:nth-last-child(1){
+                        border-radius:0 0 8px 8px;
+                        border-bottom: 1px solid rgba(235, 235, 235, 1);
                         .line{
                             display: none;
                         }
                     }
                 }
 
-            }
-            .all-wrap>.interview_list:nth-last-child(2){
-                width: 100%;
-                background: #fff;
-                border-radius:0 0 8px 8px;
-                .interview_list_wrap{
-                    border-radius:0 0 8px 8px;
-                    border-bottom: 1px solid rgba(235, 235, 235, 1);
-                }
             }
             .none_list{
                 width: 100%;
@@ -428,6 +447,9 @@
                 color: #4d4d4d;
                 background: #fff;
             }
+        }
+        .active_over{
+            color: #999999;
         }
     }
 </style>

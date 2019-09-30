@@ -1,7 +1,8 @@
 <template>
-    <div class="common">
-        <div class="title">
-            <p>发布普通任务</p>
+    <div class="common" v-if="isShow">
+        <div class="title" @click="handleBack">
+            <p><span v-if="!isHistory">职位管理 - </span><span v-if="isHistory">历史模板 -</span><span
+                    v-if="!isUpdata">发布普通任务</span><span v-if="isUpdata">编辑普通任务</span></p>
         </div>
         <div class="contain">
             <div class="basic">
@@ -18,11 +19,14 @@
                             <el-input v-model="form.task_title" placeholder="请输入职位名称"></el-input>
                         </el-form-item>
                         <el-form-item label="职位类型：">
-                            <el-cascader ref="label" :options="type_list" :show-all-levels="false"
+                            <el-cascader :options="type_list" :show-all-levels="false"
                                          v-model="form.type_label"
                                          :props="{ label:'name', value:'label_id'}"
-                                         placeholder="请选择职位类型" @focus="handleType"
-                                         @change="handleLabel"></el-cascader>
+                                         :placeholder="edit" @visible-change="handleType"
+                                         @change="handleLabel"
+                            ></el-cascader>
+                            <p class="edit_show" v-if="isUpdata && !type_label || isHistory">
+                                {{this.form.type_label}}</p>
                         </el-form-item>
                         <el-form-item label="基本工资：">
                             <el-input v-model="form.payment_money" placeholder="请输入基本工资"></el-input>
@@ -40,7 +44,6 @@
                             <el-input v-model="form.quantity_max" placeholder="请输入招募人数"></el-input>
                             <p>人</p>
                         </el-form-item>
-
                     </el-form>
                     <div class="line"></div>
                 </div>
@@ -51,17 +54,23 @@
                 <div class="ask">
                     <el-form ref="form" :model="form" label-width="92px">
                         <el-form-item label="适合行业：">
-                            <el-cascader ref="label" :options="type_list" :show-all-levels="false"
+                            <el-cascader :options="industry_list" :show-all-levels="false"
                                          v-model="form.industry"
-                                         :props="{ label:'name', value:'label_id',multiple: true,}"
-                                         placeholder="请选择职位类型" @focus="handleInd"
-                                         @change="handleIndLabel"></el-cascader>
+                                         :props="{ label:'name', value:'label_id',multiple: true}"
+                                         :placeholder="edit"
+                                         @visible-change="handleInd"
+                                         @change="handleIndLabel"
+                            ></el-cascader>
+                            <p class="edit_show" v-if="isUpdata && industry_arr.length < 1 || isHistory"><span
+                                    style="color: #808080" v-for="item in form.industry" :key="item.label_id">{{item.name}}/</span>
+                            </p>
                         </el-form-item>
                         <el-form-item label="发布城市：">
                             <el-cascader ref="city" :options="city_tree" v-model="form.city" :show-all-levels="false"
-                                         :props="{ label:'city_name', value:'city_id'}" placeholder="请选择城市"
+                                         :props="{ label:'city_name', value:'city_id'}" :placeholder="edit"
                                          @focus="handleCity"
                                          @change="handleProvince"></el-cascader>
+                            <p class="edit_show" v-if="isUpdata && !city_tree || isHistory">{{this.cityName}}</p>
                         </el-form-item>
                         <el-form-item label="职位描述：">
                             <el-input
@@ -74,18 +83,27 @@
                         "
                                     :maxlength="500"
                                     show-word-limit
-                                    v-model="form.goods_desc">
+                                    v-model="form.describes">
                             </el-input>
                         </el-form-item>
                         <el-form-item label="工作地点：">
-                            <el-input id='tipinput' v-model="form.address" type="text" @input="init" autocomplete="off" placeholder="（选填）输入行政区、街道、写字楼" :disabled="form.city === ''"></el-input>
-                            <div id="show" v-show="over" style="z-index: 1111111111"></div>
-
+                            <el-input id='area' v-model="form.address" type="text" @input="init" autocomplete="off"
+                                      placeholder="（选填）输入行政区、街道、写字楼" :disabled="form.city === ''"></el-input>
                         </el-form-item>
 
                         <el-form-item label="上传图片：">
                             <div class="picture">
                                 <p>选填</p>
+                                <div class="show_pic" v-if="(isUpdata && show_pic) || (isHistory && show_pic)">
+                                    <div @mouseover="show_icon = true" @mouseleave="show_icon = false"
+                                         v-for="(item,index) in show_pic" :key="item.file_id">
+                                        <img :src="item.file_path" alt="">
+                                        <span v-if="show_icon">
+                                            <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
+                                            <i class="icon el-icon-delete" @click="handleRemove(index,show_pic)"></i>
+                                        </span>
+                                    </div>
+                                </div>
                                 <el-upload
                                         action=""
                                         list-type="picture-card"
@@ -100,7 +118,7 @@
                                 >
                                     <i class="el-icon-plus"></i>
                                 </el-upload>
-                                <el-dialog :visible.sync="dialogVisible">
+                                <el-dialog :visible.sync="dialogVisible" custom-class="bigPic">
                                     <img width="100%" :src="dialogImageUrl" alt="">
                                 </el-dialog>
                             </div>
@@ -108,6 +126,16 @@
                         <el-form-item label="上传视频：">
                             <div class="video">
                                 <p>选填</p>
+                                <div class="operation" v-if="form.video_path">
+                                    <div class="delect" @click="form.video_path = ''">删除</div>
+                                    <el-upload action=""
+                                               :show-file-list="false"
+                                               :before-upload="beforeVidUpload"
+                                               :http-request="uploadVidFile"
+                                               :on-change="handleVidChange"
+                                    >重新上传
+                                    </el-upload>
+                                </div>
                                 <el-upload
                                         class="avatar-uploader"
                                         action=""
@@ -117,7 +145,7 @@
                                         :on-change="handleVidChange">
                                     <video id="video" class="avatar" :src="this.form.video_path"
                                            v-show="form.video_path !== ''" controls></video>
-                                    <img src="../../../assets/img/my_videos@2x.png" v-show="form.video_path === ''"
+                                    <img src="../../../assets/img/my_videos@2x.png"
                                          class="el-icon-plus avatar-uploader-icon">
                                     <p v-show="form.video_path === ''">点击上传视频</p>
                                 </el-upload>
@@ -156,8 +184,10 @@
                     <p>我已阅读并同意<span> 《得米平台服务协议》</span></p>
                     <button @click="handleSubmit">确认发布</button>
                 </div>
+
             </div>
         </div>
+
     </div>
 </template>
 
@@ -169,53 +199,74 @@
 
     export default {
         name: 'sale',
+        props: {
+            isShow: {type: Boolean, default: false},
+            isUpdata: {type: Boolean, default: false},
+            isHistory: {type: Boolean, default: false},
+            isHistoryId: {type: Number, default: null}
+        },
         data() {
             return {
                 form: {
                     task_title: '',
                     payment_money: null,
-                    front_money:null,
+                    front_money: null,
                     payment_method: '完工结 [普通任务只支持完工结]',
                     quantity_max: null,
-                    type_label:null,
+                    type_label: '',
                     industry: null,
                     city: '',
-                    address:'',
-                    goods_title: '',
-                    goods_desc: '',
+                    address: null,
+                    describes: '',
                     video_path: '',
-                    goods_price: '',
                     image_arr: []
                 },
-                cityName:null,
+                industry_arr: [],
                 type_label: null,
-                industry_arr:[],
-                over:false,
-                longitude:'',
-                latitude:'',
-                real_address:'',
+                invoice: false,
+                title: null,
+                num: null,
+                Email: null,
+                cityName: null,
+                over: false,
+                longitude: '',
+                latitude: '',
+                real_address: '',
                 files: [],
                 video: null,
                 real_video_path: null,
                 cover: "",
-                type_list: null,
-                city_tree: null,
                 dialogImageUrl: '',
                 dialogVisible: false,
-                invoice: false,
-                title: null,
-                num: null,
-                Email: null
+                type_list: null,
+                industry_list:null,
+                city_tree: null,
+                edit: '请选择',
+                show_icon: false,
+                show_pic: []
             }
         },
-        mounted(){
-            this.$nextTick(() =>{
+        mounted() {
+            this.$nextTick(() => {
                 handleMap();
             })
         },
         methods: {
-            handleType() {
-                if (getType) {
+            handleBack() {
+                if (this.isUpdata) {
+                    sessionStorage.removeItem('task');
+                    this.$router.push({
+                        name: "work",
+                        params: {
+                            activeName: 'task_work'
+                        }
+                    });
+                } else {
+                    this.$emit('show-common', false, 'common')
+                }
+            },
+            handleType(res) {
+                if (res) {
                     this.apiGet('/labels?id=1027&mode=tree').then((res) => {
                         this.type_list = res;
                     })
@@ -224,39 +275,46 @@
             handleLabel(res) {
                 var length = res.length;
                 this.type_label = null;
-                this.type_label = res[length-1]
+                this.type_label = res[length - 1];
             },
             handleCity() {
-                if (getType) {
-                    this.apiGet('/city/lists?mode=tree').then((res) => {
-                        this.$store.commit('loading', true);
-                        forEach(res, item => {
-                            if (item.municipalities !== 0) {
-                                let muniCity = [{
-                                    "city_name": item.city_name,
-                                    "city_id": item.city_id
-                                }];
-                                item.children = muniCity
+                let first_city = {
+                    "city_name": '不限',
+                    "city_id": 0,
+                    children: [{
+                        "city_name": '不限',
+                        "city_id": 0,
+                    }]
+                };
+                this.apiGet('/city/lists?mode=tree').then((res) => {
+                    this.$store.commit('loading', true);
+                    forEach(res, item => {
+                        if (item.municipalities !== 0) {
+                            let muniCity = [{
+                                "city_name": item.city_name,
+                                "city_id": item.city_id
+                            }];
+                            item.children = muniCity
+                        }
+                        forEach(item.children, item1 => {
+                            if (item1.children) {
+                                delete item1.children
                             }
-                            forEach(item.children, item1 => {
-                                if (item1.children) {
-                                    delete item1.children
-                                }
-                            });
                         });
-                        this.city_tree = res;
-                        this.$store.commit('loading', false);
-                    })
-                }
+                    });
+                    this.city_tree = res;
+                    this.city_tree.unshift(first_city);
+                    this.$store.commit('loading', false);
+                })
             },
-            handleProvince(value){
+            handleProvince(value) {
                 let dataRecieve = this.$refs.city.getCheckedNodes();
-                this.cityName = dataRecieve[0].label
+                this.cityName = dataRecieve[0].label;
             },
-            handleInd() {
-                if (getType) {
+            handleInd(res) {
+                if (res) {
                     this.apiGet('/labels?id=1025&mode=tree').then((res) => {
-                        this.type_list = res;
+                        this.industry_list = res;
                     })
                 }
             },
@@ -268,6 +326,10 @@
                     showLabel.push(res[1]);
                     showLabel.push(res[2]);
                     this.form.industry = showLabel;
+                    this.industry_arr = [];
+                    forEach(showLabel, item => {
+                        this.industry_arr.push(item[1])
+                    });
                     this.$message({
                         showClose: true,
                         message: '最多只能选3个',
@@ -281,41 +343,46 @@
                     });
                 }
             },
-            init(){
-                var auto = new AMap.Autocomplete({
-                    citylimit:true,
-                    city: this.cityName,
-                    output:'show',
-                    input:'tipinput',
-                    datatype:'poi'
-                });
-                AMap.event.addListener(auto, "select", function(e) {
-                    //开始搜索对应的poi名称
-                    this.over = true;
-                    console.log(this.over)
-                    auto.search(e.poi.name, function(status, results) {
-                        this.over = false;
-                        if(this.form.address){
-                            this.real_address = results.tips[0].district + results.tips[0].address + results.tips[0].name
-                            if(results.tips[0]){
-                                this.latitude = results.tips[0].location.lat;
-                                this.longitude = results.tips[0].location.lng;
-                            }
-                            if(results.tips[0].district){
-                                let city = results.tips[0].district.split('市')[1]
-                                this.apiGet('/city/location?city_name=' + city).then((res) =>{
+            init() {
+                AMap.plugin('AMap.Autocomplete', function () {
+                    // 实例化Autocomplete
+                    var autoOptions = {
+                        citylimit: true,
+                        city: this.cityName,
+                        input: 'area',
+                        datatype: 'poi',
+                    };
+                    var autoComplete = new AMap.Autocomplete(autoOptions);
+                    autoComplete.search(this.form.address, function (status, result) {
+                        // 搜索成功时，result即是对应的匹配数据
+                        AMap.event.addListener(autoComplete, 'select', function (results) {
+                            //获取当前选中的结果数据 console.log(results.selected.data); });
+                            this.over = false;
+                            if (this.form.address) {
+                                this.form.address = results.poi.district + results.poi.address + results.poi.name
+                                this.latitude = results.poi.location.lat;
+                                this.longitude = results.poi.location.lng;
+                                let city = results.poi.district.split('市')[1]
+                                this.apiGet('/city/location?city_name=' + city).then((res) => {
                                     this.city_id = res.city_id
                                 })
+                            } else {
+                                this.form.address = '';
                             }
-                        }else{
-                            this.real_address = '';
-                        }
-                    }.bind(this));
-                });
+                        }.bind(this))
+                    }.bind(this))
+                }.bind(this))
+
             },
             handleChange(file, fileList) {
-                if (this.form.image_arr.length < 9) {
-                    this.files = fileList;
+                if (this.show_pic) {
+                    if (this.form.image_arr.length < 9 - this.show_pic.length) {
+                        this.files = fileList;
+                    }
+                } else {
+                    if (this.form.image_arr.length < 9) {
+                        this.files = fileList;
+                    }
                 }
             },
             beforePicUpload(file) {
@@ -343,15 +410,36 @@
                     form.append('files[]', this.files[i].raw)
                 }
                 this.apiPost('/file/uploads', form).then((res) => {
-                    this.form.image_arr = res;
+                    if (res) {
+                        this.form.image_arr = res;
+                    } else {
+                        this.form.image_arr = []
+                    }
+                    if (this.show_pic) {
+                        let length = this.show_pic.length;
+                        for (let i = 0; i < length; i++) {
+                            var path = this.show_pic[i].file_path.split('com')[1];
+                            this.form.image_arr.unshift(path);
+                        }
+                    }
                 })
             },
             handleRemove(file, fileList) {
+                if (typeof file == "number") {
+                    this.apiDelete('/api/task/delete/file/' + fileList[file].file_id).then((res) => {
+                        if (res) {
+                            fileList.splice(file, 1);
+                        }
+                    });
+                }
                 this.files = fileList;
                 this.uploadFile();
             },
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
+                if (file.file_path) {
+                    this.dialogImageUrl = file.file_path;
+                }
                 this.dialogVisible = true;
             },
             beforeVidUpload(file) {
@@ -417,6 +505,13 @@
                         type: 'error',
                         duration: 500
                     })
+                } else if (!this.form.type_label) {
+                    this.$message({
+                        showClose: true,
+                        message: '请选择职位标签',
+                        type: 'error',
+                        duration: 500
+                    })
                 } else if (!this.form.payment_money) {
                     this.$message({
                         showClose: true,
@@ -445,98 +540,131 @@
                         type: 'error',
                         duration: 500
                     })
-                } else if (!this.form.goods_title) {
-                    this.$message({
-                        showClose: true,
-                        message: '请输入产品名称',
-                        type: 'error',
-                        duration: 500
-                    })
-                } else if (!this.form.goods_price) {
-                    this.$message({
-                        showClose: true,
-                        message: '请输入产品价格',
-                        type: 'error',
-                        duration: 500
-                    })
-                } else if (!this.form.describes) {
-                    this.$message({
-                        showClose: true,
-                        message: '请完善产品描述',
-                        type: 'error',
-                        duration: 500
-                    })
-                } else if (!this.form.image_arr) {
-                    this.$message({
-                        showClose: true,
-                        message: '请上传产品图片',
-                        type: 'error',
-                        duration: 500
-                    })
                 } else {
-                    let fileImg = this.base64ToBlob(this.cover);
-                    var form = new FormData();
-                    var cover_path;
-                    form.append("files", fileImg, 'image.jpg');
-                    this.apiPost('/file/uploads', form).then((res) => {
-                        cover_path = res;
-                    });
-                    var is_invoice;
+                    if (this.cover) {
+                        let fileImg = this.base64ToBlob(this.cover);
+                        var form = new FormData();
+                        var cover_path;
+                        form.append("files", fileImg, 'image.jpg');
+                        this.apiPost('/file/uploads', form).then((res) => {
+                            cover_path = res;
+                        });
+                    }
+                    if (this.form.city === '不限') {
+                        this.form.city = [0, 0]
+                    }
                     var data;
+                    data = {
+                        task_title: this.form.task_title,
+                        type_label_id: this.type_label,
+                        quantity_max: this.form.quantity_max,
+                        payment_method: 3,
+                        unit: '元',
+                        payment_money: this.form.payment_money,
+                        industry_arr: this.industry_arr,
+                        city_id: this.form.city[1],
+                        image_arr: this.image_arr,
+                        status: 1,
+                        video_path: this.real_video_path,
+                        video_cover: cover_path,
+                    };
                     if (this.invoice) {
-                        is_invoice = 1;
-                        data = {
-                            task_title: this.form.task_title,
-                            payment_method: 1,
-                            unit: '元',
-                            payment_money: this.form.payment_money,
-                            industry_arr: this.industry_arr,
-                            city_id: this.form.city_id[1],
-                            goods_title: this.form.goods_title,
-                            goods_price: this.form.goods_price,
-                            goods_desc: this.form.goods_desc,
-                            image_arr: this.image_arr,
-                            status: 1,
-                            video_path: this.real_video_path,
-                            video_cover: cover_path,
-                            is_invoice: is_invoice,
-                            title: this.title,
-                            num: this.num,
-                            Email: this.Email
-                        };
+                        data.is_invoice = 1;
+                        data.title = this.title;
+                        data.num = this.num;
+                        data.Email = this.Email
+                    }
+                    if (this.form.address) {
+                        data.city_id = this.city_id;
+                        data.longitude = this.longitude;
+                        data.latitude = this.latitude;
+                        data.address = this.form.address;
+                    }
+                    if (this.isUpdata) {
+                        var task_edit = JSON.parse(sessionStorage.getItem('task'));
+                        this.apiPost('/api/task/update/' + task_edit.id).then((res) => {
+                            if (res) {
+                                sessionStorage.removeItem('task');
+                                this.$router.push({
+                                    name: "work",
+                                    params: {
+                                        activeName: 'task_work'
+                                    }
+                                });
+                            }
+                        })
                     } else {
-                        data = {
-                            task_title: this.form.task_title,
-                            payment_method: 1,
-                            unit: '元',
-                            payment_money: this.form.payment_money,
-                            industry_arr: this.industry_arr,
-                            city_id: this.form.city_id[1],
-                            goods_title: this.form.goods_title,
-                            goods_price: this.form.goods_price,
-                            goods_desc: this.form.goods_desc,
-                            image_arr: this.image_arr,
-                            status: 1,
-                            video_path: this.real_video_path,
-                            video_cover: cover_path,
-                        };
+                        this.apiPost('/api/task/create', data).then((res) => {
+                            if (res) {
+                                sessionStorage.removeItem('task');
+                                this.$router.push({
+                                    name: "work",
+                                    params: {
+                                        activeName: 'task_work'
+                                    }
+                                });
+                            }
+                        })
                     }
 
-                    this.apiPost('/api/task/create', data).then((res) => {
-                        /*sessionStorage.removeItem('task')*/
-                        this.$router.push({
-                            name: "task",
-                            params: {
-                                activeName: 'task'
-                            }
-                        });
-                    })
 
                 }
+            },
+            handleEdit(id) {
+                this.apiGet('/api/task/info/' + id).then((res) => {
+                    console.log(res);
+                    this.form.task_title = res.task_title;
+                    this.form.payment_money = res.payment_money;
+                    this.form.quantity_max = res.quantity_max;
+                    this.form.type_label = res.type_label.name;
+                    this.type_label = res.type_label.label_id;
+                    this.form.address = res.address;
+                    if (res.city) {
+                        this.form.city = [0];
+                        this.form.city.push(res.city.city_id)
+                        this.cityName = res.city.city_name;
+                    } else {
+                        this.form.city = "不限"
+                    }
+                    if (res.images.length > 0) {
+                        this.show_pic = res.images;
+                    }
+                    if (res.video) {
+                        this.form.video_path = res.video.file_path
+                    }
+                    this.form.industry = res.industry;
+                    this.form.front_money = res.front_money;
+                    this.form.describes = res.description;
+                    forEach(res.industry, item => {
+                        this.industry_arr.push(item.label_id)
+                    });
+                    if (res.invoice) {
+                        this.invoice = true;
+                        this.title = res.invoice.title;
+                        this.num = res.invoice.tax_number;
+                        this.Email = res.invoice.email
+                    }
+                });
             }
 
         },
-        watch: {},
+        watch: {
+            isUpdata() {
+                console.log('aaa')
+                if (this.isUpdata && this.isShow) {
+                    this.edit = '';
+                    var task_edit = JSON.parse(sessionStorage.getItem('task'));
+                    this.handleEdit(task_edit.id)
+                }
+            },
+            isHistory() {
+                console.log('aaa')
+                if (this.isHistory && this.isHistoryId && this.isShow) {
+                    this.edit = '';
+                    this.handleEdit(this.isHistoryId)
+                }
+            }
+        },
         mixins: [http]
     }
 </script>
@@ -550,14 +678,19 @@
             height: 79px;
             background: rgba(247, 248, 250, 1);
             box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12);
+            font-size: 16px;
 
             p {
-                font-size: 16px;
                 color: #4D4D4D;
                 margin: 0 auto;
                 padding: 31px;
                 text-align: left;
                 width: 1000px;
+                cursor: pointer;
+            }
+
+            span:nth-child(2) {
+                color: #24BFFF;
             }
         }
 
@@ -579,11 +712,13 @@
                         background: rgba(36, 191, 255, 1);
                         border-radius: 2px;
                         margin-right: 11px;
+                        align-self: center;
                     }
 
                     p {
                         font-size: 16px;
                         color: #4D4D4D;
+                        margin: 0;
                     }
                 }
 
@@ -613,8 +748,8 @@
                             justify-content: flex-start;
 
                             p {
-                                margin-left: -26px;
                                 z-index: 2;
+                                margin: 0 0 0 -26px;
                             }
                         }
                     }
@@ -678,6 +813,30 @@
                                 p {
                                     margin: 0 0 0 -26px;
                                     z-index: 2;
+                                }
+                            }
+                        }
+
+                        .el-form-item:nth-child(4) {
+                            position: relative;
+
+                            #show_area {
+                                position: absolute;
+                                border: 1px solid #DCDFE6;
+                                border-radius: 4px;
+                                padding: 10px;
+                                top: 100%;
+                                left: 0;
+                                width: 468px;
+                                height: auto;
+                                z-index: 10000;
+                                background: #fff;
+                                box-sizing: border-box;
+
+                                .auto-item {
+                                    font-size: 14px;
+                                    height: 20px;
+                                    line-height: 20px;
                                 }
                             }
                         }
@@ -761,6 +920,43 @@
                         padding: 13px;
                         box-sizing: border-box;
                         margin-bottom: 50px;
+
+                        video {
+                            width: 100%;
+                        }
+
+                        .operation {
+                            display: flex;
+                            margin-bottom: 18px;
+
+                            .delect {
+                                width: 80px;
+                                height: 30px;
+                                line-height: 30px;
+                                background: rgba(247, 253, 255, 1);
+                                border: 1px solid rgba(36, 191, 255, 1);
+                                border-radius: 15px;
+                                margin-right: 12px;
+                                text-align: center;
+                                font-size: 14px;
+                                font-family: Microsoft YaHei;
+                                font-weight: 400;
+                                color: rgba(36, 191, 255, 1);
+                            }
+
+                            div:nth-child(2) {
+                                width: 125px;
+                                height: 32px;
+                                line-height: 32px;
+                                background: rgba(36, 191, 255, 1);
+                                border-radius: 15px;
+                                font-size: 14px;
+                                font-family: Microsoft YaHei;
+                                font-weight: 400;
+                                color: rgba(255, 255, 255, 1);
+                                text-align: center;
+                            }
+                        }
 
                         p {
                             margin: 0 0 18px 0;
@@ -886,6 +1082,18 @@
                 }
             }
         }
+    }
+
+    .edit_show {
+        position: absolute;
+        z-index: 2;
+        top: -45%;
+        left: 15px;
+        transform: translateY(50%);
+        margin: 0 !important;
+        height: 38px;
+        line-height: 38px;
+        color: #808080;
     }
 
     ::-webkit-input-placeholder { /* WebKit, Blink, Edge */

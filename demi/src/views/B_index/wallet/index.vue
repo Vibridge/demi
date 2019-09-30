@@ -24,30 +24,30 @@
                 <p>消费明细</p>
                 <p>提现</p>
             </div>
-            <div class="wallet_list" v-for="(item,index) in num" :key="index" v-show="a">
+            <div class="wallet_list" v-for="item in wallet_list" :key="item.detail_id" v-show="wallet_list.length > 0">
                 <div>
-                    <p>入账</p>
-                    <p>2019-08-05 <span> 08:59:00</span></p>
+                    <p>{{item.title}}</p>
+                    <p>{{item.created_at}}</p>
                 </div>
-                <div>+900</div>
+                <div :class="item.action === 1 ? 'wallet_add' : 'wallet_rec'"><span v-text="item.action === 2 ? '-' : '+'"></span>{{item.amount}}</div>
             </div>
-            <div class="none_wallet_list" v-show="!a">
+            <div class="none_wallet_list" v-show="wallet_list.length < 1">
                 <div>
                     <img src="../../../assets/img/snail@2x.png" alt="">
                     <p>你还没有消费记录哦</p>
                 </div>
             </div>
         </div>
-        <div class="paging" v-show="a">
+        <div class="paging" v-show="wallet_list.length > 0">
             <el-pagination
                     background
                     :hide-on-single-page="true"
                     layout="prev, pager, next"
                     prev-text="上一页"
                     next-text="下一页"
-                    :total="this.wallet_Params.total"
-                    :current-page="this.wallet_Params.page"
-                    :page-size="this.wallet_Params.per_page"
+                    :total="searchParams.total"
+                    :current-page="searchParams.page"
+                    :page-size="searchParams.per_page"
                     :pager-count = '5'
                     @size-change="handleWalletSizeChange"
                     @current-change="handleWalletCurrentPageChange"
@@ -66,10 +66,8 @@
         name: 'wallet',
         data(){
             return{
-                num:3,
-                a:false,
                 wallet_list:[],
-                wallet_Params:{
+                searchParams:{
                     page: 1,
                     total: 0,
                     per_page: 15
@@ -79,7 +77,9 @@
             }
         },
         mounted(){
-            this.handleWallet_list()
+            if(getType){
+                this.handleWallet_list()
+            }
         },
         methods:{
             handleWalletSizeChange(per_page){
@@ -96,12 +96,12 @@
                     if(res.type === 2){
                         this.Available_amount = res.available_amount_b;
                         this.Frozen_amount = res.unusable_amount_b;
-                        this.apiGet('/api/user/wallet/details',this.wallet_Params).then((res) => {
+                        this.apiGet('/api/user/wallet/details',this.searchParams).then((res) => {
                             this.wallet_list = res.data;
-                            console.log(this.wallet_list);
-                            this.wallet_Params.page = parseInt(res.current_page);
-                            this.wallet_Params.total = parseInt(res.total);
-                            this.wallet_Params.per_page = parseInt(res.per_page);
+                            console.log(res);
+                            this.searchParams.page = parseInt(res.current_page);
+                            this.searchParams.total = parseInt(res.total);
+                            this.searchParams.per_page = parseInt(res.per_page);
                             this.$store.commit('loading', false);
                         });
                     }else{
@@ -130,6 +130,7 @@
             box-sizing: border-box;
             text-align: left;
             font-family: MicrosoftYaHei;
+            display: flex;
             span:nth-child(1) {
                 width: 4px;
                 height: 22px;
@@ -233,7 +234,11 @@
                         color: #4C4C4C;
                     }
                 }
-                div:nth-child(2){
+                .wallet_add{
+                    color: #1DCC14;
+                    font-size: 16px;
+                }
+                .wallet_rec{
                     font-size: 16px;
                     color: #FF4E4D;
                 }

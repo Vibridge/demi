@@ -44,10 +44,10 @@ const router = new Router({
                     component: () => import('./views/B_index/work/index.vue')
                 },
                 {
-                    path: '/B_index/B_person/order',
-                    name: 'order',
-                    meta: {title: 'order',parent:'B_person'},
-                    component: () => import('./views/B_index/order/index.vue')
+                    path: '/B_index/B_person/interview',
+                    name: 'interview',
+                    meta: {title: 'interview',parent:'B_person'},
+                    component: () => import('./views/B_index/interview/index.vue')
                 },
                 {
                     path: '/B_index/B_person/task',
@@ -56,16 +56,16 @@ const router = new Router({
                     component: () => import('./views/B_index/task/index.vue')
                 },
                 {
-                    path: '/B_index/B_person/interview',
-                    name: 'interview',
-                    meta: {title: 'interview',parent:'B_person'},
-                    component: () => import('./views/B_index/interview/index.vue')
+                    path: '/B_index/B_person/order',
+                    name: 'order',
+                    meta: {title: 'order',parent:'B_person'},
+                    component: () => import('./views/B_index/order/index.vue')
                 },
                 {
-                    path: '/B_index/B_person/real',
-                    name: 'real',
-                    meta: {title: 'real',parent:'B_person'},
-                    component: () => import('./views/B_index/real/index.vue')
+                    path: '/B_index/B_person/collect',
+                    name: 'collect',
+                    meta: {title: 'collect',parent:'B_person'},
+                    component: () => import('./views/B_index/collect/index.vue')
                 },
                 {
                     path: '/B_index/B_person/wallet',
@@ -74,27 +74,39 @@ const router = new Router({
                     component: () => import('./views/B_index/wallet/index.vue')
                 },
                 {
+                    path: '/B_index/B_person/real',
+                    name: 'real',
+                    meta: {title: 'real',parent:'B_person'},
+                    component: () => import('./views/B_index/real/index.vue')
+                },
+                {
                     path: '/B_index/B_person/VIP',
                     name: 'VIP',
                     meta: {title: 'VIP',parent:'B_person'},
                     component: () => import('./views/B_index/VIP/index.vue')
                 },
                 {
-                    path: '/B_index/B_person/create/work',
-                    name: 'create_work',
-                    meta: {title: 'create_work'},
-                    component: () => import('./views/create/work_create/work.vue')
+                    path: '/B_index/B_person/company_info',
+                    name: 'company_info',
+                    meta: {title: 'company_info',parent:'B_person'},
+                    component: () => import('./views/company_detail/index.vue')
                 },
-                {
-                    path: '/B_index/B_person/create/task',
-                    name: 'create_task',
-                    meta: {title: 'create_task'},
-                    component: () => import('./views/create/task_create/index.vue')
-                },
-
-
             ],
         },
+
+        {
+            path: '/B_index/B_person/create/work',
+            name: 'create_work',
+            meta: {title: 'create_work'},
+            component: () => import('./views/create/work_create/work.vue')
+        },
+        {
+            path: '/B_index/B_person/create/task',
+            name: 'create_task',
+            meta: {title: 'create_task'},
+            component: () => import('./views/create/task_create/index.vue')
+        },
+
         /*{
   children:[
 
