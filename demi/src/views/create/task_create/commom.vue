@@ -25,7 +25,7 @@
                                          :placeholder="edit" @visible-change="handleType"
                                          @change="handleLabel"
                             ></el-cascader>
-                            <p class="edit_show" v-if="isUpdata && !type_label || isHistory">
+                            <p class="edit_show" v-if="isUpdata && typeof this.form.type_label === 'string' || isHistory">
                                 {{this.form.type_label}}</p>
                         </el-form-item>
                         <el-form-item label="基本工资：">
@@ -61,7 +61,7 @@
                                          @visible-change="handleInd"
                                          @change="handleIndLabel"
                             ></el-cascader>
-                            <p class="edit_show" v-if="isUpdata && industry_arr.length < 1 || isHistory"><span
+                            <p class="edit_show" v-if="isUpdata || isHistory"><span
                                     style="color: #808080" v-for="item in form.industry" :key="item.label_id">{{item.name}}/</span>
                             </p>
                         </el-form-item>
@@ -214,7 +214,7 @@
                     payment_method: '完工结 [普通任务只支持完工结]',
                     quantity_max: null,
                     type_label: '',
-                    industry: null,
+                    industry: [],
                     city: '',
                     address: null,
                     describes: '',

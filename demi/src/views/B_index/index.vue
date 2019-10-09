@@ -9,7 +9,8 @@
 						<span style="width: 99px"><img src="../../assets/img/demilogo.png" alt=""></span>
 						<el-menu default-active="/B_index/B_person" class="el-menu-demo" mode="horizontal" router>
 							<el-menu-item index="/B_index/B_person">个人中心</el-menu-item>
-							<el-menu-item index="/B_index/home">找人才</el-menu-item>
+							<el-menu-item index="/B_index/home">兼职人才</el-menu-item>
+							<el-menu-item index="/B_index/home">全职人才</el-menu-item>
 							<el-menu-item index="3">得米APP</el-menu-item>
 							<el-menu-item index="4">
 								<el-badge :value="200" :max="99" class="item">
