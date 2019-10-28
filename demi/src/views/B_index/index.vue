@@ -7,13 +7,13 @@
 				<div class="logo">
 					<div>
 						<span style="width: 99px"><img src="../../assets/img/demilogo.png" alt=""></span>
-						<el-menu default-active="/B_index/B_person" class="el-menu-demo" mode="horizontal" router>
+						<el-menu :default-active="active_top" class="el-menu-demo" mode="horizontal" router>
 							<el-menu-item index="/B_index/B_person">个人中心</el-menu-item>
-							<el-menu-item index="/B_index/home">兼职人才</el-menu-item>
-							<el-menu-item index="/B_index/home">全职人才</el-menu-item>
+							<el-menu-item index="/B_index/ability_resume">兼职人才</el-menu-item>
+							<el-menu-item index="/B_index/work_resume">全职人才</el-menu-item>
 							<el-menu-item index="3">得米APP</el-menu-item>
-							<el-menu-item index="4">
-								<el-badge :value="200" :max="99" class="item">
+							<el-menu-item index="/B_index/IM">
+								<el-badge :value="read" :hidden="read > 0 ? false : true" :max="99" class="item">
 									<el-button size="small" style="margin-bottom: 2.5px">消息</el-button>
 								</el-badge>
 							</el-menu-item>
@@ -26,10 +26,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="person-wrap" v-show="this.IsShow">
+		<div class="person-wrap" v-if="this.IsShow">
 			<div class="content">
 				<!--//左部导航-->
 				<div class="left">
+
 					<!--//公司信息-->
 					<div class="person_header" @click="handleCompany">
 						<img v-if="company_info.logo_path" :src="company_info.logo_path" alt="">
@@ -45,68 +46,20 @@
 									class="el-menu-vertical-demo"
 									@select="handleOpen"
 									router
-									active-text-color="#24BFFF"
 							>
-								<el-menu-item class="nav_label" index="/B_index/B_person">
-									<img src="../../assets/img/home@2x.png" alt="">
-									<img src="../../assets/img/home_active@2x.png" alt="">
-									<span slot="title">首&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;页</span>
-									<img src="../../assets/img/xuangzhong@2x.png">
-								</el-menu-item>
-								<el-menu-item class="nav_label" index="/B_index/B_person/work">
-									<img src="../../assets/img/post@2x.png" alt="">
-									<img src="../../assets/img/post_on@2x.png" alt="">
-									<span slot="title">职位管理</span>
-									<img src="../../assets/img/xuangzhong@2x.png">
-								</el-menu-item>
-								<el-menu-item class="nav_label" index="/B_index/B_person/interview">
-									<img src="../../assets/img/interview@2x.png" alt="">
-									<img src="../../assets/img/interview_on@2x.png" alt="">
-									<span slot="title">面试管理</span>
-									<img src="../../assets/img/xuangzhong@2x.png">
-								</el-menu-item>
-								<el-menu-item class="nav_label" index="/B_index/B_person/task">
-									<img src="../../assets/img/assignment@2x.png" alt="">
-									<img src="../../assets/img/assignment_on@2x.png" alt="">
-									<span slot="title">任务管理</span>
-									<img src="../../assets/img/xuangzhong@2x.png">
-								</el-menu-item>
-								<el-menu-item class="nav_label" index="/B_index/B_person/order">
-									<img src="../../assets/img/indent@2x.png" alt="">
-									<img src="../../assets/img/indent_on@2x.png" alt="">
-									<span slot="title">订单列表</span>
-									<img src="../../assets/img/xuangzhong@2x.png">
-								</el-menu-item>
-								<el-menu-item class="nav_label" index="/B_index/B_person/collect">
-									<img src="../../assets/img/enshrine@2x.png" alt="">
-									<img src="../../assets/img/enshrine_in@2x.png" alt="">
-									<span slot="title">人才收藏</span>
-									<img src="../../assets/img/xuangzhong@2x.png">
-								</el-menu-item>
-								<el-menu-item class="nav_label" index="/B_index/B_person/wallet">
-									<img src="../../assets/img/burse@2x.png" alt="">
-									<img src="../../assets/img/burse_on@2x.png" alt="">
-									<span slot="title">我的钱包</span>
-									<img src="../../assets/img/xuangzhong@2x.png">
-								</el-menu-item>
-								<el-menu-item class="nav_label" index="/B_index/B_person/real">
-									<img src="../../assets/img/autonym@2x.png" alt="">
-									<img src="../../assets/img/autonym_on@2x.png" alt="">
-									<span slot="title">实名认证</span>
-									<img src="../../assets/img/xuangzhong@2x.png">
-								</el-menu-item>
-								<el-menu-item class="nav_label" index="/B_index/B_person/VIP">
-									<img src="../../assets/img/vip@2x.png" alt="">
-									<img src="../../assets/img/vip_on@2x.png" alt="">
-									<span slot="title">得米 VIP</span>
-									<img src="../../assets/img/xuangzhong@2x.png">
+								<el-menu-item class="nav_label" v-for="(item,index) in left_list" :key="index" :index="item.path">
+									<img src="../../assets/img/home@2x.png" alt="" v-if="active_class !== item.path">
+									<img src="../../assets/img/home_active@2x.png" alt="" v-if="active_class === item.path">
+									<span slot="title" v-html="item.title" :class="active_class === item.path ? 'active_left' : ''"></span>
+									<img src="../../assets/img/xuangzhong@2x.png" v-if="active_class === item.path">
 								</el-menu-item>
 							</el-menu>
 						</el-col>
 					</el-row>
 				</div>
+
 				<!--//右边内容渲染-->
-				<div class="right" v-show="this.showRight">
+				<div class="right">
 					<router-view :user_info="user_info" />
 				</div>
 			</div>
@@ -116,7 +69,8 @@
 		<router-view v-if="!IsShow"/>
 
 		<!--//底部内容渲染-->
-		<bottom v-show="this.IsShow"></bottom>
+		<bottom v-if="this.IsShow"></bottom>
+
 	</div>
 </template>
 
@@ -125,6 +79,7 @@
 	import http from '../../libs/http'
 	import bottom from '../../components/B_person_bottom'
 	import {getType} from "../../libs/http";
+	import {forEach} from "../../libs/tools";
 	/* eslint-disable */
 	export default {
 		name: 'index',
@@ -139,14 +94,72 @@
 					company_position:'',
 				},
 				company_info:{},
-				active_left:'/B_index/B_person'
+				active_left:'/B_index/B_person/index',
+				active_top:'/B_index/B_person',
+				left_list:[
+					{
+						path: '/B_index/B_person',
+						title: '<span>首&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;页</span>'
+					},
+					{
+						path: '/B_index/B_person/work',
+						title:'职位管理'
+					},
+					{
+						path: '/B_index/B_person/interview',
+						title:'面试管理'
+					},
+					{
+						path: '/B_index/B_person/task',
+						title:'任务管理'
+					},
+					{
+						path: '/B_index/B_person/order',
+						title:'订单列表'
+					},
+					{
+						path: '/B_index/B_person/collect',
+						title:'人才收藏'
+					},
+					{
+						path: '/B_index/B_person/wallet',
+						title:'我的钱包'
+					},
+					{
+						path: '/B_index/B_person/real',
+						title:'实名认证'
+					},
+					{
+						path: '/B_index/B_person/VIP',
+						title:'得米 VIP'
+					},
+				],
+				active_class:'',
+				read:0
 			}
 		},
 		mounted() {
 			//回到顶部
+			tim.on(TIM.EVENT.SDK_READY, function (event) {
+				if (event.name) {
+					let promise = tim.getConversationList();
+					promise.then(function (imResponse) {
+						const newList = imResponse.data.conversationList;
+						console.log(newList);
+						forEach(newList,item=>{
+							if(item.unreadCount > 0){
+								this.read += item.unreadCount;
+							}
+						});
+						console.log(this.read)
+						// 会话列表，用该列表覆盖原有的会话列表
+					}.bind(this)).catch(function (imError) {
+						console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
+					});
+				}
+			}.bind(this));
 			this.scrollTop();
 			this.initialize();
-
 			//左边导航默认选中
 			this.active_left = this.$route.fullPath;
 			if(this.active_left){
@@ -171,89 +184,8 @@
 
 			//左边导航选中状态
 			handleOpen(key, keyPath) {
-				var lis = document.getElementsByClassName('nav_label');
 				this.scrollTop();
-				if(key === '/B_index/B_person'){
-					lis[0].getElementsByTagName('img')[0].style.display = 'none';
-					lis[0].getElementsByTagName('img')[1].style.display = 'inline-block';
-					lis[0].getElementsByTagName('img')[2].style.display = 'block';
-				}else {
-					lis[0].getElementsByTagName('img')[0].style.display = 'inline-block';
-					lis[0].getElementsByTagName('img')[1].style.display = 'none';
-					lis[0].getElementsByTagName('img')[2].style.display = 'none';
-				}
-				if(key === '/B_index/B_person/work'){
-					lis[1].getElementsByTagName('img')[0].style.display = 'none';
-					lis[1].getElementsByTagName('img')[1].style.display = 'inline-block';
-					lis[1].getElementsByTagName('img')[2].style.display = 'block';
-				}else {
-					lis[1].getElementsByTagName('img')[0].style.display = 'inline-block';
-					lis[1].getElementsByTagName('img')[1].style.display = 'none';
-					lis[1].getElementsByTagName('img')[2].style.display = 'none';
-				}
-				if(key === '/B_index/B_person/interview'){
-					lis[2].getElementsByTagName('img')[0].style.display = 'none';
-					lis[2].getElementsByTagName('img')[1].style.display = 'inline-block';
-					lis[2].getElementsByTagName('img')[2].style.display = 'block';
-				}else {
-					lis[2].getElementsByTagName('img')[0].style.display = 'inline-block';
-					lis[2].getElementsByTagName('img')[1].style.display = 'none';
-					lis[2].getElementsByTagName('img')[2].style.display = 'none';
-				}
-				if(key === '/B_index/B_person/task'){
-					lis[3].getElementsByTagName('img')[0].style.display = 'none';
-					lis[3].getElementsByTagName('img')[1].style.display = 'inline-block';
-					lis[3].getElementsByTagName('img')[2].style.display = 'block';
-				}else {
-					lis[3].getElementsByTagName('img')[0].style.display = 'inline-block';
-					lis[3].getElementsByTagName('img')[1].style.display = 'none';
-					lis[3].getElementsByTagName('img')[2].style.display = 'none';
-				}
-				if(key === '/B_index/B_person/order'){
-					lis[4].getElementsByTagName('img')[0].style.display = 'none';
-					lis[4].getElementsByTagName('img')[1].style.display = 'inline-block';
-					lis[4].getElementsByTagName('img')[2].style.display = 'block';
-				}else {
-					lis[4].getElementsByTagName('img')[0].style.display = 'inline-block';
-					lis[4].getElementsByTagName('img')[1].style.display = 'none';
-					lis[4].getElementsByTagName('img')[2].style.display = 'none';
-				}
-				if(key === '/B_index/B_person/collect'){
-					lis[5].getElementsByTagName('img')[0].style.display = 'none';
-					lis[5].getElementsByTagName('img')[1].style.display = 'inline-block';
-					lis[5].getElementsByTagName('img')[2].style.display = 'block';
-				}else {
-					lis[5].getElementsByTagName('img')[0].style.display = 'inline-block';
-					lis[5].getElementsByTagName('img')[1].style.display = 'none';
-					lis[5].getElementsByTagName('img')[2].style.display = 'none';
-				}
-				if(key === '/B_index/B_person/wallet'){
-					lis[6].getElementsByTagName('img')[0].style.display = 'none';
-					lis[6].getElementsByTagName('img')[1].style.display = 'inline-block';
-					lis[6].getElementsByTagName('img')[2].style.display = 'block';
-				}else {
-					lis[6].getElementsByTagName('img')[0].style.display = 'inline-block';
-					lis[6].getElementsByTagName('img')[1].style.display = 'none';
-					lis[6].getElementsByTagName('img')[2].style.display = 'none';
-				}
-				if(key === '/B_index/B_person/real'){
-					lis[7].getElementsByTagName('img')[0].style.display = 'none';
-					lis[7].getElementsByTagName('img')[1].style.display = 'inline-block';
-					lis[7].getElementsByTagName('img')[2].style.display = 'block';
-				}else {
-					lis[7].getElementsByTagName('img')[0].style.display = 'inline-block';
-					lis[7].getElementsByTagName('img')[1].style.display = 'none';
-					lis[7].getElementsByTagName('img')[2].style.display = 'none';
-				}
-				if(key === '/B_index/B_person/VIP'){
-					lis[8].getElementsByTagName('img')[0].style.display = 'none';
-					lis[8].getElementsByTagName('img')[1].style.display = 'inline-block';
-					lis[8].getElementsByTagName('img')[2].style.display = 'block';
-				}else {
-					lis[8].getElementsByTagName('img')[0].style.display = 'inline-block';
-					lis[8].getElementsByTagName('img')[1].style.display = 'none';
-					lis[8].getElementsByTagName('img')[2].style.display = 'none';
-				}
+				this.active_class = key
 			},
 
 			//跳转公司详情
@@ -270,6 +202,10 @@
 			//是否是左边导航
 			IsShow(){
 				if(this.$route.meta['parent'] !== 'B_person'){
+					this.active_top = '/B_index/B_person'
+					if(this.$route.meta['parent'] !== 'create'){
+						this.active_top = this.$route.path;
+					}
 					return false
 				}else{
 					return true
@@ -282,7 +218,6 @@
 					if(getType){
 						this.apiGet('/api/company/info/' + this.user_info.company_id).then((res) =>{
 							this.company_info = res;
-							console.log(this.company_info);
 						});
 						return true
 					}else{
@@ -296,7 +231,7 @@
 				}
 			},
 
-			//判断是否为左边导航内容
+			/*//判断是否为左边导航内容
 			showRight(){
 				this.active_left = this.$route.fullPath;
 				if(this.active_left){
@@ -306,7 +241,7 @@
 					return true
 				}
 				return true
-			}
+			}*/
 		},
 		watch:{
 		},
@@ -319,6 +254,7 @@
 		width:100%;
 		height: 100%;
 		font-family: MicrosoftYaHeiLight;
+		overflow-y: auto;
 		.header{
 			width:100%;
 			background: #2D3238;
@@ -339,6 +275,9 @@
 						}
 						.el-menu{
 							background: none;
+						}
+						.el-menu-demo{
+							border-bottom: none;
 						}
 						.el-menu--horizontal>.el-menu-item.is-active{
 							background: #272B30;
@@ -379,7 +318,7 @@
 									.el-badge__content{
 										border: none;
 										line-height: 17px;
-										padding: 0 3px;
+										padding: 0 5px;
 									}
 								}
 							}
@@ -475,7 +414,7 @@
 										width: 22px;
 										margin-right: 17px;
 									}
-									img:nth-child(3) {
+									img:nth-child(2){
 										position: absolute;
 										margin: 0;
 										top:33%;
@@ -501,6 +440,9 @@
 				}
 			}
 		}
+	}
+	.active_left{
+		color:#24BFFF;
 	}
 	.active_item{
 		background: #272B30;

@@ -122,7 +122,8 @@ Page({
       pic_show_array: array2,
     });
     wx.navigateBack({
-      delta: 1
+      delta: 1,
+      success: function (res) { }
     })
   }
 })

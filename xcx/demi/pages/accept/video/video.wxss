@@ -1,12 +1,12 @@
 .contain {
-  margin: 148rpx auto 0 auto;
+  margin: 129rpx auto 0 auto;
   border-top:1rpx solid #E6E6E6;
   box-sizing: content-box;
   text-align: center;
   position: relative;
   height: 1134rpx;
 }
-image{
+.none{
   width:518rpx;
   margin-top: 183rpx;
 }

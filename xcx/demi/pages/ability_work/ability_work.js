@@ -9,7 +9,8 @@ Page({
     task_info: null,
     select: null,
     title: null,
-    loading:true
+    loading:true,
+    open:false
   },
   onLoad: function(options) {
     for (var i in options) {
@@ -17,6 +18,7 @@ Page({
         id: options[i]
       })
     }
+    console.log(options)
     
 
   },
@@ -109,6 +111,42 @@ Page({
     }
   },
 
+  note: function (event){
+    let token = wx.getStorageSync('token')
+    console.log(token)
+    if (token) {
+      if (event.detail.formId) {
+        if (event.detail.formId != "the formId is a mock one") {
+          common.http(util.baseUrl + '/api/user/formid/create', 'post', function (res) {
+            console.log(res)
+          }, {
+              formid: event.detail.formId
+            }, token)
+        }
+      }
+    }
+    this.setData({
+      open:true
+    })
+  },
+  close(event){
+    let token = wx.getStorageSync('token')
+    console.log(token)
+    if (token) {
+      if (event.detail.formId) {
+        if (event.detail.formId != "the formId is a mock one") {
+          common.http(util.baseUrl + '/api/user/formid/create', 'post', function (res) {
+            console.log(res)
+          }, {
+              formid: event.detail.formId
+            }, token)
+        }
+      }
+    }
+    this.setData({
+      open: false
+    })
+  },
   //“申请”
   open: function(event) {
     let token = wx.getStorageSync('token')
@@ -135,12 +173,14 @@ Page({
         })
       }
       this.setData({
+        open:false,
         login: true,
         select: 2
       })
     } else {
       this.setData({
-        login: false
+        login: false,
+        open: false,
       })
       wx.navigateTo({
         url: "../accept/accept?task_id=" + task_id,

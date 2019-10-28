@@ -24,7 +24,7 @@
     height: 100%;
     /* background-color: #f0f0f0; */
     background:#f7f8fa;
-    overflow-y: overlay;
+    overflow-y: hidden;
     overflow-x: hidden;
     font-size: 14px;
   }

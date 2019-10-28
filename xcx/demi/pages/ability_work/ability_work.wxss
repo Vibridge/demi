@@ -4,7 +4,7 @@
   margin-top: 80%
 }
 .contain {
-  margin: 140rpx auto 0 auto;
+  margin: 129rpx auto 0 auto;
   overflow-x: hidden
 }
 .header{
@@ -177,5 +177,73 @@
 .decorate:nth-last-child(1) text{
   display: none
 }
+
+.bg{
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background:rgba(0,0,0,.5);
+  z-index:10;
+}
+.res_detail{
+  position: fixed;
+  top:50%;
+  left:50%;
+  width: 670rpx;
+  background: white;
+  transform: translate3d(-50%,-50%,0);
+  border-radius:20rpx;
+  z-index:100;
+}
+.main{
+  padding:50rpx;
+  font-size:26rpx;
+  font-family:Microsoft YaHei;
+  font-weight:400;
+  color:rgba(153,153,153,1);
+}
+.main view:nth-child(1){
+  text-align: center;
+  color: #666666;
+  margin-bottom: 20rpx;
+}
+
+.bottom{
+  display: flex;
+  height: 100rpx;
+  width: 100%;
+  justify-content: space-between;
+}
+.second{
+  align-self: center;
+  width:1px;
+  height:38rpx;
+  line-height: 38rpx;
+  color:rgba(230,230,230,1);
+}
+.bottom form{
+  align-self: center;
+  width:49%;
+  height:80rpx;
+  line-height: 80rpx;
+}
+.bottom form .button{
+  background:none;
+  border: none;
+  font-size:28rpx;
+  height: 100%;
+  line-height: 80rpx;
+  color:rgba(59,199,255,1);
+}
+.bottom form:nth-child(1) .button{
+  color:rgba(102,102,102,1);
+}
+.bottom form .button::after{
+  border: none
+}
+
+
 
 

@@ -91,37 +91,41 @@ const router = new Router({
                     meta: {title: 'company_info',parent:'B_person'},
                     component: () => import('./views/company_detail/index.vue')
                 },
-            ],
-        },
-
-        {
-            path: '/B_index/B_person/create/work',
-            name: 'create_work',
-            meta: {title: 'create_work'},
-            component: () => import('./views/create/work_create/work.vue')
-        },
-        {
-            path: '/B_index/B_person/create/task',
-            name: 'create_task',
-            meta: {title: 'create_task'},
-            component: () => import('./views/create/task_create/index.vue')
-        },
-
-        /*{
-  children:[
-
-                    ]
-            children:[
                 {
-                    path: '/B_index/B_person',
-                    name: 'index',
-                    meta: {title: 'index',parent:'B_person'},
-                    component: () => import('./views/B_index/B_person.vue')
+                    path: '/B_index/B_person/create/work',
+                    name: 'create_work',
+                    meta: {title: 'create_work',parent:'create'},
+                    component: () => import('./views/create/work_create/work.vue')
+                },
+                {
+                    path: '/B_index/B_person/create/task',
+                    name: 'create_task',
+                    meta: {title: 'create_task',parent:'create'},
+                    component: () => import('./views/create/task_create/index.vue')
+                },
+                {
+                    path: '/B_index/work_resume',
+                    name: 'work_resume',
+                    meta: {title: 'work_resume',parent:'resume'},
+                    component: () => import('./views/work_resume/index')
+                },
+                {
+                    path: '/B_index/ability_resume',
+                    name: 'ability_resume',
+                    meta: {title: 'ability_resume',parent:'resume'},
+                    component: () => import('./views/ability_resume/index')
+                },
+                {
+                    path: '/B_index/IM',
+                    name: 'IM',
+                    meta: {title: 'IM',parent:'resume'},
+                    component: () => import('./views/IM/index')
                 },
 
-
             ],
-        }*/
+        },
+
+
 
     ],
 });

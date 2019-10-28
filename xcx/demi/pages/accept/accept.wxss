@@ -82,7 +82,7 @@ cover-image{
   padding:0;
 }
 .contain {
-  margin: 140rpx auto 0 auto;
+  margin: 129rpx auto 0 auto;
   padding: 0 40rpx;
   box-sizing: border-box;
   border-top:1rpx solid #E6E6E6

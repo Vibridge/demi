@@ -1,6 +1,6 @@
 .toolTag{
   width: auto;
-  background-color: rgba(255,255,255);
+  background-color: #f2f2f2;
   font-size: 32rpx;
   position: fixed;
   top: 0;
@@ -18,7 +18,7 @@
   align-self: center
 }
 .second image{
-  padding-left: 20rpx;
+  padding-left: 15rpx;
   padding-top: 25rpx;
   padding-right: 15rpx;
   width:30rpx;
@@ -33,15 +33,17 @@
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
+  color: #303133
 }
 .one{
   width: 300rpx;
-  margin-left:20rpx;
+  margin-left:25rpx;
   font-size:32rpx;
   font-weight:bold;
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
+  color: #303133
 }
 
 

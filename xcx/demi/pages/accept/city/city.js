@@ -124,7 +124,8 @@ Page({
       city_name: name
     });
     wx.navigateBack({
-      delta: 1
+      delta: 1,
+      success: function (res) { }
     })
 
   },

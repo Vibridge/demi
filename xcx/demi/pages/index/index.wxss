@@ -1,25 +1,102 @@
 .contain{
-  margin: 240rpx auto 0 auto;
-  text-align: center
+  margin: 129rpx auto 0 auto;
+  text-align: center;
+  background: #fff;
+  width: 100%;
+  height: 100%
 }
-.title image{
-  width: 537rpx;
-  height:auto;
+.line{
+  height: 20rpx;
+  width: 100%;
 }
-.title image:nth-child(1){
-  margin-bottom: 60rpx;
+.main{
+  margin: 0 25rpx;
 }
-.title image:nth-child(2){
-  margin-bottom: 93rpx;
+.list{
+  height:250rpx;
+  background:rgba(255,255,255,1);
+  border:1px solid rgba(217, 217, 217, 1);
+  border-radius:20rpx;
+  margin: 20rpx auto;
+  background: #fff;
+  padding: 23rpx;
+  box-sizing: border-box
 }
-button{
-  width:670rpx;
-  height:86rpx;
-  line-height: 86rpx;
-  background:rgba(76,190,255,1);
-  border-radius:43rpx;
+.title{
+  text-align: left;
   font-size:32rpx;
   font-family:PingFang SC;
   font-weight:500;
-  color:rgba(255,255,255,1);
+  color:rgba(77,77,77,1);
+  margin-bottom: 26rpx;
+  width: 500rpx;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+.info{
+  display: flex;
+  justify-content: space-between
+}
+.logo{
+  width: 125rpx;
+  height: 125rpx
+}
+.logo image{
+  width: 100%;
+  height: 100%;
+}
+.level{
+  width: 240rpx;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  justify-content: space-between
+}
+.sign{
+  width: 29rpx;
+  height: 29rpx;
+  margin-bottom: 13rpx;
+}
+.sign image{
+  width: 100%;
+  height: 100%;
+  margin-right: 4rpx;
+  vertical-align: text-top;
+}
+.city{
+  width:110rpx;
+  height:32rpx;
+  background:rgba(255,255,255,1);
+  border:1px solid rgba(204, 204, 204, 1);
+  border-radius:5rpx;
+  font-size:22rpx;
+  font-family:PingFang SC;
+  font-weight:500;
+  color:rgba(36,178,255,1);
+  text-align: center
+}
+.label{
+  font-size:24rpx;
+  font-family:PingFang SC;
+  font-weight:500;
+  color:rgba(153,153,153,1);
+}
+.price{
+  width: 250rpx;
+  text-align: right;
+  vertical-align: text-bottom;
+}
+.num{
+  font-size:40rpx;
+  font-family:PingFang SC;
+  font-weight:500;
+  color:rgba(77,77,77,1);
+  margin-right: 20rpx;
+}
+.unit{
+  font-size:24rpx;
+  font-family:PingFang SC;
+  font-weight:500;
+  color:rgba(153,153,153,1);
 }

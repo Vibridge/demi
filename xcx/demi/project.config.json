@@ -55,9 +55,9 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "pages/work_info/work_info",
-					"pathName": "pages/work_info/work_info",
-					"query": "id=12",
+					"name": "pages/ability_work/ability_work",
+					"pathName": "pages/ability_work/ability_work",
+					"query": "id=160",
 					"scene": null
 				}
 			]

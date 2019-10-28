@@ -7,9 +7,11 @@
                     <h1>基本信息</h1>
                     <el-upload
                             class="avatar-uploader"
-                            action="http://app.jmzhipin.com/api/company/create"
+                            action=""
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadAvatarFile"
+                            :on-change="showAvatar"
                             :show-file-list="false"
-                            :on-change= "showAvatar"
                             :auto-upload="false"
                     >
                         <img v-if="user_avatar" :src="user_avatar" class="avatar">
@@ -227,6 +229,32 @@
         methods: {
             scrollTop(){
                 document.getElementsByClassName('reg_header_wrapper')[0].scrollIntoView();
+            },
+            handleChange(file) {
+                this.file = file.raw
+            },
+            beforeUpload(file) {
+                this.logo_loading = true;
+                this.ava_loading = true;
+                const isJPG = file.type === 'image/jpeg';
+                const isPNG = file.type === 'image/png';
+                if (!isJPG && !isPNG) {
+                    this.$message.error('上传头像图片只限 JPG,PNG 格式!');
+                }
+                return isJPG || isPNG;
+            },
+            upLogoloadFile() {
+                // 创建表单对象
+                let form = new FormData();
+                // 后端接受参数 ，可以接受多个参数
+                form.append("files", this.file);
+                this.apiPost('/file/uploads', form).then((res) => {
+                    console.log(res);
+                    if (res) {
+                        this.logo_loading = false;
+                        this.form.logo_path = res[0];
+                    }
+                })
             },
             //展示上传图片
             showAvatar(file, fileList) {

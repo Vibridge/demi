@@ -85,7 +85,7 @@
     </view>
   </view>
   <view class="footer">
-    <button open-type="launchApp" id="open" app-parameter="job_id:{{id}}" binderror="launchAppError">
+    <button open-type="launchApp" id="open" app-parameter="user_job_id:{{id}}" binderror="launchAppError">
       <view>打开APP</view>
     </button>
   </view>

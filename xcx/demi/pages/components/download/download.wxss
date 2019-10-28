@@ -56,23 +56,9 @@ cover-image{
   width:49%;
   color:rgba(36,191,255,1);
 }
-.button cover-view{
+.first,.second,.third{
   align-self: center;
   text-align: center;
   padding: 30rpx 0;
-  font-size: 28rpx
-}
-.button #open{
-  align-self: center;
-  text-align: center;
   font-size: 28rpx;
-  width:49%;
-  background: none;
-  height: auto;
-  line-height: 38rpx;
-  border: none;
-  color:rgba(128,128,128,1);
-}
-.button #open::after {
-  border: none;
 }

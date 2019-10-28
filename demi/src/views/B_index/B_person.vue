@@ -286,7 +286,6 @@
                 item.vita.work_start_date = new Date().getFullYear() - parseInt(item.vita.work_start_date.split('-')[0]);
               }
             });
-            console.log(res.data)
             this.interview_list3 = res.data;
             this.$store.commit('loading', false);
           });

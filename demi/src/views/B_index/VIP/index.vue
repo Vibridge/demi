@@ -5,7 +5,7 @@
             <span>得米VIP</span>
         </div>
         <div class="VIP_content">
-            <div class="VIP_ing" v-if="!end_time">
+            <div class="VIP_ing" v-if="!isVip">
                 <div class="VIP_info">
                 <span>
                     <img src="../../../assets/img/vip.png" alt="">
@@ -70,7 +70,7 @@
                     <button>立即开通</button>
                 </div>
             </div>
-            <div class="VIP_ed" v-if="end_time">
+            <div class="VIP_ed" v-if="isVip">
                 <div class="VIPS_info">
                     <p>Hello，尊敬的用户！</p>
                     <p>你已成为VIP会员 享无限特权</p>
@@ -81,7 +81,7 @@
                     <p>“无限制查看牛人联系方式”</p>
                     <p>“365天超长有效期”</p>
                 </div>
-                <button>有效期至：2020-08-02</button>
+                <button>有效期至：{{end_time}}</button>
                 <p class="note">《“得米”平台服务协议》</p>
             </div>
         </div>
@@ -92,6 +92,7 @@
 <script>
     /* eslint-disable */
     import time from "../../../libs/time";
+    import timestamp from "../../../libs/time";
     import http from '../../../libs/http'
 
     export default {
@@ -103,15 +104,19 @@
                 duty: null,
                 email: '',
                 end_time:null,
+                isVip:false,
             }
         },
         mounted() {
             this.apiGet('/api/user/info').then((res) => {
                 if(res.type === 2){
-                    console.log(res.vip_start)
-
-                    this.end_time = time.Time(res.vip_start,'Y-M-D h:m:s')
-                    console.log(this.end_time)
+                    var start = time.Time(res.vip_start,'Y-M-D');
+                    this.end_time = parseInt(start.split('-')[0]) + 1 + '-' + start.split('-')[1] + '-' + start.split('-')[2];
+                    if(timestamp.Stamp(this.end_time) < new Date().getTime()/1000){
+                        this.isVip = false
+                    }else{
+                        this.isVip = true
+                    }
                 }else{
                     this.$message({
                         showClose: true,

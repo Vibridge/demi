@@ -4,13 +4,9 @@
   margin-top: 80%
 }
 .contain {
-  margin: 140rpx auto 0 auto;
+  margin: 129rpx auto 0 auto;
 }
 
-.header {
-  height: 20rpx;
-  background: rgba(247, 247, 247, 1);
-}
 
 .container {
   padding: 30rpx 25rpx 0 0;

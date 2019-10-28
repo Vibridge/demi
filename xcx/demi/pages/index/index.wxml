@@ -1,12 +1,24 @@
 <toolTag prop-a="true" title="得米快找"/>
-<download wx:if="{{download}}" bindmyevent="onMyEvent"/>
 <view class="contain">
-  <view class="title">
-    <image mode="widthFix" src="../asset/img/title.png"></image>
-    <image mode="widthFix" src="../asset/img/note.png"></image>
-  </view>
-  <view>
-    <button open-type="launchApp" id="open" binderror="launchAppError">
-打开APP</button>
+  <view class="line"></view>
+  <view class="main">
+    <view class="list" data-id="{{item.task_id}}" bindtap="handleDetail" wx:for="{{task_list}}" wx:for-item="item" wx:key="{{item.task_id}}">
+      <view class="title">{{item.task_title}}</view>
+      <view class="info">
+        <view class="logo"><image src="{{item.company.logo_path}}"></image></view>
+        <view class="level">
+          <view class="sign" wx:for="{{level}}" wx:for-item="star" wx:key="index">
+            <image wx:if="{{level == 1}}" src="{{img_level}}"></image>
+            <image wx:if="{{level == 2}}" src="{{img_level}}"></image>
+            <image wx:if="{{level == 3}}" src="{{img_level}}"></image>
+            <image wx:if="{{level == 4}}" src="{{img_level}}"></image>
+          </view>
+          <view class="city" wx:if="{{item.city != null}}">{{item.city.city_name}}</view>
+          <view class="city" wx:if="{{item.city == null}}">不限城市</view>
+          <view class="label"><text wx:if="{{item.front_money != 0}}">有定金/</text><text>签合同/</text><text wx:if="{{item.payment_method == 1}}">即结</text><text wx:if="{{item.payment_method != 1}}">完工结</text></view>
+        </view>
+        <view class="price"><text class="num">{{item.payment_money}}</text><text class="unit">{{item.unit}}</text><text class="unit">/单</text></view>
+      </view>
+    </view>
   </view>
 </view>

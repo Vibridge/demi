@@ -68,7 +68,8 @@ Page({
                       show_video: that.data.video
                     });
                     wx.navigateBack({
-                      delta: 1
+                      delta: 1,
+                      success: function (res) { }
                     })
                   }
                 }

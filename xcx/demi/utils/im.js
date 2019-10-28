@@ -3,11 +3,11 @@ import TIM from '../pages/miniprogram_npm/tim-wx-sdk/index.js';
 import COS from "../pages/miniprogram_npm/cos-wx-sdk-v5/index.js";
 
 let options = {
-  SDKAppID: 1400193090, // 接入时需要将0替换为您的即时通信应用的 SDKAppID
+  SDKAppID: 1400241696, // 接入时需要将0替换为您的即时通信应用的 SDKAppID
 };
 // 创建 SDK 实例，TIM.create() 方法对于同一个 SDKAppID 只会返回同一份实例
 let tim = TIM.create(options); // SDK 实例通常用 tim 表示
-var that = this
+// var that = this
 // 将腾讯云对象存储服务 SDK （以下简称 COS SDK）注册为插件，IM SDK 发送文件、图片等消息时，需要用到腾讯云的 COS 服务
 tim.registerPlugin({ 'cos-wx-sdk': COS });
 

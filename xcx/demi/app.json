@@ -7,6 +7,7 @@
     "pages/person/person",
     "pages/accept/accept",
     "pages/IM/IM",
+    "pages/download/download",
     "pages/accept/city/city",
     "pages/accept/work/work",
     "pages/accept/industry/industry",

@@ -12,6 +12,7 @@ Component({
     },
     propA:null,
     propB:null,
+    propC: null,
     select_id:{
       type:Array,
       value:[]
@@ -57,7 +58,19 @@ Component({
     back(){
       var id = this.data.select_id;
       var select = this.data.select;
-      if (id.length > 0){
+      var propC = this.data.propC;
+      console.log(propC)
+      if(propC){
+        let that = this
+        wx.navigateTo({
+          url: '../index/index',
+          success(){
+            that.setData({
+              propC:null
+            })
+          }
+        })
+      }else if (id.length > 0){
         var pages = getCurrentPages();
         var currPage = pages[pages.length - 1];   //当前页面
         var prevPage = pages[pages.length - 2];  //上一个页面

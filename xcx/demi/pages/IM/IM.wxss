@@ -4,7 +4,7 @@
   background: rgba(247, 247, 247, 1);
   font-family: PingFang-SC-Medium;
   font-weight: 500;
-  margin: 140rpx auto 0 auto;
+  margin: 129rpx auto 0 auto;
   height: 1134rpx;
 }
 .task_info_wrap{

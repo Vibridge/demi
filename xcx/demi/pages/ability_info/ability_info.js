@@ -57,8 +57,7 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function (res) {
-    var title = this.data.task_info.task_title
-    var img = this.data.task_info.company.logo_path
+    var title = this.data.ability_info.user.nickname
     var id = this.data.id
     if (res.from === 'menu') {
       // 来自页面内转发按钮

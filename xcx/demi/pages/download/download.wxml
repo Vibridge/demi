@@ -1,0 +1,12 @@
+<toolTag prop-a="true" title="得米快找"/>
+<download wx:if="{{download}}" bindmyevent="onMyEvent"/>
+<view class="contain">
+  <view class="title">
+    <image mode="widthFix" src="../asset/img/title.png"></image>
+    <image mode="widthFix" src="../asset/img/note.png"></image>
+  </view>
+  <view>
+    <button open-type="launchApp" id="open" binderror="launchAppError">
+打开APP</button>
+  </view>
+</view>

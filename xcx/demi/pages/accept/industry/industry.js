@@ -79,7 +79,8 @@ Page({
         industry_name: name_array
       });
       wx.navigateBack({
-        delta: 1
+        delta: 1,
+        success: function (res) { }
       })
     }
    

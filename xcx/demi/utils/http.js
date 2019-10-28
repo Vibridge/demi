@@ -18,7 +18,11 @@ function http(url, method, callback, data = null, token = null){
       if(res.statusCode === 200){
         if (res.data.code === 200) {
           if (res.data.data) {
-            callback(res.data.data)
+            if (res.data.current_page) {
+              callback(res.data)
+            } else {
+              callback(res.data.data)
+            }
           } else {
             callback(true)
           }
@@ -35,7 +39,7 @@ function http(url, method, callback, data = null, token = null){
                   let timer = setTimeout(
                     function () {
                       wx.navigateTo({
-                        url: "../index/index",
+                        url: "../download/download",
                         success: function (res) {
                           console.log(res)
                           clearTimeout(timer)
@@ -46,13 +50,7 @@ function http(url, method, callback, data = null, token = null){
                   )
                 }
               })
-            }else if(title == '你已经申请了该任务'){
-              wx.showToast({
-                title: title,
-                icon: 'none',
-                duration: 2000
-              })
-            }else{
+            } else if (title == "你要查看的信息不存在" || title =="你要查看的数据不存在"){
               wx.showToast({
                 title: title,
                 icon: 'none',
@@ -61,7 +59,7 @@ function http(url, method, callback, data = null, token = null){
                   let timer = setTimeout(
                     function () {
                       wx.navigateTo({
-                        url: "../index/index",
+                        url: "../download/download",
                         success: function (res) {
                           console.log(res)
                           clearTimeout(timer)
@@ -71,6 +69,12 @@ function http(url, method, callback, data = null, token = null){
                     1500
                   )
                 }
+              })
+            } else {
+              wx.showToast({
+                title: title,
+                icon: 'none',
+                duration: 2000
               })
             }
           }else{

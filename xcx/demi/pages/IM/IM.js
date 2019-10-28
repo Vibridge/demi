@@ -53,7 +53,7 @@ Page({
     bigImg: false,
     show: false,
     height: 0,
-    loading:true
+    loading: true
   },
   onLoad: function(option) {
     this.setData({
@@ -85,18 +85,18 @@ Page({
       var recipient = that.data.userID //聊天对象id
       var foreign_key = that.data.task_id //创建对话详情的任务id
       var name = null
-      tim.tim.on(TIM.EVENT.SDK_READY, function (event) {
+      tim.tim.on(TIM.EVENT.SDK_READY, function(event) {
         // 收到离线消息和会话列表同步完毕通知，接入侧可以调用 login 等 API
         // event.name - TIM.EVENT.SDK_READY
         name = event.name
-        if(name){
-          common.http(util.baseUrl + '/converse/create', "post", function (res) { //创建对话详情
+        if (name) {
+          common.http(util.baseUrl + '/converse/create', "post", function(res) { //创建对话详情
             var chat = "C2C" + recipient + 'b' //聊天对象账号
             //获取某会话的消息列表
             tim.tim.getMessageList({
               conversationID: chat, //会话 ID
               count: 15 //需要拉取的消息数量，最大值为15
-            }).then(function (imResponse) {
+            }).then(function(imResponse) {
               const messageList = imResponse.data.messageList; // 消息列表。
               const nextReqMessageID = imResponse.data.nextReqMessageID; // 用于续拉，分页续拉时需传入该字段。
               const isCompleted = imResponse.data.isCompleted; // 表示是否已经拉完所有消息。
@@ -107,7 +107,7 @@ Page({
               }) //时间格式转换，用于页面渲染时
 
               //实时接受消息
-              tim.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function (event) {
+              tim.tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(event) {
                 // event.data - 存储 Message 对象的数组 - [Message]
                 event.data.forEach(item => {
                   if (typeof item.time === 'number') {
@@ -122,35 +122,29 @@ Page({
                 })
               }.bind(that));
               var length = messageList.length;
-              if (nextReqMessageID) {
-                that.setData({
-                  nextReqMessageID: nextReqMessageID,
-                  message: messageList,
-                  over: imResponse.data.isCompleted,
-                  scrollTop: 1000 * length,
-                  loading:false
-                })
-              }
+              that.setData({
+                nextReqMessageID: nextReqMessageID,
+                message: messageList,
+                over: imResponse.data.isCompleted,
+                scrollTop: 1000 * length,
+                loading: false
+              })
             }.bind(that));
             //将某会话下的未读消息状态设置为已读
             tim.tim.setMessageRead({
               conversationID: chat
             });
           }, {
-              type: 2,
-              recipient: recipient,
-              foreign_key: foreign_key
-            }, token)
+            type: 2,
+            recipient: recipient,
+            foreign_key: foreign_key
+          }, token)
         }
       });
-      
-      
+
+
     }.bind(that)).catch(function(imError) {
-      wx.showToast({
-        title: imError,
-        duration: 2000,
-        icon: "none"
-      })
+      console.log(imError)
     });
   },
 

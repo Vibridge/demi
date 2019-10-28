@@ -1,0 +1,25 @@
+.contain{
+  margin: 240rpx auto 0 auto;
+  text-align: center
+}
+.title image{
+  width: 537rpx;
+  height:auto;
+}
+.title image:nth-child(1){
+  margin-bottom: 60rpx;
+}
+.title image:nth-child(2){
+  margin-bottom: 93rpx;
+}
+button{
+  width:670rpx;
+  height:86rpx;
+  line-height: 86rpx;
+  background:rgba(76,190,255,1);
+  border-radius:43rpx;
+  font-size:32rpx;
+  font-family:PingFang SC;
+  font-weight:500;
+  color:rgba(255,255,255,1);
+}

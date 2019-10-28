@@ -1,5 +1,5 @@
 .contain {
-  margin: 148rpx auto 0 auto;
+  margin: 129rpx auto 0 auto;
   border-top:1rpx solid #E6E6E6;
   padding: 40rpx 30rpx 40rpx 40rpx;
   box-sizing: content-box

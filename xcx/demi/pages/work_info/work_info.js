@@ -53,8 +53,7 @@ Page({
     })
   },
   onShareAppMessage: function (res) {
-    var title = this.data.task_info.task_title
-    var img = this.data.task_info.company.logo_path
+    var title = this.data.work_info.work_name
     var id = this.data.id
     if (res.from === 'menu') {
       // 来自页面内转发按钮
