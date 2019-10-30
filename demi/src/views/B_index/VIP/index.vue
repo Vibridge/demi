@@ -92,7 +92,6 @@
 <script>
     /* eslint-disable */
     import time from "../../../libs/time";
-    import timestamp from "../../../libs/time";
     import http from '../../../libs/http'
 
     export default {
@@ -112,7 +111,7 @@
                 if(res.type === 2){
                     var start = time.Time(res.vip_start,'Y-M-D');
                     this.end_time = parseInt(start.split('-')[0]) + 1 + '-' + start.split('-')[1] + '-' + start.split('-')[2];
-                    if(timestamp.Stamp(this.end_time) < new Date().getTime()/1000){
+                    if(time.Stamp(this.end_time) < new Date().getTime()/1000){
                         this.isVip = false
                     }else{
                         this.isVip = true

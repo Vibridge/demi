@@ -170,12 +170,27 @@
                     this.setToken({authorization: res.token});
                     if (res) {
                         if (res.type === 2) {
-                            let promise = tim.login({userID: res.user_id + 'b', userSig: res.usersig});
-                            promise.then(function (imResponse) {
-                                console.log(imResponse.data); // 登录成功
-                            }).catch(function (imError) {
-                                console.warn('login error:', imError); // 登录失败的相关信息
+                            let user_id =  res.user_id;
+                            let userSig = res.usersig;
+                            sessionStorage.setItem('userID',user_id);
+                            sessionStorage.setItem('userSig',userSig);
+                            this.tim.login({
+                                userID: user_id + 'b',
+                                userSig: userSig
+                            }).then(() => {
+                                this.$store.commit('toggleIsLogin', true);
+                                this.$store.commit('startComputeCurrent');
+                                this.$store.commit('showMessage', {
+                                    type: 'success',
+                                    message: '登录成功'
+                                })
+                            }).catch(error => {
+                                this.$store.commit('showMessage', {
+                                    message: '登录失败：' + error.message,
+                                    type: 'error'
+                                })
                             });
+                            // this.$store.dispatch('login', user_id);
                             this.$router.push({
                                 name: "B_index"
                             });

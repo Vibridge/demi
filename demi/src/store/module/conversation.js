@@ -1,4 +1,4 @@
-import tim from 'tim'
+import tim from '../../libs/im'
 import TIM from 'tim-js-sdk'
 const conversationModules = {
   state: {

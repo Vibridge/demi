@@ -1,4 +1,4 @@
-import tim from '../../tim'
+import tim from '../../libs/im'
 const blacklistModule = {
   state: {
     blacklist: []

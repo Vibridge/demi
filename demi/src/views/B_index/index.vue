@@ -13,7 +13,7 @@
 							<el-menu-item index="/B_index/work_resume">全职人才</el-menu-item>
 							<el-menu-item index="3">得米APP</el-menu-item>
 							<el-menu-item index="/B_index/IM">
-								<el-badge :value="read" :hidden="read > 0 ? false : true" :max="99" class="item">
+								<el-badge :value="totalUnreadCount" :hidden="totalUnreadCount > 0 ? false : true" :max="99" class="item">
 									<el-button size="small" style="margin-bottom: 2.5px">消息</el-button>
 								</el-badge>
 							</el-menu-item>
@@ -80,6 +80,8 @@
 	import bottom from '../../components/B_person_bottom'
 	import {getType} from "../../libs/http";
 	import {forEach} from "../../libs/tools";
+
+	import { mapGetters } from 'vuex'
 	/* eslint-disable */
 	export default {
 		name: 'index',
@@ -139,8 +141,7 @@
 			}
 		},
 		mounted() {
-			//回到顶部
-			tim.on(TIM.EVENT.SDK_READY, function (event) {
+			/*tim.on(TIM.EVENT.SDK_READY, function (event) {
 				if (event.name) {
 					let promise = tim.getConversationList();
 					promise.then(function (imResponse) {
@@ -157,7 +158,9 @@
 						console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
 					});
 				}
-			}.bind(this));
+			}.bind(this));*/
+
+			//回到顶部
 			this.scrollTop();
 			this.initialize();
 			//左边导航默认选中
@@ -196,7 +199,8 @@
 						id : this.user_info.company_id
 					}
 				});
-			}
+			},
+
 		},
 		computed:{
 			//是否是左边导航
@@ -241,6 +245,12 @@
 					return true
 				}
 				return true
+			}*/
+
+			...mapGetters(['totalUnreadCount']),
+			/*// 是否显示 Loading 状态
+			showLoading() {
+				return !this.isSDKReady
 			}*/
 		},
 		watch:{

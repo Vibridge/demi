@@ -24,11 +24,11 @@ const user = {
     }
   },
   actions: {
-    login(context, userID) {
+   /* login(context, userID ,usersig) {
       tim
         .login({
           userID,
-          userSig: window.genTestUserSig(userID).userSig
+          userSig: usersig
         })
         .then(() => {
           context.commit('toggleIsLogin', true)
@@ -41,7 +41,7 @@ const user = {
             window.$message.error(imError.message)
           }
         })
-    },
+    },*/
     logout(context) {
       // 若有当前会话，在退出登录时已读上报
       if (context.rootState.conversation.currentConversation.conversationID) {

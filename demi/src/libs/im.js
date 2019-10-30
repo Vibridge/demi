@@ -14,6 +14,7 @@ tim.registerPlugin({'cos-js-sdk': COS});
 // 设置 SDK 日志输出级别为 release 级别，详细分级请参见 setLogLevel 接口的说明
 tim.setLogLevel(1);
 
+/*
 // 监听事件，例如：
 tim.on(TIM.EVENT.MESSAGE_RECEIVED, function(event) {
     // 收到推送的单聊、群聊、群提示以及群系统通知的新消息，可通过遍历 event.data 获取消息列表数据并渲染到页面
@@ -77,5 +78,6 @@ tim.on(TIM.EVENT.KICKED_OUT, function(event) {
     // event.name - TIM.EVENT.KICKED_OUT
     // event.data.type - 被踢下线的原因，例如 TIM.TYPES.KICKED_OUT_MULT_ACCOUNT 多账号登录被踢
 });
+*/
 
 export default tim
