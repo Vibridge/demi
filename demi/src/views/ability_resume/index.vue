@@ -426,7 +426,6 @@
 
 <script>
     import http from '../../libs/http'
-    import {getType} from '../../libs/http'
     import {forEach} from "../../libs/tools";
     import {handleMap} from '../../libs/Amap'
     import time from "../../libs/time";
@@ -487,12 +486,12 @@
                 //城市
                 city_tree: [],
                 city_children: [],
-                city_active:null,
-                second_city_active:null,
-                show_select_city:false,
+                city_active: null,
+                second_city_active: null,
+                show_select_city: false,
 
                 //详情固定
-                searchBarFixed:false,
+                searchBarFixed: false,
             }
         },
         mounted() {
@@ -581,24 +580,22 @@
 
             //兼职人才数据
             initialize(page, city_id, select_type_label_id) {
-                if (getType) {
-                    if (city_id || select_type_label_id) {
-                        this.apiGet('/api/ability/paginate?page=' + page + '&city_id=' + city_id + '&type_label_id=' + select_type_label_id).then((res) => {
-                            this.last_page = res.last_page;
-                            forEach(res.data, item => {
-                                this.ability_resume.push(item)
-                            });
+                if (city_id || select_type_label_id) {
+                    this.apiGet('/api/ability/paginate?page=' + page + '&city_id=' + city_id + '&type_label_id=' + select_type_label_id).then((res) => {
+                        this.last_page = res.last_page;
+                        forEach(res.data, item => {
+                            this.ability_resume.push(item)
                         });
-                    } else {
-                        this.apiGet('/api/ability/paginate?page=' + page).then((res) => {
-                            this.last_page = res.last_page;
-                            forEach(res.data, item => {
-                                this.ability_resume.push(item)
-                            });
-                        })
-                    }
-
+                    });
+                } else {
+                    this.apiGet('/api/ability/paginate?page=' + page).then((res) => {
+                        this.last_page = res.last_page;
+                        forEach(res.data, item => {
+                            this.ability_resume.push(item)
+                        });
+                    })
                 }
+
             },
 
             //城市筛选
@@ -625,17 +622,17 @@
                     this.city_tree = res;
                 })
             },
-            handleSecondCity(id,item) {
+            handleSecondCity(id, item) {
                 this.city_active = id;
                 this.city_children = item
             },
-            handleSelectCity(id,name){
+            handleSelectCity(id, name) {
                 this.ability_resume = [];
                 this.page = 1;
                 this.now_city = name;
                 this.select_city = id;
                 this.show_select_city = false;
-                this.initialize(this.page,id,this.select_type_label_id)
+                this.initialize(this.page, id, this.select_type_label_id)
             },
 
             //推荐
@@ -1182,12 +1179,14 @@
         background: rgba(255, 255, 255, 1);
         border-radius: 4px;
         margin-top: 7vh !important;
+
         .el-dialog__header {
             display: none;
         }
 
         .el-dialog__body {
             padding: 0;
+
             .show_ability_wrap {
                 height: 100%;
                 overflow-y: auto;
@@ -1488,25 +1487,31 @@
         display: flex;
         font-size: 14px;
         flex-direction: column;
+
         .level_l_wrap::-webkit-scrollbar {
             height: 5px;
         }
-        .level_l_wrap::-webkit-scrollbar-thumb{
+
+        .level_l_wrap::-webkit-scrollbar-thumb {
             background: #c1c1c1;
         }
+
         .level_l_wrap {
             display: flex;
             overflow-x: auto;
+
             .level_1_city {
                 cursor: pointer;
                 margin-bottom: 12px;
+
                 p {
                     width: 50px;
                     padding: 4px 10px;
                     text-align: center;
                 }
             }
-            .level_1_city:hover{
+
+            .level_1_city:hover {
                 border-radius: 14px;
                 background: #F7F8FA;
             }
@@ -1515,22 +1520,24 @@
         .level_2_wrap {
             width: 500px;
             margin-top: 12px;
+
             .level_2_city {
                 display: inline-block;
                 padding: 4px 10px;
                 margin-bottom: 10px;
                 cursor: pointer;
             }
-            .level_2_city:hover{
+
+            .level_2_city:hover {
                 border-radius: 14px;
                 background: #F7F8FA;
             }
         }
 
-        .active_city{
-            background:rgba(255,255,255,1);
-            border:1px solid rgba(36, 191, 255, 1);
-            color:rgba(36,191,255,1);
+        .active_city {
+            background: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(36, 191, 255, 1);
+            color: rgba(36, 191, 255, 1);
             border-radius: 14px;
         }
 

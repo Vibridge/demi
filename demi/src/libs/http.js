@@ -2,7 +2,7 @@ import axios from 'axios';
 import coolies from 'js-cookie';
 import config from '../config';
 import {encode, decode, uuid} from "./tools";
-import { Message } from 'element-ui';
+
 
 const service = axios.create({
     baseURL: config.baseUrl,
@@ -40,19 +40,7 @@ export const delToken = ()=>{
 export const getToken = ()=>{
     return sessionStorage.getItem(uuid(config.baseUrl));
 };
-export const getType = ()=>{
-    return this.apiGet('/api/user/info').then((res) =>{
-        if(res.type === 2){
-            return true
-        }else{
-            this.$message({
-                showClose: true,
-                message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
-                duration:1000
-            })
-        }
-    })
-}
+
 export default {
     methods: {
         apiGet(url, params) {

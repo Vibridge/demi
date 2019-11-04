@@ -1,7 +1,8 @@
 <template>
     <div class="sale" v-if="isShow">
         <div class="title" @click="handleBack">
-            <p><span v-if="!isHistory">职位管理 - </span><span v-if="isHistory">历史模板 -</span><span v-if="!isUpdata">发布销售代理任务</span><span v-if="isUpdata">编辑销售代理任务</span></p>
+            <p><span v-if="!isHistory">职位管理 - </span><span v-if="isHistory">历史模板 -</span><span
+                    v-if="!isUpdata">发布销售代理任务</span><span v-if="isUpdata">编辑销售代理任务</span></p>
         </div>
         <div class="contain">
             <div class="basic">
@@ -34,9 +35,10 @@
                                          :props="{ label:'name', value:'label_id',multiple: true,}"
                                          :placeholder="edit" @focus="handleType"
                                          @change="handleLabel"></el-cascader>
-                            <p class="edit_show" v-if="isUpdata && industry_arr.length < 1 || isHistory"><span style="color: #808080"
-                                                                                                  v-for="item in form.industry"
-                                                                                                  :key="item.label_id">{{item.name}}/</span>
+                            <p class="edit_show" v-if="isUpdata && industry_arr.length < 1 || isHistory"><span
+                                    style="color: #808080"
+                                    v-for="item in form.industry"
+                                    :key="item.label_id">{{item.name}}/</span>
                             </p>
 
                         </el-form-item>
@@ -82,7 +84,8 @@
                             <div class="picture">
                                 <p>必填</p>
                                 <div class="show_pic" v-if="(isUpdata && show_pic) || (isHistory && show_pic)">
-                                    <div @mouseover="show_icon = true" @mouseleave="show_icon = false" v-for="(item,index) in show_pic" :key="item.file_id">
+                                    <div @mouseover="show_icon = true" @mouseleave="show_icon = false"
+                                         v-for="(item,index) in show_pic" :key="item.file_id">
                                         <img :src="item.file_path" alt="">
                                         <span v-if="show_icon">
                                             <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
@@ -120,7 +123,7 @@
                                                :before-upload="beforeVidUpload"
                                                :http-request="uploadVidFile"
                                                :on-change="handleVidChange"
-                                               >重新上传
+                                    >重新上传
                                     </el-upload>
                                 </div>
                                 <el-upload
@@ -151,7 +154,6 @@
 
 <script>
     import http from '../../../libs/http'
-    import {getType} from '../../../libs/http'
     import {forEach} from "../../../libs/tools";
 
     export default {
@@ -159,8 +161,8 @@
         props: {
             isShow: {type: Boolean, default: false},
             isUpdata: {type: Boolean, default: false},
-            isHistory:{type:Boolean,default:false},
-            isHistoryId:{type:Number,default:null}
+            isHistory: {type: Boolean, default: false},
+            isHistoryId: {type: Number, default: null}
         },
         data() {
             return {
@@ -185,17 +187,17 @@
                 cover: "",
                 type_list: null,
                 city_tree: null,
-                cityName:null,
+                cityName: null,
                 dialogImageUrl: '',
                 dialogVisible: false,
-                show_icon:false,
-                show_pic:[],
-                loading:false
+                show_icon: false,
+                show_pic: [],
+                loading: false
             }
         },
         methods: {
-            handleBack(){
-                if(this.isUpdata){
+            handleBack() {
+                if (this.isUpdata) {
                     sessionStorage.removeItem('task');
                     this.$router.push({
                         name: "work",
@@ -203,16 +205,15 @@
                             activeName: 'task_work'
                         }
                     });
-                }else{
-                    this.$emit('show-sale', false ,'sale')
+                } else {
+                    this.$emit('show-sale', false, 'sale')
                 }
             },
             handleType() {
-                if (getType) {
-                    this.apiGet('/labels?id=1025&mode=tree').then((res) => {
-                        this.type_list = res;
-                    })
-                }
+                this.apiGet('/labels?id=1025&mode=tree').then((res) => {
+                    this.type_list = res;
+                })
+
             },
             handleLabel(res) {
                 var length = res.length;
@@ -240,43 +241,43 @@
                 }
             },
             handleCity() {
-                if (getType) {
-                    let first_city = {
+
+                let first_city = {
+                    "city_name": '不限',
+                    "city_id": 0,
+                    children: [{
                         "city_name": '不限',
                         "city_id": 0,
-                        children: [{
-                            "city_name": '不限',
-                            "city_id": 0,
-                        }]
-                    };
-                    this.apiGet('/city/lists?mode=tree').then((res) => {
-                        this.$store.commit('loading', true);
-                        forEach(res, item => {
-                            if (item.municipalities !== 0) {
-                                let muniCity = [{
-                                    "city_name": item.city_name,
-                                    "city_id": item.city_id
-                                }];
-                                item.children = muniCity
+                    }]
+                };
+                this.apiGet('/city/lists?mode=tree').then((res) => {
+                    this.$store.commit('loading', true);
+                    forEach(res, item => {
+                        if (item.municipalities !== 0) {
+                            let muniCity = [{
+                                "city_name": item.city_name,
+                                "city_id": item.city_id
+                            }];
+                            item.children = muniCity
+                        }
+                        forEach(item.children, item1 => {
+                            if (item1.children) {
+                                delete item1.children
                             }
-                            forEach(item.children, item1 => {
-                                if (item1.children) {
-                                    delete item1.children
-                                }
-                            });
                         });
-                        this.city_tree = res;
-                        this.city_tree.unshift(first_city)
-                        this.$store.commit('loading', false);
-                    })
-                }
+                    });
+                    this.city_tree = res;
+                    this.city_tree.unshift(first_city)
+                    this.$store.commit('loading', false);
+                })
+
             },
             handleChange(file, fileList) {
-                if(this.show_pic){
+                if (this.show_pic) {
                     if (this.form.image_arr.length < 9 - this.show_pic.length) {
                         this.files = fileList;
                     }
-                }else{
+                } else {
                     if (this.form.image_arr.length < 9) {
                         this.files = fileList;
                     }
@@ -307,14 +308,14 @@
                     form.append('files[]', this.files[i].raw)
                 }
                 this.apiPost('/file/uploads', form).then((res) => {
-                    if(res){
+                    if (res) {
                         this.form.image_arr = res;
-                    }else{
+                    } else {
                         this.form.image_arr = []
                     }
-                    if(this.show_pic){
+                    if (this.show_pic) {
                         let length = this.show_pic.length;
-                        for(let i = 0;i<length;i++){
+                        for (let i = 0; i < length; i++) {
                             var path = this.show_pic[i].file_path.split('com')[1];
                             this.form.image_arr.unshift(path);
                         }
@@ -322,9 +323,9 @@
                 });
             },
             handleRemove(file, fileList) {
-                if(typeof file == "number") {
-                    this.apiDelete('/api/task/delete/file/' + fileList[file].file_id).then((res) =>{
-                        if(res){
+                if (typeof file == "number") {
+                    this.apiDelete('/api/task/delete/file/' + fileList[file].file_id).then((res) => {
+                        if (res) {
                             fileList.splice(file, 1);
                         }
                     });
@@ -332,12 +333,12 @@
                 this.files = fileList;
                 this.uploadFile();
             },
-            handleSuccess(){
+            handleSuccess() {
                 this.loading = false
             },
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
-                if(file.file_path){
+                if (file.file_path) {
                     this.dialogImageUrl = file.file_path;
                 }
                 this.dialogVisible = true;
@@ -463,7 +464,7 @@
                         duration: 500
                     })
                 } else {
-                    if(this.cover){
+                    if (this.cover) {
                         let fileImg = this.base64ToBlob(this.cover);
                         var form = new FormData();
                         var cover_path;
@@ -472,13 +473,13 @@
                             cover_path = res;
                         });
                     }
-                    if(this.form.city === '不限'){
-                        this.form.city = [0,0]
+                    if (this.form.city === '不限') {
+                        this.form.city = [0, 0]
                     }
                     var data;
                     data = {
-                        type_label_id:1091,
-                        quantity_max:this.form.quantity_max,
+                        type_label_id: 1091,
+                        quantity_max: this.form.quantity_max,
                         task_title: this.form.task_title,
                         payment_method: 1,
                         unit: '元',
@@ -498,7 +499,7 @@
                         console.log('aaa')
                         var task_edit = JSON.parse(sessionStorage.getItem('task'));
                         this.apiPost('/api/task/update/' + task_edit.id).then((res) => {
-                            if(res){
+                            if (res) {
                                 sessionStorage.removeItem('task');
                                 this.$router.push({
                                     name: "work",
@@ -509,9 +510,9 @@
                             }
 
                         })
-                    }else{
+                    } else {
                         this.apiPost('/api/task/create', data).then((res) => {
-                            if(res){
+                            if (res) {
                                 sessionStorage.removeItem('task');
                                 this.$router.push({
                                     name: "work",
@@ -525,27 +526,27 @@
                     }
                 }
             },
-            handleEdit(id){
+            handleEdit(id) {
                 this.apiGet('/api/task/info/' + id).then((res) => {
                     console.log(res)
                     this.form.task_title = res.task_title;
                     this.form.payment_money = res.payment_money;
                     this.form.quantity_max = res.quantity_max;
-                    if(res.city){
+                    if (res.city) {
                         this.form.city = [0]
                         this.form.city.push(res.city.city_id);
                         this.cityName = res.city.city_name;
-                    }else{
+                    } else {
                         this.form.city = "不限"
                     }
-                    if(res.images.length > 0){
+                    if (res.images.length > 0) {
                         this.show_pic = res.images;
                     }
-                    if(res.video){
+                    if (res.video) {
                         this.form.video_path = res.video.file_path
                     }
                     this.form.industry = res.industry;
-                    forEach(res.industry,item => {
+                    forEach(res.industry, item => {
                         this.industry_arr.push(item.label_id)
                     });
                     this.form.goods_desc = res.goods.description;
@@ -562,8 +563,8 @@
                     this.handleEdit(task_edit.id)
                 }
             },
-            isHistory(){
-                if(this.isHistory && this.isHistoryId && this.isShow){
+            isHistory() {
+                if (this.isHistory && this.isHistoryId && this.isShow) {
                     this.edit = '';
                     this.handleEdit(this.isHistoryId)
                 }
@@ -790,39 +791,44 @@
                         padding: 13px;
                         box-sizing: border-box;
                         margin-bottom: 50px;
-                        video{
+
+                        video {
                             width: 100%;
                         }
-                        .operation{
+
+                        .operation {
                             display: flex;
                             margin-bottom: 18px;
-                            .delect{
-                                width:80px;
-                                height:30px;
+
+                            .delect {
+                                width: 80px;
+                                height: 30px;
                                 line-height: 30px;
-                                background:rgba(247,253,255,1);
-                                border:1px solid rgba(36, 191, 255, 1);
-                                border-radius:15px;
+                                background: rgba(247, 253, 255, 1);
+                                border: 1px solid rgba(36, 191, 255, 1);
+                                border-radius: 15px;
                                 margin-right: 12px;
                                 text-align: center;
-                                font-size:14px;
-                                font-family:Microsoft YaHei;
-                                font-weight:400;
-                                color:rgba(36,191,255,1);
+                                font-size: 14px;
+                                font-family: Microsoft YaHei;
+                                font-weight: 400;
+                                color: rgba(36, 191, 255, 1);
                             }
-                            div:nth-child(2){
-                                width:125px;
-                                height:32px;
+
+                            div:nth-child(2) {
+                                width: 125px;
+                                height: 32px;
                                 line-height: 32px;
-                                background:rgba(36,191,255,1);
-                                border-radius:15px;
-                                font-size:14px;
-                                font-family:Microsoft YaHei;
-                                font-weight:400;
-                                color:rgba(255,255,255,1);
+                                background: rgba(36, 191, 255, 1);
+                                border-radius: 15px;
+                                font-size: 14px;
+                                font-family: Microsoft YaHei;
+                                font-weight: 400;
+                                color: rgba(255, 255, 255, 1);
                                 text-align: center;
                             }
                         }
+
                         p {
                             margin: 0 0 18px 0;
                             text-align: left;
@@ -899,61 +905,72 @@
         line-height: 38px;
         color: #808080;
     }
-    .show_pic{
+
+    .show_pic {
         position: relative;
         float: left;
-        div{
-            width:140px;
+
+        div {
+            width: 140px;
             height: 140px;
             display: inline-block;
             margin-right: 8px;
-            img{
+
+            img {
                 width: 100%;
                 height: 100%;
             }
-            span{
+
+            span {
                 position: absolute;
-                top:0;
+                top: 0;
                 left: 0;
                 width: 140px;
                 height: 140px;
-                background: rgba(0,0,0,.3);
+                background: rgba(0, 0, 0, .3);
                 display: flex;
                 justify-content: center;
-                .icon{
+
+                .icon {
                     align-self: center;
                     color: white;
                     font-size: 20px;
                     margin-right: 20px;
                     cursor: pointer;
                 }
-                .icon:nth-last-child(1){
+
+                .icon:nth-last-child(1) {
                     margin: 0;
                 }
             }
 
         }
     }
-    .bigPic{
-        .el-dialog__header{
+
+    .bigPic {
+        .el-dialog__header {
             padding: 0;
-            .el-dialog__headerbtn{
+
+            .el-dialog__headerbtn {
                 background: #24BFFF;
                 border-radius: 50%;
                 width: 30px;
                 height: 30px;
                 line-height: 30px;
-                .el-icon{
+
+                .el-icon {
                     color: white;
 
                 }
             }
         }
-        .el-dialog__body{
+
+        .el-dialog__body {
             padding: 0;
             line-height: 0;
         }
     }
+
     ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
         font-size: 14px;
         font-family: MicrosoftYaHei;

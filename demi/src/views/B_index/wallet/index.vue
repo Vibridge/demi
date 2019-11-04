@@ -59,7 +59,6 @@
 
 <script>
     /* eslint-disable */
-    import {getType} from "../../../libs/http";
     import http from '../../../libs/http'
 
     export default {
@@ -77,9 +76,7 @@
             }
         },
         mounted(){
-            if(getType){
-                this.handleWallet_list()
-            }
+            this.handleWallet_list()
         },
         methods:{
             handleWalletSizeChange(per_page){

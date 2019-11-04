@@ -371,7 +371,6 @@
 <script>
     /* eslint-disable */
     import http from '../../../libs/http'
-    import {getType} from "../../../libs/http";
 
     export default {
         name: 'task',
@@ -396,9 +395,7 @@
             };
         },
         mounted() {
-            if(getType){
-                this.initialize();
-            }
+            this.initialize();
         },
         created() {
             this.getRouterData();

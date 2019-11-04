@@ -7,7 +7,7 @@
             <div v-if="!newList">
                 <p>暂无30天以内的聊天记录</p>
             </div>
-            <div class="list" v-for="(item,index) in newList" :key="index" @click="showMessage(handleList[index],item)">
+            <div v-for="(item,index) in newList" :key="index" @click="showMessage(handleList[index],item)" class="list" :class="{ 'active_list': handleList[index].conversationID === currentConversation.conversationID }">
                 <div class="list_info">
                     <div class="avatar">
                         <el-badge :value="handleList[index].unreadCount" :hidden="handleList[index].unreadCount < 1" class="item">
@@ -40,7 +40,7 @@
                     >查看更多</el-button>
                 </div>
                 <div class="no-more" v-else>没有更多了</div>
-                <MessageItem v-for="message in this.handleMessageList" :key="message.ID" :message="message"></MessageItem>
+                <MessageItem class="detail" v-for="message in this.handleMessageList" :key="message.ID" :message="message"></MessageItem>
             </div>
             <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置</div>
             <MessageBox v-if="messageDetail"></MessageBox>
@@ -77,7 +77,15 @@
                 messageDetail:null,
                 isShowScrollButtomTips: false,
                 preScrollHeight: 0,
+                isCheckouting: false, // 是否正在切换会话
             }
+        },
+        mounted(){
+            this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
+            window.addEventListener('keydown', this.handleKeydown)
+        },
+        destroyed() {
+            window.removeEventListener('keydown', this.handleKeydown)
         },
         created() {
             this.$nextTick(function () {
@@ -96,7 +104,10 @@
                     })
 
                 });
-                console.log(this.handleMessageList)
+                console.log(this.newList)
+                // console.log(this.handleList)
+                console.log(this.handleList)
+
             });
             this.apiGet('/labels?id=967').then((res)=>{
                 this.work_label = res
@@ -105,7 +116,6 @@
         methods: {
             showMessage(im,item){
                 this.messageDetail = item;
-                console.log(this.messageDetail)
                 if (im.conversationID !== this.$store.state.conversation.currentConversation.conversationID) {
                     this.$store.dispatch(
                         'checkoutConversation',
@@ -121,6 +131,15 @@
                         lastMessageTime: im.lastMessage.lastTime
                     })
                 }
+                /*let message = state.conversation.currentMessageList;
+                let length = message.length;
+                for(let i = 0; i<length;i++){
+                    if(i + 1 < length){
+                        if((message[i+1].time - message[i].time) < 180){
+                            message[i+1].time = null;
+                        }
+                    }
+                }*/
             },
 
             handleWork(id){
@@ -158,6 +177,51 @@
                     this.isShowScrollButtomTips = false
                 })
             },
+            handleKeydown(event) {
+                if (event.keyCode !== 38 && event.keyCode !== 40 || this.isCheckouting) {
+                    return
+                }
+                const currentIndex = this.conversationList.findIndex(
+                    item => item.conversationID === this.currentConversation.conversationID
+                )
+                if (event.keyCode === 38 && currentIndex - 1 >= 0) {
+                    this.checkoutPrev(currentIndex)
+                }
+                if (
+                    event.keyCode === 40 &&
+                    currentIndex + 1 < this.conversationList.length
+                ) {
+                    this.checkoutNext(currentIndex)
+                }
+            },
+            checkoutPrev(currentIndex) {
+                this.isCheckouting = true
+                this.$store
+                    .dispatch(
+                        'checkoutConversation',
+                        this.conversationList[currentIndex - 1].conversationID
+                    )
+                    .then(() => {
+                        this.isCheckouting = false
+                    })
+                    .catch(() => {
+                        this.isCheckouting = false
+                    })
+            },
+            checkoutNext(currentIndex) {
+                this.isCheckouting = true
+                this.$store
+                    .dispatch(
+                        'checkoutConversation',
+                        this.conversationList[currentIndex + 1].conversationID
+                    )
+                    .then(() => {
+                        this.isCheckouting = false
+                    })
+                    .catch(() => {
+                        this.isCheckouting = false
+                    })
+            }
         },
         computed:{
             ...mapState({
@@ -193,26 +257,23 @@
             min-height: calc(100vh - 116px);
             background: #fafafa;
             border: 1px solid rgba(230, 230, 230, 1);
+            /*border-right: 1px solid transparent;*/
 
             .title {
-                width: 100%;
                 background: rgba(255, 255, 255, 1);
                 border-bottom: 1px solid rgba(230, 230, 230, 1);
-                padding: 22px 20px;
+                padding: 23px 20px;
                 font-size: 14px;
-                font-weight: 400;
                 color: rgba(153, 153, 153, 1);
-                box-sizing: border-box;
+                /*border-right: 1px solid rgba(230, 230, 230, 1);*/
             }
 
             .list {
-                width: 100%;
                 display: flex;
                 justify-content: space-between;
                 padding: 19px;
-                box-sizing: border-box;
                 cursor: pointer;
-
+                margin-right: -1px;
                 .list_info {
                     align-self: center;
                     display: flex;
@@ -260,6 +321,10 @@
             width: 701px;
             border: 1px solid rgba(230, 230, 230, 1);
             border-left: 1px solid transparent;
+            margin-left: -1px;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
 
             .title {
                 width: 701px;
@@ -313,29 +378,51 @@
                 box-sizing: border-box;
                 overflow-y: scroll;
                 padding: 0 26px;
-                max-height: 722px;
-                .newMessageTips{
-                    position: absolute;
-                    cursor: pointer;
-                    padding: 5px;
-                    width: 120px;
-                    margin: auto;
-                    left: 0;
-                    right: 0;
-                    bottom: 5px;
+                height: calc(100vh - 350px);
+                .more{
+                    display: flex;
+                    justify-content: center;
                     font-size: 12px;
-                    text-align: center;
-                    border-radius: 10px;
-                    /*border: $border-light 1px solid;
-                    background-color: $white;
-                    color: $primary;*/
+                }
+                .no-more{
+                    display: flex;
+                    justify-content: center;
+                    color: #a5b5c1;
+                    font-size: 12px;
+                    padding: 10px 10px;
+                }
+
+                .detail{
+                    margin-top: 50px;
+                }
+                .detail:nth-child(2){
+                     margin-top: 30px;
+                 }
+                .detail:nth-last-child(1){
+                    margin-bottom: 30px;
                 }
             }
-
-            .send {
-                border-top: 1px solid #E6E6E6;
-                min-height: 180px;
+            .message-list::-webkit-scrollbar{
+                width: 2px;
             }
+            .newMessageTips{
+                position: absolute;
+                cursor: pointer;
+                padding: 5px;
+                width: 120px;
+                margin: auto;
+                left: 0;
+                right: 0;
+                bottom: 5px;
+                font-size: 12px;
+                text-align: center;
+                border-radius: 10px;
+                /*border: $border-light 1px solid;
+                background-color: $white;
+                color: $primary;*/
+            }
+
+
         }
 
         .el-badge__content.is-fixed{
@@ -345,5 +432,9 @@
             background:rgba(255,56,89,1);
             border-radius:50%;
         }
+    }
+    .active_list{
+        background:rgba(255,255,255,1);
+        border-right:1px solid white!important;
     }
 </style>

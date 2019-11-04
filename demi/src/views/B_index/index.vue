@@ -78,7 +78,6 @@
 	import  "../../assets/css/reset.css"
 	import http from '../../libs/http'
 	import bottom from '../../components/B_person_bottom'
-	import {getType} from "../../libs/http";
 	import {forEach} from "../../libs/tools";
 
 	import { mapGetters } from 'vuex'
@@ -219,19 +218,10 @@
 			//判断用户类型
 			start(){
 				if(this.user_info.company_id && this.user_info.user_id){
-					if(getType){
-						this.apiGet('/api/company/info/' + this.user_info.company_id).then((res) =>{
-							this.company_info = res;
-						});
-						return true
-					}else{
-						this.$message({
-							showClose: true,
-							message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
-							duration:1000
-						});
-						return false
-					}
+					this.apiGet('/api/company/info/' + this.user_info.company_id).then((res) =>{
+						this.company_info = res;
+					});
+					return true;
 				}
 			},
 

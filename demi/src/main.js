@@ -8,6 +8,7 @@ import tim from '../src/libs/im'
 import TIM from 'tim-js-sdk'
 window.tim = tim
 window.TIM = TIM
+Vue.prototype.$bus = new Vue() // event Bus 用于无关系组件间的通信。
 Vue.config.productionTip = false
 Vue.prototype.tim = tim
 Vue.prototype.TIM = TIM

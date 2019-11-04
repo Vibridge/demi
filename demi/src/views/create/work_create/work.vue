@@ -174,7 +174,6 @@
     /*import AMap from 'AMap'
     var map*/
     import http from '../../../libs/http'
-    import {getType} from '../../../libs/http'
     import {forEach} from "../../../libs/tools";
     import {handleMap} from '../../../libs/Amap'
 
@@ -210,7 +209,7 @@
                 latitude: '',
                 tpl: [],
                 index: 0,
-                isHistory:false,
+                isHistory: false,
                 work_edit: null
             }
         },
@@ -219,7 +218,7 @@
                 handleMap();
                 this.getRouterData();
                 var data = sessionStorage.getItem('work')
-                if(data){
+                if (data) {
                     this.work_edit = JSON.parse(data).info;
                     this.isHistory = JSON.parse(data).isHistory;
                 }
@@ -227,44 +226,44 @@
         },
         methods: {
             handleCity() {
-                if (getType) {
-                    this.apiGet('/city/lists?mode=tree').then((res) => {
-                        this.$store.commit('loading', true);
-                        forEach(res, item => {
-                            if (item.municipalities !== 0) {
-                                let muniCity = [{
-                                    "city_name": item.city_name,
-                                    "city_id": item.city_id
-                                }];
-                                item.children = muniCity
+
+                this.apiGet('/city/lists?mode=tree').then((res) => {
+                    this.$store.commit('loading', true);
+                    forEach(res, item => {
+                        if (item.municipalities !== 0) {
+                            let muniCity = [{
+                                "city_name": item.city_name,
+                                "city_id": item.city_id
+                            }];
+                            item.children = muniCity
+                        }
+                        forEach(item.children, item1 => {
+                            if (item1.children) {
+                                delete item1.children
                             }
-                            forEach(item.children, item1 => {
-                                if (item1.children) {
-                                    delete item1.children
-                                }
-                            });
                         });
-                        this.city_tree = res;
-                        this.$store.commit('loading', false);
-                    })
-                }
+                    });
+                    this.city_tree = res;
+                    this.$store.commit('loading', false);
+                })
+
             },
             handleLabel() {
-                if (getType) {
-                    this.$store.commit('loading', true);
-                    this.apiGet('/labels?id=967&mode=tree').then((res) => {
-                        this.work_tree = res;
-                        this.$store.commit('loading', false);
+
+                this.$store.commit('loading', true);
+                this.apiGet('/labels?id=967&mode=tree').then((res) => {
+                    this.work_tree = res;
+                    this.$store.commit('loading', false);
+                });
+                this.apiGet('/labels?id=967').then((res) => {
+                    forEach(res, item => {
+                        if (item.level === 2) {
+                            this.work_list.push(item)
+                        }
                     });
-                    this.apiGet('/labels?id=967').then((res) => {
-                        forEach(res, item => {
-                            if (item.level === 2) {
-                                this.work_list.push(item)
-                            }
-                        });
-                        this.$store.commit('loading', false);
-                    });
-                }
+                    this.$store.commit('loading', false);
+                });
+
 
             },
             querySearch(queryString, cb) {
@@ -444,7 +443,7 @@
                     };
                     if (this.work_edit !== null && !this.isHistory) {
                         this.apiPost('/api/work/update/' + this.work_edit.work_id, data).then((res) => {
-                            if(res){
+                            if (res) {
                                 sessionStorage.removeItem('work');
                                 this.$router.push({
                                     name: "work",
@@ -454,7 +453,7 @@
                                 });
                             }
                         })
-                    }else{
+                    } else {
                         this.apiPost('/api/work/create', data).then((res) => {
                             if (res) {
                                 this.backWork();

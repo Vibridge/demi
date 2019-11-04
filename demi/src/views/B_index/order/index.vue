@@ -275,7 +275,6 @@
 
 <script>
     /* eslint-disable */
-    import {getType} from "../../../libs/http";
     import http from '../../../libs/http'
     export default {
         name: 'order',
@@ -302,9 +301,7 @@
             };
         },
         mounted(){
-            if(getType){
-                this.initialize();
-            }
+            this.initialize();
         },
         created(){
             this.getRouterData();

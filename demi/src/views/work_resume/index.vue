@@ -17,7 +17,8 @@
             <div class="search_label">
                 <div class="hot_label">
                     <p>热门职位:</p>
-                    <span v-for="hw in hot_work" :key="hw.work_label_id" @click="HandleSelectMatching(hw.work_label_id)">{{hw.name}}</span>
+                    <span v-for="hw in hot_work" :key="hw.work_label_id"
+                          @click="HandleSelectMatching(hw.work_label_id)">{{hw.name}}</span>
                 </div>
             </div>
         </div>
@@ -376,12 +377,15 @@
                 <div class="user_info">
                     <div class="user_info_avatar">
                         <div>
-                            <img v-if="detail_info && !detail_info.user.avatar" src="../../assets/img/toxiang@2x.png" alt="">
+                            <img v-if="detail_info && !detail_info.user.avatar" src="../../assets/img/toxiang@2x.png"
+                                 alt="">
                             <img v-if="detail_info && detail_info.user.avatar" :src="detail_info.user.avatar" alt="">
                         </div>
                         <div style="align-self: flex-end">
-                            <img v-if="detail_info && detail_info.real && detail_info.real.sex === 1" class="sex" src="../../assets/img/boy.png" alt="">
-                            <img v-if="detail_info && detail_info.real && detail_info.real.sex === 2" class="sex" src="../../assets/img/girl.png" alt="">
+                            <img v-if="detail_info && detail_info.real && detail_info.real.sex === 1" class="sex"
+                                 src="../../assets/img/boy.png" alt="">
+                            <img v-if="detail_info && detail_info.real && detail_info.real.sex === 2" class="sex"
+                                 src="../../assets/img/girl.png" alt="">
                         </div>
                     </div>
                     <div class="user_info_name">
@@ -420,24 +424,27 @@
             </div>
             <div class="work_exp">
                 <div>
-                    <p>期望职位：<span>{{detail_info && detail_info.work.name}}<span style="margin-left: 0" v-if="detail_info && detail_info.city">- {{detail_info.city.city_name}}</span></span></p>
+                    <p>期望职位：<span>{{detail_info && detail_info.work.name}}<span style="margin-left: 0"
+                                                                                v-if="detail_info && detail_info.city">- {{detail_info.city.city_name}}</span></span>
+                    </p>
                     <p>求助意向：<span>{{detail_info && detail_info.vita.status}}</span></p>
                 </div>
                 <div>
                     <p>开始工作：<span>{{detail_info && detail_info.vita.work_start_date}}</span></p>
-                    <p>薪资要求：<span>{{detail_info && detail_info.salary_min/1000}}-{{detail_info && detail_info.salary_max/1000}}k</span></p>
+                    <p>薪资要求：<span>{{detail_info && detail_info.salary_min/1000}}-{{detail_info && detail_info.salary_max/1000}}k</span>
+                    </p>
                 </div>
             </div>
             <div class="another_label">
                 <p class="label_title">视频简历</p>
                 <div class="label_content">
                     <video v-if="detail_info && detail_info.video" :src="detail_info.video.file_path" controls></video>
-                    <img v-if="detail_info && !detail_info.video"  src="../../assets/img/snail@2x.png" alt="">
+                    <img v-if="detail_info && !detail_info.video" src="../../assets/img/snail@2x.png" alt="">
                 </div>
             </div>
             <div class="another_label">
                 <p class="label_title">工作经验</p>
-                <div class="label_content" v-if="detail_info && detail_info.experiences.length > 0" >
+                <div class="label_content" v-if="detail_info && detail_info.experiences.length > 0">
                     <div class="timeline" v-for="timeline in detail_info.experiences" :key="timeline.experience_id">
                         <div class="work_time">
                             <p v-if="timeline.end_date">{{timeline.end_date}}</p>
@@ -546,7 +553,6 @@
 
 <script>
     import http from '../../libs/http'
-    import {getType} from '../../libs/http'
     import {forEach} from "../../libs/tools";
     import time from "../../libs/time";
     import timestamp from "../../libs/time";
@@ -556,10 +562,10 @@
         data() {
             return {
                 //公司id
-                company_id:null,
+                company_id: null,
 
                 //是否vip
-                isVip:false,
+                isVip: false,
 
                 //岗位搜索
                 search: '',
@@ -756,8 +762,8 @@
 
                 //详情
                 dialogVisible: false,
-                detail_info:null,
-                index:null,
+                detail_info: null,
+                index: null,
 
             }
         },
@@ -769,11 +775,11 @@
                     console.log(res);
                     if (res.type === 2) {
                         this.company_id = res.company_real.company_id;
-                        var start = time.Time(res.vip_start,'Y-M-D');
+                        var start = time.Time(res.vip_start, 'Y-M-D');
                         var end_time = parseInt(start.split('-')[0]) + 1 + '-' + start.split('-')[1] + '-' + start.split('-')[2];
-                        if(timestamp.Stamp(end_time) < new Date().getTime()/1000){
+                        if (timestamp.Stamp(end_time) < new Date().getTime() / 1000) {
                             this.isVip = false
-                        }else{
+                        } else {
                             this.isVip = true
                         }
                     }
@@ -802,44 +808,43 @@
 
             //城市数据
             handleCity() {
-                if (getType) {
-                    this.apiGet('/city/lists').then((res) => {
-                        this.$store.commit('loading', true);
-                        console.log(res)
-                        forEach(res, item => {
-                            if (item.municipalities !== 0) {
-                                let muniCity = [{
-                                    "city_name": item.city_name,
-                                    "city_id": item.city_id
-                                }];
-                                item.children = muniCity
-                            }
-                            if (item.is_hot === 1) {
-                                this.hot_city.push(item)
-                            }
-                            // forEach(item.children, item1 => {
-                            //     if (item1.children) {
-                            //         delete item1.children
-                            //     }
-                            // });
-                        });
-                        this.city_tree = res;
-                        this.$store.commit('loading', false);
-                    })
-                }
+                this.apiGet('/city/lists').then((res) => {
+                    this.$store.commit('loading', true);
+                    console.log(res)
+                    forEach(res, item => {
+                        if (item.municipalities !== 0) {
+                            let muniCity = [{
+                                "city_name": item.city_name,
+                                "city_id": item.city_id
+                            }];
+                            item.children = muniCity
+                        }
+                        if (item.is_hot === 1) {
+                            this.hot_city.push(item)
+                        }
+                        // forEach(item.children, item1 => {
+                        //     if (item1.children) {
+                        //         delete item1.children
+                        //     }
+                        // });
+                    });
+                    this.city_tree = res;
+                    this.$store.commit('loading', false);
+                })
+
             },
 
             //岗位数据
             handleLabel() {
-                if (getType) {
-                    this.apiGet('/labels?id=967').then((res) => {
-                        forEach(res, item => {
-                            if (item.level === 2) {
-                                this.work_list.push(item)
-                            }
-                        });
+
+                this.apiGet('/labels?id=967').then((res) => {
+                    forEach(res, item => {
+                        if (item.level === 2) {
+                            this.work_list.push(item)
+                        }
                     });
-                }
+                });
+
             },
 
             //搜索框
@@ -858,7 +863,7 @@
             //搜索框选择岗位
             handleSelect(item) {
                 this.select_job_label_id = item.label_id;
-                console.log(this.select_job_label_id )
+                console.log(this.select_job_label_id)
             },
 
             //导航切换
@@ -890,61 +895,61 @@
 
             //人才数据列表
             initialize(page, city_id, edc, Exp_min, Exp_max, Sal_min, Sal_max, work_label_id) {
-                if (getType) {
-                    if (city_id || edc || Exp_min || Exp_max || Sal_min || Sal_max || work_label_id) {
-                        this.apiGet('/api/vita/paginate?page=' + page + '&education=' + edc + '&city_id=' + city_id + '&work_year_s=' + Exp_min + '&work_year_e=' + Exp_max + '&salary_min=' + Sal_min + '&salary_max=' + Sal_max + '&job_label_id=' + work_label_id).then((res) => {
-                            console.log(res);
-                            this.last_page = res.last_page;
-                            forEach(res.data, item => {
-                                this.work_resume.push(item)
-                            });
+
+                if (city_id || edc || Exp_min || Exp_max || Sal_min || Sal_max || work_label_id) {
+                    this.apiGet('/api/vita/paginate?page=' + page + '&education=' + edc + '&city_id=' + city_id + '&work_year_s=' + Exp_min + '&work_year_e=' + Exp_max + '&salary_min=' + Sal_min + '&salary_max=' + Sal_max + '&job_label_id=' + work_label_id).then((res) => {
+                        console.log(res);
+                        this.last_page = res.last_page;
+                        forEach(res.data, item => {
+                            this.work_resume.push(item)
                         });
-                    } else {
-                        this.apiGet('/api/vita/paginate?page=' + page).then((res) => {
-                            console.log(res);
-                            this.last_page = res.last_page;
-                            forEach(res.data, item => {
-                                this.work_resume.push(item)
-                            });
-                        })
-                    }
-                    // if(edc){
-                    //     this.apiGet('/api/vita/paginate?page=' + page + '&education=' + edc).then((res) =>{
-                    //         console.log(res);
-                    //         forEach(res.data,item => {
-                    //             this.work_resume.push(item)
-                    //         });
-                    //     });
-                    // }else if(city_id){
-                    //     this.apiGet('/api/vita/paginate?page=' + page + '&city_id=' + city_id).then((res) =>{
-                    //         console.log(res);
-                    //         forEach(res.data,item => {
-                    //             this.work_resume.push(item)
-                    //         });
-                    //     });
-                    // }else if(Exp_min || Exp_max){
-                    //     this.apiGet('/api/vita/paginate?page=' + page + '&work_year_s=' + Exp_min + '&work_year_e=' + Exp_max).then((res) =>{
-                    //         console.log(res);
-                    //         forEach(res.data,item => {
-                    //             this.work_resume.push(item)
-                    //         });
-                    //     });
-                    // }else if(Sal_min || Sal_max){
-                    //     this.apiGet('/api/vita/paginate?page=' + page + '&salary_min=' + Sal_min + '&salary_max=' + Sal_max).then((res) =>{
-                    //         console.log(res);
-                    //         forEach(res.data,item => {
-                    //             this.work_resume.push(item)
-                    //         });
-                    //     });
-                    // }else{
-                    //     this.apiGet('/api/vita/paginate?page=' + page).then((res) =>{
-                    //         console.log(res);
-                    //         forEach(res.data,item => {
-                    //             this.work_resume.push(item)
-                    //         });
-                    //     })
-                    // }
+                    });
+                } else {
+                    this.apiGet('/api/vita/paginate?page=' + page).then((res) => {
+                        console.log(res);
+                        this.last_page = res.last_page;
+                        forEach(res.data, item => {
+                            this.work_resume.push(item)
+                        });
+                    })
                 }
+                // if(edc){
+                //     this.apiGet('/api/vita/paginate?page=' + page + '&education=' + edc).then((res) =>{
+                //         console.log(res);
+                //         forEach(res.data,item => {
+                //             this.work_resume.push(item)
+                //         });
+                //     });
+                // }else if(city_id){
+                //     this.apiGet('/api/vita/paginate?page=' + page + '&city_id=' + city_id).then((res) =>{
+                //         console.log(res);
+                //         forEach(res.data,item => {
+                //             this.work_resume.push(item)
+                //         });
+                //     });
+                // }else if(Exp_min || Exp_max){
+                //     this.apiGet('/api/vita/paginate?page=' + page + '&work_year_s=' + Exp_min + '&work_year_e=' + Exp_max).then((res) =>{
+                //         console.log(res);
+                //         forEach(res.data,item => {
+                //             this.work_resume.push(item)
+                //         });
+                //     });
+                // }else if(Sal_min || Sal_max){
+                //     this.apiGet('/api/vita/paginate?page=' + page + '&salary_min=' + Sal_min + '&salary_max=' + Sal_max).then((res) =>{
+                //         console.log(res);
+                //         forEach(res.data,item => {
+                //             this.work_resume.push(item)
+                //         });
+                //     });
+                // }else{
+                //     this.apiGet('/api/vita/paginate?page=' + page).then((res) =>{
+                //         console.log(res);
+                //         forEach(res.data,item => {
+                //             this.work_resume.push(item)
+                //         });
+                //     })
+                // }
+
             },
 
             //收藏简历
@@ -953,7 +958,7 @@
                     id: id
                 };
                 console.log(id);
-                if(this.collect = false || !this.detail_info.favorites){
+                if (this.collect = false || !this.detail_info.favorites) {
                     this.apiPost('/api/user/favorite', data).then((res) => {
                         console.log(res)
                         this.collect = true
@@ -1029,7 +1034,7 @@
             //与我匹配筛选
             HandleSelectMatching(id) {
                 var work_label_id = id;
-                if(this.select_job_label_id !== 0 && this.select_job_label_id !== null){
+                if (this.select_job_label_id !== 0 && this.select_job_label_id !== null) {
                     work_label_id = this.select_job_label_id;
                 }
                 this.show_matching = false;
@@ -1053,22 +1058,22 @@
             handleDetail(index) {
                 this.index = index;
                 this.dialogVisible = true;
-                this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res)=>{
+                this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res) => {
                     console.log(res)
                     this.detail_info = res;
                 })
             },
 
             //返回上一个
-            goBack(){
-                if(0 <= this.index < this.work_resume.length){
+            goBack() {
+                if (0 <= this.index < this.work_resume.length) {
                     this.index = this.index - 1;
                     this.dialogVisible = true;
-                    this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res)=>{
+                    this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res) => {
                         console.log(res)
                         this.detail_info = res;
                     })
-                }else{
+                } else {
                     this.$message({
                         showClose: true,
                         message: '这是第一条了'
@@ -1077,15 +1082,15 @@
             },
 
             //下一个
-            goNext(){
-                if(0 <= this.index < this.work_resume.length){
+            goNext() {
+                if (0 <= this.index < this.work_resume.length) {
                     this.index = this.index + 1;
                     this.dialogVisible = true;
-                    this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res)=>{
+                    this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res) => {
                         console.log(res)
                         this.detail_info = res;
                     })
-                }else{
+                } else {
                     this.$message({
                         showClose: true,
                         message: '没有下一条了'
@@ -1458,68 +1463,84 @@
         background: rgba(255, 255, 255, 1);
         border-radius: 4px;
         position: relative;
-        .el-dialog__header{
+
+        .el-dialog__header {
             display: none;
         }
-        .el-dialog__body{
+
+        .el-dialog__body {
             padding: 0;
+
             .show_detail_header {
                 display: flex;
                 justify-content: space-between;
                 padding: 57px 80px 77px;
-                background:rgba(247,248,250,1);
+                background: rgba(247, 248, 250, 1);
                 box-sizing: border-box;
-                .user_info{
+
+                .user_info {
                     align-self: center;
                     display: flex;
-                    .user_info_avatar{
+
+                    .user_info_avatar {
                         display: flex;
                         width: 86px;
                         height: 86px;
-                        img{
+
+                        img {
                             width: 86px;
                             height: 86px;
                             border-radius: 50%;
                         }
+
                         .sex {
                             width: 16px;
                             height: 16px;
                             transform: translateX(-100%);
                         }
                     }
-                    .user_info_name{
+
+                    .user_info_name {
                         margin-left: 38px;
                         align-self: center;
-                        p:nth-child(1){
-                            font-size:22px;
-                            color:rgba(51,51,51,1);
+
+                        p:nth-child(1) {
+                            font-size: 22px;
+                            color: rgba(51, 51, 51, 1);
                             margin-bottom: 17px;
                             line-height: 22px;
                         }
-                        p:nth-child(2){
-                            font-size:14px;
-                            color:rgba(51,51,51,1);
-                            span{
+
+                        p:nth-child(2) {
+                            font-size: 14px;
+                            color: rgba(51, 51, 51, 1);
+
+                            span {
                                 padding: 0 14px;
                                 border-right: 1px solid #E0E0E0;
                             }
-                            span:nth-child(1){
+
+                            span:nth-child(1) {
                                 padding-left: 0;
                             }
-                            span:nth-last-child(1){
+
+                            span:nth-last-child(1) {
                                 border-right: none;
                             }
                         }
                     }
                 }
-                .cop{
+
+                .cop {
                     text-align: right;
                     align-self: flex-end;
-                    p{
-                        font-size:13px;
-                        color:rgba(179,179,179,1);
+
+                    p {
+                        font-size: 13px;
+                        color: rgba(179, 179, 179, 1);
                         margin-bottom: 21px;
                     }
+
                     button {
                         width: 112px;
                         line-height: 32px;
@@ -1550,165 +1571,194 @@
                     }
                 }
             }
-            .work_exp{
-                width:714px;
-                height:132px;
-                background:rgba(255,255,255,1);
-                box-shadow:0 0 12px 0 rgba(48,74,126,0.12);
-                border-radius:4px;
+
+            .work_exp {
+                width: 714px;
+                height: 132px;
+                background: rgba(255, 255, 255, 1);
+                box-shadow: 0 0 12px 0 rgba(48, 74, 126, 0.12);
+                border-radius: 4px;
                 margin: 0 auto 30px;
                 transform: translateY(-39px);
                 display: flex;
                 justify-content: space-between;
-                div{
+
+                div {
                     width: 50%;
                     align-self: center;
-                    p{
+
+                    p {
                         width: 60%;
                         margin: 0 auto 22px;
-                        font-size:13px;
-                        color:rgba(153,153,153,1);
-                        span{
+                        font-size: 13px;
+                        color: rgba(153, 153, 153, 1);
+
+                        span {
                             margin-left: 15px;
-                            color:rgba(77,77,77,1);
+                            color: rgba(77, 77, 77, 1);
                         }
                     }
-                    p:nth-last-child(1){
+
+                    p:nth-last-child(1) {
                         margin-bottom: 0;
                     }
                 }
             }
-            .another_label{
+
+            .another_label {
                 padding: 0 80px 49px;
-                .label_title{
-                    font-size:16px;
-                    color:rgba(50,51,51,1);
+
+                .label_title {
+                    font-size: 16px;
+                    color: rgba(50, 51, 51, 1);
                     margin-bottom: 28px;
                 }
-                .label_content{
+
+                .label_content {
                     text-align: center;
                     margin: 0 auto;
-                    video{
+
+                    video {
                         width: 510px;
                     }
-                    .timeline{
+
+                    .timeline {
                         display: flex;
                         justify-content: flex-start;
                         margin: 0 63px;
-                        .work_time{
+
+                        .work_time {
                             font-size: 12px;
                             width: 82px;
-                            height:22px;
+                            height: 22px;
                             line-height: 22px;
                             margin-right: 10px;
-                            p:nth-child(1){
-                                background:rgba(128,128,128,1);
-                                border-radius:2px;
-                                color:rgba(255,255,255,1);
+
+                            p:nth-child(1) {
+                                background: rgba(128, 128, 128, 1);
+                                border-radius: 2px;
+                                color: rgba(255, 255, 255, 1);
                                 margin-bottom: 6px;
                             }
-                            p:nth-child(2){
-                                color:rgba(153,153,153,1);
+
+                            p:nth-child(2) {
+                                color: rgba(153, 153, 153, 1);
                                 text-align: right;
                             }
                         }
-                        .time-line{
-                            img{
+
+                        .time-line {
+                            img {
                                 width: 9px;
                                 height: 9px;
                             }
-                            .line{
+
+                            .line {
                                 width: 1px;
                                 height: 100%;
-                                background:rgba(240,240,240,1);
+                                background: rgba(240, 240, 240, 1);
                                 margin: 0 auto;
                             }
                         }
-                        .label_detail{
+
+                        .label_detail {
                             text-align: left;
                             width: 597px;
                             margin-left: 10px;
-                            p:nth-child(1){
-                                color:rgba(50,51,51,1);
+
+                            p:nth-child(1) {
+                                color: rgba(50, 51, 51, 1);
                                 margin-bottom: 14px;
-                                font-size:14px;
-                                span{
-                                    color:rgba(152,152,152,1);
+                                font-size: 14px;
+
+                                span {
+                                    color: rgba(152, 152, 152, 1);
                                 }
                             }
-                            p:nth-child(2){
-                                width:76px;
-                                height:24px;
-                                background:rgba(36,191,255,1);
-                                border-radius:3px;
+
+                            p:nth-child(2) {
+                                width: 76px;
+                                height: 24px;
+                                background: rgba(36, 191, 255, 1);
+                                border-radius: 3px;
                                 line-height: 24px;
                                 text-align: center;
-                                font-size:12px;
-                                color:rgba(255,255,255,1);
+                                font-size: 12px;
+                                color: rgba(255, 255, 255, 1);
                                 margin-bottom: 15px;
                                 padding: 0 14px;
                             }
-                            p:nth-child(3){
-                                font-size:14px;
-                                color:rgba(86,86,87,1);
-                                line-height:31px;
+
+                            p:nth-child(3) {
+                                font-size: 14px;
+                                color: rgba(86, 86, 87, 1);
+                                line-height: 31px;
                             }
                         }
                     }
-                    .info{
+
+                    .info {
                         display: flex;
                         justify-content: space-between;
-                        div{
+
+                        div {
                             width: 50%;
 
-                            img{
+                            img {
                                 width: 15px;
                                 height: 15px;
                                 margin-right: 14px;
                                 vertical-align: middle;
                             }
-                            span{
-                                font-size:14px;
-                                color:rgba(76,76,77,1);
+
+                            span {
+                                font-size: 14px;
+                                color: rgba(76, 76, 77, 1);
                                 vertical-align: text-bottom;
                             }
                         }
                     }
-                    .vip{
-                        font-size:13px;
-                        color:rgba(255,176,66,1);
+
+                    .vip {
+                        font-size: 13px;
+                        color: rgba(255, 176, 66, 1);
                         text-align: right;
                         margin-top: 30px;
                         margin-right: 60px;
-                        img{
+
+                        img {
                             width: 27px;
                             vertical-align: text-bottom;
                         }
 
                     }
-                    .dec{
+
+                    .dec {
                         text-align: left;
                         margin: 0 63px;
-                        font-size:14px;
-                        color:rgba(86,86,87,1);
-                        line-height:31px;
+                        font-size: 14px;
+                        color: rgba(86, 86, 87, 1);
+                        line-height: 31px;
                     }
-                    .pic{
-                        width:713px;
-                        height:312px;
-                        background:rgba(255,255,255,1);
-                        border:1px solid rgba(230, 230, 230, 1);
-                        border-radius:10px;
+
+                    .pic {
+                        width: 713px;
+                        height: 312px;
+                        background: rgba(255, 255, 255, 1);
+                        border: 1px solid rgba(230, 230, 230, 1);
+                        border-radius: 10px;
                         padding: 23px 19px 23px 23px;
                         box-sizing: border-box;
                         margin: 0 auto;
-                        .demo-image__preview{
+
+                        .demo-image__preview {
                             width: 100%;
                             height: 100%;
                             text-align: left;
-                            .el-image__inner{
-                                width:130px;
-                                height:130px;
+
+                            .el-image__inner {
+                                width: 130px;
+                                height: 130px;
                                 display: inline-block;
                                 margin: 0 4px 4px 0;
                             }
@@ -1719,21 +1769,25 @@
                 }
             }
         }
-        .go_left{
+
+        .go_left {
             position: absolute;
-            top:50%;
-            left:0;
-            transform: translate3d(-50%,-50%,0);
-            img{
+            top: 50%;
+            left: 0;
+            transform: translate3d(-50%, -50%, 0);
+
+            img {
                 width: 20px;
             }
         }
-        .go_right{
+
+        .go_right {
             position: absolute;
-            top:50%;
-            right:0;
-            transform: translate3d(50%,-50%,0);
-            img{
+            top: 50%;
+            right: 0;
+            transform: translate3d(50%, -50%, 0);
+
+            img {
                 width: 20px;
             }
         }

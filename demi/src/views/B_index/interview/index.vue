@@ -157,7 +157,6 @@
     /* eslint-disable */
     import http from '../../../libs/http'
     import {forEach} from "../../../libs/tools";
-    import {getType} from "../../../libs/http";
     export default {
         name: 'interview',
         data() {
@@ -172,9 +171,7 @@
             };
         },
         mounted(){
-            if(getType){
-                this.initialize(3);
-            }
+            this.initialize(3);
         },
         methods: {
 

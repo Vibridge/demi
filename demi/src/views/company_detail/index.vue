@@ -240,7 +240,6 @@
 
 <script>
     import http from '../../libs/http'
-    import {getType} from "../../libs/http";
     import {forEach} from "../../libs/tools";
     import config from "../../config"
 

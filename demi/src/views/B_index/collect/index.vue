@@ -253,7 +253,6 @@
     /* eslint-disable */
     import http from '../../../libs/http'
     import {forEach} from "../../../libs/tools";
-    import {getType} from "../../../libs/http";
 
     export default {
         name: 'collect',
@@ -272,9 +271,7 @@
             };
         },
         mounted() {
-            if (getType) {
-                this.initialize(1);
-            }
+            this.initialize(1);
         },
         methods: {
 

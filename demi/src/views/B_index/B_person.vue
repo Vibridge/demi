@@ -204,7 +204,6 @@
   import bottom from '../../components/B_person_bottom'
   import http from '../../libs/http'
   import {forEach} from "../../libs/tools";
-  import {getType} from "../../libs/http";
 
   export default {
     name: 'B_person',
