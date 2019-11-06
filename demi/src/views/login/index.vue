@@ -165,11 +165,11 @@
                     mode: 'sms',
                     captcha: this.yzm,
                 }).then((res) => {
-                    console.log(res)
+                    console.log(res);
                     this.yzm = '';
                     this.setToken({authorization: res.token});
                     if (res) {
-                        if (res.type === 2) {
+                        if (res.type === 2 && res.enterprise_step > 4) {
                             let user_id =  res.user_id;
                             let userSig = res.usersig;
                             sessionStorage.setItem('userID',user_id);
@@ -194,7 +194,7 @@
                             this.$router.push({
                                 name: "B_index"
                             });
-                        } else if (res.type === 0) {
+                        } else if (res.type === 0 || (res.type === 2 && res.enterprise_step <= 4)) {
                             this.$router.push({
                                 name: "B_reg"
                             });

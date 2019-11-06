@@ -34,7 +34,13 @@ const router = new Router({
                 {
                     path: '/B_index/B_person',
                     name: 'B_person',
-                    meta: {title: 'B_person',parent:'B_person'},
+                    redirect: '/B_index/B_person/index',
+                    meta: {title: 'B_person',parent:'B_index'},
+                },
+                {
+                    path: '/B_index/B_person/index',
+                    name: 'B_person',
+                    meta: {title: 'index',parent:'B_person'},
                     component: () => import('./views/B_index/B_person.vue'),
                 },
                 {
@@ -118,12 +124,18 @@ const router = new Router({
                 {
                     path: '/B_index/IM',
                     name: 'IM',
-                    meta: {title: 'IM',parent:'resume'},
+                    meta: {title: 'IM',parent:'im'},
                     component: () => import('./views/IM/index')
                 },
-
+                {
+                    path: '/B_index/Detail',
+                    name: 'App',
+                    meta: {title: 'App',parent:'detail'},
+                    component: () => import('./views/app_detail/index')
+                },
             ],
         },
+
 
 
 

@@ -212,7 +212,7 @@
                                 <div class="collect_desc">
                                     <p style="width: 364px">{{collect.ability.description}}</p>
                                     <div class="collect_cop">
-                                        <button>和他聊聊</button>
+                                        <button @click="handleMsg(collect_list.user_id,)">和他聊聊</button>
                                     </div>
                                 </div>
                                 <div class="delect" v-if="show_delect === collect.ability_id" @click="handleDelect(2,collect.favorite_id)">
@@ -271,9 +271,31 @@
             };
         },
         mounted() {
+            this.apiGet('/api/user/info').then((res) => {
+                if (res.type !== 2) {
+                    this.$message({
+                        showClose: true,
+                        message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                        duration: 1000
+                    });
+                    this.$router.push({
+                        name: "login"
+                    });
+                }
+            });
             this.initialize(1);
         },
         methods: {
+            //聊天
+            handleMsg(id,key){
+                let data = {};
+                data.recipient = id;
+                data.foreign_key = key;
+                this.$router.push({
+                    name: "IM",
+                    params:{id :JSON.stringify(data)}
+                });
+            },
 
             //切换导航
             handleClick(tab, event) {

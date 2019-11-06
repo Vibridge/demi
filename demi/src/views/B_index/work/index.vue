@@ -181,6 +181,18 @@
             this.getRouterData();
         },
         mounted() {
+            this.apiGet('/api/user/info').then((res) => {
+                if (res.type !== 2) {
+                    this.$message({
+                        showClose: true,
+                        message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                        duration: 1000
+                    });
+                    this.$router.push({
+                        name: "login"
+                    });
+                }
+            });
             this.handleWork_list();
             this.handleTask_Work_list();
 

@@ -7,40 +7,50 @@
             <div v-if="!newList">
                 <p>暂无30天以内的聊天记录</p>
             </div>
-            <div v-for="(item,index) in newList" :key="index" @click="showMessage(handleList[index],item)" class="list" :class="{ 'active_list': handleList[index].conversationID === currentConversation.conversationID }">
+            <div v-for="(item,index) in newList" :key="index" @click="showMessage(handleList[index],item)" class="list"
+                 :class="{ 'active_list': handleList[index].conversationID === currentConversation.conversationID }">
                 <div class="list_info">
                     <div class="avatar">
-                        <el-badge :value="handleList[index].unreadCount" :hidden="handleList[index].unreadCount < 1" class="item">
+                        <el-badge :value="handleList[index].unreadCount" :hidden="handleList[index].unreadCount < 1 || handleList[index].conversationID === currentConversation.conversationID"
+                                  class="item">
                             <img v-if="item.recipient.user_id == user_id" :src="item.sender.avatar" alt="">
-                            <img v-if="item.recipient.user_id == user_id && !item.sender.avatar" src="../../assets/img/toxiang@2x.png" alt="">
+                            <img v-if="item.recipient.user_id == user_id && !item.sender.avatar"
+                                 src="../../assets/img/toxiang@2x.png" alt="">
                             <img v-if="item.sender.user_id == user_id" :src="item.recipient.avatar" alt="">
-                            <img v-if="item.sender.user_id == user_id && !item.recipient.avatar" src="../../assets/img/toxiang@2x.png" alt="">
+                            <img v-if="item.sender.user_id == user_id && !item.recipient.avatar"
+                                 src="../../assets/img/toxiang@2x.png" alt="">
                         </el-badge>
                     </div>
                     <div class="name">
                         <p v-if="item.recipient.user_id == user_id">{{item.sender.nickname}}</p>
                         <p v-if="item.sender.user_id == user_id">{{item.recipient.nickname}}</p>
                         <p v-if="item.type === 2">{{item.job.type_label.name}}</p>
-                        <p v-if="item.type === 1"><span v-text="handleWork(item.job.job_label_id)"></span> - {{item.job.salary_min/1000}}-{{item.job.salary_max/1000}}k</p>
+                        <p v-if="item.type === 1"><span v-text="handleWork(item.job.job_label_id)"></span> -
+                            {{item.job.salary_min/1000}}-{{item.job.salary_max/1000}}k</p>
                         <!--<p>翰阅网络科技-人事</p>-->
                     </div>
                 </div>
-                <div class="time">
+                <div class="time" v-if="handleList[index].lastMessage.lastTime > 0">
                     {{time.Time(handleList[index].lastMessage.lastTime,'Y-M-D')}}
+                </div>
+                <div class="time" v-else>
+                    {{getDate(new Date())}}
                 </div>
             </div>
         </div>
-        <div class="main">
+        <div class="main" @click="onScroll">
             <MessageHeader :message-detail="messageDetail"></MessageHeader>
             <div class="message-list" ref="message-list" @scroll="this.onScroll" v-if="messageDetail">
                 <div class="more" v-if="!isCompleted">
                     <el-button
                             type="text"
                             @click="$store.dispatch('getMessageList', currentConversation.conversationID)"
-                    >查看更多</el-button>
+                    >查看更多
+                    </el-button>
                 </div>
                 <div class="no-more" v-else>没有更多了</div>
-                <MessageItem class="detail" v-for="message in this.handleMessageList" :key="message.ID" :message="message"></MessageItem>
+                <MessageItem class="detail" v-for="message in this.handleMessageList" :key="message.ID"
+                             :message="message"></MessageItem>
             </div>
             <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置</div>
             <MessageBox v-if="messageDetail"></MessageBox>
@@ -54,12 +64,14 @@
     /*import tim from "../../libs/im";
     import TIM from 'tim-js-sdk';*/
     // import COS from "cos-js-sdk-v5";
-    import { mapState } from 'vuex'
+    import {mapState} from 'vuex'
     import {forEach} from "../../libs/tools";
     import time from "../../libs/time";
     import MessageItem from './message_detail'
     import MessageHeader from './message_header'
     import MessageBox from './message_box'
+    import { getDate } from '../../libs/time'
+
 
     export default {
         name: 'index',
@@ -71,50 +83,81 @@
         data() {
             return {
                 time,
-                newList:[],
-                user_id:null,
-                work_label:null,
-                messageDetail:null,
+                getDate,
+                newList: [],
+                user_id: null,
+                work_label: null,
+                messageDetail: null,
                 isShowScrollButtomTips: false,
                 preScrollHeight: 0,
                 isCheckouting: false, // 是否正在切换会话
+                hasMessageAtMe: false
             }
         },
-        mounted(){
+        mounted() {
             this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
-            window.addEventListener('keydown', this.handleKeydown)
+            window.addEventListener('keydown', this.handleKeydown);
+            this.getRouterData();
+            var data = sessionStorage.getItem('id');
+            if (data) {
+                let userID = JSON.parse(data).recipient + 'a';
+                this.$store
+                    .dispatch('checkoutConversation', `C2C${userID}`)
+                    .then(() => {
+                        let a ={
+                            type:JSON.parse(data).type,
+                            recipient:JSON.parse(data).recipient,
+                            foreign_key:JSON.parse(data).foreign_key
+                        };
+                        this.apiPost('/converse/create',a).then((res)=>{
+                            console.log(res);
+                            this.messageDetail = res;
+                            sessionStorage.removeItem('id')
+                        })
+                    })
+            }
+            this.$bus.$on('new-messsage-at-me', event => {
+                if (
+                    event.data.conversationID === this.conversation.conversationID &&
+                    this.conversation.conversationID !==
+                    this.currentConversation.conversationID
+                ) {
+                    this.hasMessageAtMe = true
+                }
+            })
         },
         destroyed() {
             window.removeEventListener('keydown', this.handleKeydown)
         },
         created() {
             this.$nextTick(function () {
+                this.handleMsgList()
+            });
+            this.apiGet('/labels?id=967').then((res) => {
+                this.work_label = res
+            })
+        },
+        updated() {
+            this.keepMessageListOnButtom();
+        },
+        methods: {
+            handleMsgList(){
                 this.user_id = sessionStorage.getItem('userID');
-                this.apiGet('/converse/lists?mode=object').then((res)=>{
+                this.apiGet('/converse/lists?mode=object').then((res) => {
                     let arr = [];
-                    for(let n in res){
+                    for (let n in res) {
                         arr.push(res[n])
                     }
-                    forEach(this.handleList,i=>{
-                        forEach(arr,item=>{
-                            if(i.toAccount === item.sender_mark || i.toAccount === item.recipient_mark){
+                    forEach(this.handleList, i => {
+                        forEach(arr, item => {
+                            if (i.toAccount === item.sender_mark || i.toAccount === item.recipient_mark) {
                                 this.newList.push(item)
                             }
                         })
                     })
-
                 });
-                console.log(this.newList)
-                // console.log(this.handleList)
-                console.log(this.handleList)
-
-            });
-            this.apiGet('/labels?id=967').then((res)=>{
-                this.work_label = res
-            })
-        },
-        methods: {
-            showMessage(im,item){
+            },
+            showMessage(im, item) {
                 this.messageDetail = item;
                 if (im.conversationID !== this.$store.state.conversation.currentConversation.conversationID) {
                     this.$store.dispatch(
@@ -131,23 +174,33 @@
                         lastMessageTime: im.lastMessage.lastTime
                     })
                 }
-                /*let message = state.conversation.currentMessageList;
-                let length = message.length;
-                for(let i = 0; i<length;i++){
-                    if(i + 1 < length){
-                        if((message[i+1].time - message[i].time) < 180){
-                            message[i+1].time = null;
-                        }
-                    }
-                }*/
             },
 
-            handleWork(id){
+            // 如果滚到底部就保持在底部，否则提示是否要滚到底部
+            keepMessageListOnButtom() {
+                let messageListNode = this.$refs['message-list']
+                if (!messageListNode) {
+                    return
+                }
+                // 距离底部20px内强制滚到底部,否则提示有新消息
+                if (this.preScrollHeight - messageListNode.clientHeight - messageListNode.scrollTop < 20) {
+                    this.$nextTick(() => {
+                        messageListNode.scrollTop = messageListNode.scrollHeight
+                    });
+                    this.isShowScrollButtomTips = false
+                } else {
+                    this.isShowScrollButtomTips = true
+                }
+                this.preScrollHeight = messageListNode.scrollHeight
+            },
+
+            //id对应的工作岗位/任务
+            handleWork(id) {
                 let label_name = '';
-                if(this.work_label){
+                if (this.work_label) {
                     let length = this.work_label.length;
-                    for(let i = 0;i<length;i++){
-                        if(this.work_label[i].label_id === id){
+                    for (let i = 0; i < length; i++) {
+                        if (this.work_label[i].label_id === id) {
                             label_name = this.work_label[i].name;
                             return label_name
                         }
@@ -155,7 +208,7 @@
                 }
             },
 
-            onScroll({ target: { scrollTop } }) {
+            onScroll({target: {scrollTop}}) {
                 let messageListNode = this.$refs['message-list']
                 if (!messageListNode) {
                     return
@@ -177,6 +230,8 @@
                     this.isShowScrollButtomTips = false
                 })
             },
+
+
             handleKeydown(event) {
                 if (event.keyCode !== 38 && event.keyCode !== 40 || this.isCheckouting) {
                     return
@@ -209,7 +264,7 @@
                     })
             },
             checkoutNext(currentIndex) {
-                this.isCheckouting = true
+                this.isCheckouting = true;
                 this.$store
                     .dispatch(
                         'checkoutConversation',
@@ -221,24 +276,34 @@
                     .catch(() => {
                         this.isCheckouting = false
                     })
-            }
+            },
+            getRouterData() {
+                if (this.$route.params.id) {
+                    sessionStorage.setItem('id', this.$route.params.id);
+                }
+            },
         },
-        computed:{
+        computed: {
             ...mapState({
                 // conversationList: state => state.conversation.conversationList,
                 currentConversation: state => state.conversation.currentConversation,
-                handleList (state) {
+                handleList(state) {
                     return state.conversation.conversationList
                 },
-                handleMessageList(state){
+                handleMessageList(state) {
                     return state.conversation.currentMessageList
                 },
                 isCompleted: state => state.conversation.isCompleted,
             }),
-        },
-        watch:{
 
         },
+        // watch: {
+        //     currentConversation(next) {
+        //         if (next.conversationID === this.conversation.conversationID) {
+        //             this.hasMessageAtMe = false
+        //         }
+        //     }
+        // },
         mixins: [http],
     }
 </script>
@@ -274,6 +339,7 @@
                 padding: 19px;
                 cursor: pointer;
                 margin-right: -1px;
+
                 .list_info {
                     align-self: center;
                     display: flex;
@@ -317,6 +383,7 @@
                 background: rgba(242, 242, 245, 1);
             }
         }
+
         .main {
             width: 701px;
             border: 1px solid rgba(230, 230, 230, 1);
@@ -374,17 +441,19 @@
                 }
             }
 
-            .message-list{
+            .message-list {
                 box-sizing: border-box;
                 overflow-y: scroll;
                 padding: 0 26px;
                 height: calc(100vh - 350px);
-                .more{
+
+                .more {
                     display: flex;
                     justify-content: center;
                     font-size: 12px;
                 }
-                .no-more{
+
+                .no-more {
                     display: flex;
                     justify-content: center;
                     color: #a5b5c1;
@@ -392,20 +461,24 @@
                     padding: 10px 10px;
                 }
 
-                .detail{
+                .detail {
                     margin-top: 50px;
                 }
-                .detail:nth-child(2){
-                     margin-top: 30px;
-                 }
-                .detail:nth-last-child(1){
+
+                .detail:nth-child(2) {
+                    margin-top: 30px;
+                }
+
+                .detail:nth-last-child(1) {
                     margin-bottom: 30px;
                 }
             }
-            .message-list::-webkit-scrollbar{
+
+            .message-list::-webkit-scrollbar {
                 width: 2px;
             }
-            .newMessageTips{
+
+            .newMessageTips {
                 position: absolute;
                 cursor: pointer;
                 padding: 5px;
@@ -425,16 +498,17 @@
 
         }
 
-        .el-badge__content.is-fixed{
-            top:5px;
+        .el-badge__content.is-fixed {
+            top: 5px;
             right: 15px;
             font-size: 10px;
-            background:rgba(255,56,89,1);
-            border-radius:50%;
+            background: rgba(255, 56, 89, 1);
+            border-radius: 50%;
         }
     }
-    .active_list{
-        background:rgba(255,255,255,1);
-        border-right:1px solid white!important;
+
+    .active_list {
+        background: rgba(255, 255, 255, 1);
+        border-right: 1px solid white !important;
     }
 </style>

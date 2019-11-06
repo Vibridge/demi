@@ -26,14 +26,14 @@
             <div class="company_another">
                 <div class="company_label">
                     <p class="label_title">公司视频</p>
-                    <div v-if="company_info && company_info.video && !form.video_path" class="company_video"
+                    <div v-if="company_info && company_info.video.length > 0 && !form.video_path" class="company_video"
                          v-loading="vid_loading">
-                        <video controls :src="company_info.video[0].file_path"></video>
+                        <video controls :src="company_info && company_info.video[0].file_path"></video>
                     </div>
                     <div v-if="form.video_path" class="company_video" v-loading="vid_loading">
                         <video controls :src="baseUrl + form.video_path"></video>
                     </div>
-                    <div class="video_ing" v-if="company_info && !company_info.video">
+                    <div class="video_ing" v-if="company_info && company_info.video.length < 1">
                         <el-upload
                                 class="avatar-uploader"
                                 action=""
@@ -47,7 +47,7 @@
                             </div>
                         </el-upload>
                     </div>
-                    <div class="reupload" v-if="company_info && company_info.video">
+                    <div class="reupload" v-if="company_info && company_info.video.length > 0">
                         <el-upload
                                 class="avatar-uploader"
                                 action=""
@@ -103,7 +103,7 @@
                             </el-form-item>
                             <el-form-item>
                                 <div slot="label">公司简称</div>
-                                <el-input v-model="form.abbreviation" placeholder="请输入工作地点"></el-input>
+                                <el-input v-model="form.abbreviation" placeholder="请输入公司简称"></el-input>
                             </el-form-item>
 
                             <el-form-item>
@@ -265,7 +265,7 @@
                 file: null,
                 ava_loading: false,
                 vid_loading: false,
-                logo_loading:false,
+                logo_loading: false,
                 avatar: null,
 
                 options: [],
@@ -323,10 +323,10 @@
                     longitude: '',
                     latitude: '',
                 },
-                user_info:{
-                    name:'',
-                    work:'',
-                    avatar:''
+                user_info: {
+                    name: '',
+                    work: '',
+                    avatar: ''
                 },
 
 
@@ -346,17 +346,20 @@
         mounted() {
             handleMap();
             this.apiGet('/api/user/info').then((res) => {
-                if(res.type === 2){
+                if (res.type === 2) {
                     this.user_info.name = res.nickname;
                     this.user_info.work = res.company_position;
                     this.user_info.avatar = res.avatar;
                     this.apiGet('/api/company/info/' + res.company_id).then((res) => {
+                        console.log(res)
                         this.company_info = res;
-                        forEach(res.files, item => {
-                            if (item.type === 2) {
-                                this.edPic.push(item)
-                            }
-                        });
+                        if(res.files.length > 0){
+                            forEach(res.files, item => {
+                                if (item.type === 2) {
+                                    this.edPic.push(item)
+                                }
+                            });
+                        }
                         this.form.address = res.address;
                         this.form.abbreviation = res.abbreviation;
                         this.form.industry_label = res.industry_label_id;
@@ -366,6 +369,15 @@
                     });
                     this.apiGet('/labels?id=992').then((res) => {
                         this.options = res;
+                    });
+                } else {
+                    this.$message({
+                        showClose: true,
+                        message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                        duration: 1000
+                    });
+                    this.$router.push({
+                        name: "login"
                     });
                 }
             })
@@ -504,27 +516,27 @@
 
             //选择城市
             handleCity() {
-                if (getType) {
-                    this.apiGet('/city/lists?mode=tree').then((res) => {
-                        this.$store.commit('loading', true);
-                        forEach(res, item => {
-                            if (item.municipalities !== 0) {
-                                let muniCity = [{
-                                    "city_name": item.city_name,
-                                    "city_id": item.city_id
-                                }];
-                                item.children = muniCity
+
+                this.apiGet('/city/lists?mode=tree').then((res) => {
+                    this.$store.commit('loading', true);
+                    forEach(res, item => {
+                        if (item.municipalities !== 0) {
+                            let muniCity = [{
+                                "city_name": item.city_name,
+                                "city_id": item.city_id
+                            }];
+                            item.children = muniCity
+                        }
+                        forEach(item.children, item1 => {
+                            if (item1.children) {
+                                delete item1.children
                             }
-                            forEach(item.children, item1 => {
-                                if (item1.children) {
-                                    delete item1.children
-                                }
-                            });
                         });
-                        this.city_tree = res;
-                        this.$store.commit('loading', false);
-                    })
-                }
+                    });
+                    this.city_tree = res;
+                    this.$store.commit('loading', false);
+                })
+
             },
             init() {
                 AMap.plugin('AMap.Autocomplete', function () {
@@ -581,10 +593,10 @@
             },
 
             //提交
-            handleUpdata(){
+            handleUpdata() {
                 console.log(this.form)
                 var id = this.company_info.company_id;
-                this.apiPost('/api/company/update/' + id,this.form).then((res) => {
+                this.apiPost('/api/company/update/' + id, this.form).then((res) => {
                     if (res) {
                         this.$router.push({
                             name: "B_index",
@@ -684,9 +696,11 @@
 
             .company_another {
                 padding: 30px 39px;
-                .company_label:nth-child(4){
+
+                .company_label:nth-child(4) {
                     margin-bottom: 0;
                 }
+
                 .company_label {
                     display: flex;
                     margin-bottom: 30px;
@@ -883,40 +897,48 @@
 
                     }
 
-                    .myself_info{
+                    .myself_info {
                         text-align: left;
                         width: 468px;
-                        p{
-                            font-size:14px;
-                            color:rgba(153,153,153,1);
+
+                        p {
+                            font-size: 14px;
+                            color: rgba(153, 153, 153, 1);
                             margin-bottom: 8px;
                         }
-                        .avatar{
+
+                        .avatar {
                             display: flex;
                             justify-content: flex-start;
                             margin-bottom: 29px;
-                            .logo{
+
+                            .logo {
                                 align-self: center;
                                 width: 62px;
                                 height: 62px;
                                 margin-right: 19px;
-                                img{
+
+                                img {
                                     width: 100%;
                                     height: 100%;
-                                    border-radius:50%;
+                                    border-radius: 50%;
                                 }
                             }
-                            .name{
+
+                            .name {
                                 align-self: center;
                             }
                         }
-                        .my_name,.my_work{
+
+                        .my_name, .my_work {
                             margin-bottom: 29px;
-                            .el-input{
+
+                            .el-input {
                                 width: 100%;
-                                .el-input__inner{
-                                    background:rgba(255,255,255,1);
-                                    border:1px solid rgba(213, 218, 223, 1);
+
+                                .el-input__inner {
+                                    background: rgba(255, 255, 255, 1);
+                                    border: 1px solid rgba(213, 218, 223, 1);
                                     border-radius: 0;
                                 }
                             }
@@ -924,18 +946,19 @@
                     }
                 }
 
-                .ed_sumbit{
+                .ed_sumbit {
                     width: 557px;
                     text-align: right;
                     margin-bottom: 18px;
-                    button{
+
+                    button {
                         border: 0;
-                        width:125px;
-                        height:30px;
-                        background:rgba(36,191,255,1);
-                        border-radius:15px;
-                        font-size:14px;
-                        color:rgba(255,255,255,1);
+                        width: 125px;
+                        height: 30px;
+                        background: rgba(36, 191, 255, 1);
+                        border-radius: 15px;
+                        font-size: 14px;
+                        color: rgba(255, 255, 255, 1);
                     }
                 }
             }

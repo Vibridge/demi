@@ -69,6 +69,7 @@
             }
         },
         mounted() {
+
             this.$nextTick(() =>{
                 this.getRouterData();
                 this.task_edit = JSON.parse(sessionStorage.getItem('task'));
@@ -99,6 +100,15 @@
                         console.log(res)
                         this.history_list = res.data
                     })
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                        duration: 1000
+                    });
+                    this.$router.push({
+                        name: "login"
+                    });
                 }
             })
         },

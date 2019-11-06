@@ -1,27 +1,32 @@
 <template>
-	<div class="B_index_wrapper" v-show="this.start" v-loading="$store.state.app.loading"
+	<div class="B_index_wrapper" v-show="this.start"
 		 element-loading-spinner="el-icon-loading" element-loading-customClass="el-loading">
 		<!--//头部导航-->
-		<div class="header">
+		<div :class="active_top === '/B_index/Detail' ? 'header active_app' : 'header'">
 			<div class="header_wrap">
 				<div class="logo">
 					<div>
-						<span style="width: 99px"><img src="../../assets/img/demilogo.png" alt=""></span>
-						<el-menu :default-active="active_top" class="el-menu-demo" mode="horizontal" router>
-							<el-menu-item index="/B_index/B_person">个人中心</el-menu-item>
-							<el-menu-item index="/B_index/ability_resume">兼职人才</el-menu-item>
-							<el-menu-item index="/B_index/work_resume">全职人才</el-menu-item>
-							<el-menu-item index="3">得米APP</el-menu-item>
-							<el-menu-item index="/B_index/IM">
+						<span style="width: 99px" v-if="active_top !== '/B_index/Detail'"><img src="../../assets/img/demilogo.png" alt=""></span>
+						<span style="width: 99px" v-if="active_top === '/B_index/Detail'"><img src="../../assets/img/detail_2.png" alt=""></span>
+						<el-menu :default-active="active_top" class="el-menu-demo" mode="horizontal" router @select="handleTopMenu">
+							<el-menu-item :class="active_top === '/B_index/Detail' ? 'active_app_item' : ''" index="/B_index/B_person">个人中心</el-menu-item>
+							<el-menu-item :class="active_top === '/B_index/Detail' ? 'active_app_item' : ''" index="/B_index/ability_resume">兼职人才</el-menu-item>
+							<el-menu-item :class="active_top === '/B_index/Detail' ? 'active_app_item' : ''" index="/B_index/work_resume">全职人才</el-menu-item>
+							<el-menu-item :class="active_top === '/B_index/Detail' ? 'active_app_item is_app_active' : ''" index="/B_index/Detail">得米APP</el-menu-item>
+							<el-menu-item :class="active_top === '/B_index/Detail' ? 'active_app_item' : ''" index="/B_index/IM">
 								<el-badge :value="totalUnreadCount" :hidden="totalUnreadCount > 0 ? false : true" :max="99" class="item">
-									<el-button size="small" style="margin-bottom: 2.5px">消息</el-button>
+									<el-button size="small" style="margin-bottom: 2.5px">
+										<span :class="active_top === '/B_index/Detail' ? 'active_app_item' : ''">
+											消息
+										</span>
+									</el-button>
 								</el-badge>
 							</el-menu-item>
 						</el-menu>
 					</div>
 				</div>
-				<div class="Avatar">
-					<span v-text="user_info.company_position ? user_info.name + '-' +  user_info.company_position : user_info.name"></span>
+				<div class="Avatar" :class="active_top === '/B_index/Detail' ? 'active_app_item' : ''">
+					<span class="work_name" v-text="user_info.company_position ? user_info.name + '-' +  user_info.company_position : user_info.name"></span>
 					<img :src="user_info.avatar" alt="" :title="user_info.name">
 				</div>
 			</div>
@@ -78,7 +83,6 @@
 	import  "../../assets/css/reset.css"
 	import http from '../../libs/http'
 	import bottom from '../../components/B_person_bottom'
-	import {forEach} from "../../libs/tools";
 
 	import { mapGetters } from 'vuex'
 	/* eslint-disable */
@@ -99,7 +103,7 @@
 				active_top:'/B_index/B_person',
 				left_list:[
 					{
-						path: '/B_index/B_person',
+						path: '/B_index/B_person/index',
 						title: '<span>首&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;页</span>'
 					},
 					{
@@ -136,29 +140,23 @@
 					},
 				],
 				active_class:'',
-				read:0
+				read:0,
+				active_app_class:''
 			}
 		},
 		mounted() {
-			/*tim.on(TIM.EVENT.SDK_READY, function (event) {
-				if (event.name) {
-					let promise = tim.getConversationList();
-					promise.then(function (imResponse) {
-						const newList = imResponse.data.conversationList;
-						console.log(newList);
-						forEach(newList,item=>{
-							if(item.unreadCount > 0){
-								this.read += item.unreadCount;
-							}
-						});
-						console.log(this.read)
-						// 会话列表，用该列表覆盖原有的会话列表
-					}.bind(this)).catch(function (imError) {
-						console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
+			this.apiGet('/api/user/info').then((res) => {
+				if (res.type !== 2) {
+					this.$message({
+						showClose: true,
+						message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+						duration: 1000
+					});
+					this.$router.push({
+						name: "login"
 					});
 				}
-			}.bind(this));*/
-
+			});
 			//回到顶部
 			this.scrollTop();
 			this.initialize();
@@ -170,18 +168,20 @@
 		},
 		methods:{
 			initialize(){
-				this.$store.commit('loading', true);
 				this.apiGet('/api/user/info').then((res) =>{
 					this.user_info.avatar = res.avatar;
 					this.user_info.company_id = res.company_id;
 					this.user_info.user_id = res.user_id;
 					this.user_info.name = res.nickname;
 					this.user_info.company_position = res.company_position;
-					this.$store.commit('loading', false);
 				});
 			},
 			scrollTop(){
 				document.getElementsByClassName('B_index_wrapper')[0].scrollIntoView();
+			},
+
+			handleTopMenu(key, keyPath){
+				this.active_top = key
 			},
 
 			//左边导航选中状态
@@ -205,7 +205,7 @@
 			//是否是左边导航
 			IsShow(){
 				if(this.$route.meta['parent'] !== 'B_person'){
-					this.active_top = '/B_index/B_person'
+					this.active_top = '/B_index/B_person';
 					if(this.$route.meta['parent'] !== 'create'){
 						this.active_top = this.$route.path;
 					}
@@ -255,6 +255,9 @@
 		height: 100%;
 		font-family: MicrosoftYaHeiLight;
 		overflow-y: auto;
+		.active_app{
+			background:rgba(69,201,255,1)!important;
+		}
 		.header{
 			width:100%;
 			background: #2D3238;
@@ -275,6 +278,9 @@
 						}
 						.el-menu{
 							background: none;
+						}
+						.is_app_active{
+							background:rgba(29,184,248,1)!important;
 						}
 						.el-menu-demo{
 							border-bottom: none;
@@ -325,11 +331,18 @@
 						}
 					}
 				}
+				.active_app_item{
+					/*background:rgba(29,184,248,1);*/
+					/*border-bottom:none;*/
+					color: #ffffff!important;
+				}
 				.Avatar{
 					float: right;
 					height: 100%;
 					padding-top: 10px;
 					display: flex;
+					color: #D9D9D9;
+					font-size: 14px;
 					img{
 						width:30px;
 						height: 30px;
@@ -337,11 +350,9 @@
 						cursor: pointer;
 						align-self: flex-start;
 					}
-					span{
+					.work_name{
 						align-self: flex-start;
 						height: 100%;
-						color: #D9D9D9;
-						font-size: 14px;
 						margin-right: 12px;
 						line-height: 30px;
 					}

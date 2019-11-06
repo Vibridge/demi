@@ -5,9 +5,11 @@
         <img src="../assets/img/demilogo@2x.png" alt="">
       </div>
       <div class="avatar">
-        <img v-if="userAvatar" :src="userAvatar" alt="">
-        <img v-if="!userAvatar" src="../assets/img/toxiang@2x.png" alt="">
-        <span>企业用户</span>
+        <div>
+          <img v-if="userAvatar" :src="baseUrl + userAvatar" alt="">
+          <img v-if="!userAvatar" src="../assets/img/toxiang@2x.png" alt="">
+        </div>
+        <p>企业用户</p>
       </div>
     </div>
   </div>
@@ -15,10 +17,18 @@
 
 <script>
   import  "../assets/css/reset.css"
+  import config from '../config'
+  const baseUrl = config.baseUrl;
+
   export default {
     name: 'HelloWorld',
     props: {
       userAvatar :{type:String}
+    },
+    data(){
+      return{
+        baseUrl
+      }
     }
   }
 </script>
@@ -45,14 +55,17 @@
       .avatar{
         float: right;
         width: 94px;
-        height: 100%;
-        padding-top: 10px;
-        img{
-          width:30px;
-          height: 30px;
-          border-radius: 50%;
+        height:50px;
+        display: flex;
+        div{
+          align-self: center;
+          img{
+            width:30px;
+            border-radius: 50%;
+          }
         }
-        span{
+        p{
+          align-self: center;
           color: #F5F5F7;
           font-size: 14px;
           margin-left: 8px;

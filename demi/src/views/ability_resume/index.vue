@@ -258,7 +258,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button>和他聊聊</button>
+                        <button @click="handleMsg(item.user.user_id,item.ability_id)">和他聊聊</button>
                     </div>
                     <p class="des">
                         {{item.description}}
@@ -508,7 +508,17 @@
                         } else {
                             this.isVip = true
                         }
+                    }else{
+                        this.$message({
+                            showClose: true,
+                            message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                            duration: 1000
+                        });
+                        this.$router.push({
+                            name: "login"
+                        });
                     }
+
                 });
                 // document.addEventListener('scroll', this.handleScroll)
             });
@@ -747,6 +757,18 @@
                     });
                 }
             },
+
+            //聊天
+            handleMsg(id,key){
+                let data = {};
+                data.recipient = id;
+                data.foreign_key = key;
+                data.type = 2;
+                this.$router.push({
+                    name: "IM",
+                    params:{id :JSON.stringify(data)}
+                });
+            }
 
             /*handleScroll () { //改变元素#searchBar的top值
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
