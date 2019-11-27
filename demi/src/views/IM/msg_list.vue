@@ -270,7 +270,7 @@
                 } else {
                     data = this.newList[this.Corresponding(this.currentConversation.conversationID)];
                 }
-                // console.log(this.newList)
+                console.log(data)
                 this.$emit('on-msg-header', data);
 
             }

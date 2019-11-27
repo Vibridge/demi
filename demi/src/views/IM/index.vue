@@ -5,13 +5,13 @@
         <MessageList @on-msg-header="handleMsgHeader" @on-msg-refresh="handleRefresh"></MessageList>
 
         <!--消息内容-->
-        <div class="main" @click="onScroll">
+        <div class="main" @click="onScroll" :style="(messageDetail && messageDetail.dominator) ? 'justify-content:flex-start' : ''" >
 
             <!--头部信息-->
             <MessageHeader :message-detail="messageDetail"></MessageHeader>
 
             <div style="position: relative">
-                <div class="message-list" ref="message-list" @scroll="this.onScroll" v-if="messageDetail">
+                <div class="message-list" :style="messageDetail.dominator ? 'max-height:calc(100vh - 145px)' : ''" ref="message-list" @scroll="this.onScroll" v-if="messageDetail">
                     <div class="more" v-if="!isCompleted">
                         <el-button
                                 type="text"
@@ -345,10 +345,12 @@
                 text-align: center;
                 margin-top: 23px;
             }
-
+            .list_wrap::-webkit-scrollbar {
+                width: 2px;
+            }
             .list_wrap{
                 height: calc(100vh - 177px);
-                overflow-y: scroll;
+                overflow-y: auto;
                 overflow-x: hidden;
 
                 .list {
@@ -464,7 +466,7 @@
 
             .message-list {
                 box-sizing: border-box;
-                overflow-y: scroll;
+                overflow-y: auto;
                 padding: 0 26px;
                 max-height: calc(100vh - 325px);
                 position: relative;

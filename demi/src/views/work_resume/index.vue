@@ -1217,9 +1217,9 @@
             border: 1px solid rgba(230, 230, 230, 1);
             padding: 16px 30px 30px;
             box-sizing: border-box;
-            .select_city:nth-child(1){
+            /*.select_city:nth-child(1){
                 margin-bottom: 14px;
-            }
+            }*/
             .select_city {
                 margin-bottom: 28px;
                 display: flex;
@@ -1237,6 +1237,9 @@
                     color: rgba(77, 77, 77, 1);
                     margin-right: 20px;
                     cursor: pointer;
+                }
+                .now_city{
+                    height: 14px;
                 }
 
 
