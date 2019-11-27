@@ -4,13 +4,28 @@
       <div class="logo">
         <img src="../assets/img/demilogo@2x.png" alt="">
       </div>
-      <div class="avatar">
-        <div>
-          <img v-if="userAvatar" :src="baseUrl + userAvatar" alt="">
-          <img v-if="!userAvatar" src="../assets/img/toxiang@2x.png" alt="">
-        </div>
-        <p>企业用户</p>
+
+        <!--//@select="handleSelect"-->
+      <div class="logout">
+        <el-menu default-active="1" class="el-menu-demo" mode="horizontal" active-text-color="#fff" background-color="#2D3238">
+          <el-submenu index="1">
+            <template slot="title">
+              <div class="avatar">
+                <div>
+                  <img v-if="userAvatar" :src="baseUrl + userAvatar" alt="">
+                  <img v-if="!userAvatar" src="../assets/img/toxiang@2x.png" alt="">
+                </div>
+                <p v-if="!userName">企业用户</p>
+                <p v-if="userName">{{userName}}</p>
+              </div>
+
+            </template>
+            <el-menu-item index="2-1" @click="handleLoginOut">退出登录</el-menu-item>
+          </el-submenu>
+        </el-menu>
       </div>
+
+
     </div>
   </div>
 </template>
@@ -23,11 +38,25 @@
   export default {
     name: 'HelloWorld',
     props: {
-      userAvatar :{type:String}
+      userAvatar :{type:String},
+      userName :{type:String}
     },
     data(){
       return{
         baseUrl
+      }
+    },
+    methods:{
+      handleLoginOut(){
+        this.tim.logout().then(function(imResponse) {
+          console.log(imResponse.data); // 登出成功
+        }).catch(function(imError) {
+          console.warn('logout error:', imError);
+        });
+        sessionStorage.clear();
+        this.$router.push({
+          name: "login"
+        });
       }
     }
   }
@@ -52,26 +81,49 @@
           width: 100%;
         }
       }
-      .avatar{
-        float: right;
-        width: 94px;
-        height:50px;
-        display: flex;
-        div{
+      .logout{
+        ul{
           align-self: center;
-          img{
-            width:30px;
-            border-radius: 50%;
+          border-bottom:none;
+          background:none;
+          float: right;
+          width: 150px;
+          height:50px;
+          li{
+            height: 50px;
+            line-height: 50px;
+            padding:0!important;
+            .el-submenu__title{
+              display: flex;
+              height: 50px;
+              line-height: 50px;
+              .el-submenu__icon-arrow{
+                display: none;
+              }
+              .avatar{
+                display: flex;
+                height: 50px;
+                line-height: 50px;
+                p{
+                  align-self: center;
+                  color: #F5F5F7;
+                  font-size: 14px;
+                  margin-left: 8px;
+                  line-height: 30px;
+                }
+                img{
+                  width:30px;
+                  border-radius: 50%;
+                }
+              }
+
+            }
           }
         }
-        p{
-          align-self: center;
-          color: #F5F5F7;
-          font-size: 14px;
-          margin-left: 8px;
-          line-height: 30px;
-        }
       }
+
     }
   }
+
+
 </style>

@@ -43,7 +43,8 @@
                                     </div>
                                     <div class="work_operate">
                                         <span @click="handleEdit(1,work)">编辑</span>
-                                        <span>下线</span>
+                                        <span v-if="work.status === 1" @click="handleOver(1,0,work.work_id)">下线</span>
+                                        <span v-if="work.status === 0" @click="handleOver(1,1,work.work_id)">重新上线</span>
                                         <span @click="deleteWork(1,work)">删除</span>
                                     </div>
                                 </div>
@@ -109,7 +110,8 @@
                                     </div>
                                     <div class="work_operate">
                                         <span @click="handleEdit(2,task)">编辑</span>
-                                        <span>下线</span>
+                                        <span v-if="task.status === 1" @click="handleOver(2,0,task.task_id)">下线</span>
+                                        <span v-if="task.status === 0" @click="handleOver(2,1,task.task_id)">重新上线</span>
                                         <span @click="deleteWork(2,task)">删除</span>
                                     </div>
                                 </div>
@@ -315,6 +317,24 @@
 
             },
 
+            //岗位下线
+            handleOver(type,status,id){
+                if(type === 1){
+                    this.apiPost('/api/work/update/' + id,{status:status} ).then((res)=>{
+                        if(res){
+                            this.handleWork_list()
+                        }
+                    })
+                }else{
+                    this.apiPost('/api/task/update/' + id,{status:status} ).then((res)=>{
+                        if(res){
+                            this.handleTask_Work_list()
+                        }
+                    })
+                }
+
+            },
+
             //删除岗位或兼职
             deleteWork(index, data) {
                 this.$confirm('该操作将彻底删除该数据切无法恢复，确定要继续吗?', '提示', {
@@ -472,6 +492,9 @@
                                 align-self: center;
                                 font-size: 13px;
                                 color: #24BFFF;
+                                width: 162px;
+                                display: flex;
+                                justify-content: inherit;
 
                                 span {
                                     margin-right: 29px;

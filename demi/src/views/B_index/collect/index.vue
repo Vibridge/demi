@@ -38,7 +38,7 @@
                                         </div>
                                     </div>
                                     <div class="collect_cop">
-                                        <button>和他聊聊</button>
+                                        <button @click="handleMsg(1,collect.job.user.user_id,collect.job.job_label_id)">和他聊聊</button>
                                     </div>
                                 </div>
                                 <div class="collect_desc">
@@ -212,7 +212,7 @@
                                 <div class="collect_desc">
                                     <p style="width: 364px">{{collect.ability.description}}</p>
                                     <div class="collect_cop">
-                                        <button @click="handleMsg(collect_list.user_id,)">和他聊聊</button>
+                                        <button @click="handleMsg(2,collect.ability.user.user_id,collect.ability.ability_id)">和他聊聊</button>
                                     </div>
                                 </div>
                                 <div class="delect" v-if="show_delect === collect.ability_id" @click="handleDelect(2,collect.favorite_id)">
@@ -287,10 +287,11 @@
         },
         methods: {
             //聊天
-            handleMsg(id,key){
+            handleMsg(type,id,key){
                 let data = {};
                 data.recipient = id;
                 data.foreign_key = key;
+                data.type = type;
                 this.$router.push({
                     name: "IM",
                     params:{id :JSON.stringify(data)}

@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/demi/src/views/B_index/interview/index.vue" line="122" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6f90a3db-058e-43a4-9ccd-216c03523543" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/demi/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/demi/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/assets/img/_notification @2x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/components/B_person_bottom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/components/B_person_bottom.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/components/reg_header.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/components/reg_header.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/config/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/config/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/libs/im.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/libs/im.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/store/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/store/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/store/module/conversation.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/store/module/conversation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/B_person.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/B_person.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/VIP/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/VIP/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/collect/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/collect/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/interview/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/interview/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/order/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/order/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/real/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/real/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/task/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/task/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/wallet/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/wallet/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/work/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/work/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/B_reg/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_reg/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/IM/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/IM/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/IM/message-elements/custom-element.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/IM/message-elements/custom-element.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/IM/message-elements/group-system-notice-element.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/IM/message-elements/group-tip-element.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/IM/message_box.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/IM/message_box.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/IM/message_detail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/IM/message_detail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/IM/message_header.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/IM/message_header.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/ability_resume/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/ability_resume/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/app_detail/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/app_detail/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/create/work_create/work.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/create/work_create/work.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/login/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/login/index.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/views/work_resume/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/work_resume/index.vue" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demi/src/views/ability_resume/index.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="161">
+              <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+              <folding>
+                <element signature="n#div#1;n#div#0;n#template#0;n#!!top" />
+                <element signature="n#div#1;n#div#1;n#div#1;n#div#0;n#template#0;n#!!top" />
+                <element signature="n#div#2;n#div#1;n#div#1;n#div#0;n#template#0;n#!!top" />
+                <element signature="n#ul#0;n#div#0;n#template#0;n#!!top" />
+                <element signature="n#el-dialog#0;n#div#0;n#template#0;n#!!top" />
+                <element signature="n#div#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/demi/src/components/scroll.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="492">
+              <caret line="50" column="42" lean-forward="true" selection-start-line="50" selection-start-column="42" selection-end-line="50" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demi/src/views/work_resume/index.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="584">
+              <caret line="257" selection-start-line="257" selection-end-line="258" />
+              <folding>
+                <element signature="n#style#0;n#span#0;n#div#1;n#el-popover#0;n#div#0;n#div#0;n#div#2;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#div#3;n#div#0;n#template#0;n#!!top" />
+                <element signature="e#5300#12536#0" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#el-dialog#0;n#template#0;n#div#3;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#img#2;n#button#0;n#div#0;n#div#1;n#div#0;n#el-dialog#0;n#template#0;n#div#3;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#span#0;n#p#0;n#div#0;n#div#1;n#el-dialog#0;n#template#0;n#div#3;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#img#0;n#div#1;n#div#0;n#div#0;n#div#4;n#el-dialog#0;n#template#0;n#div#3;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="e#33189#34188#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demi/src/views/IM/index.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="239">
+              <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+              <folding>
+                <element signature="n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" />
+                <element signature="e#13322#13407#0" />
+                <element signature="e#13485#14828#0" />
+                <element signature="e#14889#18289#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demi/src/views/IM/msg_list.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="207">
+              <caret line="9" column="29" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="29" />
+              <folding>
+                <element signature="n#div#0;n#div#2;n#div#0;n#template#0;n#!!top" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/VIP/index.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="506">
+              <caret line="137" column="44" selection-start-line="137" selection-start-column="44" selection-end-line="137" selection-end-column="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>logo</find>
+      <find>pass</find>
+      <find>matching_task</find>
+      <find>show_matching</find>
+      <find>work_label</find>
+      <find>select_job_label_id</find>
+      <find>id</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/demi/src/views/B_index/interview/index.vue" />
+        <option value="$PROJECT_DIR$/demi/src/views/B_index/order/orderList.vue" />
+        <option value="$PROJECT_DIR$/demi/src/views/B_index/order/index.vue" />
+        <option value="$PROJECT_DIR$/demi/src/config/index.js" />
+        <option value="$PROJECT_DIR$/demi/src/components/reg_header.vue" />
+        <option value="$PROJECT_DIR$/demi/src/libs/im.js" />
+        <option value="$PROJECT_DIR$/demi/src/views/B_reg/index.vue" />
+        <option value="$PROJECT_DIR$/demi/src/views/B_index/real/index.vue" />
+        <option value="$PROJECT_DIR$/demi/src/views/work_resume/work_resume_list.vue" />
+        <option value="$PROJECT_DIR$/demi/src/views/B_index/VIP/index.vue" />
+        <option value="$PROJECT_DIR$/demi/src/views/IM/msg_list.vue" />
+        <option value="$PROJECT_DIR$/demi/src/views/IM/index.vue" />
+        <option value="$PROJECT_DIR$/demi/src/views/work_resume/index.vue" />
+        <option value="$PROJECT_DIR$/demi/src/views/ability_resume/index.vue" />
+        <option value="$PROJECT_DIR$/demi/src/components/scroll.vue" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1102" />
+    <option name="height" value="867" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="ability_resume" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="B_index" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="B_index" type="462c0819:PsiDirectoryNode" />
+              <item name="real" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="B_index" type="462c0819:PsiDirectoryNode" />
+              <item name="task" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="B_index" type="462c0819:PsiDirectoryNode" />
+              <item name="VIP" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="B_index" type="462c0819:PsiDirectoryNode" />
+              <item name="wallet" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="B_index" type="462c0819:PsiDirectoryNode" />
+              <item name="work" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="B_reg" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="IM" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="login" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="demi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="demi" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="work_resume" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6f90a3db-058e-43a4-9ccd-216c03523543" name="Default Changelist" comment="" />
+      <created>1574730394837</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1574730394837</updated>
+      <workItem from="1574730396166" duration="21973000" />
+      <workItem from="1574816533610" duration="19675000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="41648000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2496474" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/interview/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="977">
+          <caret line="261" column="18" selection-start-line="261" selection-start-column="18" selection-end-line="261" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/order/orderList.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="79" column="36" selection-start-line="79" selection-start-column="36" selection-end-line="79" selection-end-column="36" />
+          <folding>
+            <element signature="n#div#0;n#div#1;n#div#2;n#div#0;n#div#0;n#template#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/order/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23">
+          <caret line="191" column="55" selection-start-line="191" selection-start-column="55" selection-end-line="191" selection-end-column="55" />
+          <folding>
+            <element signature="e#5174#8786#0" />
+            <element signature="e#8971#13053#0" />
+            <element signature="n#div#1;n#el-tab-pane#2;n#el-tabs#0;n#div#1;n#div#0;n#template#0;n#!!top" />
+            <element signature="e#8689#12419#0" />
+            <element signature="n#div#1;n#el-tab-pane#3;n#el-tabs#0;n#div#1;n#div#0;n#template#0;n#!!top" />
+            <element signature="e#16775#16783#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/config/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="11" column="39" selection-start-line="11" selection-start-column="39" selection-end-line="11" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/components/reg_header.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2277">
+          <caret line="100" column="30" selection-start-line="100" selection-start-column="30" selection-end-line="100" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/libs/time.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="828">
+          <caret line="36" column="1" selection-start-line="32" selection-start-column="8" selection-end-line="36" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/real/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2553">
+          <caret line="111" column="45" selection-start-line="111" selection-start-column="45" selection-end-line="111" selection-end-column="45" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#template#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/B_reg/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1081">
+          <caret line="125" column="24" lean-forward="true" selection-start-line="122" selection-start-column="20" selection-end-line="125" selection-end-column="24" />
+          <folding>
+            <element signature="n#div#0;n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#div#1;n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#div#1;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#div#2;n#div#0;n#template#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/login/index.vue">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/libs/im.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="7" column="26" lean-forward="true" selection-start-line="7" selection-start-column="26" selection-end-line="7" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/task/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4347">
+          <caret line="534" column="12" selection-start-line="534" selection-start-column="12" selection-end-line="534" selection-end-column="12" />
+          <folding>
+            <element signature="n#el-tab-pane#0;n#el-tabs#0;n#div#1;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#el-tab-pane#1;n#el-tabs#0;n#div#1;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#el-tab-pane#2;n#el-tabs#0;n#div#1;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#el-tab-pane#3;n#el-tabs#0;n#div#1;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#el-dialog#0;n#div#1;n#div#0;n#template#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/work/index.vue">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/wallet/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2622" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/work_resume/work_resume_list.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="80" column="51" lean-forward="true" selection-start-line="80" selection-start-column="51" selection-end-line="80" selection-end-column="51" />
+          <folding>
+            <element signature="n#style#0;n#button#0;n#div#1;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/VIP/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="137" column="44" selection-start-line="137" selection-start-column="44" selection-end-line="137" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/router.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="552">
+          <caret line="90" column="40" selection-start-line="90" selection-start-column="40" selection-end-line="90" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/IM/msg_list.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="9" column="29" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="29" />
+          <folding>
+            <element signature="n#div#0;n#div#2;n#div#0;n#template#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/IM/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+          <folding>
+            <element signature="n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="e#13322#13407#0" />
+            <element signature="e#13485#14828#0" />
+            <element signature="e#14889#18289#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/work_resume/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="584">
+          <caret line="257" selection-start-line="257" selection-end-line="258" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#div#1;n#el-popover#0;n#div#0;n#div#0;n#div#2;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#div#3;n#div#0;n#template#0;n#!!top" />
+            <element signature="e#5300#12536#0" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#el-dialog#0;n#template#0;n#div#3;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#2;n#button#0;n#div#0;n#div#1;n#div#0;n#el-dialog#0;n#template#0;n#div#3;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#span#0;n#p#0;n#div#0;n#div#1;n#el-dialog#0;n#template#0;n#div#3;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#1;n#div#0;n#div#0;n#div#4;n#el-dialog#0;n#template#0;n#div#3;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#33189#34188#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/views/ability_resume/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+          <folding>
+            <element signature="n#div#1;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#div#1;n#div#1;n#div#1;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#div#2;n#div#1;n#div#1;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#ul#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#el-dialog#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#div#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demi/src/components/scroll.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="492">
+          <caret line="50" column="42" lean-forward="true" selection-start-line="50" selection-start-column="42" selection-end-line="50" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
