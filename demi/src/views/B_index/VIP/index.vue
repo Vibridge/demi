@@ -12,7 +12,7 @@
                 </span>
                     <span style="align-self: flex-end;text-align: right">
                     <p style="margin-bottom: 15px">×1</p>
-                    <p>¥2000</p>
+                    <p>¥1998</p>
                 </span>
                 </div>
                 <div class="VIP_introduce">
@@ -34,19 +34,21 @@
                 <div class="VIP_invoice">
                     <p>申请发票</p>
                     <div class="change">
-                        <div>
-                            <img src="../../../assets/img/weixuanz@2x.png" alt="" @click="handleSelect(1)"
-                                 v-show="active === 2">
-                            <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 1">
-                            <span style="color: #999999;" v-show="active === 2">需要</span>
-                            <span style="color: #4d4d4d;" v-show="active === 1">需要</span>
+                        <div class="ask">
+                            <div>
+                                <img src="../../../assets/img/weixuanz@2x.png" alt="" @click="handleSelect(1)"
+                                     v-show="active === 2">
+                                <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 1">
+                            </div>
+                            <p :style="active === 2 ? 'color: #999999': 'color: #4d4d4d'">需要</p>
                         </div>
-                        <div>
-                            <img src="../../../assets/img/weixuanz@2x.png" alt="" @click="handleSelect(2)"
-                                 v-show="active === 1">
-                            <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 2">
-                            <span style="color: #999999;" v-show="active === 1">不需要</span>
-                            <span style="color: #4d4d4d;" v-show="active === 2">不需要</span>
+                        <div class="noask">
+                            <div>
+                                <img src="../../../assets/img/weixuanz@2x.png" alt="" @click="handleSelect(2)"
+                                     v-show="active === 1">
+                                <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 2">
+                            </div>
+                            <p :style="active === 2 ? 'color: #4d4d4d': 'color: #999999'">不需要</p>
                         </div>
                     </div>
                 </div>
@@ -66,7 +68,7 @@
                         </div>
                     </div>
                 </el-collapse-transition>
-                <div class="bottom">
+                <div class="bottom" @click="openVip">
                     <button>立即开通</button>
                 </div>
             </div>
@@ -132,6 +134,9 @@
             handleSelect(active) {
                 this.active = active
             },
+            openVip(){
+                this.$message('请在app上进行此操作')
+            }
 
         },
         mixins: [http]
@@ -241,22 +246,28 @@
                         display: flex;
                         justify-content: space-between;
 
-                        div {
+                        .ask,.noask {
                             align-self: center;
                             font-size: 16px;
-
-                            img {
-                                width: 24px;
-                                margin-right: 5px;
+                            height: 24px;
+                            line-height: 24px;
+                            display: flex;
+                            div{
+                                align-self: self-start;
+                                img {
+                                    width: 24px;
+                                    margin-right: 5px;
+                                }
                             }
 
-                            span {
-                                line-height: 22px;
+                            p {
+                                align-self: flex-start;
                             }
+
                         }
 
-                        div:nth-child(1) {
-                            span {
+                        .ask {
+                            p {
                                 margin-right: 75px;
                             }
                         }

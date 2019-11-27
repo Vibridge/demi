@@ -22,7 +22,7 @@
         <div class="wallet_detail">
             <div class="wallet_detail-title">
                 <p>消费明细</p>
-                <p>提现</p>
+                <p @click="handleWithDraw">提现</p>
             </div>
             <div class="wallet_list" v-for="item in wallet_list" :key="item.detail_id" v-show="wallet_list.length > 0">
                 <div>
@@ -76,7 +76,7 @@
             }
         },
         mounted(){
-            this.handleWallet_list()
+            this.handleWallet_list();
         },
         methods:{
             handleWalletSizeChange(per_page){
@@ -113,6 +113,11 @@
                     }
                 })
             },
+            handleWithDraw(){
+                this.$router.push({
+                    name: "withdraw",
+                });
+            }
         },
         mixins:[http]
     }

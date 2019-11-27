@@ -36,7 +36,7 @@
                     <el-form ref="form" :model="form" label-width="92px">
                         <el-form-item label="工作经验：">
                             <el-select v-model="form.experience" placeholder="请选择">
-                                <el-option label="不限" value="0"></el-option>
+                                <el-option label="不限" value="0-0"></el-option>
                                 <el-option label="1年以内" value="0-1"></el-option>
                                 <el-option label="1-3年" value="1-3"></el-option>
                                 <el-option label="3-5年" value="3-5"></el-option>

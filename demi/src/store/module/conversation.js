@@ -15,9 +15,9 @@ const conversationModules = {
       }
       switch (state.currentConversation.type) {
         case 'C2C':
-          return state.currentConversation.conversationID.replace('C2C', '')
+          return state.currentConversation.conversationID.replace('C2C', '');
         case 'GROUP':
-          return state.currentConversation.conversationID.replace('GROUP', '')
+          return state.currentConversation.conversationID.replace('GROUP', '');
         default:
           return state.currentConversation.conversationID
       }
@@ -140,7 +140,7 @@ const conversationModules = {
      * @param {String} conversationID
      */
     checkoutConversation(context, conversationID) {
-      context.commit('resetCurrentMemberList')
+      // context.commit('resetCurrentMemberList')
       // 1.切换会话前，将切换前的会话进行已读上报
       if (context.state.currentConversation.conversationID) {
         const prevConversationID = context.state.currentConversation.conversationID

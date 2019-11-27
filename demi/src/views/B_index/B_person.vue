@@ -139,7 +139,8 @@
                                     <p style="margin-bottom: 10px">
                                         <span style="font-size: 16px;color: #4D4D4D;margin-right: 18px">{{interview.candidate.nickname}}</span>
                                         <span>
-                                            <img src="../../assets/img/girl@2x.png" alt="">
+                                            <img v-if="interview.candidate.real.sex === 2" src="../../assets/img/girl@2x.png" alt="">
+                                            <img v-if="interview.candidate.real.sex === 1" src="../../assets/img/boy@2x.png" alt="">
                                         </span>
                                         <span class="vita_info" style="color: #999999;font-size: 12px">{{interview.vita.work_start_date}}年/</span>
                                         <span class="vita_info" v-if="interview.vita.education === 1">初中及以下/</span>
@@ -152,18 +153,24 @@
                                         <span class="vita_info">{{interview.work && interview.work.work_name}}</span>
                                     </p>
                                     <p style="color: #999999;font-size: 12px">面试时间：{{interview.time}} <span
-                                            v-if="interview.status === 3">[等待同意]</span>
+                                            v-if="interview.status === 3">[已同意]</span>
                                         <span v-if="interview.status === 1">[已取消]</span>
                                         <span v-if="interview.status === 2">[已拒绝]</span>
                                         <span v-if="interview.status === 4">[已面试]</span>
                                         <span v-if="interview.status === 5">[已反馈]</span>
-                                        <span v-if="interview.status === 0">[已邀约]</span>
+                                        <span v-if="interview.status === 0">[等待同意]</span>
                                     </p>
                                 </span>
                             </div>
-                            <div class="info_button">
-                                <button>和他聊聊</button>
-                                <button v-text="interview.status === 3 ? '取消面试' : '等待面试'"></button>
+                            <div class="info_button" v-if="interview.status !== 1 && interview.status !== 2">
+                                <button @click="handleMsg(interview.candidate.user_id,interview.work_id)">和他聊聊</button>
+                                <button v-if="interview.status === 0" @click="canleIv(interview.interview_id)">取消面试</button>
+                                <button v-if="interview.status === 3">等待面试</button>
+                                <button v-if="interview.status === 4">已面试</button>
+                                <button v-if="interview.status === 5">已反馈</button>
+                            </div>
+                            <div class="info_button" v-if="interview.status === 1 || interview.status === 2">
+                                <img src="../../assets/img/countermand@2x.png" alt="">
                             </div>
                         </div>
                     </li>
@@ -181,20 +188,20 @@
                     <span></span>
                     <span>我的钱包</span>
                 </div>
-                <div class="wallet_header_button">
+                <div class="wallet_header_button" @click="handleWallet">
                     <button>提现<img src="../../assets/img/icon_return_3@2x.png" alt=""></button>
                 </div>
             </div>
             <span class="line"></span>
             <div class="wallet_money">
-                <div class="wallet_money_wrap">
+                <div class="wallet_money_wrap" @click="handleWallet">
                     <div class="money">
                         <p v-text="user_info ? user_info.available_amount_b : '--'"></p>
                         <p>可用金额</p>
                     </div>
                 </div>
                 <div style="width:1px;height: 96px;border-right: 0.5px solid #F2F2F2;border-left: 0.5px solid #f2f2f2;margin-top: 16px"></div>
-                <div class="wallet_money_wrap">
+                <div class="wallet_money_wrap" @click="handleWallet">
                     <div class="money">
                         <p v-text="user_info ? user_info.unusable_amount_b : '--'"></p>
                         <p>冻结金额</p>
@@ -287,6 +294,7 @@
 
                     //面试记录三条
                     this.apiGet('/api/work/interview/lists?per_page=3&page=1').then((res) => {
+                        console.log(res)
                         forEach(res.data, item => {
                             if (item.vita.work_start_date) {
                                 item.vita.work_start_date = new Date().getFullYear() - parseInt(item.vita.work_start_date.split('-')[0]);
@@ -336,6 +344,28 @@
             handleInterview() {
                 this.$router.push({
                     name: "interview",
+                });
+            },
+            handleWallet() {
+                this.$router.push({
+                    name: "wallet",
+                });
+            },
+            //取消面试
+            canleIv(id){
+                this.apiPost('/api/work/interview/update/' + id).then((res)=>{
+                    console.log(res)
+                })
+            },
+            //聊天
+            handleMsg(id,key){
+                let data = {};
+                data.recipient = id;
+                data.foreign_key = key;
+                data.type = 1;
+                this.$router.push({
+                    name: "IM",
+                    params:{id :JSON.stringify(data)}
                 });
             }
         },
@@ -719,7 +749,8 @@
             border: 1px solid rgba(235, 235, 235, 1);
             position: relative;
             margin-bottom: 16px;
-            height: 386px;
+            max-height: 386px;
+            min-height: 172px;
 
             .interview_header {
                 padding: 16px 0 7px 18px;
@@ -810,6 +841,10 @@
 
                             .info_button {
                                 align-self: center;
+                                img{
+                                    width: 46px;
+                                    margin-right: 18px;
+                                }
 
                                 button {
                                     width: 82px;
@@ -856,10 +891,7 @@
 
             .interview_bottom {
                 width: 100%;
-                margin-top: 4px;
-                position: absolute;
-                bottom: 12px;
-                left: 0;
+                margin-bottom:12px;
 
                 div {
                     button {

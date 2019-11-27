@@ -1,10 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import conversation from './module/conversation'
-import group from './module/group'
 import user from './module/user'
-import friend from './module/friend'
-import blacklist from './module/blacklist'
 import {Message} from 'element-ui'
 import app from './module/app';
 
@@ -42,9 +39,6 @@ export default new Vuex.Store({
   modules: {
     app,
     conversation,
-    group,
-    friend,
-    blacklist,
     user
   }
 });

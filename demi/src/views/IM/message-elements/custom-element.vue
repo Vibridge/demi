@@ -45,10 +45,8 @@ export default {
   },
   methods: {
     translateCustomMessage(payload) {
-      if (payload.data === 'group_create') {
-        return `${payload.extension}`
-      }
-      return '[自定义消息]'
+      return payload.description
+
     }
   }
 }

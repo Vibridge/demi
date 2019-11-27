@@ -39,27 +39,28 @@
                                             已销售：0</p>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 0">
-                                        <button @click="handleRefuse(0,task.task_order_id)" class="first active_over">拒绝
+                                        <button @click="handleRefuse(0,task.task_order_id,task.user.user_id)" class="first active_over">拒绝
                                         </button>
-                                        <button @click="handlePass(0,task.task_order_id)">通过</button>
+                                        <button @click="handlePass(0,task.task_order_id,task.user.user_id)">通过</button>
                                         <button v-if="parseInt(task.snapshot.front_money)>0"
-                                                @click="handlePass(0,task.task_order_id)">通过&支付定金
+                                                @click="pay()">通过&支付定金
                                         </button>
                                     </div>
 
                                     <div class="task_operate" v-if="task.status === 1 & task.payment_method !== 1">
                                         <button style="width: 82px;margin-right: 10px;background: #EBEBEB;color: #999999">进行中</button>
-                                        <button style="background: #fff;border: 1px solid rgba(36, 191, 255, 1);color: rgba(36, 191, 255, 1)">
+                                        <button style="background: #fff;border: 1px solid rgba(36, 191, 255, 1);color: rgba(36, 191, 255, 1)"
+                                                @click="handleMsg(task.user.user_id,task.task_order_id)">
                                             和他聊聊
                                         </button>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 1 & task.payment_method === 1">
-                                        <button class="first">和他聊聊</button>
-                                        <button @click="handleOver(0,task.task_order_id)">结束任务</button>
+                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
+                                        <button @click="handleOver(0,task.task_order_id,task.user.user_id)">结束任务</button>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 3">
-                                        <button class="first">和他聊聊</button>
-                                        <button>任务完成&支付尾款</button>
+                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
+                                        <button @click="pay">任务完成&支付尾款</button>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 2">
                                         <!--<button style="visibility: hidden;width: 82px;margin-right: 10px;"></button>-->
@@ -69,7 +70,7 @@
                                     </div>
 
                                     <div class="task_operate" v-if="task.status === 4 && task.is_comment_boss === 0">
-                                        <button class="first">和他聊聊</button>
+                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
                                         <button @click="handleDiscuss_dia(3,task)">去评价</button>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 4 && task.is_comment_boss === 1">
@@ -133,9 +134,9 @@
                                         </div>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 0">
-                                        <button @click="handleRefuse(1,task.task_order_id)" class="first active_over">拒绝
+                                        <button @click="handleRefuse(1,task.task_order_id,task.user.user_id)" class="first active_over">拒绝
                                         </button>
-                                        <button @click="handlePass(1,task.task_order_id)">通过</button>
+                                        <button @click="handlePass(1,task.task_order_id,task.user.user_id)">通过</button>
                                     </div>
                                 </div>
                                 <div class="line"></div>
@@ -198,17 +199,18 @@
                                     </div>
                                     <div class="task_operate" v-if="task.status === 1 & task.payment_method !== 1">
                                         <button style="width: 82px;margin-right: 10px;background: #EBEBEB;color: #999999">进行中</button>
-                                        <button style="background: #fff;border: 1px solid rgba(36, 191, 255, 1);color: rgba(36, 191, 255, 1)">
+                                        <button style="background: #fff;border: 1px solid rgba(36, 191, 255, 1);color: rgba(36, 191, 255, 1)"
+                                                @click="handleMsg(task.user.user_id,task.task_order_id)">
                                             和他聊聊
                                         </button>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 1 & task.payment_method === 1">
-                                        <button class="first">和他聊聊</button>
-                                        <button @click="handleOver(2,task.task_order_id)">结束任务</button>
+                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
+                                        <button @click="handleOver(2,task.task_order_id,task.user.user_id)">结束任务</button>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 3">
-                                        <button class="first">和他聊聊</button>
-                                        <button>任务完成&支付尾款</button>
+                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
+                                        <button @click="pay">任务完成&支付尾款</button>
                                     </div>
                                 </div>
                                 <div class="line"></div>
@@ -274,7 +276,7 @@
                                         <button style="width: 82px;background: #EBEBEB;color: #999999;">已拒绝</button>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 4 && task.is_comment_boss === 0">
-                                        <button class="first">和他聊聊</button>
+                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
                                         <button @click="handleDiscuss_dia(3,task)">去评价</button>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 4 && task.is_comment_boss === 1">
@@ -450,6 +452,7 @@
                 } else {
                     this.apiGet('/api/task/order/paginate', this.searchParams).then((res) => {
                         this.task_list = res.data;
+                        console.log(res.data)
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
@@ -459,7 +462,6 @@
             handleSizeChange(status1, status2, per_page) {
                 this.searchParams.per_page = per_page;
                 this.initialize(status1, status2);
-                console.log(this.searchParams.per_page);
             },
             handleCurrentPageChange(status1, status2, page) {
                 this.searchParams.page = page;
@@ -467,23 +469,38 @@
             },
 
             //通过任务
-            handlePass(index, id) {
+            handlePass(index, id, user_id) {
                 this.apiPost('/api/task/order/status/' + id, {status: 1}).then((res) => {
                     if (res) {
-                        if (res) {
-                            if (index === 0) {
-                                this.initialize()
-                            } else if (index === 1) {
-                                this.initialize(0)
-                            }
+                        if (index === 0) {
+                            this.initialize()
+                        } else if (index === 1) {
+                            this.initialize(0)
                         }
+                        let userID = user_id + 'a';
+                        const message = this.tim.createCustomMessage({
+                            to: userID,
+                            conversationType: "C2C",
+                            payload: {
+                                data: '', // 用于标识该消息是骰子类型消息
+                                description: '[任务发布者通过了任务申请]', // 获取骰子点数
+                                extension: ''
+                            }
+                        });
+                        let promise = this.tim.sendMessage(message);
+                        promise.then(function(imResponse) {
+                            // 发送成功
+                            console.log(imResponse);
+                        }).catch(function(imError) {
+                            // 发送失败
+                            console.warn('sendMessage error:', imError);
+                        });
                     }
                 })
             },
 
             //拒绝任务
-            handleRefuse(index, id) {
-
+            handleRefuse(index, id, user_id) {
                 this.apiPost('/api/task/order/status/' + id, {status: 2}).then((res) => {
                     console.log(res);
                     if (res) {
@@ -492,12 +509,30 @@
                         } else if (index === 1) {
                             this.initialize(0)
                         }
+                        let userID = user_id + 'a';
+                        const message = this.tim.createCustomMessage({
+                            to: userID,
+                            conversationType: "C2C",
+                            payload: {
+                                data: '', // 用于标识该消息是骰子类型消息
+                                description: '[任务发布者拒绝了任务申请]', // 获取骰子点数
+                                extension: ''
+                            }
+                        });
+                        let promise = this.tim.sendMessage(message);
+                        promise.then(function(imResponse) {
+                            // 发送成功
+                            console.log(imResponse);
+                        }).catch(function(imError) {
+                            // 发送失败
+                            console.warn('sendMessage error:', imError);
+                        });
                     }
                 })
             },
 
             //结束任务
-            handleOver(index, id) {
+            handleOver(index, id, user_id) {
                 this.apiPost('/api/task/order/status/' + id, {status: 4}).then((res) => {
                     if (res) {
                         if (index === 0) {
@@ -505,6 +540,24 @@
                         } else if (index === 2) {
                             this.initialize(1, 3)
                         }
+                        let userID = user_id + 'a';
+                        const message = this.tim.createCustomMessage({
+                            to: userID,
+                            conversationType: "C2C",
+                            payload: {
+                                data: '', // 用于标识该消息是骰子类型消息
+                                description: '[任务发布者结束了任务]', // 获取骰子点数
+                                extension: ''
+                            }
+                        });
+                        let promise = this.tim.sendMessage(message);
+                        promise.then(function(imResponse) {
+                            // 发送成功
+                            console.log(imResponse);
+                        }).catch(function(imError) {
+                            // 发送失败
+                            console.warn('sendMessage error:', imError);
+                        });
                     }
                 })
             },
@@ -576,6 +629,22 @@
                 } else {
                     return this.activeName
                 }
+            },
+
+            //聊天
+            handleMsg(id, key) {
+                let data = {};
+                data.recipient = id;
+                data.foreign_key = key;
+                data.type = 2;
+                this.$router.push({
+                    name: "IM",
+                    params: {id: JSON.stringify(data)}
+                });
+            },
+
+            pay(){
+                this.$message('请在app完成此操作')
             }
         },
         watch: {},
@@ -723,6 +792,7 @@
                                     font-size: 12px;
                                     line-height: 29px;
                                     padding: 0;
+                                    cursor: pointer;
                                 }
 
                                 .first {
@@ -731,12 +801,14 @@
                                     background: #fff;
                                     color: rgba(36, 191, 255, 1);
                                     border: 1px solid rgba(235, 235, 235, 1);
+                                    cursor: pointer;
                                 }
 
                                 button:nth-child(2) {
                                     width: 136px;
                                     background: rgba(36, 191, 255, 1);
                                     color: #fff;
+                                    cursor: pointer;
                                 }
                             }
                         }

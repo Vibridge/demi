@@ -1,8 +1,8 @@
 <template>
-	<div class="B_index_wrapper" v-show="this.start"
+	<div class="B_index_wrapper" :style="active_top === '/B_index/Detail' ? 'overflow:hidden' : ''"  v-show="this.start"
 		 element-loading-spinner="el-icon-loading" element-loading-customClass="el-loading">
 		<!--//头部导航-->
-		<div :class="active_top === '/B_index/Detail' ? 'header active_app' : 'header'">
+		<div :class="active_top === '/B_index/Detail' ? 'header active_app' : 'header'" :style="active_top === '/B_index/Detail' ? 'margin:0 auto;z-index:1;height:50px':''">
 			<div class="header_wrap">
 				<div class="logo">
 					<div>
@@ -25,10 +25,22 @@
 						</el-menu>
 					</div>
 				</div>
-				<div class="Avatar" :class="active_top === '/B_index/Detail' ? 'active_app_item' : ''">
-					<span class="work_name" v-text="user_info.company_position ? user_info.name + '-' +  user_info.company_position : user_info.name"></span>
-					<img :src="user_info.avatar" alt="" :title="user_info.name">
+
+				<div class="logout">
+					<el-menu default-active="1" class="el-menu-demo" mode="horizontal" active-text-color="#fff" :background-color="active_top === '/B_index/Detail' ? '#45c9ff' : '#2D3238'">
+						<el-submenu index="1">
+							<template slot="title">
+								<div class="Avatar" :class="active_top === '/B_index/Detail' ? 'active_app_item' : ''">
+									<span class="work_name" v-text="user_info.company_position ? user_info.name + '-' +  user_info.company_position : user_info.name"></span>
+									<img :src="user_info.avatar" alt="" :title="user_info.name">
+								</div>
+							</template>
+							<el-menu-item index="2-1" @click="handleLoginOut">退出登录</el-menu-item>
+						</el-submenu>
+					</el-menu>
 				</div>
+
+
 			</div>
 		</div>
 		<div class="person-wrap" v-if="this.IsShow">
@@ -99,11 +111,11 @@
 					company_position:'',
 				},
 				company_info:{},
-				active_left:'/B_index/B_person/index',
+				active_left:'/B_index/B_person',
 				active_top:'/B_index/B_person',
 				left_list:[
 					{
-						path: '/B_index/B_person/index',
+						path: '/B_index/B_person',
 						title: '<span>首&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;页</span>'
 					},
 					{
@@ -139,7 +151,7 @@
 						title:'得米 VIP'
 					},
 				],
-				active_class:'',
+				active_class:'/B_index/B_person',
 				read:0,
 				active_app_class:''
 			}
@@ -158,7 +170,7 @@
 				}
 			});
 			//回到顶部
-			this.scrollTop();
+			// this.scrollTop();
 			this.initialize();
 			//左边导航默认选中
 			this.active_left = this.$route.fullPath;
@@ -176,9 +188,9 @@
 					this.user_info.company_position = res.company_position;
 				});
 			},
-			scrollTop(){
+			/*scrollTop(){
 				document.getElementsByClassName('B_index_wrapper')[0].scrollIntoView();
-			},
+			},*/
 
 			handleTopMenu(key, keyPath){
 				this.active_top = key
@@ -186,7 +198,7 @@
 
 			//左边导航选中状态
 			handleOpen(key, keyPath) {
-				this.scrollTop();
+				// this.scrollTop();
 				this.active_class = key
 			},
 
@@ -200,6 +212,19 @@
 				});
 			},
 
+			//退出登录
+			handleLoginOut(){
+				this.tim.logout().then(function(imResponse) {
+					console.log(imResponse.data); // 登出成功
+				}).catch(function(imError) {
+					console.warn('logout error:', imError);
+				});
+				sessionStorage.clear();
+				this.$router.push({
+					name: "login"
+				});
+			}
+
 		},
 		computed:{
 			//是否是左边导航
@@ -211,6 +236,7 @@
 					}
 					return false
 				}else{
+					this.active_class = this.$route.path
 					return true
 				}
 			},
@@ -265,6 +291,8 @@
 				width:1000px;
 				height:50px;
 				margin: 0 auto;
+				z-index: 99999;
+
 				.logo{
 					float: left;
 					height: 100%;
@@ -336,27 +364,60 @@
 					/*border-bottom:none;*/
 					color: #ffffff!important;
 				}
-				.Avatar{
-					float: right;
+				.logout{
+					/*width: 200px;*/
 					height: 100%;
-					padding-top: 10px;
-					display: flex;
-					color: #D9D9D9;
-					font-size: 14px;
-					img{
-						width:30px;
-						height: 30px;
-						border-radius: 50%;
-						cursor: pointer;
-						align-self: flex-start;
-					}
-					.work_name{
-						align-self: flex-start;
-						height: 100%;
-						margin-right: 12px;
-						line-height: 30px;
+					float: right;
+					padding: 0 10px;
+					/*padding: 0 10px;*/
+
+					ul{
+						align-self: center;
+						border-bottom:none;
+						background:none;
+						height:50px;
+						padding: 0 5px;
+						li{
+							height: 50px;
+							line-height: 50px;
+							padding:0!important;
+							.el-submenu__title{
+								display: flex;
+								height: 50px;
+								line-height: 50px;
+
+								.Avatar{
+									height: 100%;
+									padding-top: 10px;
+									display: flex;
+									color: #D9D9D9;
+									font-size: 14px;
+									img{
+										width:30px;
+										height: 30px;
+										border-radius: 50%;
+										cursor: pointer;
+										align-self: flex-start;
+									}
+									.work_name{
+										align-self: flex-start;
+										height: 100%;
+										margin-right: 12px;
+										line-height: 30px;
+									}
+								}
+								i{
+									display: none;
+								}
+
+							}
+						}
 					}
 				}
+				/*.is-opened{
+					background: #272B30;
+				}*/
+
 			}
 		}
 		.person-wrap {
@@ -467,4 +528,23 @@
 	a{
 		color: white;
 	}
+	.el-menu--horizontal {
+		border-bottom: none;
+		.el-menu--popup{
+			font-size: 16px;
+			/*height: 50px;*/
+			margin: 0 16px;
+			/*padding: 0 5px;*/
+			/*line-height: 50px;*/
+			background-color: #fff !important;
+			li{
+				background: none!important;
+			}
+		}
+		.el-menu-item.is-active {
+			color: #ffffff !important;
+			border-bottom: 3px solid #00e0ba;
+		}
+	}
+
 </style>
