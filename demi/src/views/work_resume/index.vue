@@ -1,5 +1,6 @@
 <template>
     <div class="work_resume">
+        <!--//搜索筛选-->
         <div class="work_resume_header">
             <div class="search">
                 <el-autocomplete
@@ -22,12 +23,44 @@
                 </div>
             </div>
         </div>
+
+        <!--//城市筛选-->
         <div class="work_resume_select">
             <div class="select_city">
                 <p>选择城市:</p>
                 <span v-for="city in hot_city" :key="city.city_id" :class="select_city === city.city_id ? 'active' : ''"
                       @click="HandleSelectCity(city.city_id)">{{city.city_name}}</span>
-                <span style="color: #24BFFF">全部城市</span>
+                <div class="now_city" @click="handelAllCity()">
+                    <el-popover
+                            placement="left-start"
+                            width="500"
+                            trigger="click"
+                            v-model="show_select_city"
+                    >
+                        <div class="city_list" v-loading="loading">
+                            <div class="level_l_wrap">
+                                <div v-for="first in city_tree" :key="first.city_id"
+                                     @click="handleSecondCity(first.city_id,first.children)"
+                                     :class="city_active === first.city_id ? 'level_1_city active_city' : 'level_1_city'"
+                                >
+                                    <p>{{first.city_name}}</p>
+                                </div>
+                            </div>
+
+                            <ul class="level_2_wrap">
+                                <li class="level_2_city" v-for="second in city_children" :key="second.city_id"
+                                    :class="second_city_active === second.city_id ? 'level_2_city active_city' : 'level_2_city'"
+                                    @click="HandleSelectCity(second.city_id,second.city_name)"
+                                >
+                                    {{second.city_name}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div slot="reference" class="label_wrap">
+                            <span style="color: #24BFFF;line-height: 14px">{{now_city}}</span>
+                        </div>
+                    </el-popover>
+                </div>
             </div>
             <div class="select_city">
                 <p>最低学历:</p>
@@ -47,96 +80,17 @@
                       @click="HandleSelectSal(index,sal.salary_min,sal.salary_max)">{{sal.label_name}}</span>
             </div>
         </div>
+
         <div class="work_resume_main">
             <div class="work_resume_nav">
-                <el-tabs v-model="activeName" @tab-click="handleClick">
-
+                <el-tabs v-model="activeName" @tab-click="handleClick" :before-leave="beforeToggle">
                     <!--//人才推荐-->
                     <el-tab-pane label="人才推荐" name="first">
                         <div class="work_resume_list">
                             <ul class="infinite-list" v-infinite-scroll="load">
                                 <li class="work_resume_wrap" v-for="(item,index) in work_resume" :key="index"
                                     @click="handleDetail(index)">
-                                    <div class="work_resume_info">
-                                        <div style="align-self: center;display: flex">
-                                            <div class="info_avatar">
-                                                <img :src="item.user.avatar" alt="">
-                                                <img src="../../assets/img/toxiang@2x.png" alt=""
-                                                     v-if="!item.user.avatar">
-                                                <img v-if="item.real && item.real.sex === 1" class="sex"
-                                                     src="../../assets/img/boy.png" alt="">
-                                                <img v-if="item.real && item.real.sex === 2" class="sex"
-                                                     src="../../assets/img/girl.png" alt="">
-                                            </div>
-                                            <div class="info_name">
-                                                <p>{{item.user.nickname}}</p>
-                                                <div style="display: flex">
-                                                    <p>{{item.salary_min/1000}}-{{item.salary_max/1000}}k</p>
-                                                    <p>
-                                                        <span v-if="item.vita.education === 1">初中及以下/</span>
-                                                        <span v-if="item.vita.education === 2">中专/中技/</span>
-                                                        <span v-if="item.vita.education === 3">高中/</span>
-                                                        <span v-if="item.vita.education === 4">大专/</span>
-                                                        <span v-if="item.vita.education === 5">本科/</span>
-                                                        <span v-if="item.vita.education === 6">硕士/</span>
-                                                        <span v-if="item.vita.education === 7">博士/</span>
-                                                        <span>{{new Date().getFullYear()-item.vita.work_start_date.split('-')[0]}}年/</span>
-                                                        <span v-if="item.real && item.real.birthday">{{new Date().getFullYear()-item.real.birthday.split('-')[0]}}岁/</span>
-                                                        <span v-if="item.vita.work_status === 1">应届生</span>
-                                                        <span v-if="item.vita.work_status === 2">离职-随时到岗</span>
-                                                        <span v-if="item.vita.work_status === 3">在职-月内到岗</span>
-                                                        <span v-if="item.vita.work_status === 4">在职-考虑机会</span>
-                                                        <span v-if="item.vita.work_status === 5">在职-暂不考虑</span>
-                                                    </p>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="info_cop">
-                                            <button @mouseover="show_collect = item.index"
-                                                    @mouseleave="show_collect = null"
-                                                    @click="handleCollect(item.user_job_id)"
-                                            >
-                                                <img src="../../assets/img/enshrine_hover.png" alt=""
-                                                     v-if="show_collect === item.index">
-                                                <img src="../../assets/img/enshrine.png" alt=""
-                                                     v-if="show_collect === null">
-                                                <img src="../../assets/img/have_already_collected@2x.png" alt=""
-                                                     v-if="collect">
-                                                <span>收藏</span>
-                                            </button>
-                                            <button>和他聊聊</button>
-                                        </div>
-                                    </div>
-                                    <p class="export">求职意向：{{item.work.name}}<span v-if="item.city"> - {{item.city.city_name}}</span>
-                                    </p>
-                                    <div class="another">
-                                        <div class="work_exc">
-                                            <div class="work_exc_info" v-show="item.experiences.length < 1">
-                                                <span><img src="../../assets/img/experience@2x.png" alt=""></span>
-                                                <span>该用户没有填写工作经历</span>
-                                            </div>
-                                            <div class="work_exc_info" v-show="item.experiences.length > 0">
-                                                <span><img src="../../assets/img/experience@2x.png" alt=""></span>
-                                                <span v-if="item.experiences.length > 0 && item.experiences[0].company">{{item.experiences[0].company.company_name}}</span>
-                                                <span v-if="item.experiences.length > 0">{{item.experiences[0].workname}}</span>
-                                            </div>
-                                            <p class="time" v-if="item.experiences.length > 0">
-                                                {{item.experiences[0].start_date}}-<span
-                                                    v-if="item.experiences[0].start_end">item.experiences[0].start_end</span>
-                                                <span v-if="!item.experiences[0].start_end">至今</span>
-                                            </p>
-                                        </div>
-                                        <div class="edc" v-show="item.diploma">
-                                            <div class="edc_info">
-                                                <span><img src="../../assets/img/edc.png" alt=""></span>
-                                                <span v-if="item.diploma && item.diploma.school">{{item.diploma.school.school_name}}</span>
-                                                <span v-if="item.diploma && item.diploma.major">{{item.diploma.major}}</span>
-                                            </div>
-                                            <p class="time">2018.06-2019.09</p>
-                                        </div>
-                                    </div>
-                                    <div class="line"></div>
+                                    <list :item="item"></list>
                                 </li>
                                 <li v-if="work_resume.length < 1" class="work_resume_none">
                                     <img src="../../assets/img/snail@2x.png" alt="">
@@ -146,10 +100,10 @@
                         </div>
                     </el-tab-pane>
 
-                    <!--//最新发布-->
+                    <!--&lt;!&ndash;//最新发布&ndash;&gt;
                     <el-tab-pane label="最新发布" name="second">
                         <div class="work_resume_list">
-                            <!--<ul class="infinite-list" v-infinite-scroll="load">
+                            &lt;!&ndash;<ul class="infinite-list" v-infinite-scroll="load">
                                 <li class="work_resume_wrap" v-for="(item,index) in work_resume" :key="item.index">
                                     <div class="work_resume_info">
                                         <div style="align-self: center;display: flex">
@@ -230,10 +184,10 @@
                                     </div>
                                     <div class="line"></div>
                                 </li>
-                            </ul>-->
+                            </ul>&ndash;&gt;
                             aa
                         </div>
-                    </el-tab-pane>
+                    </el-tab-pane>-->
 
                     <!--//与我匹配-->
                     <el-tab-pane name="third">
@@ -248,7 +202,7 @@
                                 <div class="matching">
                                     <p class="title" v-if="matching_work.length > 0">我发布的职位</p>
                                     <div class="matching_list" v-for="work in matching_work" :key="work.work_id"
-                                         @click="HandleSelectMatching(work.work_label_id)">
+                                         @click="HandleSelectMatching(true,work.work_label_id)">
                                         <div class="matching_work">
                                             <p>{{work.work_name}}</p>
                                             <p>{{work.salary_min/1000}}-{{work.salary_max/1000}}k</p>
@@ -277,87 +231,13 @@
                         </div>
                         <div class="work_resume_list">
                             <ul class="infinite-list" v-infinite-scroll="load">
-                                <li class="work_resume_wrap" v-for="(item,index) in work_resume" :key="item.index"
+                                <li class="work_resume_wrap" v-for="(item,index) in work_resume" :key="index"
                                     @click="handleDetail(index)">
-                                    <div class="work_resume_info">
-                                        <div style="align-self: center;display: flex">
-                                            <div class="info_avatar">
-                                                <img :src="item.user.avatar" alt="">
-                                                <img src="../../assets/img/toxiang@2x.png" alt=""
-                                                     v-if="!item.user.avatar">
-                                                <img v-if="item.real && item.real.sex === 1" class="sex"
-                                                     src="../../assets/img/boy.png" alt="">
-                                                <img v-if="item.real && item.real.sex === 2" class="sex"
-                                                     src="../../assets/img/girl.png" alt="">
-                                            </div>
-                                            <div class="info_name">
-                                                <p>{{item.user.nickname}}</p>
-                                                <div style="display: flex">
-                                                    <p>{{item.salary_min/1000}}-{{item.salary_max/1000}}k</p>
-                                                    <p>
-                                                        <span v-if="item.vita.education === 1">初中及以下/</span>
-                                                        <span v-if="item.vita.education === 2">中专/中技/</span>
-                                                        <span v-if="item.vita.education === 3">高中/</span>
-                                                        <span v-if="item.vita.education === 4">大专/</span>
-                                                        <span v-if="item.vita.education === 5">本科/</span>
-                                                        <span v-if="item.vita.education === 6">硕士/</span>
-                                                        <span v-if="item.vita.education === 7">博士/</span>
-                                                        <span>{{new Date().getFullYear()-item.vita.work_start_date.split('-')[0]}}年/</span>
-                                                        <span v-if="item.real && item.real.birthday">{{new Date().getFullYear()-item.real.birthday.split('-')[0]}}岁/</span>
-                                                        <span v-if="item.vita.work_status === 1">应届生</span>
-                                                        <span v-if="item.vita.work_status === 2">离职-随时到岗</span>
-                                                        <span v-if="item.vita.work_status === 3">在职-月内到岗</span>
-                                                        <span v-if="item.vita.work_status === 4">在职-考虑机会</span>
-                                                        <span v-if="item.vita.work_status === 5">在职-暂不考虑</span>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="info_cop">
-                                            <button @mouseover="show_collect = item.index"
-                                                    @mouseleave="show_collect = null"
-                                                    @click="handleCollect(item.user_job_id)"
-                                            >
-                                                <img src="../../assets/img/enshrine_hover.png" alt=""
-                                                     v-if="show_collect === item.index">
-                                                <img src="../../assets/img/enshrine.png" alt=""
-                                                     v-if="show_collect === null">
-                                                <img src="../../assets/img/have_already_collected@2x.png" alt=""
-                                                     v-if="collect">
-                                                <span>收藏</span>
-                                            </button>
-                                            <button>和他聊聊</button>
-                                        </div>
-                                    </div>
-                                    <p class="export">求职意向：{{item.work.name}}<span v-if="item.city"> - {{item.city.city_name}}</span>
-                                    </p>
-                                    <div class="another">
-                                        <div class="work_exc">
-                                            <div class="work_exc_info" v-show="item.experiences.length < 1">
-                                                <span><img src="../../assets/img/experience@2x.png" alt=""></span>
-                                                <span>该用户没有填写工作经历</span>
-                                            </div>
-                                            <div class="work_exc_info" v-show="item.experiences.length > 0">
-                                                <span><img src="../../assets/img/experience@2x.png" alt=""></span>
-                                                <span v-if="item.experiences.length > 0 && item.experiences[0].company">{{item.experiences[0].company.company_name}}</span>
-                                                <span v-if="item.experiences.length > 0">{{item.experiences[0].workname}}</span>
-                                            </div>
-                                            <p class="time" v-if="item.experiences.length > 0">
-                                                {{item.experiences[0].start_date}}-<span
-                                                    v-if="item.experiences[0].start_end">item.experiences[0].start_end</span>
-                                                <span v-if="!item.experiences[0].start_end">至今</span>
-                                            </p>
-                                        </div>
-                                        <div class="edc" v-show="item.diploma">
-                                            <div class="edc_info">
-                                                <span><img src="../../assets/img/edc.png" alt=""></span>
-                                                <span v-if="item.diploma && item.diploma.school">{{item.diploma.school.school_name}}</span>
-                                                <span v-if="item.diploma && item.diploma.major">{{item.diploma.major}}</span>
-                                            </div>
-                                            <p class="time">2018.06-2019.09</p>
-                                        </div>
-                                    </div>
-                                    <div class="line"></div>
+                                    <list :item="item"></list>
+                                </li>
+                                <li v-if="work_resume.length < 1" class="work_resume_none">
+                                    <img src="../../assets/img/snail@2x.png" alt="">
+                                    <p class="none_note">牛人正在赶来</p>
                                 </li>
                             </ul>
                         </div>
@@ -367,187 +247,197 @@
 
         </div>
 
-        <el-dialog
-                :visible.sync="dialogVisible"
-                width="1000px"
-                :show-close=false
-                custom-class="show_detail"
-        >
-            <div class="show_detail_header">
-                <div class="user_info">
-                    <div class="user_info_avatar">
+        <div>
+            <template>
+                <el-dialog
+                        :visible.sync="dialogVisible"
+                        width="1000px"
+                        :show-close=false
+                        custom-class="show_detail"
+                        :destroy-on-close=true
+                        v-if="dialogVisible"
+                >
+                    <div class="show_detail_header">
+                        <div class="user_info">
+                            <div class="user_info_avatar">
+                                <div>
+                                    <img v-if="detail_info && !detail_info.user.avatar" src="../../assets/img/toxiang@2x.png"
+                                         alt="">
+                                    <img v-if="detail_info && detail_info.user.avatar" :src="detail_info.user.avatar" alt="">
+                                </div>
+                                <div style="align-self: flex-end">
+                                    <img v-if="detail_info && detail_info.real && detail_info.real.sex === 1" class="sex"
+                                         src="../../assets/img/boy.png" alt="">
+                                    <img v-if="detail_info && detail_info.real && detail_info.real.sex === 2" class="sex"
+                                         src="../../assets/img/girl.png" alt="">
+                                </div>
+                            </div>
+                            <div class="user_info_name">
+                                <p v-if="detail_info">{{detail_info.user.nickname}}</p>
+                                <p v-if="detail_info">
+                                    <span v-if="detail_info.vita.education === 1">初中及以下</span>
+                                    <span v-if="detail_info.vita.education === 2">中专/中技</span>
+                                    <span v-if="detail_info.vita.education === 3">高中</span>
+                                    <span v-if="detail_info.vita.education === 4">大专</span>
+                                    <span v-if="detail_info.vita.education === 5">本科</span>
+                                    <span v-if="detail_info.vita.education === 6">硕士</span>
+                                    <span v-if="detail_info.vita.education === 7">博士</span>
+                                    <span v-if="detail_info.real && detail_info.real.birthday">{{new Date().getFullYear()-detail_info.real.birthday.split('-')[0]}}岁</span>
+                                    <span v-if="detail_info && parseInt(detail_info.work_year.split('年')[0]) > 0">{{detail_info.work_year}}</span>
+                                    <span v-if="detail_info && parseInt(detail_info.work_year.split('年')[0]) <= 0">低于1年</span>
+                                    <!--<span>{{detail_info.work_year}}</span>-->
+                                </p>
+                            </div>
+                        </div>
+                        <div class="cop">
+                            <p>发布于2019</p>
+                            <div>
+                                <button @mouseover="show_collect = true"
+                                        @mouseleave="show_collect = false"
+                                        @click="handleCollect(detail_info)"
+                                >
+                                    <img src="../../assets/img/enshrine_hover.png" alt=""
+                                         v-if="show_collect && detail_info && !detail_info.favorites">
+                                    <img src="../../assets/img/enshrine.png" alt=""
+                                         v-if="!show_collect && detail_info && !detail_info.favorites">
+                                    <img style="width: 17px" src="../../assets/img/have_already_collected@2x.png" alt=""
+                                         v-if="detail_info && detail_info.favorites">
+                                    <span>收藏</span>
+                                </button>
+                                <button @click="handleMsg(detail_info.user_id,detail_info.job_label_id)">和他聊聊</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="work_exp">
                         <div>
-                            <img v-if="detail_info && !detail_info.user.avatar" src="../../assets/img/toxiang@2x.png"
-                                 alt="">
-                            <img v-if="detail_info && detail_info.user.avatar" :src="detail_info.user.avatar" alt="">
+                            <p>期望职位：<span>{{detail_info && detail_info.work.name}}<span style="margin-left: 0"
+                                                                                        v-if="detail_info && detail_info.city">- {{detail_info.city.city_name}}</span></span>
+                            </p>
+                            <p>求助意向：<span>{{detail_info && detail_info.vita.status}}</span></p>
                         </div>
-                        <div style="align-self: flex-end">
-                            <img v-if="detail_info && detail_info.real && detail_info.real.sex === 1" class="sex"
-                                 src="../../assets/img/boy.png" alt="">
-                            <img v-if="detail_info && detail_info.real && detail_info.real.sex === 2" class="sex"
-                                 src="../../assets/img/girl.png" alt="">
-                        </div>
-                    </div>
-                    <div class="user_info_name">
-                        <p v-if="detail_info">{{detail_info.user.nickname}}</p>
-                        <p v-if="detail_info">
-                            <span v-if="detail_info.vita.education === 1">初中及以下</span>
-                            <span v-if="detail_info.vita.education === 2">中专/中技</span>
-                            <span v-if="detail_info.vita.education === 3">高中</span>
-                            <span v-if="detail_info.vita.education === 4">大专</span>
-                            <span v-if="detail_info.vita.education === 5">本科</span>
-                            <span v-if="detail_info.vita.education === 6">硕士</span>
-                            <span v-if="detail_info.vita.education === 7">博士</span>
-                            <span v-if="detail_info.real && detail_info.real.birthday">{{new Date().getFullYear()-detail_info.real.birthday.split('-')[0]}}岁</span>
-                            <span>{{detail_info.work_year}}</span>
-                        </p>
-                    </div>
-                </div>
-                <div class="cop">
-                    <p>发布于2019</p>
-                    <div>
-                        <button @mouseover="show_collect = true"
-                                @mouseleave="show_collect = false"
-                                @click="handleCollect(detail_info.user_job_id)"
-                        >
-                            <img src="../../assets/img/enshrine_hover.png" alt=""
-                                 v-if="show_collect">
-                            <img src="../../assets/img/enshrine.png" alt=""
-                                 v-if="!show_collect && detail_info && !detail_info.favorites">
-                            <img style="width: 17px" src="../../assets/img/have_already_collected@2x.png" alt=""
-                                 v-if="collect || (detail_info && detail_info.favorites)">
-                            <span>收藏</span>
-                        </button>
-                        <button>和他聊聊</button>
-                    </div>
-                </div>
-            </div>
-            <div class="work_exp">
-                <div>
-                    <p>期望职位：<span>{{detail_info && detail_info.work.name}}<span style="margin-left: 0"
-                                                                                v-if="detail_info && detail_info.city">- {{detail_info.city.city_name}}</span></span>
-                    </p>
-                    <p>求助意向：<span>{{detail_info && detail_info.vita.status}}</span></p>
-                </div>
-                <div>
-                    <p>开始工作：<span>{{detail_info && detail_info.vita.work_start_date}}</span></p>
-                    <p>薪资要求：<span>{{detail_info && detail_info.salary_min/1000}}-{{detail_info && detail_info.salary_max/1000}}k</span>
-                    </p>
-                </div>
-            </div>
-            <div class="another_label">
-                <p class="label_title">视频简历</p>
-                <div class="label_content">
-                    <video v-if="detail_info && detail_info.video" :src="detail_info.video.file_path" controls></video>
-                    <img v-if="detail_info && !detail_info.video" src="../../assets/img/snail@2x.png" alt="">
-                </div>
-            </div>
-            <div class="another_label">
-                <p class="label_title">工作经验</p>
-                <div class="label_content" v-if="detail_info && detail_info.experiences.length > 0">
-                    <div class="timeline" v-for="timeline in detail_info.experiences" :key="timeline.experience_id">
-                        <div class="work_time">
-                            <p v-if="timeline.end_date">{{timeline.end_date}}</p>
-                            <p v-if="!timeline.end_date">至今</p>
-                            <p>{{timeline.start_date}}</p>
-                        </div>
-                        <div class="time-line">
-                            <img src="../../assets/img/stamp@2x.png" alt="">
-                            <div class="line"></div>
-                        </div>
-                        <div class="label_detail">
-                            <p>{{timeline.company.company_name}}</p>
-                            <p>{{timeline.work.name}}</p>
-                            <p>
-                                {{timeline.description}}
+                        <div>
+                            <p>开始工作：<span>{{detail_info && detail_info.vita.work_start_date}}</span></p>
+                            <p>薪资要求：<span>{{detail_info && detail_info.salary_min/1000}}-{{detail_info && detail_info.salary_max/1000}}k</span>
                             </p>
                         </div>
                     </div>
-                </div>
-                <div class="label_content" v-if="detail_info && detail_info.experiences.length < 1">
-                    <p>该用户没有填写工作经验</p>
-                </div>
-            </div>
-            <div class="another_label">
-                <p class="label_title">联系方式</p>
-                <div class="label_content">
-                    <div class="info">
-                        <div>
-                            <img src="../../assets/img/phone@2x.png" alt="">
-                            <span>{{detail_info && detail_info.user.phone}}</span>
-                        </div>
-                        <div>
-                            <img src="../../assets/img/postbox@2x.png" alt="" style="width: 16px">
-                            <span>{{detail_info && detail_info.user.email}}</span>
+                    <div class="another_label">
+                        <p class="label_title">视频简历</p>
+                        <div class="label_content">
+                            <video v-if="detail_info && detail_info.video && detail_info.video.status === 2" :src="detail_info.video.file_path" controls></video>
+                            <img v-if="(detail_info && !detail_info.video) || (detail_info && detail_info.video && detail_info.video.status !== 2)" src="../../assets/img/snail@2x.png" alt="">
                         </div>
                     </div>
-                    <div class="vip" v-if="!isVip">开通<img src="../../assets/img/vip_detail@2x.png">查看完整联系方式</div>
-                </div>
-            </div>
-            <div class="another_label">
-                <p class="label_title">自我描述</p>
-                <div class="label_content">
-                    <div class="dec">
-                        {{detail_info && detail_info.vita.description}}
-                    </div>
-                </div>
-            </div>
-            <div class="another_label">
-                <p class="label_title">教育经历</p>
-                <div class="label_content" v-if="detail_info && detail_info.education.length > 0">
-                    <div class="timeline" v-for="edc in detail_info.education" :key="edc.education_id">
-                        <div class="work_time">
-                            <p>{{edc.e_date}}</p>
-                            <p>{{edc.s_date}}</p>
+                    <div class="another_label">
+                        <p class="label_title">工作经验</p>
+                        <div class="label_content" v-if="detail_info && detail_info.experiences.length > 0">
+                            <div class="timeline" v-for="timeline in detail_info.experiences" :key="timeline.experience_id">
+                                <div class="work_time">
+                                    <p v-if="timeline.end_date">{{timeline.end_date}}</p>
+                                    <p v-if="!timeline.end_date">至今</p>
+                                    <p>{{timeline.start_date}}</p>
+                                </div>
+                                <div class="time-line">
+                                    <img src="../../assets/img/stamp@2x.png" alt="">
+                                    <div class="line"></div>
+                                </div>
+                                <div class="label_detail">
+                                    <p>{{timeline.company.company_name}}</p>
+                                    <p>{{timeline.work.name}}</p>
+                                    <p>
+                                        {{timeline.description}}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="time-line">
-                            <img src="../../assets/img/stamp@2x.png" alt="">
-                            <div class="line"></div>
-                        </div>
-                        <div class="label_detail" v-if="edc.school">
-                            <p>{{edc.school.school_name}} -
-                                <span v-if="edc.education === 1">初中及以下</span>
-                                <span v-if="edc.education === 2">中专/中技</span>
-                                <span v-if="edc.education === 3">高中</span>
-                                <span v-if="edc.education === 4">大专</span>
-                                <span v-if="edc.education === 5">本科</span>
-                                <span v-if="edc.education === 6">硕士</span>
-                                <span v-if="edc.education === 7">博士</span>
-                                <span> / {{edc.major}}</span></p>
+                        <div class="label_content" v-if="detail_info && detail_info.experiences.length < 1">
+                            <p>该用户没有填写工作经验</p>
                         </div>
                     </div>
-                </div>
-                <div class="label_content" v-if="detail_info && detail_info.education.length < 1">
-                    <p>该用户没有填写教育经历</p>
-                </div>
-            </div>
-            <div class="another_label">
-                <p class="label_title">图片作品</p>
-                <div class="label_content" v-if="detail_info && detail_info.files.length > 0">
-                    <div class="pic">
-                        <div class="demo-image__preview">
-                            <el-image
-                                    v-for="pic in detail_info.files"
-                                    :key="pic.file_id"
-                                    :src="pic.file_path"
-                                    :preview-src-list="detail_info.files"
-                                    v-if="pic.type === 1"
-                            >
-                            </el-image>
+                    <div class="another_label">
+                        <p class="label_title">联系方式</p>
+                        <div class="label_content">
+                            <div class="info">
+                                <div>
+                                    <img src="../../assets/img/phone@2x.png" alt="">
+                                    <span v-if="isVip">{{detail_info && detail_info.user.phone}}</span>
+                                    <span v-if="!isVip && detail_info">{{this.vipShow(detail_info.user.phone,3,4)}}</span>
+                                </div>
+                                <div>
+                                    <img src="../../assets/img/postbox@2x.png" alt="" style="width: 16px">
+                                    <span v-if="isVip">{{detail_info && detail_info.user.email}}</span>
+                                    <span v-if="!isVip && detail_info">{{this.vipShow(detail_info.user.email,3,3)}}</span>
+                                </div>
+                            </div>
+                            <div class="vip" v-if="!isVip" @click="handleOpenVip">开通<img src="../../assets/img/vip_detail@2x.png">查看完整联系方式</div>
                         </div>
                     </div>
-                </div>
-                <div class="label_content" v-if="detail_info && detail_info.files.length < 1">
-                    <img src="../../assets/img/snail@2x.png" alt="">
-                </div>
-            </div>
-            <div class="go_left" @click="goBack">
-                <img src="../../assets/img/left@2x.png" alt="">
-            </div>
-            <div class="go_right" @click="goNext">
-                <img src="../../assets/img/right@2x.png" alt="">
-            </div>
-        </el-dialog>
+                    <div class="another_label">
+                        <p class="label_title">自我描述</p>
+                        <div class="label_content">
+                            <div class="dec">
+                                {{detail_info && detail_info.vita.description}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="another_label">
+                        <p class="label_title">教育经历</p>
+                        <div class="label_content" v-if="detail_info && detail_info.education.length > 0">
+                            <div class="timeline" v-for="edc in detail_info.education" :key="edc.education_id">
+                                <div class="work_time">
+                                    <p>{{edc.e_date}}</p>
+                                    <p>{{edc.s_date}}</p>
+                                </div>
+                                <div class="time-line">
+                                    <img src="../../assets/img/stamp@2x.png" alt="">
+                                    <div class="line"></div>
+                                </div>
+                                <div class="label_detail" v-if="edc.school">
+                                    <p>{{edc.school.school_name}} -
+                                        <span v-if="edc.education === 1">初中及以下</span>
+                                        <span v-if="edc.education === 2">中专/中技</span>
+                                        <span v-if="edc.education === 3">高中</span>
+                                        <span v-if="edc.education === 4">大专</span>
+                                        <span v-if="edc.education === 5">本科</span>
+                                        <span v-if="edc.education === 6">硕士</span>
+                                        <span v-if="edc.education === 7">博士</span>
+                                        <span> / {{edc.major}}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="label_content" v-if="detail_info && detail_info.education.length < 1">
+                            <p>该用户没有填写教育经历</p>
+                        </div>
+                    </div>
+                    <div class="another_label">
+                        <p class="label_title">图片作品</p>
+                        <div class="label_content" v-if="detail_info && sumImg(detail_info.files) > 0">
+                            <div class="pic">
+                                <div class="demo-image__preview">
+                                    <el-image
+                                            v-for="pic in detail_info.files"
+                                            :key="pic.file_id"
+                                            :src="pic.file_path"
+                                            :preview-src-list="handleBigImg(detail_info.files)"
+                                            v-if="pic.type === 2"
+                                    >
+                                    </el-image>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="label_content" v-if="detail_info && sumImg(detail_info.files) < 1">
+                            <img src="../../assets/img/snail@2x.png" alt="">
+                        </div>
+                    </div>
+                    <div class="go_left" @click="goBack">
+                        <img src="../../assets/img/left@2x.png" alt="">
+                    </div>
+                    <div class="go_right" @click="goNext">
+                        <img src="../../assets/img/right@2x.png" alt="">
+                    </div>
+                </el-dialog>
+            </template>
+        </div>
     </div>
 </template>
 
@@ -556,9 +446,10 @@
     import {forEach} from "../../libs/tools";
     import time from "../../libs/time";
     import timestamp from "../../libs/time";
-
+    import list from "./work_resume_list"
     export default {
         name: 'index',
+        components:{list},
         data() {
             return {
                 //公司id
@@ -575,10 +466,15 @@
 
                 //城市数据
                 city_tree: null,
+                city_children: [],
+                city_active: null,
+                second_city_active: null,
+                show_select_city: false,
+                now_city: '全部城市',
+                loading:true,
 
                 //鼠标更改收藏按钮样式
                 show_collect: null,
-                collect: false,
 
                 //热门城市
                 hot_city: [
@@ -810,9 +706,10 @@
                 }
                 if (this.page < this.last_page) {
                     this.page = this.page + 1;
-                    this.initialize(this.page, this.select_city, this.select_education, min, max, Sal_min, Sal_max, this.select_job_label_id);
+                    setTimeout(
+                        this.initialize(this.page, this.select_city, this.select_education, min, max, Sal_min, Sal_max, this.select_job_label_id)
+                    ,1000)
                 }
-
             },
 
             //城市数据
@@ -837,10 +734,41 @@
                         //     }
                         // });
                     });
-                    this.city_tree = res;
                     this.$store.commit('loading', false);
                 })
 
+            },
+
+            //城市筛选
+            handelAllCity() {
+                this.show_select_city = true;
+                this.apiGet('/city/lists?mode=tree').then((res) => {
+                    forEach(res, item => {
+                        if (item.municipalities !== 0) {
+                            let muniCity = [{
+                                "city_name": item.city_name,
+                                "city_id": item.city_id,
+                                "is_hot": 1
+                            }];
+                            item.children = muniCity
+                        }
+                        forEach(item.children, item1 => {
+                            if (item1.children) {
+                                delete item1.children
+                            }
+                        });
+
+                        /*if(item.city_id === 1){
+                            this.city_children = item.children;
+                        }*/
+                    });
+                    this.city_tree = res;
+                    this.loading = false
+                })
+            },
+            handleSecondCity(id, item) {
+                this.city_active = id;
+                this.city_children = item
             },
 
             //岗位数据
@@ -872,12 +800,10 @@
             //搜索框选择岗位
             handleSelect(item) {
                 this.select_job_label_id = item.label_id;
-                console.log(this.select_job_label_id)
             },
 
             //导航切换
             handleClick(tab, event) {
-                console.log(tab, event);
                 var min = null, max = null;
                 if (this.select_experience !== null) {
                     min = this.experience[this.select_experience].experience_min;
@@ -896,89 +822,70 @@
                 if (tab.name === 'third') {
                     this.show_matching = true;
                     this.apiGet('/api/work/paginate?company_id=' + this.company_id).then((res) => {
-                        console.log(res);
                         this.matching_work = res.data;
                     });
                 }
             },
 
+            beforeToggle(){
+                console.log('aaa')
+                if(this.show_matching){
+                    return false
+                }else{
+                    return true
+                }
+            },
+
             //人才数据列表
             initialize(page, city_id, edc, Exp_min, Exp_max, Sal_min, Sal_max, work_label_id) {
-
                 if (city_id || edc || Exp_min || Exp_max || Sal_min || Sal_max || work_label_id) {
                     this.apiGet('/api/vita/paginate?page=' + page + '&education=' + edc + '&city_id=' + city_id + '&work_year_s=' + Exp_min + '&work_year_e=' + Exp_max + '&salary_min=' + Sal_min + '&salary_max=' + Sal_max + '&job_label_id=' + work_label_id).then((res) => {
-                        console.log(res);
                         this.last_page = res.last_page;
                         forEach(res.data, item => {
                             this.work_resume.push(item)
                         });
+                        console.log(res.data)
                     });
                 } else {
                     this.apiGet('/api/vita/paginate?page=' + page).then((res) => {
-                        console.log(res);
                         this.last_page = res.last_page;
                         forEach(res.data, item => {
                             this.work_resume.push(item)
                         });
+                        console.log(res.data)
+
                     })
                 }
-                // if(edc){
-                //     this.apiGet('/api/vita/paginate?page=' + page + '&education=' + edc).then((res) =>{
-                //         console.log(res);
-                //         forEach(res.data,item => {
-                //             this.work_resume.push(item)
-                //         });
-                //     });
-                // }else if(city_id){
-                //     this.apiGet('/api/vita/paginate?page=' + page + '&city_id=' + city_id).then((res) =>{
-                //         console.log(res);
-                //         forEach(res.data,item => {
-                //             this.work_resume.push(item)
-                //         });
-                //     });
-                // }else if(Exp_min || Exp_max){
-                //     this.apiGet('/api/vita/paginate?page=' + page + '&work_year_s=' + Exp_min + '&work_year_e=' + Exp_max).then((res) =>{
-                //         console.log(res);
-                //         forEach(res.data,item => {
-                //             this.work_resume.push(item)
-                //         });
-                //     });
-                // }else if(Sal_min || Sal_max){
-                //     this.apiGet('/api/vita/paginate?page=' + page + '&salary_min=' + Sal_min + '&salary_max=' + Sal_max).then((res) =>{
-                //         console.log(res);
-                //         forEach(res.data,item => {
-                //             this.work_resume.push(item)
-                //         });
-                //     });
-                // }else{
-                //     this.apiGet('/api/vita/paginate?page=' + page).then((res) =>{
-                //         console.log(res);
-                //         forEach(res.data,item => {
-                //             this.work_resume.push(item)
-                //         });
-                //     })
-                // }
-
             },
 
             //收藏简历
-            handleCollect(id) {
+            handleCollect(item) {
                 var data = {
-                    id: id
+                    id: item.user_job_id
                 };
-                console.log(id);
-                if (this.collect = false || !this.detail_info.favorites) {
+                if (!this.detail_info.favorites) {
                     this.apiPost('/api/user/favorite', data).then((res) => {
-                        console.log(res)
-                        this.collect = true
+                        console.log(res);
+                        if(res){
+                            this.handleDetail(this.index)
+                        }
+                    })
+                }else{
+                    this.apiDelete('/api/user/favorite/delete/' + item.favorites.favorite_id).then((res)=>{
+                        console.log(res);
+                        if(res){
+                            this.handleDetail(this.index)
+                        }
                     })
                 }
-
-
             },
 
             //通过城市筛选
-            HandleSelectCity(id) {
+            HandleSelectCity(id,name) {
+                if(name){
+                    this.now_city = name;
+                    this.show_select_city = false
+                }
                 var min = null, max = null;
                 if (this.select_experience !== null) {
                     min = this.experience[this.select_experience].experience_min;
@@ -1042,10 +949,11 @@
 
             //与我匹配筛选
             HandleSelectMatching(id) {
-                var work_label_id = id;
-                if (this.select_job_label_id !== 0 && this.select_job_label_id !== null) {
+                console.log(id);
+                // var work_label_id = id;
+                /*if (this.select_job_label_id !== 0 && this.select_job_label_id !== null) {
                     work_label_id = this.select_job_label_id;
-                }
+                }*/
                 this.show_matching = false;
                 this.page = 1;
                 this.work_resume = [];
@@ -1060,7 +968,40 @@
                     Sal_max = this.salary[this.select_salary].salary_max;
                 }
                 this.select_job_label_id = id;
-                this.initialize(this.page, this.select_city, this.select_education, min, max, Sal_min, Sal_max, work_label_id);
+                this.initialize(this.page, this.select_city, this.select_education, min, max, Sal_min, Sal_max, this.select_job_label_id);
+            },
+
+
+            //图片数量
+            sumImg(array){
+                if(array){
+                    let data = [];
+                    forEach(array,item=>{
+                        if(item.type === 2 && item.status === 2){
+                            data.push(item.file_path);
+                        }
+                    })
+                    return data.length;
+                }else{
+                    return 0
+                }
+
+            },
+
+            //图片作品放大
+            handleBigImg(array){
+                if(array){
+                    let data = [];
+                    forEach(array,item=>{
+                        if(item.type === 2 && item.status === 2){
+                            data.push(item.file_path);
+                        }
+                    })
+                    return data;
+                }else{
+                    return []
+                }
+
             },
 
             //简历详情
@@ -1071,6 +1012,35 @@
                     console.log(res)
                     this.detail_info = res;
                 })
+            },
+
+            //聊天
+            handleMsg(id, key) {
+                let data = {};
+                data.recipient = id;
+                data.foreign_key = key;
+                data.type = 1;
+                this.$router.push({
+                    name: "IM",
+                    params: {id: JSON.stringify(data)}
+                });
+            },
+
+            //手机、邮箱显示
+            vipShow (str,frontLen,endLen) {
+                var len = str.length-frontLen-endLen;
+                var xing = '';
+                for (var i=0;i<len;i++) {
+                    xing+='*';
+                }
+                return str.substring(0,frontLen)+xing+str.substring(str.length-endLen);
+            },
+
+            //开通vip
+            handleOpenVip(){
+                this.$router.push({
+                    name: "VIP",
+                });
             },
 
             //返回上一个
@@ -1113,6 +1083,67 @@
 </script>
 
 <style lang="less" type="text/less">
+    .city_list {
+        display: flex;
+        font-size: 14px;
+        flex-direction: column;
+        overflow-y: hidden;
+        min-height: 50px;
+
+        .level_l_wrap::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        .level_l_wrap::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+        }
+
+        .level_l_wrap {
+            display: flex;
+            overflow-x: auto;
+
+            .level_1_city {
+                cursor: pointer;
+                margin-bottom: 12px;
+
+                p {
+                    width: 50px;
+                    padding: 4px 10px;
+                    text-align: center;
+                }
+            }
+
+            .level_1_city:hover {
+                border-radius: 14px;
+                background: #F7F8FA;
+            }
+        }
+
+        .level_2_wrap {
+            width: 500px;
+            margin-top: 12px;
+
+            .level_2_city {
+                display: inline-block;
+                padding: 4px 10px;
+                margin-bottom: 10px;
+                cursor: pointer;
+            }
+
+            .level_2_city:hover {
+                border-radius: 14px;
+                background: #F7F8FA;
+            }
+        }
+
+        .active_city {
+            background: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(36, 191, 255, 1);
+            color: rgba(36, 191, 255, 1);
+            border-radius: 14px;
+        }
+
+    }
     .work_resume {
         font-family: MicrosoftYaHei;
         width: 100%;
@@ -1184,13 +1215,16 @@
             margin: 32px auto;
             background: rgba(255, 255, 255, 1);
             border: 1px solid rgba(230, 230, 230, 1);
-            padding: 30px;
+            padding: 16px 30px 30px;
             box-sizing: border-box;
-
+            .select_city:nth-child(1){
+                margin-bottom: 14px;
+            }
             .select_city {
                 margin-bottom: 28px;
-
+                display: flex;
                 p {
+                    align-self: center;
                     font-size: 14px;
                     color: rgba(153, 153, 153, 1);
                     display: inline-block;
@@ -1198,11 +1232,14 @@
                 }
 
                 span {
+                    align-self: center;
                     font-size: 14px;
                     color: rgba(77, 77, 77, 1);
                     margin-right: 20px;
                     cursor: pointer;
                 }
+
+
             }
 
             .select_city:nth-last-child(1) {
@@ -1472,6 +1509,7 @@
         background: rgba(255, 255, 255, 1);
         border-radius: 4px;
         position: relative;
+        margin-top: 7vh !important;
 
         .el-dialog__header {
             display: none;
@@ -1597,7 +1635,7 @@
                     align-self: center;
 
                     p {
-                        width: 60%;
+                        width: 80%;
                         margin: 0 auto 22px;
                         font-size: 13px;
                         color: rgba(153, 153, 153, 1);
@@ -1628,7 +1666,7 @@
                     margin: 0 auto;
 
                     video {
-                        width: 510px;
+                        max-width: 510px;
                     }
 
                     .timeline {
@@ -1734,6 +1772,7 @@
                         text-align: right;
                         margin-top: 30px;
                         margin-right: 60px;
+                        cursor: pointer;
 
                         img {
                             width: 27px;
@@ -1752,7 +1791,6 @@
 
                     .pic {
                         width: 713px;
-                        height: 312px;
                         background: rgba(255, 255, 255, 1);
                         border: 1px solid rgba(230, 230, 230, 1);
                         border-radius: 10px;
@@ -1777,30 +1815,28 @@
                     }
                 }
             }
-        }
 
-        .go_left {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            transform: translate3d(-50%, -50%, 0);
+            .go_left {
+                position: fixed;
+                top: 50%;
+                left: calc(50% - 520px);
+                transform: translate3d(0, -50%, 0);
 
-            img {
-                width: 20px;
+                img {
+                    width: 20px;
+                }
+            }
+
+            .go_right {
+                position: fixed;
+                top: 50%;
+                right: calc(50% - 500px);;
+                transform: translate3d(20%, -50%, 0);
+                img {
+                    width: 20px;
+                }
             }
         }
-
-        .go_right {
-            position: absolute;
-            top: 50%;
-            right: 0;
-            transform: translate3d(50%, -50%, 0);
-
-            img {
-                width: 20px;
-            }
-        }
-
     }
 
     .matching_wrap {

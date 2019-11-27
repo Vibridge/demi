@@ -7,7 +7,8 @@
         >
             <div class="col-1">
                 <!-- 头像 -->
-                <img class="avatar" :src="avatar"/>
+                <img v-if="message.from !== 'dominator'" class="avatar" :src="avatar"/>
+                <img v-if="message.from === 'dominator'" class="avatar" src="../../assets/img/notification.png"/>
             </div>
             <div class="col-2">
                 <text-element
@@ -94,6 +95,9 @@
         created() {
             // console.log(new Date().getTime())
         },
+        mounted(){
+
+        },
         computed: {
             ...mapState({
                 currentConversation: state => state.conversation.currentConversation,
@@ -112,7 +116,7 @@
                     return this.isMine
                         ? this.currentUserProfile.avatar
                         : this.message.avatar
-                } else {
+                } else{
                     return ''
                 }
             },

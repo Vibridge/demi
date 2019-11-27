@@ -3,8 +3,8 @@
         <div class="all_bottom_content">
             <div>
                 <img src="../assets/img/DEMI@2x.png" alt="">
-                <p>服务热线：159-8910-9060</p>
-                <p>企业邮箱：819374116@qq.com</p>
+                <p>服务热线：02031148487</p>
+                <p>企业邮箱：1154880471@qq.com</p>
             </div>
             <div>
                 <p style="color: #4d4d4d;font-size: 14px;margin-bottom: 21px">服务支持</p>
@@ -58,7 +58,7 @@
             div:nth-child(1){
                 margin-top: 8px;
                 font-size: 13px;
-                margin-right: 175px;
+                margin-right: 169px;
                 img{
                     width: 88px;
                     margin-bottom: 22px;

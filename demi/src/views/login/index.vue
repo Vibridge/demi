@@ -170,6 +170,7 @@
                     this.setToken({authorization: res.token});
                     if (res) {
                         if (res.type === 2 && res.enterprise_step > 4) {
+                            console.log('bbb')
                             let user_id =  res.user_id;
                             let userSig = res.usersig;
                             sessionStorage.setItem('userID',user_id);
@@ -180,10 +181,7 @@
                             }).then(() => {
                                 this.$store.commit('toggleIsLogin', true);
                                 this.$store.commit('startComputeCurrent');
-                                this.$store.commit('showMessage', {
-                                    type: 'success',
-                                    message: '登录成功'
-                                })
+                                console.log('im登陆成功');
                             }).catch(error => {
                                 this.$store.commit('showMessage', {
                                     message: '登录失败：' + error.message,
@@ -195,6 +193,20 @@
                                 name: "B_index"
                             });
                         } else if (res.type === 0 || (res.type === 2 && res.enterprise_step <= 4)) {
+                            console.log('aaa')
+                            if(res.enterprise_step === 0){
+                                let data = {
+                                    type:2,
+                                    enterprise_step:1
+                                };
+                                this.apiPost('/api/user/update',data).then((res)=>{
+                                    if(res){
+                                        this.$router.push({
+                                            name: "B_reg"
+                                        });
+                                    }
+                                })
+                            }
                             this.$router.push({
                                 name: "B_reg"
                             });

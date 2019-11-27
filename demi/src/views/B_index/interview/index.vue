@@ -27,7 +27,9 @@
                                             <img src="../../../assets/img/toxiang@2x.png" alt="" v-show="!interview.candidate.avatar">
                                         </div>
                                         <div>
-                                            <p>{{interview.candidate.nickname}}<img src="../../../assets/img/girl@2x.png"></p>
+                                            <p>{{interview.candidate.nickname}}<img v-if="interview.candidate.real.sex === 2" src="../../../assets/img/girl@2x.png" alt="">
+                                                <img v-if="interview.candidate.real.sex === 1" src="../../../assets/img/boy@2x.png" alt="">
+                                            </p>
                                             <p>
                                                 <span class="vita_info" style="color: #999999;font-size: 12px">{{interview.vita.work_start_date}}年/</span>
                                                 <span class="vita_info" v-if="interview.vita.education === 1">初中及以下/</span>
@@ -43,11 +45,11 @@
                                         </div>
                                     </div>
                                     <div class="interview_operate" v-if="interview.status === 0">
-                                        <button>和他聊聊</button>
+                                        <button @click="handleMsg(interview.candidate.user_id,interview.work_id)">和他聊聊</button>
                                         <button>取消面试</button>
                                     </div>
                                     <div class="interview_operate" v-if="interview.status === 3">
-                                        <button>和他聊聊</button>
+                                        <button @click="handleMsg(interview.candidate.user_id,interview.work_id)">和他聊聊</button>
                                         <button>等待面试</button>
                                     </div>
                                     <div class="interview_operate" v-if="interview.status === 1 || interview.status === 2">
@@ -99,7 +101,9 @@
                                             <img src="../../../assets/img/toxiang@2x.png" alt="" v-show="!interview.candidate.avatar">
                                         </div>
                                         <div>
-                                            <p>{{interview.candidate.nickname}}<img src="../../../assets/img/girl@2x.png"></p>
+                                            <p>{{interview.candidate.nickname}}<img v-if="interview.candidate.real.sex === 2" src="../../../assets/img/girl@2x.png" alt="">
+                                                <img v-if="interview.candidate.real.sex === 1" src="../../../assets/img/boy@2x.png" alt="">
+                                            </p>
                                             <p>
                                                 <span class="vita_info" style="color: #999999;font-size: 12px">{{interview.vita.work_start_date}}年/</span>
                                                 <span class="vita_info" v-if="interview.vita.education === 1">初中及以下/</span>
@@ -116,8 +120,8 @@
                                     </div>
                                     <div class="interview_operate">
                                         <div v-if="interview.status === 4">
-                                            <button>确认录用</button>
-                                            <button>不合适</button>
+                                            <button @click="handleOver(2,interview.interview_id,interview.candidate.user_id)">确认录用</button>
+                                            <button @click="handleOver(1,interview.interview_id,interview.candidate.user_id)">不合适</button>
                                         </div>
                                     </div>
                                 </div>
@@ -237,6 +241,53 @@
             handleCurrentPageChange(status,page){
                 this.searchParams.page = page;
                 this.initialize(status);
+            },
+            //聊天
+            handleMsg(id,key){
+                let data = {};
+                data.recipient = id;
+                data.foreign_key = key;
+                data.type = 1;
+                this.$router.push({
+                    name: "IM",
+                    params:{id :JSON.stringify(data)}
+                });
+            },
+
+            //面试反馈
+            handleOver(index,id,user_id){
+                let data = {
+                    interview_id : id,
+                    label_ids: [index]
+                };
+                this.apiPost('/api/work/interview/feedback',data).then((res)=>{
+                    if(res){
+                        let userID = user_id + 'a';
+                        let desc = '';
+                        if(index === 1){
+                            desc = '[面试结果为不合适]';
+                        }else{
+                            desc = '[面试结果为录用]'
+                        }
+                        const message = this.tim.createCustomMessage({
+                            to: userID,
+                            conversationType: "C2C",
+                            payload: {
+                                data: '',
+                                description: desc,
+                                extension: ''
+                            }
+                        });
+                        let promise = this.tim.sendMessage(message);
+                        promise.then(function(imResponse) {
+                            // 发送成功
+                            console.log(imResponse);
+                        }).catch(function(imError) {
+                            // 发送失败
+                            console.warn('sendMessage error:', imError);
+                        });
+                    }
+                })
             },
         },
         watch:{
