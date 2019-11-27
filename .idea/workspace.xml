@@ -69,6 +69,7 @@
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/demi/src/components/reg_header.vue">
           <provider selected="true" editor-type-id="text-editor">
@@ -88,6 +89,13 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="492">
               <caret line="50" column="42" selection-start-line="50" selection-start-column="42" selection-end-line="50" selection-end-column="42" />
+=======
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/demi/src/components/scroll.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="492">
+              <caret line="50" column="42" lean-forward="true" selection-start-line="50" selection-start-column="42" selection-end-line="50" selection-end-column="42" />
+>>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
             </state>
           </provider>
         </entry>
@@ -191,7 +199,11 @@
       </list>
     </option>
   </component>
+<<<<<<< HEAD
   <component name="ProjectFrameBounds" extendedState="7">
+=======
+  <component name="ProjectFrameBounds" extendedState="6">
+>>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1102" />
@@ -368,15 +380,26 @@
       <option name="presentableId" value="Default" />
       <updated>1574730394837</updated>
       <workItem from="1574730396166" duration="21973000" />
+<<<<<<< HEAD
       <workItem from="1574816533610" duration="20873000" />
+=======
+      <workItem from="1574816533610" duration="19675000" />
+>>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="42846000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="7" />
+=======
+    <option name="totallyTimeSpent" value="41648000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
+>>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2496474" />
@@ -441,6 +464,16 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
+=======
+    <entry file="file://$PROJECT_DIR$/demi/src/components/reg_header.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2277">
+          <caret line="100" column="30" selection-start-line="100" selection-start-column="30" selection-end-line="100" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
     <entry file="file://$PROJECT_DIR$/demi/src/libs/time.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="828">
@@ -589,6 +622,7 @@
     <entry file="file://$PROJECT_DIR$/demi/src/components/scroll.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="492">
+<<<<<<< HEAD
           <caret line="50" column="42" selection-start-line="50" selection-start-column="42" selection-end-line="50" selection-end-column="42" />
         </state>
       </provider>
@@ -603,5 +637,11 @@
     <entry file="file://$PROJECT_DIR$/demi/src/components/xieyi.vue">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+=======
+          <caret line="50" column="42" lean-forward="true" selection-start-line="50" selection-start-column="42" selection-end-line="50" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
   </component>
 </project>
