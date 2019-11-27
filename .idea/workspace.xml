@@ -6,7 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="6f90a3db-058e-43a4-9ccd-216c03523543" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/demi/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/demi/package-lock.json" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/demi/package.json" beforeDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/demi/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/demi/package.json" afterDir="false" />
+>>>>>>> demi
       <change beforePath="$PROJECT_DIR$/demi/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/App.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demi/src/assets/img/_notification @2x.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/demi/src/components/B_person_bottom.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/components/B_person_bottom.vue" afterDir="false" />
@@ -16,7 +20,14 @@
       <change beforePath="$PROJECT_DIR$/demi/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demi/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/router.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demi/src/store/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/store/index.js" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/demi/src/store/module/conversation.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/store/module/conversation.js" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/demi/src/store/module/blacklist.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/store/module/blacklist.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/store/module/conversation.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/store/module/conversation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/store/module/friend.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/store/module/friend.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demi/src/store/module/group.js" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/store/module/group.js" afterDir="false" />
+>>>>>>> demi
       <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/B_person.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/B_person.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/VIP/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/VIP/index.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demi/src/views/B_index/collect/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/demi/src/views/B_index/collect/index.vue" afterDir="false" />
@@ -56,7 +67,11 @@
         <entry file="file://$PROJECT_DIR$/demi/src/views/ability_resume/index.vue">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="161">
+<<<<<<< HEAD
               <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+=======
+              <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+>>>>>>> demi
               <folding>
                 <element signature="n#div#1;n#div#0;n#template#0;n#!!top" />
                 <element signature="n#div#1;n#div#1;n#div#1;n#div#0;n#template#0;n#!!top" />
@@ -69,6 +84,7 @@
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
 <<<<<<< HEAD
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/demi/src/components/reg_header.vue">
@@ -96,6 +112,13 @@
             <state relative-caret-position="492">
               <caret line="50" column="42" lean-forward="true" selection-start-line="50" selection-start-column="42" selection-end-line="50" selection-end-column="42" />
 >>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
+=======
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/demi/src/components/scroll.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1090">
+              <caret line="64" column="10" selection-start-line="64" selection-start-column="10" selection-end-line="64" selection-end-column="10" />
+>>>>>>> demi
             </state>
           </provider>
         </entry>
@@ -123,7 +146,11 @@
         <entry file="file://$PROJECT_DIR$/demi/src/views/IM/index.vue">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="239">
+<<<<<<< HEAD
               <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+=======
+              <caret line="43" column="45" lean-forward="true" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+>>>>>>> demi
               <folding>
                 <element signature="n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" />
                 <element signature="e#13322#13407#0" />
@@ -150,7 +177,11 @@
         <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/VIP/index.vue">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="506">
+<<<<<<< HEAD
               <caret line="137" column="44" selection-start-line="137" selection-start-column="44" selection-end-line="137" selection-end-column="44" />
+=======
+              <caret line="137" column="44" lean-forward="true" selection-start-line="137" selection-start-column="44" selection-end-line="137" selection-end-column="44" />
+>>>>>>> demi
             </state>
           </provider>
         </entry>
@@ -200,10 +231,14 @@
     </option>
   </component>
 <<<<<<< HEAD
+<<<<<<< HEAD
   <component name="ProjectFrameBounds" extendedState="7">
 =======
   <component name="ProjectFrameBounds" extendedState="6">
 >>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
+=======
+  <component name="ProjectFrameBounds" extendedState="6">
+>>>>>>> demi
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1102" />
@@ -381,14 +416,19 @@
       <updated>1574730394837</updated>
       <workItem from="1574730396166" duration="21973000" />
 <<<<<<< HEAD
+<<<<<<< HEAD
       <workItem from="1574816533610" duration="20873000" />
 =======
       <workItem from="1574816533610" duration="19675000" />
 >>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
+=======
+      <workItem from="1574816533610" duration="19669000" />
+>>>>>>> demi
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
 <<<<<<< HEAD
     <option name="totallyTimeSpent" value="42846000" />
   </component>
@@ -400,6 +440,12 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
 >>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
+=======
+    <option name="totallyTimeSpent" value="41642000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
+>>>>>>> demi
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2496474" />
@@ -465,7 +511,10 @@
       </provider>
     </entry>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> demi
     <entry file="file://$PROJECT_DIR$/demi/src/components/reg_header.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2277">
@@ -473,7 +522,10 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
 >>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
+=======
+>>>>>>> demi
     <entry file="file://$PROJECT_DIR$/demi/src/libs/time.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="828">
@@ -550,7 +602,11 @@
     <entry file="file://$PROJECT_DIR$/demi/src/views/B_index/VIP/index.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="506">
+<<<<<<< HEAD
           <caret line="137" column="44" selection-start-line="137" selection-start-column="44" selection-end-line="137" selection-end-column="44" />
+=======
+          <caret line="137" column="44" lean-forward="true" selection-start-line="137" selection-start-column="44" selection-end-line="137" selection-end-column="44" />
+>>>>>>> demi
         </state>
       </provider>
     </entry>
@@ -577,7 +633,11 @@
     <entry file="file://$PROJECT_DIR$/demi/src/views/IM/index.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="239">
+<<<<<<< HEAD
           <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+=======
+          <caret line="43" column="45" lean-forward="true" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+>>>>>>> demi
           <folding>
             <element signature="n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" />
             <element signature="e#13322#13407#0" />
@@ -607,7 +667,11 @@
     <entry file="file://$PROJECT_DIR$/demi/src/views/ability_resume/index.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="161">
+<<<<<<< HEAD
           <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+=======
+          <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+>>>>>>> demi
           <folding>
             <element signature="n#div#1;n#div#0;n#template#0;n#!!top" />
             <element signature="n#div#1;n#div#1;n#div#1;n#div#0;n#template#0;n#!!top" />
@@ -621,6 +685,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/demi/src/components/scroll.vue">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="492">
 <<<<<<< HEAD
           <caret line="50" column="42" selection-start-line="50" selection-start-column="42" selection-end-line="50" selection-end-column="42" />
@@ -643,5 +708,12 @@
       </provider>
     </entry>
 >>>>>>> 88132f58c962f8cce12c0c7adc5a715c97a61965
+=======
+        <state relative-caret-position="1090">
+          <caret line="64" column="10" selection-start-line="64" selection-start-column="10" selection-end-line="64" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> demi
   </component>
 </project>
