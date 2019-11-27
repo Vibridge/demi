@@ -1,5 +1,11 @@
 <template>
     <div class="ability_resume">
+        <!--搜索职位-->
+        <template>
+            <el-backtop target=".ability_resume">
+                up
+            </el-backtop>
+        </template>
         <div class="ability_resume_header">
             <div class="search">
                 <el-autocomplete
@@ -15,7 +21,11 @@
                 </el-autocomplete>
             </div>
         </div>
+
+
+        <!--其它筛选-->
         <div class="select_label">
+            <!--城市筛选-->
             <div class="now_city" @click="handelSelectCity()">
                 <el-popover
                         placement="left-start"
@@ -23,7 +33,7 @@
                         trigger="click"
                         v-model="show_select_city"
                 >
-                    <div class="city_list">
+                    <div class="city_list" v-loading="loading">
                         <div class="level_l_wrap">
                             <div v-for="first in city_tree" :key="first.city_id"
                                  @click="handleSecondCity(first.city_id,first.children)"
@@ -41,8 +51,6 @@
                                 {{second.city_name}}
                             </li>
                         </ul>
-
-
                     </div>
                     <div slot="reference" class="label_wrap">
                         <img src="../../assets/img/Location@2x.png" alt="">
@@ -51,7 +59,10 @@
                     </div>
                 </el-popover>
             </div>
+
             <div class="select_detail">
+
+                <!--推荐-->
                 <div class="label_wrap" @click="handleRecommend(1)">
                     <div>
                         <img v-if="active !== 1" src="../../assets/img/_recommend @2x.png" alt="">
@@ -59,70 +70,79 @@
                     </div>
                     <span :class="active === 1 ? 'active_select' : ''">推荐人才</span>
                 </div>
-                <el-popover
-                        width="438"
-                        trigger="manual"
-                        popper-class="matching_task_wrap"
-                        placement="bottom"
-                        v-model="show_matching"
-                >
-                    <div class="matching_task">
-                        <p class="title" v-if="matching_task">我发布的职位</p>
-                        <div class="matching_task_list" v-for="task in matching_task" :key="task.task_id"
-                             @click="HandleSelectMatching(task.type_label.label_id)">
-                            <div class="matching_task_info">
-                                <p>{{task.task_title}}</p>
-                                <p>{{task.payment_money}}{{task.unit}}/单</p>
-                            </div>
-                            <p class="matching_label">
-                                <span v-if="task.city">{{task.city.city_name}}</span>
-                                <span v-if="!task.city">不限城市</span>
-                            </p>
-                        </div>
-                        <div class="matching_task_none" v-if="!matching_task">
-                            <img src="../../assets/img/snail@2x.png" alt="">
-                            <p class="none_note">您还没有发布任何岗位</p>
-                        </div>
-                    </div>
-                    <div class="label_wrap" slot="reference" @click="handleMatching(2)">
-                        <div>
-                            <img v-if="active !== 2" src="../../assets/img/mapping@2x.png" alt="">
-                            <img v-if="active === 2" src="../../assets/img/mapping_in@2x.png" alt="">
-                        </div>
-                        <span :class="active === 2 ? 'active_select' : ''">与我匹配</span>
-                    </div>
-                </el-popover>
 
-                <el-popover
-                        width="548"
-                        trigger="manual"
-                        popper-class="select_work_wrap"
-                        placement="bottom"
-                        v-model="show_select_work"
-                >
-                    <div class="select_work">
-                        <p class="title">任务职位</p>
-                        <div class="select_wrap" v-for="work in work_label" :key="work.label_id">
-                            <div class="select_left">
-                                {{work.name}}
+                <!--我发布的职位-->
+                <div @click="handleMatching()">
+                    <el-popover
+                            width="438"
+                            trigger="click"
+                            popper-class="matching_task_wrap"
+                            placement="bottom"
+                            v-model="show_matching"
+                    >
+                        <div class="matching_task">
+                            <p class="title" v-if="matching_task.length > 0">我发布的职位</p>
+                            <div class="matching_task_list" v-for="task in matching_task" :key="task.task_id"
+                                 @click="HandleSelectMatching(2,task.type_label.label_id)">
+                                <div class="matching_task_info">
+                                    <p>{{task.task_title}}</p>
+                                    <p>{{task.payment_money}}{{task.unit}}/单</p>
+                                </div>
+                                <p class="matching_label">
+                                    <span v-if="task.city">{{task.city.city_name}}</span>
+                                    <span v-if="!task.city">不限城市</span>
+                                </p>
                             </div>
-                            <div class="select_right">
+                            <div class="matching_task_none" v-if="matching_task.length < 1">
+                                <img src="../../assets/img/snail@2x.png" alt="">
+                                <p class="none_note">您还没有发布任何岗位</p>
+                            </div>
+                        </div>
+                        <div class="label_wrap" slot="reference">
+                            <div>
+                                <img v-show="active !== 2" src="../../assets/img/mapping@2x.png" alt="">
+                                <img v-show="active === 2" src="../../assets/img/mapping_in@2x.png" alt="">
+                            </div>
+                            <span :class="active === 2 ? 'active_select' : ''">与我匹配</span>
+                        </div>
+                    </el-popover>
+                </div>
+
+                <!--任务职位筛选-->
+                <div @click="handleSelectWork()">
+                    <el-popover
+                            width="548"
+                            trigger="click"
+                            popper-class="select_work_wrap"
+                            placement="bottom"
+                            v-model="show_select_work"
+                    >
+                        <div class="select_work">
+                            <p class="title">任务职位</p>
+                            <div class="select_wrap" v-for="work in work_label" :key="work.label_id">
+                                <div class="select_left">
+                                    {{work.name}}
+                                </div>
+                                <div class="select_right">
                                 <span v-for="child in work.children" :key="child.label_id"
-                                      @click="HandleSelectMatching(child.label_id)">{{child.name}}</span>
+                                      @click="HandleSelectMatching(3,child.label_id)">{{child.name}}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="label_wrap" slot="reference" @click="handleSelectWork(3)">
-                        <div>
-                            <img v-if="active !== 3" src="../../assets/img/screen@2x.png" alt="">
-                            <img v-if="active === 3" src="../../assets/img/screen_in@2x.png" alt="">
+                        <div class="label_wrap" slot="reference">
+                            <div>
+                                <img v-if="active !== 3" src="../../assets/img/screen@2x.png" alt="">
+                                <img v-else src="../../assets/img/screen_in@2x.png" alt="">
+                            </div>
+                            <span :class="active === 3 ? 'active_select' : ''">职位筛选</span>
                         </div>
-                        <span :class="active === 3 ? 'active_select' : ''">职位筛选</span>
-                    </div>
-                </el-popover>
+                    </el-popover>
+                </div>
 
             </div>
         </div>
+
+        <!--数据列表-->
         <ul class="infinite-list" v-infinite-scroll="load">
             <li class="ability_resume_detail" v-for="(item,index) in ability_resume" :key="index"
                 @click="handleDetail(index)">
@@ -138,7 +158,7 @@
                                 <div class="level_info">
                                     <span v-if="item.user.nickname">{{item.user.nickname}}</span>
                                     <span v-if="!item.user.nickname">{{item.user.user_id}}</span>
-                                    <div class="level levle_1"
+                                    <div class="level level_1"
                                          v-if="item.user.reputation > 0 && item.user.reputation < 251">
                                         <div v-if="4 <= item.user.reputation && item.user.reputation <= 10">
                                             <img src="../../assets/img/x.png" alt="">
@@ -166,7 +186,7 @@
                                             <img src="../../assets/img/x.png" alt="">
                                         </div>
                                     </div>
-                                    <div class="level levle_2"
+                                    <div class="level level_2"
                                          v-if="item.user.reputation >= 251 && item.user.reputation < 10001">
                                         <div v-if="251 <= item.user.reputation && item.user.reputation <= 500">
                                             <img src="../../assets/img/z.png" alt="">
@@ -194,7 +214,7 @@
                                             <img src="../../assets/img/z.png" alt="">
                                         </div>
                                     </div>
-                                    <div class="level levle_3"
+                                    <div class="level level_3"
                                          v-if="item.user.reputation >= 10001 && item.user.reputation < 500001">
                                         <div v-if="10001 <= item.user.reputation && item.user.reputation <= 20000">
                                             <img src="../../assets/img/level3.png" alt="">
@@ -222,7 +242,7 @@
                                             <img src="../../assets/img/level3.png" alt="">
                                         </div>
                                     </div>
-                                    <div class="level levle_4" v-if="item.user.reputation >= 500001">
+                                    <div class="level level_4" v-if="item.user.reputation >= 500001">
                                         <div v-if="500001 <= item.user.reputation && item.user.reputation <= 1000000">
                                             <img src="../../assets/img/level4.png" alt="">
                                         </div>
@@ -258,7 +278,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button @click="handleMsg(item.user.user_id,item.ability_id)">和他聊聊</button>
+                        <button v-on:click.stop="handleMsg(item.user.user_id,item.ability_id)">和他聊聊</button>
                     </div>
                     <p class="des">
                         {{item.description}}
@@ -271,13 +291,17 @@
             </li>
         </ul>
 
+        <!--详情-->
         <el-dialog
                 :visible.sync="dialogVisible"
                 width="1000px"
                 :show-close=false
                 custom-class="show_ability_detail"
+                :destroy-on-close=true
+                v-if="dialogVisible"
+
         >
-            <div :class="searchBarFixed === true ? 'isFixed show_ability_wrap' :'show_ability_wrap'">
+            <div class="show_ability_wrap">
                 <div class="show_detail_header">
                     <div class="user_info">
                         <div class="user_info_avatar">
@@ -317,27 +341,33 @@
                         <div>
                             <button @mouseover="show_collect = true"
                                     @mouseleave="show_collect = false"
-                                    @click="handleCollect(detail_info.ability_id)"
+                                    @click="handleCollect(detail_info)"
                             >
                                 <img src="../../assets/img/enshrine_hover.png" alt=""
-                                     v-if="show_collect">
+                                     v-if="show_collect && detail_info && !detail_info.favorites">
                                 <img src="../../assets/img/enshrine.png" alt=""
                                      v-if="!show_collect && detail_info && !detail_info.favorites">
                                 <img style="width: 17px" src="../../assets/img/have_already_collected@2x.png" alt=""
-                                     v-if="collect || (detail_info && detail_info.favorites)">
+                                     v-if="detail_info && detail_info.favorites">
                                 <span>收藏</span>
                             </button>
                             <button>和他聊聊</button>
                         </div>
                     </div>
                 </div>
-                <div class="another_label" style="margin-top: 40px">
+                <div class="another_label" style="margin-top: 40px"
+                     v-if="detail_info && detail_info.video && detail_info.video.status === 2">
                     <p class="label_title">视频简历</p>
                     <div class="label_content">
                         <video v-if="detail_info && detail_info.video" :src="detail_info.video.file_path"
                                controls></video>
-                        <img v-if="detail_info && !detail_info.video" src="../../assets/img/snail@2x.png" alt="">
+                        <img v-if="(detail_info && !detail_info.video) || (detail_info && detail_info.video && detail_info.video.status !== 2)"
+                             src="../../assets/img/snail@2x.png" alt="">
                     </div>
+                </div>
+                <div style="margin-top: 40px"
+                     v-if="(detail_info && !detail_info.video) || (detail_info && detail_info.video && detail_info.video.status !== 2)">
+
                 </div>
                 <div class="another_label">
                     <p class="label_title">工作描述</p>
@@ -345,7 +375,7 @@
                         <p class="dec">{{detail_info.description}}</p>
                     </div>
                 </div>
-                <div class="another_label">
+                <!--<div class="another_label">
                     <p class="label_title">联系方式</p>
                     <div class="label_content">
                         <div class="info">
@@ -360,7 +390,7 @@
                         </div>
                         <div class="vip" v-if="!isVip">开通<img src="../../assets/img/vip_detail@2x.png">查看完整联系方式</div>
                     </div>
-                </div>
+                </div>-->
                 <div class="another_label">
                     <p class="label_title">图片作品</p>
                     <div class="label_content" v-if="detail_info && detail_info.images.length > 0">
@@ -369,7 +399,7 @@
                                 <el-image
                                         v-for="pic in detail_info.images"
                                         :src="pic.file_path"
-                                        :preview-src-list="detail_info.images"
+                                        :preview-src-list="handleBigImg(detail_info.images)"
                                         v-if="pic.status === 2"
                                 >
                                 </el-image>
@@ -421,7 +451,10 @@
         </el-dialog>
 
 
+        <!--<el-backtop target=".ability_resume .infinite-list"></el-backtop>-->
     </div>
+
+
 </template>
 
 <script>
@@ -437,6 +470,8 @@
             return {
                 user_id: null,
                 isVip: false,
+
+                loading: true,
 
                 //岗位数据
                 work_list: [],
@@ -462,7 +497,7 @@
                 active: 1,
 
                 //与我匹配
-                matching_task: null,
+                matching_task: [],
                 show_matching: false,
 
                 //职位筛选
@@ -476,7 +511,6 @@
 
                 //鼠标更改收藏按钮样式
                 show_collect: null,
-                collect: false,
 
                 //评论
                 card_page: 1,
@@ -489,6 +523,10 @@
                 city_active: null,
                 second_city_active: null,
                 show_select_city: false,
+
+                /*//
+                phone:null,
+                email:null,*/
 
                 //详情固定
                 searchBarFixed: false,
@@ -508,7 +546,7 @@
                         } else {
                             this.isVip = true
                         }
-                    }else{
+                    } else {
                         this.$message({
                             showClose: true,
                             message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
@@ -596,6 +634,7 @@
                         forEach(res.data, item => {
                             this.ability_resume.push(item)
                         });
+                        console.log(res)
                     });
                 } else {
                     this.apiGet('/api/ability/paginate?page=' + page).then((res) => {
@@ -630,6 +669,7 @@
                         }*/
                     });
                     this.city_tree = res;
+                    this.loading = false
                 })
             },
             handleSecondCity(id, item) {
@@ -656,21 +696,17 @@
             },
 
             //与我匹配
-            handleMatching(active) {
-                this.active = active;
-                if (this.show_matching) {
-                    this.show_matching = false
-                } else {
-                    this.show_matching = true;
-                    this.show_select_work = false
-                }
+            handleMatching() {
+                this.show_matching = true;
                 this.apiGet('/api/task/paginate?user_id=' + this.user_id).then((res) => {
                     this.matching_task = res.data;
+                    console.log(this.matching_task)
                 });
             },
 
             //与我匹配筛选
-            HandleSelectMatching(id) {
+            HandleSelectMatching(active, id) {
+                this.active = active;
                 var work_label_id = id;
                 if (this.select_type_label_id !== 0 && this.select_type_label_id !== null) {
                     work_label_id = this.select_type_label_id;
@@ -680,19 +716,12 @@
                 this.page = 1;
                 this.select_type_label_id = id;
                 this.ability_resume = [];
-                this.active = null;
                 this.initialize(this.page, this.select_city, work_label_id);
             },
 
             //职位筛选
-            handleSelectWork(active) {
-                this.active = active;
-                if (this.show_select_work) {
-                    this.show_select_work = false
-                } else {
-                    this.show_select_work = true;
-                    this.show_matching = false;
-                }
+            handleSelectWork() {
+                this.show_select_work = true;
                 this.apiGet('/labels?id=1027&mode=tree').then((res) => {
                     this.work_label = res;
                 })
@@ -700,14 +729,49 @@
 
             //简历详情
             handleDetail(index) {
+                // this.handePhoneEmail(this.ability_resume[index].user.user_id);
                 this.index = index;
                 this.dialogVisible = true;
+                window.scrollTo(0, 0);
                 this.apiGet("/api/ability/info/" + this.ability_resume[this.index].ability_id).then((res) => {
                     this.detail_info = res;
+                    console.log(res);
                     if (res) {
                         this.handCard(this.card_page)
                     }
                 })
+            },
+
+            //展示图片
+            handleBigImg(array) {
+                let data = [];
+                forEach(array, item => {
+                    if (item.type === 2 && item.status === 2) {
+                        data.push(item.file_path);
+                    }
+                });
+                return data;
+            },
+
+            //收藏简历
+            handleCollect(item) {
+                var data = {
+                    id: item.ability_id,
+                    mode: 2
+                };
+                if (!this.detail_info.favorites) {
+                    this.apiPost('/api/user/favorite', data).then((res) => {
+                        if (res) {
+                            this.handleDetail(this.index)
+                        }
+                    })
+                } else {
+                    this.apiDelete('/api/user/favorite/delete/' + item.favorites.favorite_id).then((res) => {
+                        if (res) {
+                            this.handleDetail(this.index)
+                        }
+                    })
+                }
             },
 
             //评论数据
@@ -759,30 +823,24 @@
             },
 
             //聊天
-            handleMsg(id,key){
+            handleMsg(id, key) {
                 let data = {};
                 data.recipient = id;
                 data.foreign_key = key;
                 data.type = 2;
                 this.$router.push({
                     name: "IM",
-                    params:{id :JSON.stringify(data)}
+                    params: {id: JSON.stringify(data)}
                 });
-            }
-
-            /*handleScroll () { //改变元素#searchBar的top值
-                var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-                console.log(scrollTop);
-                var offsetTop = document.getElementById('fixed').offsetTop;
-                if (scrollTop > offsetTop) {
-                    this.searchBarFixed = true
-                } else {
-                    this.searchBarFixed = false
-                }
             },
-            destroyed () {//离开该页面需要移除这个监听的事件
-                window.removeEventListener('scroll', this.handleScroll)
-            },*/
+
+            /*handePhoneEmail(id){
+                this.apiGet('/api/user/info/' + id).then((res)=>{
+                    this.phone = res.phone;
+                    this.email = res.email;
+                })
+            }*/
+
         },
         mixins: [http]
 
@@ -937,6 +995,11 @@
             padding: 17px 30px 26px 28px;
             text-align: left;
             box-sizing: border-box;
+            max-height: 249px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
 
             .title {
                 font-size: 16px;
@@ -982,19 +1045,19 @@
                                 }
                             }
 
-                            .levle_1 {
+                            .level_1 {
                                 img {
                                     width: 17px;
                                 }
                             }
 
-                            .levle_2 {
+                            .level_2 {
                                 img {
                                     width: 20px;
                                 }
                             }
 
-                            .levle_3, .levle_4 {
+                            .level_3, .level_4 {
                                 img {
                                     width: 23px;
                                 }
@@ -1051,6 +1114,10 @@
                     font-size: 14px;
                     color: rgba(77, 77, 77, 1);
                     line-height: 28px;
+                    height: 60px;
+                    overflow: hidden;
+                    /*white-space:nowrap;*/
+                    text-overflow: ellipsis;
                 }
             }
         }
@@ -1062,7 +1129,320 @@
         .active_select {
             color: rgba(36, 191, 255, 1) !important;
         }
+
     }
+
+    .el-dialog__wrapper {
+        .show_ability_detail {
+            background: rgba(255, 255, 255, 1);
+            border-radius: 4px;
+            margin-top: 7vh !important;
+            width: 100%;
+
+            .el-dialog__header {
+                display: none;
+            }
+
+            .el-dialog__body {
+                padding: 0;
+                overflow-y: hidden;
+
+                .show_ability_wrap {
+                    height: 100%;
+
+                    background: #fff;
+
+                    .show_detail_header {
+                        display: flex;
+                        justify-content: space-between;
+                        padding: 50px 0;
+                        margin: 0 80px;
+                        box-sizing: border-box;
+                        border-bottom: 1px dashed rgba(235, 235, 235, 1);
+
+                        .user_info {
+                            align-self: center;
+                            display: flex;
+
+                            .user_info_avatar {
+                                display: flex;
+                                width: 86px;
+                                height: 86px;
+
+                                img {
+                                    width: 86px;
+                                    height: 86px;
+                                    border-radius: 50%;
+                                }
+
+                                .sex {
+                                    width: 18px;
+                                    height: 18px;
+                                    transform: translateX(-100%);
+                                }
+                            }
+
+                            .user_info_name {
+                                margin-left: 39px;
+                                align-self: center;
+                                text-align: left;
+
+                                p:nth-child(1) {
+                                    font-size: 22px;
+                                    color: #323333;
+                                    margin-bottom: 12px;
+                                    line-height: 22px;
+                                }
+
+                                p:nth-child(2) {
+                                    font-size: 14px;
+                                    color: #999999;
+                                    margin-bottom: 10px;
+
+                                    span:nth-last-child(1) {
+                                        span {
+                                            display: none;
+                                        }
+                                    }
+                                }
+
+                                p:nth-child(3) {
+                                    font-size: 13px;
+
+                                    span:nth-child(1) {
+                                        background: rgba(36, 191, 255, 1);
+                                        border-radius: 3px;
+                                        padding: 4px 14px;
+                                        margin-right: 6px;
+                                        color: rgba(255, 255, 255, 1);
+                                    }
+
+                                    span:nth-child(2) {
+                                        background: rgba(255, 255, 255, 1);
+                                        border: 1px solid rgba(36, 191, 255, 1);
+                                        border-radius: 3px;
+                                        padding: 3px 14px;
+                                        color: #24BFFF;
+                                    }
+                                }
+                            }
+                        }
+
+                        .cop {
+                            text-align: right;
+                            align-self: flex-end;
+
+                            p {
+                                font-size: 13px;
+                                color: rgba(179, 179, 179, 1);
+                                margin-bottom: 21px;
+                            }
+
+                            button {
+                                width: 138px;
+                                height: 35px;
+                                line-height: 35px;
+                                border-radius: 18px;
+                                font-size: 14px;
+                            }
+
+                            button:nth-child(1) {
+                                background: rgba(255, 255, 255, 1);
+                                border: 1px solid rgba(230, 230, 230, 1);
+                                color: rgba(153, 153, 153, 1);
+                                margin-right: 8px;
+
+                                img {
+                                    width: 13px;
+                                    height: 13px;
+                                    margin-right: 11px;
+                                    vertical-align: text-top;
+                                    margin-top: 1px;
+                                }
+                            }
+
+                            button:nth-child(2) {
+                                background: rgba(36, 191, 255, 1);
+                                color: rgba(255, 255, 255, 1);
+                                border: 0;
+                            }
+                        }
+                    }
+
+                    .another_label {
+                        padding: 0 80px 49px;
+                        text-align: left;
+
+                        .label_title {
+                            font-size: 16px;
+                            color: rgba(50, 51, 51, 1);
+                            margin-bottom: 28px;
+                            margin-left: 62px;
+                        }
+
+                        .label_content {
+                            text-align: center;
+                            margin: 0 auto;
+
+                            video {
+                                max-width: 510px;
+                            }
+
+                            .info {
+                                display: flex;
+                                justify-content: space-between;
+
+                                div {
+                                    width: 50%;
+
+                                    img {
+                                        width: 15px;
+                                        height: 15px;
+                                        margin-right: 14px;
+                                        vertical-align: middle;
+                                    }
+
+                                    span {
+                                        font-size: 14px;
+                                        color: rgba(76, 76, 77, 1);
+                                        vertical-align: text-bottom;
+                                    }
+                                }
+                            }
+
+                            .vip {
+                                font-size: 13px;
+                                color: rgba(255, 176, 66, 1);
+                                text-align: right;
+                                margin-top: 30px;
+                                margin-right: 60px;
+
+                                img {
+                                    width: 27px;
+                                    vertical-align: text-bottom;
+                                }
+
+                            }
+
+                            .dec {
+                                text-align: left;
+                                margin: 0 126px;
+                                font-size: 14px;
+                                color: #565657;
+                                line-height: 31px;
+                            }
+
+                            .pic {
+                                width: 713px;
+                                background: rgba(255, 255, 255, 1);
+                                border: 1px solid rgba(230, 230, 230, 1);
+                                border-radius: 10px;
+                                padding: 23px 19px 19px 23px;
+                                box-sizing: border-box;
+                                margin-left: 126px;
+
+                                .demo-image__preview {
+                                    width: 100%;
+                                    height: 100%;
+                                    text-align: left;
+
+                                    .el-image__inner {
+                                        width: 130px;
+                                        height: 130px;
+                                        display: inline-block;
+                                        margin: 0 4px 4px 0;
+                                    }
+
+                                }
+
+                            }
+
+                            .card {
+                                .card_wrap {
+                                    margin-left: 126px;
+                                    text-align: left;
+                                    padding: 30px 0;
+                                    border-bottom: 1px dashed #EBEBEB;
+
+                                    .card_company_info {
+                                        display: flex;
+                                        justify-content: space-between;
+                                        margin-bottom: 10px;
+
+                                        .card_company_avatar {
+                                            display: flex;
+
+                                            img {
+                                                width: 48px;
+                                                height: 48px;
+                                                border-radius: 50%;
+                                                margin-right: 16px;
+                                            }
+
+                                            .name {
+                                                font-size: 14px;
+
+                                                p:nth-child(1) {
+                                                    color: rgba(50, 51, 51, 1);
+                                                    margin-bottom: 8px;
+                                                }
+
+                                                P:nth-child(2) {
+                                                    color: rgba(151, 152, 153, 1);
+                                                }
+                                            }
+                                        }
+
+                                        .reputation {
+                                            font-size: 14px;
+                                            color: rgba(36, 191, 255, 1);
+                                        }
+                                    }
+
+                                    .desc {
+                                        margin-left: 64px;
+                                    }
+                                }
+
+                                .card_wrap:nth-child(1) {
+                                    padding-top: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .show_ability_wrap::-webkit-scrollbar {
+                    width: 2px;
+                }
+
+                .go_left {
+                    position: fixed;
+                    top: 50%;
+                    left: calc(50% - 520px);
+                    transform: translate3d(0, -50%, 0);
+
+                    img {
+                        width: 20px;
+                    }
+                }
+
+                .go_right {
+                    position: fixed;
+                    top: 50%;
+                    right: calc(50% - 500px);;
+                    transform: translate3d(20%, -50%, 0);
+
+                    img {
+                        width: 20px;
+                    }
+                }
+            }
+
+
+        }
+    }
+
 
     .matching_task_wrap {
         border: 1px solid rgba(240, 240, 240, 1);
@@ -1197,318 +1577,11 @@
         }
     }
 
-    .show_ability_detail {
-        background: rgba(255, 255, 255, 1);
-        border-radius: 4px;
-        margin-top: 7vh !important;
-
-        .el-dialog__header {
-            display: none;
-        }
-
-        .el-dialog__body {
-            padding: 0;
-
-            .show_ability_wrap {
-                height: 100%;
-                overflow-y: auto;
-                background: #fff;
-
-                .show_detail_header {
-                    display: flex;
-                    justify-content: space-between;
-                    padding: 50px 0;
-                    margin: 0 80px;
-                    box-sizing: border-box;
-                    border-bottom: 1px dashed rgba(235, 235, 235, 1);
-
-                    .user_info {
-                        align-self: center;
-                        display: flex;
-
-                        .user_info_avatar {
-                            display: flex;
-                            width: 86px;
-                            height: 86px;
-
-                            img {
-                                width: 86px;
-                                height: 86px;
-                                border-radius: 50%;
-                            }
-
-                            .sex {
-                                width: 18px;
-                                height: 18px;
-                                transform: translateX(-100%);
-                            }
-                        }
-
-                        .user_info_name {
-                            margin-left: 39px;
-                            align-self: center;
-                            text-align: left;
-
-                            p:nth-child(1) {
-                                font-size: 22px;
-                                color: #323333;
-                                margin-bottom: 12px;
-                                line-height: 22px;
-                            }
-
-                            p:nth-child(2) {
-                                font-size: 14px;
-                                color: #999999;
-                                margin-bottom: 10px;
-
-                                span:nth-last-child(1) {
-                                    span {
-                                        display: none;
-                                    }
-                                }
-                            }
-
-                            p:nth-child(3) {
-                                font-size: 13px;
-
-                                span:nth-child(1) {
-                                    background: rgba(36, 191, 255, 1);
-                                    border-radius: 3px;
-                                    padding: 4px 14px;
-                                    margin-right: 6px;
-                                    color: rgba(255, 255, 255, 1);
-                                }
-
-                                span:nth-child(2) {
-                                    background: rgba(255, 255, 255, 1);
-                                    border: 1px solid rgba(36, 191, 255, 1);
-                                    border-radius: 3px;
-                                    padding: 3px 14px;
-                                    color: #24BFFF;
-                                }
-                            }
-                        }
-                    }
-
-                    .cop {
-                        text-align: right;
-                        align-self: flex-end;
-
-                        p {
-                            font-size: 13px;
-                            color: rgba(179, 179, 179, 1);
-                            margin-bottom: 21px;
-                        }
-
-                        button {
-                            width: 138px;
-                            height: 35px;
-                            line-height: 35px;
-                            border-radius: 18px;
-                            font-size: 14px;
-                        }
-
-                        button:nth-child(1) {
-                            background: rgba(255, 255, 255, 1);
-                            border: 1px solid rgba(230, 230, 230, 1);
-                            color: rgba(153, 153, 153, 1);
-                            margin-right: 8px;
-
-                            img {
-                                width: 13px;
-                                height: 13px;
-                                margin-right: 11px;
-                                vertical-align: text-top;
-                                margin-top: 1px;
-                            }
-                        }
-
-                        button:nth-child(2) {
-                            background: rgba(36, 191, 255, 1);
-                            color: rgba(255, 255, 255, 1);
-                            border: 0;
-                        }
-                    }
-                }
-
-                .another_label {
-                    padding: 0 80px 49px;
-                    text-align: left;
-
-                    .label_title {
-                        font-size: 16px;
-                        color: rgba(50, 51, 51, 1);
-                        margin-bottom: 28px;
-                        margin-left: 62px;
-                    }
-
-                    .label_content {
-                        text-align: center;
-                        margin: 0 auto;
-
-                        video {
-                            width: 510px;
-                        }
-
-                        .info {
-                            display: flex;
-                            justify-content: space-between;
-
-                            div {
-                                width: 50%;
-
-                                img {
-                                    width: 15px;
-                                    height: 15px;
-                                    margin-right: 14px;
-                                    vertical-align: middle;
-                                }
-
-                                span {
-                                    font-size: 14px;
-                                    color: rgba(76, 76, 77, 1);
-                                    vertical-align: text-bottom;
-                                }
-                            }
-                        }
-
-                        .vip {
-                            font-size: 13px;
-                            color: rgba(255, 176, 66, 1);
-                            text-align: right;
-                            margin-top: 30px;
-                            margin-right: 60px;
-
-                            img {
-                                width: 27px;
-                                vertical-align: text-bottom;
-                            }
-
-                        }
-
-                        .dec {
-                            text-align: left;
-                            margin: 0 126px;
-                            font-size: 14px;
-                            color: #565657;
-                            line-height: 31px;
-                        }
-
-                        .pic {
-                            width: 713px;
-                            height: 312px;
-                            background: rgba(255, 255, 255, 1);
-                            border: 1px solid rgba(230, 230, 230, 1);
-                            border-radius: 10px;
-                            padding: 23px 19px 23px 23px;
-                            box-sizing: border-box;
-                            margin-left: 126px;
-
-                            .demo-image__preview {
-                                width: 100%;
-                                height: 100%;
-                                text-align: left;
-
-                                .el-image__inner {
-                                    width: 130px;
-                                    height: 130px;
-                                    display: inline-block;
-                                    margin: 0 4px 4px 0;
-                                }
-
-                            }
-
-                        }
-
-                        .card {
-                            .card_wrap {
-                                margin-left: 126px;
-                                text-align: left;
-                                padding: 30px 0;
-                                border-bottom: 1px dashed #EBEBEB;
-
-                                .card_company_info {
-                                    display: flex;
-                                    justify-content: space-between;
-                                    margin-bottom: 10px;
-
-                                    .card_company_avatar {
-                                        display: flex;
-
-                                        img {
-                                            width: 48px;
-                                            height: 48px;
-                                            border-radius: 50%;
-                                            margin-right: 16px;
-                                        }
-
-                                        .name {
-                                            font-size: 14px;
-
-                                            p:nth-child(1) {
-                                                color: rgba(50, 51, 51, 1);
-                                                margin-bottom: 8px;
-                                            }
-
-                                            P:nth-child(2) {
-                                                color: rgba(151, 152, 153, 1);
-                                            }
-                                        }
-                                    }
-
-                                    .reputation {
-                                        font-size: 14px;
-                                        color: rgba(36, 191, 255, 1);
-                                    }
-                                }
-
-                                .desc {
-                                    margin-left: 64px;
-                                }
-                            }
-
-                            .card_wrap:nth-child(1) {
-                                padding-top: 0;
-                            }
-                        }
-                    }
-                }
-            }
-
-            .show_ability_wrap::-webkit-scrollbar {
-                width: 2px;
-            }
-
-            .go_left {
-                position: fixed;
-                left: calc(50vw - 500px);
-                top: 50%;
-                transform: translate3d(-100%, -50%, 0);
-
-                img {
-                    width: 20px;
-                }
-            }
-
-            .go_right {
-                position: fixed;
-                right: calc(50vw - 490px);
-                top: 50%;
-                transform: translate3d(50%, -50%, 0);
-
-                img {
-                    width: 20px;
-                }
-            }
-        }
-
-
-    }
-
     .city_list {
         display: flex;
         font-size: 14px;
         flex-direction: column;
+        min-height: 50px;
 
         .level_l_wrap::-webkit-scrollbar {
             height: 5px;

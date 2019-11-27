@@ -1,6 +1,6 @@
 <template>
     <div class="reg_wrap">
-        <Headers :user-avatar="user_avatar"></Headers>
+        <Headers :user-avatar="user_avatar" :user-name="name"></Headers>
         <div class="main">
             <div class="left">
                 <div v-if="first" class="first">
@@ -14,7 +14,6 @@
                             :on-change="handleChange"
                     >
                         <img v-loading="ava_loading" v-if="user_avatar" :src="baseUrl + user_avatar" class="avatar">
-                        <img v-loading="ava_loading" v-if="company_info && company_info.logo_path" :src="company_info && company_info.logo_path" class="avatar">
                         <img v-else class="el-icon-plus avatar-uploader-icon" slot="trigger"
                              src="../../assets/img/ndtx@2x.png">
                     </el-upload>
@@ -27,7 +26,7 @@
                         <p>公司全称</p>
                         <el-input v-model="company_name" placeholder="必须与公司营业执照一致"></el-input>
                     </div>
-                    <div style="margin-right: 154px;text-align: right;">
+                    <div style="margin-right: 154px;text-align: right;margin-bottom: 40px">
                         <button @click="handleSecond">下一步</button>
                     </div>
                 </div>
@@ -92,9 +91,9 @@
                             :show-file-list="false"
                             :before-upload="beforeUpload"
                             :http-request="upPassFile"
-                            :on-change="handleChange"
+                            :on-change="handlePassChange"
                     >
-                        <img v-loading="pass_loading" v-if="pass" :src="baseUrl + pass" class="avatar">
+                        <img v-loading="pass_loading" v-if="pass" :src="pass" class="avatar">
                         <div v-else style="position: absolute;top:50%;left:50%;transform: translate3d(-50%,-70%,0)">
                             <img class="el-icon-plus avatar-uploader-icon" src="../../assets/img/ndtx@2x.png">
                             <p style="margin-top: -24px;font-size: 12px;color: #999999;">点击上传</p>
@@ -113,47 +112,18 @@
                             <li style="text-indent: 1rem">你的账号被锁定</li>
                         </ol>
                     </div>
-                    <div style="margin: 0 auto;width: 317px;">
+                    <div style="margin: 0 auto 40px;width: 317px;">
                         <button @click="handleBackSecond">上一步</button>
                         <button @click="handlefourth">确认提交</button>
                     </div>
                 </div>
                 <div class="fourth" v-if="fourth">
                     <h1>等待审核通过</h1>
-                    <!--<el-upload
-                            class="avatar-uploader"
-                            action=""
-                            :show-file-list="false"
-                            :before-upload="beforeUpload"
-                            :http-request="upPassFile"
-                            :on-change="handleChange"
-                    >
-                        <img v-loading="pass_loading" v-if="pass" :src="baseUrl + pass" class="avatar">
-                        <div v-else style="position: absolute;top:50%;left:50%;transform: translate3d(-50%,-70%,0)">
-                            <img class="el-icon-plus avatar-uploader-icon" src="../../assets/img/ndtx@2x.png">
-                            <p style="margin-top: -24px;font-size: 12px;color: #999999;">点击上传</p>
-                        </div>
-                    </el-upload>
-                    <div class="note">
-                        <div class="title">
-                            <span></span>
-                            <span>注意事项</span>
-                            <span></span>
-                        </div>
-                        <ol style="text-align: left;color: #999999;font-size: 15px">
-                            <li style="margin-bottom: 15px">1, 照片不能裁剪</li>
-                            <li style="margin-bottom: 15px">2, 照片清晰可见</li>
-                            <li style="margin-bottom: 3px">3, 请确保你的营业执照真实有效，否则可能导致</li>
-                            <li style="text-indent: 1rem">你的账号被锁定</li>
-                        </ol>
-                    </div>
-                    <div style="margin: 0 auto;width: 317px;">
-                        <button @click="handleBackSecond">上一步</button>
-                        <button @click="handleSubmit">确认提交</button>
-                    </div>-->
-                   <!-- <div style="margin: 0 auto;width: 317px;">
-                        <button @click="handleSubmit">确认提交</button>
-                    </div>-->
+                    <img src="../../assets/img/snail@2x.png" alt="">
+                    <p>
+                        你的材料已提交<br/>
+                        我们将会在一个工作日内完成审核
+                    </p>
                 </div>
             </div>
             <div class="right">
@@ -177,24 +147,28 @@
                 </div>
             </div>
         </div>
-        <el-dialog
-                title="请选择公司行业"
-                :visible.sync="dialogVisible"
-                width="850px"
-        >
+        <div class="label_dialog">
+            <el-dialog
+                    title="请选择公司行业"
+                    :visible.sync="dialogVisible"
+                    width="850px"
+            >
       <span>
         <ul>
           <li class="industry" v-for="item in lists" :key="item.label_id"
               @click="handleIndustry(item.label_id,item.name)">{{item.name}}</li>
         </ul>
       </span>
-        </el-dialog>
+            </el-dialog>
+
+        </div>
 
         <div class="area_dialog">
             <el-dialog
                     title="添加工作地点"
                     :visible.sync="area_dialog"
-                    width="850px">
+                    width="850px"
+            >
                 <div class="search">
                     <p class="note">请先选择工作城市</p>
                     <div class="block">
@@ -239,7 +213,7 @@
     import Headers from "../../components/reg_header.vue"
     import http from '../../libs/http';
     import config from '../../config'
-
+    import {forEach} from "../../libs/tools";
     const baseUrl = config.baseUrl;
     import {handleMap} from '../../libs/Amap'
     // import config from '../libs/http';
@@ -260,6 +234,7 @@
                 user_avatar: '',
                 logo: '',
                 pass: '',
+                license_path:'',
                 logo_loading: false,
                 ava_loading: false,
                 pass_loading: false,
@@ -269,57 +244,57 @@
                 name: '',
                 work: '',
                 company_name: '',
-                abbreviation: '',
 
                 //第二步
                 company_address: '',
                 company_industry: '',
+                abbreviation: '',
                 label_id: null,
                 dialogVisible: false,
                 company_staff: '',
                 staff: [{
-                    value: '选项1',
+                    value: '20人以下',
                     label: '20人以下'
                 }, {
-                    value: '选项2',
+                    value: '20-99人',
                     label: '20-99人'
                 }, {
-                    value: '选项3',
+                    value: '100-500人',
                     label: '100-500人'
                 }, {
-                    value: '选项4',
+                    value: '500-1000人',
                     label: '500-1000人'
                 }, {
-                    value: '选项5',
+                    value: '1000人以上',
                     label: '1000人以上'
                 }],
                 company_stage: '',
                 stage: [{
-                    value: '选项1',
+                    value: '未融资',
                     label: '未融资'
                 }, {
-                    value: '选项2',
+                    value: '天使轮',
                     label: '天使轮'
                 }, {
-                    value: '选项3',
+                    value: 'A轮',
                     label: 'A轮'
                 }, {
-                    value: '选项4',
+                    value: 'B轮',
                     label: 'B轮'
                 }, {
-                    value: '选项5',
+                    value: 'C轮',
                     label: 'C轮'
                 },
                     {
-                        value: '选项6',
+                        value: 'D轮及以上',
                         label: 'D轮及以上'
                     },
                     {
-                        value: '选项7',
+                        value: '已上市',
                         label: '已上市'
                     },
                     {
-                        value: '选项8',
+                        value: '不需要融资',
                         label: '不需要融资'
                     }],
                 lists: {},
@@ -344,26 +319,58 @@
                 city_id: '',
 
                 //企业步骤
-                company_info:null,
+                company_id:null,
+                enterprise_step:null
+
             };
         },
         mounted() {
             handleMap();
             this.apiGet('/api/user/info').then((res) => {
-                console.log(res)
-                this.company_info = res;
+                console.log(res);
+                this.company_id = res.company_real.company_id;
                 this.enterprise_step = res.enterprise_step;
-                if (res.enterprise_step === 1) {
+                this.user_avatar =res.avatar.split('com')[1];
+                this.name = res.nickname;
+                this.work = res.company_real.company_position;
+                this.company_name = res.company_real.company_name;
+                this.apiGet('/api/company/info/' + this.company_id).then((result)=>{
+                    console.log(result);
+                    if(result){
+                        this.company_address = result.address;
+                        this.company_industry = result.industry_label.name;
+                        this.abbreviation = result.abbreviation;
+                        this.label_id = result.label_id;
+                        this.company_staff = result.employee;
+                        this.company_stage = result.financing;
+                        this.latitude = result.latitude;
+                        this.longitude = result.longitude;
+                        this.city_id = result.city_id;
+                        this.logo = result.logo_path.split('com')[1]
+                    }
+                });
+                if(res.company_real.status === 2 && res.enterprise_step === 1){
+                    this.$confirm(res.company_real.denial_reason, '审核不通过', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+
+                    }).catch(() => {
+
+                    });
+                }
+                if (res.enterprise_step === 2) {
                     this.second = true;
                     this.first = false;
                     this.third = false;
                     this.fourth = false;
-                } else if (res.enterprise_step === 2) {
+                } else if (res.enterprise_step === 3) {
                     this.third = true;
                     this.second = false;
                     this.first = false;
                     this.fourth = false;
-                }else if (res.enterprise_step === 3 || res.enterprise_step === 4) {
+                }else if (res.enterprise_step === 4) {
                     this.third = false;
                     this.second = false;
                     this.first = false;
@@ -391,6 +398,11 @@
             },
             handleChange(file) {
                 this.file = file.raw;
+            },
+
+            handlePassChange(file){
+                this.file = file.raw;
+                this.pass = URL.createObjectURL(this.file);
             },
 
             //上传头像
@@ -424,23 +436,25 @@
                 })
             },
 
-            //上传logo
+            //上传营业执照
             upPassFile() {
                 // 创建表单对象
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 form.append("files", this.file);
-                this.apiPost('/file/uploads', form).then((res) => {
+                console.log(this.file)
+
+                this.apiPost('/api/tools/ocr/bizlicense', form).then((res) => {
                     console.log(res);
                     if (res) {
                         this.pass_loading = false;
-                        this.pass = res[0];
+                        this.license_path = res[0].file_path;
                     }
                 })
             },
-
             //下一步
             handleSecond() {
+                this.file = null;
                 if (!this.user_avatar) {
                     this.$message({
                         showClose: true,
@@ -473,23 +487,36 @@
                     let data = {
                         nickname: this.name,
                         avatar: this.user_avatar,
-                        enterprise_step: 1,
                         company_name: this.company_name,
                         company_position: this.work,
                     };
-                    this.apiPost('/api/company/create', data).then((res) => {
-                        console.log(res)
-                        if (res) {
-                            this.first = false;
-                            this.second = true;
-                            this.scrollTop()
-                        }
-                    })
+                    if(this.enterprise_step === 2){
+                        this.apiPost('/api/company/update/' + this.company_id,data).then((res)=>{
+                            console.log(res);
+                            if (res) {
+                                this.first = false;
+                                this.second = true;
+                                this.scrollTop()
+                            }
+                        })
+                    }else{
+                        data.enterprise_step = 2;
+                        this.apiPost('/api/company/create', data).then((res) => {
+                            console.log(res);
+                            if (res) {
+                                this.first = false;
+                                this.second = true;
+                                this.scrollTop()
+                            }
+                        })
+                    }
+
                 }
             },
 
             //上一步
             handleFirst() {
+                this.file = null;
                 this.first = true;
                 this.second = false;
                 this.scrollTop()
@@ -581,6 +608,8 @@
             },
 
             handleThird() {
+                this.file = null;
+
                 if (!this.logo) {
                     this.$message({
                         showClose: true,
@@ -629,38 +658,52 @@
                         logo_path: this.logo,
                         abbreviation: this.abbreviation,
                         address: this.company_address,
-                        industry_label_id: this.company_industry,
+                        industry_label_id: this.label_id,
                         employee: this.company_staff,
                         financing: this.company_stage,
                         longitude:this.longitude,
                         latitude:this.latitude,
                         city_id:this.city_id,
-                        enterprise_step: 2,
                     };
-                    this.apiPost('/api/company/create', data).then((res) => {
-                        console.log(res);
-                        if (res) {
-                            this.second = false;
-                            this.third = true;
-                            this.scrollTop()
-                        }
-                    });
+                    if(this.enterprise_step === 3){
+                        this.apiPost('/api/company/update/' + this.company_id,data).then((res)=>{
+                            console.log(res)
+                            if (res) {
+                                this.second = false;
+                                this.third = true;
+                                this.scrollTop()
+                            }
+                        })
+                    }else{
+                        data.enterprise_step = 3;
+                        this.apiPost('/api/company/create', data).then((res) => {
+                            console.log(res);
+                            if (res) {
+                                this.second = false;
+                                this.third = true;
+                                this.scrollTop()
+                            }
+                        })
+                    }
                 }
             },
 
             //返回第二步
             handleBackSecond() {
+                this.file = null;
                 this.second = true;
                 this.third = false;
                 this.scrollTop()
             },
 
             handlefourth(){
-                if (this.pass) {
+                this.file = null;
+                if (this.license_path) {
                     let data = {
                         company_name: this.company_name,
-                        license_path: this.pass,
-                        enterprise_step: 3,
+                        license_path: this.license_path,
+                        enterprise_step: 4,
+                        status:1
                     };
                     this.apiPost('/api/company/create', data).then((res) => {
                         console.log(res);
@@ -670,7 +713,6 @@
                             this.scrollTop()
                         }
                     });
-
                 } else {
                     this.$message({
                         showClose: true,
@@ -680,26 +722,6 @@
                     })
                 }
             },
-
-           /* handleSubmit() {
-                let data = {
-                    company_name: this.company_name,
-                    enterprise_step: 4,
-                };
-                this.apiPost('/api/company/create', data).then((res) => {
-                    console.log(res);
-                    if(res){
-                        this.third = false;
-                        this.fourth = true;
-                        this.scrollTop()
-                    }
-                });
-                if (this.enterprise_step > 4) {
-                    this.$router.push({
-                        name: "B_index"
-                    });
-                }
-            }*/
 
         },
         mixins: [http],
@@ -719,175 +741,41 @@
                     });
                 }
             },
-            fourth(){
-                if(this.fourth){
-                    let data = {
-                        company_name: this.company_name,
-                        enterprise_step: 4,
-                    };
-                    this.apiPost('/api/company/create', data).then((res) => {
-                        console.log(res);
-                        if(res){
-                            this.third = false;
-                            this.fourth = true;
-                            this.scrollTop()
-                        }
-                    });
+            area_dialog() {
+                if (this.area_dialog) {
+                    this.handleCity();
                 }
             }
-        }
+        },
     }
 </script>
 <style lang="less" type="text/less">
     a {
         color: white;
     }
-
-    .area_dialog {
-        .el-dialog__wrapper {
-            overflow-y: hidden;
+    .el-menu--horizontal {
+        border-bottom: none;
+        .el-submenu__icon-arrow{
+            color: #F5F5F7!important;
+            right: 5px;
+            margin-top: -7px;
         }
-
-        .el-dialog {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate3d(-50%, -80%, 0);
-            margin-top: 0 !important;
-
-            .el-input__suffix {
-                display: none;
+        .el-menu--popup{
+            font-size: 16px;
+            /*height: 50px;*/
+            /*margin: 0 26px;*/
+            /*padding: 0 5px;*/
+            /*line-height: 50px;*/
+            background-color: #fff !important;
+            li{
+                background: none!important;
             }
-
-            .el-dialog__header {
-                text-align: left;
-
-                .el-dialog__title {
-                    font-size: 16px;
-                    color: #4D4D4D;
-                    text-align: left;
-                }
-            }
-
-            .el-dialog__body {
-                padding-top: 0;
-                padding-bottom: 10px;
-
-                .search {
-                    text-align: left;
-                    margin-bottom: 10px;
-
-                    .note {
-                        color: #B3B3B3;
-                        font-size: 12px;
-                        margin-bottom: 20px;
-                    }
-
-                    .block {
-                        display: flex;
-                        margin-bottom: 20px;
-
-                        p {
-                            align-self: center;
-                            width: 107px;
-                            text-align: right;
-                            margin-right: 10px;
-                        }
-
-                        .el-cascader {
-                            align-self: center;
-
-                            .el-input {
-                                width: 200px;
-                            }
-
-                            .el-cascader-menu {
-                                min-width: 120px;
-                            }
-
-                            .el-cascader-node {
-                                text-align: center;
-                            }
-                        }
-
-                    }
-
-                    .info {
-                        position: relative;
-
-                        .input_key {
-                            display: flex;
-
-                            p {
-                                align-self: center;
-                                width: 107px;
-                                text-align: right;
-                                margin-right: 10px;
-                            }
-
-                            .input-item {
-                                align-self: center;
-
-                                .el-input {
-                                    width: 500px;
-                                }
-                            }
-                        }
-
-                        #show {
-                            position: absolute;
-                            border: 1px solid #DCDFE6;
-                            margin-left: 117px;
-                            margin-top: 10px;
-                            width: 480px !important;
-                            border-radius: 4px;
-                            padding: 10px;
-                            background-color: #FFF;
-                            top: 40px !important;
-                            left: 0 !important;
-                            z-index: 99999999;
-
-                            .auto-item {
-                                font-size: 14px;
-                                height: 20px;
-                                line-height: 20px;
-                            }
-                        }
-                    }
-
-                    .room {
-                        display: flex;
-                        margin-top: 20px;
-
-                        p {
-                            align-self: center;
-                            width: 107px;
-                            text-align: right;
-                            margin-right: 10px;
-                        }
-
-                        .el-input {
-                            width: 500px;
-                        }
-                    }
-                }
-
-                .el-cascader-menu__wrap {
-                    height: 350px;
-                }
-
-                .el-cascader-menu {
-                    min-width: 269px;
-                }
-            }
-
-            .el-dialog__footer {
-                padding-top: 0;
-                padding-bottom: 20px;
-            }
+        }
+        .el-menu-item.is-active {
+            color: #ffffff !important;
+            border-bottom: 3px solid #00e0ba;
         }
     }
-
     .reg_wrap {
         width: 100%;
         height: 100%;
@@ -896,7 +784,6 @@
         .main {
             margin: 110px auto;
             width: 930px;
-            height: 650px;
             font-family: MicrosoftYaHei;
             border-radius: 10px;
             box-shadow: 0 3px 16px 0 rgba(7, 14, 54, 0.12);
@@ -904,7 +791,6 @@
 
             .left {
                 width: 698px;
-                height: 100%;
                 text-align: center;
                 background: #fff;
                 border-radius: 10px 0 0 10px;
@@ -1176,11 +1062,30 @@
                         cursor: pointer;
                     }
                 }
+
+                .fourth{
+                    height: 100%;
+                    h1 {
+                        margin-bottom: 42px;
+                        padding-top: 42px;
+                        color: #464646;
+                        font-size: 24px;
+                    }
+                    img{
+                        margin-top: 70px;
+                        margin-bottom: 120px;
+                    }
+                    p{
+                        font-size:15px;
+                        color:rgba(153,153,153,1);
+                        margin-bottom: 40px;
+                        line-height: 30px;
+                    }
+                }
             }
 
             .right {
                 width: 232px;
-                height: 100%;
                 background: rgba(247, 247, 250, 1);
                 position: relative;
                 border-radius: 0 10px 10px 0;
@@ -1230,46 +1135,192 @@
             }
         }
 
-        .el-dialog {
-            position: fixed;
-            top: 50%;
-            transform: translate3d(-50%, -50%, 0);
-            left: 50%;
-            margin: 0 !important;
-            text-align: left;
-            border-radius: 10px;
-            height: 500px;
-        }
+        .area_dialog {
+            .el-dialog__wrapper {
+                overflow-y: hidden;
+            }
 
-        .el-dialog__header {
-            color: #464646;
-            padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
-            background: #fff;
-            border-radius: 10px 10px 0 0;
-        }
+            .el-dialog {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate3d(-50%, -80%, 0);
+                margin-top: 0 !important;
 
-        .el-dialog__body {
-            background: #f7f8fa;
-            border-bottom: 1px solid #f0f0f0;
-            border-radius: 0 0 10px 10px;
-            height: 375px;
+                .el-input__suffix {
+                    display: none;
+                }
 
-            ul {
-                li {
-                    display: inline-block;
-                    margin-right: 20px;
-                    margin-bottom: 20px;
-                    border: 1px solid #e5e5e5;
-                    border-radius: 21px;
-                    padding: 10px;
-                    background: #fff;
+                .el-dialog__header {
+                    text-align: left;
+
+                    .el-dialog__title {
+                        font-size: 16px;
+                        color: #4D4D4D;
+                        text-align: left;
+                    }
+                }
+
+                .el-dialog__body {
+                    padding-bottom: 10px;
+
+                    .search {
+                        text-align: left;
+                        margin-bottom: 10px;
+
+                        .note {
+                            color: #B3B3B3;
+                            font-size: 12px;
+                            margin-bottom: 20px;
+                        }
+
+                        .block {
+                            display: flex;
+                            margin-bottom: 20px;
+
+                            p {
+                                align-self: center;
+                                width: 107px;
+                                text-align: right;
+                                margin-right: 10px;
+                            }
+
+                            .el-cascader {
+                                align-self: center;
+
+                                .el-input {
+                                    width: 200px;
+                                }
+
+                                .el-cascader-menu {
+                                    min-width: 120px;
+                                }
+
+                                .el-cascader-node {
+                                    text-align: center;
+                                }
+                            }
+
+                        }
+
+                        .info {
+                            position: relative;
+
+                            .input_key {
+                                display: flex;
+
+                                p {
+                                    align-self: center;
+                                    width: 107px;
+                                    text-align: right;
+                                    margin-right: 10px;
+                                }
+
+                                .input-item {
+                                    align-self: center;
+
+                                    .el-input {
+                                        width: 500px;
+                                    }
+                                }
+                            }
+
+                            #show {
+                                position: absolute;
+                                border: 1px solid #DCDFE6;
+                                margin-left: 117px;
+                                margin-top: 10px;
+                                width: 480px !important;
+                                border-radius: 4px;
+                                padding: 10px;
+                                background-color: #FFF;
+                                top: 40px !important;
+                                left: 0 !important;
+                                z-index: 99999999;
+
+                                .auto-item {
+                                    font-size: 14px;
+                                    height: 20px;
+                                    line-height: 20px;
+                                }
+                            }
+                        }
+
+                        .room {
+                            display: flex;
+                            margin-top: 20px;
+
+                            p {
+                                align-self: center;
+                                width: 107px;
+                                text-align: right;
+                                margin-right: 10px;
+                            }
+
+                            .el-input {
+                                width: 500px;
+                            }
+                        }
+                    }
+
+                    .el-cascader-menu__wrap {
+                        height: 350px;
+                    }
+
+                    .el-cascader-menu {
+                        min-width: 269px;
+                    }
+                }
+
+                .el-dialog__footer {
+                    padding-top: 0;
+                    padding-bottom: 20px;
                 }
             }
         }
+        .label_dialog{
+            .el-dialog {
+                position: fixed;
+                top: 50%;
+                transform: translate3d(-50%, -50%, 0);
+                left: 50%;
+                margin: 0 !important;
+                text-align: left;
+                border-radius: 10px;
+                height: 500px;
+            }
 
-        .el-scrollbar {
-            text-align: center;
+            .el-dialog__header {
+                color: #464646;
+                padding: 20px;
+                border-bottom: 1px solid #f0f0f0;
+                background: #fff;
+                border-radius: 10px 10px 0 0;
+            }
+
+            .el-dialog__body {
+                background: #f7f8fa;
+                border-bottom: 1px solid #f0f0f0;
+                border-radius: 0 0 10px 10px;
+                height: 375px;
+
+                ul {
+                    li {
+                        display: inline-block;
+                        margin-right: 20px;
+                        margin-bottom: 20px;
+                        border: 1px solid #e5e5e5;
+                        border-radius: 21px;
+                        padding: 10px;
+                        background: #fff;
+                    }
+                }
+            }
+
+            .el-scrollbar {
+                text-align: center;
+            }
+
         }
 
         .avatar-uploader .el-upload {
@@ -1333,6 +1384,20 @@
             color: white;
             border: none;
         }
+        .el-menu--horizontal>.el-submenu .el-submenu__title{
+            height: 50px;
+            line-height: 50px;
+            /*display: flex;*/
+        }
+        .el-menu--horizontal>.el-submenu .el-submenu__icon-arrow{
+            position: absolute;
+            font-size: 17px;
+            color: aqua;
+        }
+
+    }
+    .el-menu--collapse .el-menu .el-submenu, .el-menu--popup{
+        min-width: 130px;
     }
 
 </style>

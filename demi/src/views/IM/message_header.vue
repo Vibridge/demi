@@ -1,5 +1,8 @@
 <template>
     <div class="title">
+        <div v-if="messageDetail && messageDetail.dominator">
+            系统消息
+        </div>
         <div class="title_wrap" v-if="messageDetail && messageDetail.type === 1">
             <div class="label">
                 <p>{{messageDetail.work.work_name}}</p>
@@ -40,6 +43,9 @@
     export default {
         name: 'message_header',
         props: {messageDetail: {type: Object, default: null}},
+        mounted() {
+            console.log(this.messageDetail)
+        }
     }
 </script>
 

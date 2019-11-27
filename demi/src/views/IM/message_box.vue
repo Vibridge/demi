@@ -64,6 +64,7 @@
                 emojiName: emojiName,
                 emojiUrl: emojiUrl,
                 file: '',
+                // timeout:null,
             }
         },
         computed: {
@@ -115,8 +116,35 @@
                 this.$store.commit('pushCurrentMessageList', message);
                 this.$bus.$emit('scroll-bottom');
                 this.tim.sendMessage(message);
-                this.messageContent = ''
+                this.messageContent = '';
+                /*if(message){
+                    this.refreshConversation()
+                }*/
             },
+            /*refreshConversation() {
+                this.tim.getConversationList().then(() => {
+                    /!* that.$store.commit('showMessage', {
+                         message: '刷新成功',
+                         type: 'success',
+                     });*!/
+                    this.$emit('on-msg-refresh', true);
+                });
+                /!*let that = this;
+                return function () {
+                    if (!that.timeout) {
+                        that.timeout = setTimeout(() =>{
+                            that.timeout = null;
+                            that.tim.getConversationList().then(() => {
+                               /!* that.$store.commit('showMessage', {
+                                    message: '刷新成功',
+                                    type: 'success',
+                                });*!/
+                                this.$emit('on-msg-refresh', true);
+                            })
+                        }, 1000)
+                    }
+                }*!/
+            },*/
             chooseEmoji(item) {
                 this.messageContent += item
             },

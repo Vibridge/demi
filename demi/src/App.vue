@@ -30,7 +30,7 @@
                 });
             }
             this.initListener();
-            this.apiGet('/api/user/info').then((res) => {
+            /*this.apiGet('/api/user/info').then((res) => {
                 if (res.type !== 2) {
                     this.$message({
                         showClose: true,
@@ -41,7 +41,7 @@
                         name: "login"
                     });
                 }
-            });
+            });*/
         },
         methods: {
             initListener() {
@@ -66,11 +66,11 @@
                 this.tim.on(this.TIM.EVENT.CONVERSATION_LIST_UPDATED, event => {
                     this.$store.commit('updateConversationList', event.data)
                 })
-                // 群组列表更新
+                /*// 群组列表更新
                 this.tim.on(this.TIM.EVENT.GROUP_LIST_UPDATED, event => {
                     this.$store.commit('updateGroupList', event.data)
-                })
-                // 收到新的群系统通知
+                })*/
+              /*  // 收到新的群系统通知
                 this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, event => {
                     const isKickedout = event.data.type === 4
                     const isCurrentConversation =
@@ -88,7 +88,7 @@
                             this.$store.dispatch('checkoutConversation', SystemConversationID)
                         }
                     })
-                })
+                })*/
             },
             onReceiveMessage({data: messageList}) {
                 this.handleAt(messageList)
@@ -109,7 +109,7 @@
                     this.tim.getMyProfile().then(({data}) => {
                         this.$store.commit('updateCurrentUserProfile', data)
                     })
-                    this.$store.dispatch('getBlacklist')
+                    // this.$store.dispatch('getBlacklist')
                 }
             },
             /**
@@ -193,6 +193,7 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
+
     }
 
     html, body, #app {
@@ -202,6 +203,7 @@
         background: #f7f8fa;
         overflow-x: hidden;
         font-size: 14px;
+
     }
 
 </style>

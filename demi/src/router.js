@@ -31,14 +31,14 @@ const router = new Router({
             meta: {title: 'B_index'},
             component: () => import( './views/B_index/index.vue'),
             children:[
-                {
+                /*{
                     path: '/B_index/B_person',
                     name: 'B_person',
                     redirect: '/B_index/B_person/index',
                     meta: {title: 'B_person',parent:'B_index'},
-                },
+                },*/
                 {
-                    path: '/B_index/B_person/index',
+                    path: '/B_index/B_person',
                     name: 'B_person',
                     meta: {title: 'index',parent:'B_person'},
                     component: () => import('./views/B_index/B_person.vue'),
@@ -110,6 +110,12 @@ const router = new Router({
                     component: () => import('./views/create/task_create/index.vue')
                 },
                 {
+                    path: '/B_index/B_person/withdraw',
+                    name: 'withdraw',
+                    meta: {title: 'create_work',parent:'withdraw'},
+                    component: () => import('./views/withdraw/index.vue')
+                },
+                {
                     path: '/B_index/work_resume',
                     name: 'work_resume',
                     meta: {title: 'work_resume',parent:'resume'},
@@ -150,4 +156,10 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
+
+router.afterEach((to,from) => {
+    document.getElementsByClassName('B_index_wrapper')[0].scrollTo(0,0);
+});
+
+
 export default router;
