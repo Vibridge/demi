@@ -31,7 +31,7 @@
                 title="得米服务协议"
                 :visible.sync="dialogVisible"
                 width="1000px"
-                :before-close="handleClose">
+                >
             <XieYi></XieYi>
         </el-dialog>
     </div>

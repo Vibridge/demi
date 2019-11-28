@@ -6,7 +6,9 @@ import router from './router'
 import store from './store/index'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import './libs/axios'
 Vue.use(ElementUI);
+
 import tim from '../src/libs/im'
 import TIM from 'tim-js-sdk'
 window.tim = tim;

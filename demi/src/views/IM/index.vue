@@ -239,6 +239,7 @@
             },
 
             handleMsgHeader(data){
+                console.log(data)
                 this.messageDetail = data;
             },
 

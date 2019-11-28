@@ -30,7 +30,7 @@
                 <p>选择城市:</p>
                 <span v-for="city in hot_city" :key="city.city_id" :class="select_city === city.city_id ? 'active' : ''"
                       @click="HandleSelectCity(city.city_id)">{{city.city_name}}</span>
-                <div class="now_city" @click="handelAllCity()">
+                <span @click="handelAllCity()">
                     <el-popover
                             placement="left-start"
                             width="500"
@@ -60,7 +60,7 @@
                             <span style="color: #24BFFF;line-height: 14px">{{now_city}}</span>
                         </div>
                     </el-popover>
-                </div>
+                </span>
             </div>
             <div class="select_city">
                 <p>最低学历:</p>
@@ -1215,7 +1215,7 @@
             margin: 32px auto;
             background: rgba(255, 255, 255, 1);
             border: 1px solid rgba(230, 230, 230, 1);
-            padding: 16px 30px 30px;
+            padding: 30px;
             box-sizing: border-box;
             /*.select_city:nth-child(1){
                 margin-bottom: 14px;
@@ -1237,11 +1237,8 @@
                     color: rgba(77, 77, 77, 1);
                     margin-right: 20px;
                     cursor: pointer;
+                    display: inline-block;
                 }
-                .now_city{
-                    height: 14px;
-                }
-
 
             }
 

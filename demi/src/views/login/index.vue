@@ -99,18 +99,20 @@
             }
         },
         methods: {
+
             Getyzm() {
+                /*else if (!/^((13[0-9])|(166)|(17[0-9])|(15[^4\\D])|(18[0,2,5-9]))\d{8}$/.test(this.phone)) {
+                    this.$message({
+                        showClose: true,
+                        message: '请输入正确的手机号',
+                        type: 'error',
+                        duration: 500
+                    })
+                }*/
                 if (!this.phone) {
                     this.$message({
                         showClose: true,
                         message: '请输入手机号',
-                        type: 'error',
-                        duration: 500
-                    })
-                } else if (!/^((13[0-9])|(166)|(17[0-9])|(15[^4\\D])|(18[0,2,5-9]))\d{8}$/.test(this.phone)) {
-                    this.$message({
-                        showClose: true,
-                        message: '请输入正确的手机号',
                         type: 'error',
                         duration: 500
                     })
@@ -159,6 +161,7 @@
                     this.time = 61
                 }
             },
+
             login() {
                 this.apiPost('/api/login', {
                     phone: this.phone,
@@ -168,56 +171,75 @@
                     console.log(res);
                     this.yzm = '';
                     this.setToken({authorization: res.token});
-                    if (res) {
-                        if (res.type === 2 && res.enterprise_step > 4) {
-                            console.log('bbb')
-                            let user_id =  res.user_id;
-                            let userSig = res.usersig;
-                            sessionStorage.setItem('userID',user_id);
-                            sessionStorage.setItem('userSig',userSig);
-                            this.tim.login({
-                                userID: user_id + 'b',
-                                userSig: userSig
-                            }).then(() => {
-                                this.$store.commit('toggleIsLogin', true);
-                                this.$store.commit('startComputeCurrent');
-                                console.log('im登陆成功');
-                            }).catch(error => {
-                                this.$store.commit('showMessage', {
-                                    message: '登录失败：' + error.message,
-                                    type: 'error'
-                                })
-                            });
-                            // this.$store.dispatch('login', user_id);
-                            this.$router.push({
-                                name: "B_index"
-                            });
-                        } else if (res.type === 0 || (res.type === 2 && res.enterprise_step <= 4)) {
-                            console.log('aaa')
-                            if(res.enterprise_step === 0){
-                                let data = {
-                                    type:2,
-                                    enterprise_step:1
-                                };
-                                this.apiPost('/api/user/update',data).then((res)=>{
-                                    if(res){
-                                        this.$router.push({
-                                            name: "B_reg"
-                                        });
-                                    }
-                                })
-                            }
-                            this.$router.push({
-                                name: "B_reg"
-                            });
-                        } else {
-                            this.$message({
-                                showClose: true,
-                                message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
-                                duration: 1000
+
+                    if (res && (res.type === 2) && (res.enterprise_step > 4)) {
+                        let user_id = res.user_id;
+                        let userSig = res.usersig;
+                        sessionStorage.setItem('userID', user_id);
+                        sessionStorage.setItem('userSig', userSig);
+                        this.tim.login({
+                            userID: user_id + 'b',
+                            userSig: userSig
+                        }).then(() => {
+                            this.$store.commit('toggleIsLogin', true);
+                            this.$store.commit('startComputeCurrent');
+                            console.log('im登陆成功');
+                            /*this.apiGet('/api/service').then((res) => {
+                                if (res && (res.service_id !== user_id)) {
+                                    sessionStorage.setItem('service_id', res.service_id);
+                                    let data = {
+                                        type:3,
+                                        recipient: res.service_id,
+                                        foreign_key: 0,
+                                        sender_mark: user_id + 'b',
+                                        recipient_mark: res.service_id + 'b'
+                                    };
+                                    this.apiPost('/converse/create',data).then((res)=>{
+                                        if(res){
+                                            this.$store
+                                                .dispatch('checkoutConversation', `C2C${res.recipient_mark}`)
+                                                .then(() => {
+                                                    console.log('aaa')
+                                                })
+                                        }
+                                    })
+                                }
+                            })*/
+                        }).catch(error => {
+                            this.$store.commit('showMessage', {
+                                message: '登录失败：' + error.message,
+                                type: 'error'
+                            })
+                        });
+                        // this.$store.dispatch('login', user_id);
+                        this.$router.push({
+                            name: "B_index"
+                        });
+                    } else if (res.type === 0 || (res.type === 2 && res.enterprise_step <= 4)) {
+                        if (res.enterprise_step === 0) {
+                            let data = {
+                                type: 2,
+                                enterprise_step: 1
+                            };
+                            this.apiPost('/api/user/update', data).then((res) => {
+                                if (res) {
+                                    this.$router.push({
+                                        name: "B_reg"
+                                    });
+                                }
                             })
                         }
+                        this.$router.push({
+                            name: "B_reg"
+                        });
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                            duration: 1000
+                        })
                     }
+
 
                 })
             }

@@ -1,6 +1,6 @@
 <template>
     <transition name="el-fade-in">
-        <div class="page-up" @click="scrollToTop" v-show="toTopShow">
+        <div class="page-up" v-on:click="scrollToTop" v-show="toTopShow">
             <i class="el-icon-caret-top"></i>
         </div>
     </transition>
@@ -9,6 +9,12 @@
 <script>
     export default {
         name: 'scroll',
+        data(){
+            return{
+                toTopShow:false,
+                scrollTop:0
+            }
+        },
         mounted() {
             this.$nextTick(function () {
                 window.addEventListener('scroll', this.handleScroll,true);
@@ -17,52 +23,56 @@
         destroyed() {
             window.addEventListener('scroll', this.handleScroll,true);
         },
-        handleScroll() {
-            let dom =document.getElementsByClassName('content-container')[0];
-            this.scrollTop = dom.scrollTop;
-            if (this.scrollTop > 300) {
-                this.toTopShow = true;
-            }else {
-                this.toTopShow = false;
-            }
-        },
-
-        scrollToTop() {
-            let timer = null;
-            let _this = this;
-            cancelAnimationFrame(timer);
-            timer = requestAnimationFrame(function fn() {
-                if (_this.scrollTop > 5000) {
-                    _this.scrollTop -= 1000;
-                    document.getElementsByClassName("content-container")[0].scrollTop =
-                        _this.scrollTop;
-                    timer = requestAnimationFrame(fn);
-                } else if (_this.scrollTop > 1000 && _this.scrollTop <= 5000) {
-                    _this.scrollTop -= 500;
-                    document.getElementsByClassName("content-container")[0].scrollTop =
-                        _this.scrollTop;
-                    timer = requestAnimationFrame(fn);
-                } else if (_this.scrollTop > 200 && _this.scrollTop <= 1000) {
-                    _this.scrollTop -= 100;
-                    document.getElementsByClassName("content-container")[0].scrollTop =
-                        _this.scrollTop;
-                    timer = requestAnimationFrame(fn);
-                } else if (_this.scrollTop > 50 && _this.scrollTop <= 200) {
-                    _this.scrollTop -= 10;
-                    document.getElementsByClassName("content-container")[0].scrollTop =
-                        _this.scrollTop;
-                    timer = requestAnimationFrame(fn);
-                } else if (_this.scrollTop > 0 && _this.scrollTop <= 50) {
-                    _this.scrollTop -= 5;
-                    document.getElementsByClassName("content-container")[0].scrollTop =
-                        _this.scrollTop;
-                    timer = requestAnimationFrame(fn);
-                } else {
-                    cancelAnimationFrame(timer);
-                    _this.toTopShow = false;
+        methods:{
+            handleScroll() {
+                let dom = document.getElementById('app');
+                this.scrollTop = dom.scrollTop;
+                console.log(this.scrollTop)
+                if (this.scrollTop > 300) {
+                    this.toTopShow = true;
+                }else {
+                    this.toTopShow = false;
                 }
-            });
-        },
+            },
+
+            scrollToTop() {
+                let timer = null;
+                let _this = this;
+                cancelAnimationFrame(timer);
+                timer = requestAnimationFrame(function fn() {
+                    if (_this.scrollTop > 5000) {
+                        _this.scrollTop -= 1000;
+                        document.getElementById('app').scrollTop =
+                            _this.scrollTop;
+                        timer = requestAnimationFrame(fn);
+                    } else if (_this.scrollTop > 1000 && _this.scrollTop <= 5000) {
+                        _this.scrollTop -= 500;
+                        document.getElementById('app').scrollTop =
+                            _this.scrollTop;
+                        timer = requestAnimationFrame(fn);
+                    } else if (_this.scrollTop > 200 && _this.scrollTop <= 1000) {
+                        _this.scrollTop -= 100;
+                        document.getElementById('app').scrollTop =
+                            _this.scrollTop;
+                        timer = requestAnimationFrame(fn);
+                    } else if (_this.scrollTop > 50 && _this.scrollTop <= 200) {
+                        _this.scrollTop -= 10;
+                        document.getElementById('app').scrollTop =
+                            _this.scrollTop;
+                        timer = requestAnimationFrame(fn);
+                    } else if (_this.scrollTop > 0 && _this.scrollTop <= 50) {
+                        _this.scrollTop -= 5;
+                        document.getElementById('app').scrollTop =
+                            _this.scrollTop;
+                        timer = requestAnimationFrame(fn);
+                    } else {
+                        cancelAnimationFrame(timer);
+                        _this.toTopShow = false;
+                    }
+                });
+            },
+        }
+
     }
 </script>
 

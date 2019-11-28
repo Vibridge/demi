@@ -88,6 +88,12 @@
 		<!--//底部内容渲染-->
 		<bottom v-if="this.IsShow"></bottom>
 
+		<div class="customer" v-if="showCustomer" @click="handleSendCustomer">
+			<el-badge :value="12" class="item">
+				<img src="http://produce.jmzhipin.com/h5/images/customer.png" alt="">
+			</el-badge>
+		</div>
+		<!--<scroll></scroll>-->
 	</div>
 </template>
 
@@ -95,12 +101,14 @@
 	import  "../../assets/css/reset.css"
 	import http from '../../libs/http'
 	import bottom from '../../components/B_person_bottom'
-
+	import {mapState} from 'vuex'
 	import { mapGetters } from 'vuex'
+	import scroll from '../../components/scroll'
+
 	/* eslint-disable */
 	export default {
 		name: 'index',
-		components:{bottom},
+		components:{bottom,scroll},
 		data(){
 			return{
 				user_info:{
@@ -214,15 +222,36 @@
 
 			//退出登录
 			handleLoginOut(){
-				this.tim.logout().then(function(imResponse) {
-					console.log(imResponse.data); // 登出成功
-				}).catch(function(imError) {
-					console.warn('logout error:', imError);
-				});
+				this.$store.dispatch('logout');
 				sessionStorage.clear();
 				this.$router.push({
 					name: "login"
 				});
+			},
+
+			//客服聊天
+			handleSendCustomer(){
+				this.apiGet('/api/service').then((res) => {
+					if (res && (res.service_id !== user_id)) {
+						sessionStorage.setItem('service_id', res.service_id);
+						let data = {
+							type:3,
+							recipient: res.service_id,
+							foreign_key: 0,
+							sender_mark: user_id + 'b',
+							recipient_mark: res.service_id + 'b'
+						};
+						this.apiPost('/converse/create',data).then((res)=>{
+							if(res){
+								this.$store
+										.dispatch('checkoutConversation', `C2C${res.recipient_mark}`)
+										.then(() => {
+											console.log('aaa')
+										})
+							}
+						})
+					}
+				})
 			}
 
 		},
@@ -268,6 +297,30 @@
 			showLoading() {
 				return !this.isSDKReady
 			}*/
+
+			//显示客服
+			showCustomer(){
+				if((this.$route.name !== 'App') && (this.$route.name !== 'IM')){
+					console.log(this.$route.name);
+					return true
+				}else{
+					console.log(this.$route.name);
+					return false
+				}
+			},
+
+			...mapState({
+				handleList(state) {
+					let id = "C2C" +  sessionStorage.getItem('service_id');
+					for(let i in state.conversation.conversationList){
+						if(state.conversation.conversationList[i].conversationID === id){
+							this.deleteConversation(id)
+						}
+					}
+					return state.conversation.conversationList
+				},
+				currentConversation: state => state.conversation.currentConversation
+			}),
 		},
 		watch:{
 		},
@@ -510,6 +563,20 @@
 				.right {
 					width: 724px;
 				}
+			}
+		}
+
+		.customer{
+			position: fixed;
+			bottom: 100px;
+			right: 40px;
+			z-index: 10;
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			img{
+				width: 100%;
+				height: 100%;
 			}
 		}
 	}

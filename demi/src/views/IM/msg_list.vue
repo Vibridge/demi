@@ -129,7 +129,14 @@
         computed: {
             ...mapState({
                 handleList(state) {
+                    let id = "C2C" +  sessionStorage.getItem('service_id');
+                    for(let i in state.conversation.conversationList){
+                        if(state.conversation.conversationList[i].conversationID === id){
+                            this.deleteConversation(id)
+                        }
+                    }
                     return state.conversation.conversationList
+
                 },
                 currentConversation: state => state.conversation.currentConversation
             }),
@@ -233,6 +240,8 @@
                 } else {
                     data = this.newList[this.Corresponding(item)];
                 }
+                console.log(data)
+
                 this.$emit('on-msg-header', data);
                 /* this.$emit('on-msg-refresh', false);*/
                 if (im.conversationID !== this.$store.state.conversation.currentConversation.conversationID) {
@@ -250,6 +259,30 @@
                         lastMessageTime: im.lastMessage.lastTime
                     })
                 }
+            },
+
+            //删除会话
+            deleteConversation(id) {
+                this.tim
+                    .deleteConversation(id)
+                    .then(() => {
+                        /*this.$store.commit('showMessage', {
+                            message: `会话${this.conversation.conversationID}删除成功!`,
+                            type: 'success'
+                        })*/
+                        // this.popoverVisible = false
+                        this.$store.commit('resetCurrentConversation')
+                        console.log('success')
+                    })
+                    .catch(error => {
+                        /*this.$store.commit('showMessage', {
+                            message: `会话${this.conversation.conversationID}删除失败!, error=${error.message}`,
+                            type: 'error'
+                        })*/
+                        console.log(error)
+
+                        // this.popoverVisible = false
+                    })
             },
         },
         mixins: [http],

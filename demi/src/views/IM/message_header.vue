@@ -26,13 +26,13 @@
         </div>
         <div class="title_wrap" v-if="messageDetail && messageDetail.type === 2">
             <div class="label">
-                <p>{{messageDetail.work.task_title}}</p>
+                <p>{{messageDetail && messageDetail.work && messageDetail.work.task_title}}</p>
                 <p>
-                    <span v-if="messageDetail.work.address">{{messageDetail.work.address}}</span>
+                    <span v-if="messageDetail && messageDetail.work && messageDetail.work.address">{{messageDetail && messageDetail.work && messageDetail.work.address}}</span>
                 </p>
             </div>
             <div class="salary">
-                <p>{{messageDetail.work.payment_money}}{{messageDetail.work.unit}}/单</p>
+                <p>{{messageDetail && messageDetail.work && messageDetail.work.payment_money}}{{messageDetail && messageDetail.work && messageDetail.work.unit}}/单</p>
                 <p><img src="../../assets/img/icon_return.png" alt=""></p>
             </div>
         </div>

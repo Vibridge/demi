@@ -1,6 +1,29 @@
 <template>
     <div id="app">
-        <router-view/>
+        <div class="wrap">
+            <template>
+                <el-backtop target="#app">
+                    <div
+                            style="{
+                        height: 100%;
+                        width: 100%;
+                        background-color: #f2f5f6;
+                        box-shadow: 0 0 6px rgba(0,0,0, .12);
+                        text-align: center;
+                        line-height: 40px;
+                        color: #1989fa;
+                        border-radius: 50%;
+                    }"
+                    >
+                        <i class="el-icon-caret-top"></i>
+                    </div>
+                </el-backtop>
+            </template>
+
+            <router-view/>
+
+        </div>
+
     </div>
 </template>
 
@@ -11,6 +34,7 @@
 
     export default {
         name: 'app',
+
         mounted() {
             // 初始化监听器
             let user_id = sessionStorage.getItem('userID') + 'b';
@@ -70,25 +94,25 @@
                 this.tim.on(this.TIM.EVENT.GROUP_LIST_UPDATED, event => {
                     this.$store.commit('updateGroupList', event.data)
                 })*/
-              /*  // 收到新的群系统通知
-                this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, event => {
-                    const isKickedout = event.data.type === 4
-                    const isCurrentConversation =
-                        `GROUP${event.data.message.payload.groupProfile.groupID}` === this.currentConversation.conversationID
-                    // 在当前会话被踢，需reset当前会话
-                    if (isKickedout && isCurrentConversation) {
-                        this.$store.commit('resetCurrentConversation')
-                    }
-                    Notification({
-                        title: '新系统通知',
-                        message: translateGroupSystemNotice(event.data.message),
-                        duration: 3000,
-                        onClick: () => {
-                            const SystemConversationID = '@TIM#SYSTEM'
-                            this.$store.dispatch('checkoutConversation', SystemConversationID)
-                        }
-                    })
-                })*/
+                /*  // 收到新的群系统通知
+                  this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, event => {
+                      const isKickedout = event.data.type === 4
+                      const isCurrentConversation =
+                          `GROUP${event.data.message.payload.groupProfile.groupID}` === this.currentConversation.conversationID
+                      // 在当前会话被踢，需reset当前会话
+                      if (isKickedout && isCurrentConversation) {
+                          this.$store.commit('resetCurrentConversation')
+                      }
+                      Notification({
+                          title: '新系统通知',
+                          message: translateGroupSystemNotice(event.data.message),
+                          duration: 3000,
+                          onClick: () => {
+                              const SystemConversationID = '@TIM#SYSTEM'
+                              this.$store.dispatch('checkoutConversation', SystemConversationID)
+                          }
+                      })
+                  })*/
             },
             onReceiveMessage({data: messageList}) {
                 this.handleAt(messageList)
@@ -174,7 +198,7 @@
                 }
             }
         },
-        mixins:[http],
+        mixins: [http],
         computed: {
             ...mapState({
                 currentUserProfile: state => state.user.currentUserProfile,
@@ -186,14 +210,13 @@
     }
 </script>
 
-<style>
+<style type="text/less" lang="less">
     #app {
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
-
     }
 
     html, body, #app {
@@ -203,7 +226,6 @@
         background: #f7f8fa;
         overflow-x: hidden;
         font-size: 14px;
-
     }
 
 </style>
