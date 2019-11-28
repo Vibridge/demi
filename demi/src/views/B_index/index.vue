@@ -89,7 +89,7 @@
 		<bottom v-if="this.IsShow"></bottom>
 
 		<div class="customer" v-if="showCustomer" @click="handleSendCustomer">
-			<el-badge :value="12" class="item">
+			<el-badge :value="customer.unreadCount" :hidden="customer.unreadCount < 1" class="item">
 				<img src="http://produce.jmzhipin.com/h5/images/customer.png" alt="">
 			</el-badge>
 		</div>
@@ -161,7 +161,8 @@
 				],
 				active_class:'/B_index/B_person',
 				read:0,
-				active_app_class:''
+				active_app_class:'',
+				customer: null,
 			}
 		},
 		mounted() {
@@ -231,25 +232,23 @@
 
 			//客服聊天
 			handleSendCustomer(){
-				this.apiGet('/api/service').then((res) => {
-					if (res && (res.service_id !== user_id)) {
-						sessionStorage.setItem('service_id', res.service_id);
-						let data = {
-							type:3,
-							recipient: res.service_id,
-							foreign_key: 0,
-							sender_mark: user_id + 'b',
-							recipient_mark: res.service_id + 'b'
-						};
-						this.apiPost('/converse/create',data).then((res)=>{
-							if(res){
-								this.$store
-										.dispatch('checkoutConversation', `C2C${res.recipient_mark}`)
-										.then(() => {
-											console.log('aaa')
-										})
-							}
-						})
+				let service_id = sessionStorage.getItem('service_id')
+				let user_id = sessionStorage.getItem('userID')
+				let data = {
+					type:3,
+					recipient: service_id,
+					foreign_key: 0,
+					sender_mark: user_id + 'b',
+					recipient_mark: service_id + 'b'
+				};
+				this.apiPost('/converse/create',data).then((res)=>{
+					if(res){
+						this.$store
+								.dispatch('checkoutConversation', `C2C${res.recipient_mark}`)
+								.then(() => {
+									console.log(this.handleList)
+									this.customer = this.handleList
+								})
 					}
 				})
 			}
@@ -311,13 +310,14 @@
 
 			...mapState({
 				handleList(state) {
-					let id = "C2C" +  sessionStorage.getItem('service_id');
+					let id = "C2C" +  sessionStorage.getItem('service_id') + 'b';
+					let message = null
 					for(let i in state.conversation.conversationList){
-						if(state.conversation.conversationList[i].conversationID === id){
-							this.deleteConversation(id)
+						if(state.conversation.conversationList[i].conversationID == id){
+							message =  state.conversation.conversationList[i]
 						}
 					}
-					return state.conversation.conversationList
+					return message
 				},
 				currentConversation: state => state.conversation.currentConversation
 			}),

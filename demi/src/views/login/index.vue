@@ -184,6 +184,28 @@
                             this.$store.commit('toggleIsLogin', true);
                             this.$store.commit('startComputeCurrent');
                             console.log('im登陆成功');
+                            this.apiGet('/api/service').then((res) => {
+                                if (res && (res.service_id != user_id)) {
+                                    sessionStorage.setItem('service_id', res.service_id);
+                                    console.log(res)
+                                    let data = {
+                                        type:3,
+                                        recipient: res.service_id,
+                                        foreign_key: 0,
+                                        sender_mark: user_id + 'b',
+                                        recipient_mark: res.service_id + 'b'
+                                    };
+                                    this.apiPost('/converse/create',data).then((res)=>{
+                                        if(res){
+                                            this.$store
+                                                .dispatch('checkoutConversation', `C2C${res.recipient_mark}`)
+                                                .then(() => {
+                                                    console.log('aaa');
+                                                })
+                                        }
+                                    })
+                                }
+                            })
                             /*this.apiGet('/api/service').then((res) => {
                                 if (res && (res.service_id !== user_id)) {
                                     sessionStorage.setItem('service_id', res.service_id);
@@ -232,7 +254,7 @@
                         this.$router.push({
                             name: "B_reg"
                         });
-                    } else {
+                    } else if(res && (res.type !== 2)) {
                         this.$message({
                             showClose: true,
                             message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',

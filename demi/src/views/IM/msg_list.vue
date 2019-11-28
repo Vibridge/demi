@@ -129,7 +129,7 @@
         computed: {
             ...mapState({
                 handleList(state) {
-                    let id = "C2C" +  sessionStorage.getItem('service_id');
+                    let id = "C2C" +  sessionStorage.getItem('service_id') + 'b';
                     for(let i in state.conversation.conversationList){
                         if(state.conversation.conversationList[i].conversationID === id){
                             this.deleteConversation(id)
