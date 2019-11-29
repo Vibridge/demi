@@ -7,7 +7,7 @@
             <p>暂无聊天记录</p>
         </div>
 
-        <div class="list_wrap">
+        <div class="list_wrap" v-if="handleList.length > 0">
             <div v-for="(item,index) in handleList" :key="index" @click="showMessage(item,item.conversationID)" class="list"
                  :class="{ 'active_list': item.conversationID === currentConversation.conversationID }">
                 <div class="list_info">
@@ -165,8 +165,6 @@
                     this.newList = res;
                     // this.isRefresh = false;
                     this.$emit('on-msg-refresh', false);
-                    console.log(this.newList);
-                    console.log(this.handleList);
                 });
             },
             handleKeydown(event) {
@@ -294,7 +292,6 @@
                 }
             },
             newList() {
-
                 let data = null;
                 if (this.currentConversation.conversationID === 'C2Cdominator') {
                     data = {
@@ -305,7 +302,6 @@
                 }
                 console.log(data)
                 this.$emit('on-msg-header', data);
-
             }
         }
     }

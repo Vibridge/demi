@@ -168,10 +168,8 @@
                     mode: 'sms',
                     captcha: this.yzm,
                 }).then((res) => {
-                    console.log(res);
                     this.yzm = '';
                     this.setToken({authorization: res.token});
-
                     if (res && (res.type === 2) && (res.enterprise_step > 4)) {
                         let user_id = res.user_id;
                         let userSig = res.usersig;
@@ -184,29 +182,10 @@
                             this.$store.commit('toggleIsLogin', true);
                             this.$store.commit('startComputeCurrent');
                             console.log('im登陆成功');
+                            this.$router.push({
+                                path: '/B_index',
+                            });
                             this.apiGet('/api/service').then((res) => {
-                                if (res && (res.service_id != user_id)) {
-                                    sessionStorage.setItem('service_id', res.service_id);
-                                    console.log(res)
-                                    let data = {
-                                        type:3,
-                                        recipient: res.service_id,
-                                        foreign_key: 0,
-                                        sender_mark: user_id + 'b',
-                                        recipient_mark: res.service_id + 'b'
-                                    };
-                                    this.apiPost('/converse/create',data).then((res)=>{
-                                        if(res){
-                                            this.$store
-                                                .dispatch('checkoutConversation', `C2C${res.recipient_mark}`)
-                                                .then(() => {
-                                                    console.log('aaa');
-                                                })
-                                        }
-                                    })
-                                }
-                            })
-                            /*this.apiGet('/api/service').then((res) => {
                                 if (res && (res.service_id !== user_id)) {
                                     sessionStorage.setItem('service_id', res.service_id);
                                     let data = {
@@ -221,12 +200,12 @@
                                             this.$store
                                                 .dispatch('checkoutConversation', `C2C${res.recipient_mark}`)
                                                 .then(() => {
-                                                    console.log('aaa')
+
                                                 })
                                         }
                                     })
                                 }
-                            })*/
+                            })
                         }).catch(error => {
                             this.$store.commit('showMessage', {
                                 message: '登录失败：' + error.message,
@@ -234,9 +213,6 @@
                             })
                         });
                         // this.$store.dispatch('login', user_id);
-                        this.$router.push({
-                            name: "B_index"
-                        });
                     } else if (res.type === 0 || (res.type === 2 && res.enterprise_step <= 4)) {
                         if (res.enterprise_step === 0) {
                             let data = {
@@ -250,10 +226,11 @@
                                     });
                                 }
                             })
+                        }else{
+                            this.$router.push({
+                                name: "B_reg"
+                            });
                         }
-                        this.$router.push({
-                            name: "B_reg"
-                        });
                     } else if(res && (res.type !== 2)) {
                         this.$message({
                             showClose: true,
@@ -261,8 +238,6 @@
                             duration: 1000
                         })
                     }
-
-
                 })
             }
         },
@@ -275,7 +250,7 @@
 
     .login_wrap {
         width: 100%;
-        height: 100%;
+        height: 100vh;
         background: linear-gradient(45deg, rgba(0, 166, 255, 1), rgba(0, 204, 255, 1));
         font-family: MicrosoftYaHei;
 

@@ -15,10 +15,6 @@ const router = new Router({
             component: () => import('./views/login/index.vue'),
         },
         {
-            path: '/',
-            redirect: '/login',
-        },
-        {
             path: '/B_reg',
             name: 'B_reg',
             meta: {title: 'B_reg'},
