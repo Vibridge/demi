@@ -299,6 +299,7 @@
         computed: {
             //是否是左边导航
             IsShow() {
+                console.log(this.$route.path)
                 if (this.$route.meta['parent'] !== 'B_person') {
                     this.active_top = '/B_index/B_person';
                     if (this.$route.meta['parent'] !== 'create') {

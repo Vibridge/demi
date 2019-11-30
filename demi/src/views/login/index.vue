@@ -183,7 +183,7 @@
                             this.$store.commit('startComputeCurrent');
                             console.log('im登陆成功');
                             this.$router.push({
-                                path: '/B_index',
+                                name: 'B_index',
                             });
                             this.apiGet('/api/service').then((res) => {
                                 if (res && (res.service_id !== user_id)) {

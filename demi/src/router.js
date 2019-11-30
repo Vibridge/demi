@@ -9,11 +9,16 @@ Vue.use(Router);
 const router = new Router({
     routes: [
         {
+            path:'/',
+            redirect:'/login',
+        },
+        {
             path: '/login',
             name: 'login',
             meta: {title: 'login'},
             component: () => import('./views/login/index.vue'),
         },
+
         {
             path: '/B_reg',
             name: 'B_reg',
