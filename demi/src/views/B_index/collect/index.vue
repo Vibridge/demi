@@ -11,7 +11,7 @@
                     <div class="all-wrap">
                         <div class="collect_list" v-show="collect_list.length>0">
                             <div class="collect_list_wrap" v-for="collect in collect_list" :key="collect.favorite_id" @mouseover="show_delect = collect.favorite_id"
-                                 @mouseleave="show_delect = null">
+                                 @mouseleave="show_delect = null" @click="handleDetail('work_resume',collect.job.user_job_id)">
                                 <div class="collect_info">
                                     <div style="display: flex">
                                         <div class="collect_avatar">
@@ -79,7 +79,7 @@
                     <div class="all-wrap">
                         <div class="collect_list" v-show="collect_ability.length>0">
                             <div class="collect_list_wrap" v-for="collect in collect_ability" :key="collect.ability_id" @mouseover="show_delect = collect.ability_id"
-                                 @mouseleave="show_delect = null">
+                                 @mouseleave="show_delect = null" @click="handleDetail('ability_resume',collect.ability_id)">
                                 <div class="collect_info">
                                     <div style="display: flex">
                                         <div class="collect_avatar">
@@ -314,7 +314,8 @@
                     if(status === 1){
                         this.collect_list = res.data;
                     }else{
-                        this.collect_ability = res.data
+                        this.collect_ability = res.data;
+
                     }
                     console.log(res)
                     this.searchParams.page = parseInt(res.current_page);
@@ -346,6 +347,17 @@
                         }
                     }
                 })
+            },
+
+            //打开新窗口，跳详情
+            handleDetail(type,id){
+                let routeData = this.$router.resolve({
+                    name: type,
+                    query: {
+                        id:id
+                    },
+                });
+                window.open(routeData.href, '_blank');
             }
         },
         watch: {},

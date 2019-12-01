@@ -1,11 +1,6 @@
 <template>
     <div class="ability_resume">
         <!--搜索职位-->
-        <template>
-            <el-backtop target=".ability_resume">
-                up
-            </el-backtop>
-        </template>
         <div class="ability_resume_header">
             <div class="search">
                 <el-autocomplete
@@ -442,10 +437,10 @@
                 </div>
 
             </div>
-            <div class="go_left" @click="goBack">
+            <div class="go_left" @click="goBack" v-if="this.index > 0">
                 <img src="../../assets/img/left@2x.png" alt="">
             </div>
-            <div class="go_right" @click="goNext">
+            <div class="go_right" @click="goNext" v-if="this.index < this.last_page">
                 <img src="../../assets/img/right@2x.png" alt="">
             </div>
         </el-dialog>
@@ -530,9 +525,14 @@
 
                 //详情固定
                 searchBarFixed: false,
+
+                //收藏跳转
+                collect_id:this.$route.params.id
             }
         },
         mounted() {
+            console.log(this.collect_id)
+
             this.$nextTick(() => {
                 handleMap();
                 this.showCityInfo();
@@ -728,18 +728,29 @@
             },
 
             //简历详情
-            handleDetail(index) {
+            handleDetail(index,id) {
                 // this.handePhoneEmail(this.ability_resume[index].user.user_id);
+
                 this.index = index;
                 this.dialogVisible = true;
-                window.scrollTo(0, 0);
-                this.apiGet("/api/ability/info/" + this.ability_resume[this.index].ability_id).then((res) => {
-                    this.detail_info = res;
-                    console.log(res);
-                    if (res) {
-                        this.handCard(this.card_page)
-                    }
-                })
+                if(id){
+                    this.apiGet("/api/ability/info/" + id).then((res) => {
+                        this.detail_info = res;
+                        console.log(res);
+                        if (res) {
+                            this.handCard(this.card_page)
+                        }
+                    })
+                }else{
+                    this.apiGet("/api/ability/info/" + this.ability_resume[this.index].ability_id).then((res) => {
+                        this.detail_info = res;
+                        console.log(res);
+                        if (res) {
+                            this.handCard(this.card_page)
+                        }
+                    })
+                }
+
             },
 
             //展示图片
@@ -792,7 +803,7 @@
 
             //返回上一个
             goBack() {
-                if (0 <= this.index < this.ability_resume.length) {
+                if ((0 < this.index) && (this.index < this.ability_resume.length)) {
                     this.index = this.index - 1;
                     this.dialogVisible = true;
                     this.apiGet("/api/ability/info/" + this.ability_resume[this.index].ability_id).then((res) => {
@@ -808,7 +819,7 @@
 
             //下一个
             goNext() {
-                if (0 <= this.index < this.ability_resume.length) {
+                if ((0 <= this.index) && (this.index < this.ability_resume.length)) {
                     this.index = this.index + 1;
                     this.dialogVisible = true;
                     this.apiGet("/api/ability/info/" + this.ability_resume[this.index].ability_id).then((res) => {
@@ -842,7 +853,16 @@
             }*/
 
         },
-        mixins: [http]
+        mixins: [http],
+        watch:{
+            collect_id(){
+                console.log('aaa')
+                if(this.collect_id){
+                    console.log('aaa')
+                    this.handleDetail(0,this.collect_id)
+                }
+            }
+        }
 
 
     }
