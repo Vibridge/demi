@@ -31,7 +31,7 @@
                         <p>365天超长有效期</p>
                     </div>
                 </div>
-                <div class="VIP_invoice">
+                <div class="VIP_invoice" v-if="false">
                     <p>申请发票</p>
                     <div class="change">
                         <div class="ask">

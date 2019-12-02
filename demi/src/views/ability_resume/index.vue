@@ -531,8 +531,6 @@
             }
         },
         mounted() {
-            console.log(this.collect_id)
-
             this.$nextTick(() => {
                 handleMap();
                 this.showCityInfo();

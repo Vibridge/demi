@@ -9,21 +9,22 @@ Vue.use(Router);
 const router = new Router({
     routes: [
         {
-            path:'/',
-            redirect:'/login',
-        },
-        {
             path: '/login',
             name: 'login',
             meta: {title: 'login'},
-            component: () => import('./views/login/index.vue'),
+            // component:resolve => require(['@/views/login/index.vue'], resolve),
+            component:()=> import('./views/login/index.vue')
         },
+
+        {path:'/', redirect:'login'},
 
         {
             path: '/B_reg',
             name: 'B_reg',
             meta: {title: 'B_reg'},
             component: () => import('./views/B_reg/index.vue')
+            // component:resolve => require(['@/views/B_reg/index.vue'], resolve),
+
         },
         {
             path: '/B_index',
@@ -32,53 +33,58 @@ const router = new Router({
             meta: {title: 'B_index'},
             component: () => import( './views/B_index/index.vue'),
             children:[
-                /*{
-                    path: '/B_index/B_person',
-                    name: 'B_person',
-                    redirect: '/B_index/B_person/index',
-                    meta: {title: 'B_person',parent:'B_index'},
-                },*/
                 {
                     path: '/B_index/B_person',
                     name: 'B_person',
                     meta: {title: 'index',parent:'B_person'},
                     component: () => import('./views/B_index/B_person.vue'),
+                    // component:resolve => require(['@/views/B_index/B_person.vue'], resolve),
+
                 },
                 {
                     path: '/B_index/B_person/work',
                     name: 'work',
                     meta: {title: 'work',parent:'B_person'},
                     component: () => import('./views/B_index/work/index.vue')
+                    // component:resolve => require(['@/views/B_index/work/index.vue'], resolve),
+
                 },
                 {
                     path: '/B_index/B_person/interview',
                     name: 'interview',
                     meta: {title: 'interview',parent:'B_person'},
                     component: () => import('./views/B_index/interview/index.vue')
+                    // component:resolve => require(['@/views/B_index/interview/index.vue'], resolve),
+
                 },
                 {
                     path: '/B_index/B_person/task',
                     name: 'task',
                     meta: {title: 'task',parent:'B_person'},
                     component: () => import('./views/B_index/task/index.vue')
+                    // component:resolve => require(['@/views/B_index/task/index.vue'], resolve),
+
                 },
                 {
                     path: '/B_index/B_person/order',
                     name: 'order',
                     meta: {title: 'order',parent:'B_person'},
                     component: () => import('./views/B_index/order/index.vue')
+                    // component:resolve => require(['@/views/B_index/order/index.vue'], resolve),
                 },
                 {
                     path: '/B_index/B_person/collect',
                     name: 'collect',
                     meta: {title: 'collect',parent:'B_person'},
                     component: () => import('./views/B_index/collect/index.vue')
+                    // component:resolve => require(['@/views/B_index/collect/index.vue'], resolve),
                 },
                 {
                     path: '/B_index/B_person/wallet',
                     name: 'wallet',
                     meta: {title: 'wallet',parent:'B_person'},
                     component: () => import('./views/B_index/wallet/index.vue')
+
                 },
                 {
                     path: '/B_index/B_person/real',
@@ -91,6 +97,7 @@ const router = new Router({
                     name: 'VIP',
                     meta: {title: 'VIP',parent:'B_person'},
                     component: () => import('./views/B_index/VIP/index.vue')
+
                 },
                 {
                     path: '/B_index/B_person/company_info',
@@ -158,9 +165,9 @@ router.beforeEach((to, from, next) => {
     }
 });
 
-router.afterEach((to,from) => {
+/*router.afterEach((to,from) => {
     document.getElementsByClassName('B_index_wrapper')[0].scrollTo(0,0);
-});
+});*/
 
 
 export default router;

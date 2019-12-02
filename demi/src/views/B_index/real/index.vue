@@ -5,6 +5,7 @@
       <span>实名认证</span>
     </div>
     <div class="real_main">
+      <p class="reason" v-if="denial_reason">*认证不通过，原因：{{denial_reason}}</p>
       <div class="real_wrap" v-show="!is_real">
         <p>身份证正面</p>
         <el-upload
@@ -52,10 +53,12 @@
         </div>
       </div>
       <div class="none_real" v-show="is_real && loading">
+        <img src="../../../assets/img/success.png" alt="">
         <p>您已完成实名认证</p>
         <p>可以去发布岗位啦!</p>
       </div>
       <div class="none_real" v-show="is_real && !loading">
+        <img src="../../../assets/img/in_autonym@2x.png" alt="">
         <p>你的材料已提交</p>
         <p>我们将会在一个工作日内完成审核</p>
       </div>
@@ -81,8 +84,9 @@
           image_behind:null,
           number:null,
           name:null,
-          real_status:1
+          real_status:1,
         },
+        denial_reason:'',
         loading:false
       };
     },
@@ -90,12 +94,14 @@
       this.$store.commit('loading', true);
       this.apiGet('/api/user/info').then((res) => {
         if(res.type === 2){
-          if(res.card){
-            this.is_real = true;
-          }else if(res.card && res.card.status !== 3){
+          if(res.card && res.card.status === 3){
             this.is_real = true;
             this.loading = true;
-          }else{
+            this.denial_reason = ''
+          }else if((!res.card) || (res.card && res.card.status === 2)){
+            if(res.card.denial_reason){
+              this.denial_reason = res.card.denial_reason;
+            }
             this.is_real = false;
           }
           console.log(res)
@@ -206,6 +212,14 @@
       border-radius:8px;
       border:1px solid rgba(235, 235, 235, 1);
       position: relative;
+      .reason{
+        font-size:14px;
+        color:rgba(255,78,77,1);
+        line-height:31px;
+        margin-top: 15px;
+        margin-left: 18px;
+        text-align: left;
+      }
       .real_wrap{
         width: 268px;
         margin: 0 auto;
@@ -257,6 +271,10 @@
         left: 50%;
         transform: translate3d(-50%,-50%,0);
         color: #999999;
+        img{
+          width: 314px;
+          margin-bottom: 94px;
+        }
         p{
           font-size: 14px;
           margin-bottom: 10px;

@@ -20,7 +20,7 @@ export default new Vuex.Store({
       }, 1000)
     },
     stopComputeCurrent(state) {
-      clearInterval(state.intervalID)
+      clearInterval(state.intervalID);
       state.intervalID = 0
     },
     showMessage(state, options) {

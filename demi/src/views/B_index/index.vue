@@ -83,8 +83,8 @@
                             >
                                 <el-menu-item class="nav_label" v-for="(item,index) in left_list" :key="index"
                                               :index="item.path">
-                                    <img src="../../assets/img/home@2x.png" alt="" v-if="active_class !== item.path">
-                                    <img src="../../assets/img/home_active@2x.png" alt=""
+                                    <img :src="item.img" alt="" v-if="active_class !== item.path">
+                                    <img :src="item.img_active" alt=""
                                          v-if="active_class === item.path">
                                     <span slot="title" v-html="item.title"
                                           :class="active_class === item.path ? 'active_left' : ''"></span>
@@ -160,39 +160,57 @@
                 left_list: [
                     {
                         path: '/B_index/B_person',
-                        title: '<span>首&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;页</span>'
+                        title: '<span>首&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;页</span>',
+                        img:'../../assets/img/home@2x.png',
+                        img_active:'../../assets/img/home_active@2x.png'
                     },
                     {
                         path: '/B_index/B_person/work',
-                        title: '职位管理'
+                        title: '职位管理',
+                        img:'../../assets/img/home@2x.png',
+                        img_active:'../../assets/img/home_active@2x.png'
                     },
                     {
                         path: '/B_index/B_person/interview',
-                        title: '面试管理'
+                        title: '面试管理',
+                        img:'../../assets/img/home@2x.png',
+                        img_active:'../../assets/img/home_active@2x.png'
                     },
                     {
                         path: '/B_index/B_person/task',
-                        title: '任务管理'
+                        title: '任务管理',
+                        img:'../../assets/img/home@2x.png',
+                        img_active:'../../assets/img/home_active@2x.png'
                     },
                     {
                         path: '/B_index/B_person/order',
-                        title: '订单列表'
+                        title: '订单列表',
+                        img:'../../assets/img/home@2x.png',
+                        img_active:'../../assets/img/home_active@2x.png'
                     },
                     {
                         path: '/B_index/B_person/collect',
-                        title: '人才收藏'
+                        title: '人才收藏',
+                        img:'../../assets/img/home@2x.png',
+                        img_active:'../../assets/img/home_active@2x.png'
                     },
                     {
                         path: '/B_index/B_person/wallet',
-                        title: '我的钱包'
+                        title: '我的钱包',
+                        img:'../../assets/img/home@2x.png',
+                        img_active:'../../assets/img/home_active@2x.png'
                     },
                     {
                         path: '/B_index/B_person/real',
-                        title: '实名认证'
+                        title: '实名认证',
+                        img:'../../assets/img/home@2x.png',
+                        img_active:'../../assets/img/home_active@2x.png'
                     },
                     {
                         path: '/B_index/B_person/VIP',
-                        title: '得米 VIP'
+                        title: '得米 VIP',
+                        img:'../../assets/img/home@2x.png',
+                        img_active:'../../assets/img/home_active@2x.png'
                     },
                 ],
                 active_class: '/B_index/B_person',
@@ -260,7 +278,12 @@
 
             //退出登录
             handleLoginOut() {
-                this.$store.dispatch('logout');
+                this.tim.logout().then(function(imResponse) {
+                    console.log(imResponse.data); // 登出成功
+                }).catch(function(imError) {
+                    console.warn('logout error:', imError);
+                });
+                // this.$store.dispatch('logout');
                 sessionStorage.clear();
                 this.$router.push({
                     name: "login"

@@ -54,9 +54,9 @@
           console.warn('logout error:', imError);
         });
         sessionStorage.clear();
-        this.$router.push({
+        /*this.$router.push({
           name: "login"
-        });
+        });*/
       }
     }
   }

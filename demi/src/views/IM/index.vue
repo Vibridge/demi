@@ -209,6 +209,8 @@
             .none_list{
                 text-align: center;
                 margin-top: 23px;
+                height: calc(100vh - 177px);
+
             }
             .list_wrap::-webkit-scrollbar {
                 width: 2px;
