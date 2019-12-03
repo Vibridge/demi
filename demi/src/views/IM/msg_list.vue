@@ -293,15 +293,18 @@
             },
             newList() {
                 let data = null;
-                if (this.currentConversation.conversationID === 'C2Cdominator') {
-                    data = {
-                        dominator: true
+                console.log(this.currentConversation.conversationID)
+                if(this.currentConversation.conversationID){
+                    if (this.currentConversation.conversationID === 'C2Cdominator') {
+                        data = {
+                            dominator: true
+                        }
+                    } else {
+                        data = this.newList[this.Corresponding(this.currentConversation.conversationID)];
                     }
-                } else {
-                    data = this.newList[this.Corresponding(this.currentConversation.conversationID)];
+                    this.$emit('on-msg-header', data);
                 }
-                console.log(data)
-                this.$emit('on-msg-header', data);
+
             }
         }
     }

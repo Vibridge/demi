@@ -122,7 +122,21 @@
                     :visible.sync="chatCustomer"
                     width="700px"
             >
-                <span>这是一段信息</span>
+                <div style="position: relative">
+                    <div class="message-list" ref="message-list" @scroll="this.onScroll">
+                        <div class="more" v-if="!isCompleted">
+                            <el-button
+                                    type="text"
+                                    @click="$store.dispatch('getMessageList', currentConversation.conversationID)"
+                            >查看更多
+                            </el-button>
+                        </div>
+                        <div class="no-more" v-else>没有更多了</div>
+                        <MessageItem class="detail" v-for="(item,index) in this.handleMessageList" :key="item.ID"
+                                     :message="item"></MessageItem>
+                    </div>
+                    <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置</div>
+                </div>
                 <span slot="footer" class="dialog-footer">
                     <MessageBox></MessageBox>
                 </span>
@@ -140,11 +154,12 @@
     import {mapGetters} from 'vuex'
     // import scroll from '../../components/scroll'
     import MessageBox from '../../views/IM/message_box'
+    import MessageItem from '../../views/IM/message_detail'
 
     /* eslint-disable */
     export default {
         name: 'index',
-        components: {bottom,MessageBox},
+        components: {bottom,MessageBox,MessageItem},
         data() {
             return {
                 user_info: {
@@ -217,10 +232,15 @@
                 read: 0,
                 active_app_class: '',
                 customer: null,
-                chatCustomer:false
+                chatCustomer:false,
+                isShowScrollButtomTips: false,
+                preScrollHeight: 0,
             }
         },
         mounted() {
+            //发送后消息到底部
+            this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
+
             this.apiGet('/api/user/info').then((res) => {
                 if (res.type !== 2) {
                     this.$message({
@@ -242,6 +262,11 @@
                 this.handleOpen(this.active_left)
             }
         },
+
+        updated() {
+            this.keepMessageListOnButtom();
+        },
+
         methods: {
             initialize() {
                 this.apiGet('/api/user/info').then((res) => {
@@ -292,8 +317,9 @@
 
             //客服聊天
             handleSendCustomer() {
-                let service_id = sessionStorage.getItem('service_id')
-                let user_id = sessionStorage.getItem('userID')
+                let service_id = sessionStorage.getItem('service_id');
+                let user_id = sessionStorage.getItem('userID');
+                console.log(service_id)
                 if(service_id){
                     let data = {
                         type: 3,
@@ -316,7 +342,49 @@
             },
             handleCustomer(){
                 this.chatCustomer = true
-            }
+            },
+
+            // 如果滚到底部就保持在底部，否则提示是否要滚到底部
+            keepMessageListOnButtom() {
+                let messageListNode = this.$refs['message-list']
+                if (!messageListNode) {
+                    return
+                }
+                // 距离底部20px内强制滚到底部,否则提示有新消息
+                if (this.preScrollHeight - messageListNode.clientHeight - messageListNode.scrollTop < 20) {
+                    this.$nextTick(() => {
+                        messageListNode.scrollTop = messageListNode.scrollHeight
+                    });
+                    this.isShowScrollButtomTips = false
+                } else {
+                    this.isShowScrollButtomTips = true
+                }
+                this.preScrollHeight = messageListNode.scrollHeight
+            },
+
+            onScroll({target: {scrollTop}}) {
+                console.log('aaa')
+                let messageListNode = this.$refs['message-list']
+                if (!messageListNode) {
+                    return
+                }
+                if (this.preScrollHeight - messageListNode.clientHeight - scrollTop < 20) {
+                    this.isShowScrollButtomTips = false
+                }
+            },
+
+            // 直接滚到底部
+            scrollMessageListToButtom() {
+                this.$nextTick(() => {
+                    let messageListNode = this.$refs['message-list']
+                    if (!messageListNode) {
+                        return
+                    }
+                    messageListNode.scrollTop = messageListNode.scrollHeight
+                    this.preScrollHeight = messageListNode.scrollHeight
+                    this.isShowScrollButtomTips = false
+                })
+            },
 
         },
         computed: {
@@ -389,7 +457,11 @@
                 },
                 currentConversation: state => state.conversation.currentConversation,
                 isLogin: state => state.user.isLogin,
-                isSDKReady: state => state.user.isSDKReady
+                isSDKReady: state => state.user.isSDKReady,
+                handleMessageList(state) {
+                    return state.conversation.currentMessageList
+                },
+                isCompleted: state => state.conversation.isCompleted,
             }),
         },
         watch: {},

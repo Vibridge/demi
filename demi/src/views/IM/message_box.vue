@@ -117,6 +117,7 @@
                 this.$bus.$emit('scroll-bottom');
                 this.tim.sendMessage(message);
                 this.messageContent = '';
+                this.$emit("on-show-time",message.time);
                 /*if(message){
                     this.refreshConversation()
                 }*/

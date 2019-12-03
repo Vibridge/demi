@@ -20,14 +20,14 @@
                         </el-button>
                     </div>
                     <div class="no-more" v-else>没有更多了</div>
-                    <MessageItem class="detail" v-for="(item,index) in this.handleMessageList" :key="item.ID"
-                                 :message="item"></MessageItem>
+                    <MessageItem class="detail" v-for="item in this.handleMessageList" :key="item.ID"
+                                 :message="item" :is-show-time="timeTamp"></MessageItem>
                 </div>
                 <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置</div>
             </div>
 
             <!--发送框@on-msg-refresh="handleRefresh"-->
-            <MessageBox v-show="messageDetail && !messageDetail.dominator" ></MessageBox>
+            <MessageBox v-show="messageDetail && !messageDetail.dominator"></MessageBox>
         </div>
 
     </div>
@@ -64,6 +64,7 @@
                 messageDetail: null,
                 isShowScrollButtomTips: false,
                 preScrollHeight: 0,
+                timeTamp:0
             }
         },
         mounted() {
@@ -72,7 +73,6 @@
             //发送后消息到底部
             this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
 
-            console.log(this.handleMessageList)
             /*//路由参数
             this.getRouterData();
             let data = null;
@@ -135,7 +135,6 @@
             },
 
             onScroll({target: {scrollTop}}) {
-                console.log('aaa')
                 let messageListNode = this.$refs['message-list']
                 if (!messageListNode) {
                     return
@@ -158,6 +157,11 @@
                 })
             },
 
+            handleUpdataTime(data){
+                this.timeTamp = data;
+                console.log(this.timeTamp)
+            }
+
             /*getRouterData() {
                 if (this.$route.params.id) {
                     sessionStorage.setItem('id', this.$route.params.id);
@@ -172,6 +176,9 @@
                     return state.conversation.conversationList
                 },*/
                 handleMessageList(state) {
+                    if(state.conversation.currentMessageList.length > 0){
+                        this.timeTamp = state.conversation.currentMessageList[0].time;
+                    }
                     return state.conversation.currentMessageList
                 },
                 isCompleted: state => state.conversation.isCompleted,

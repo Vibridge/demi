@@ -78,6 +78,9 @@
             message: {
                 type: Object,
                 required: true
+            },
+            isShowTime:{
+                type:Number,
             }
         },
         components: {
@@ -122,7 +125,14 @@
             },
             date() {
                 // console.log(this.message.time)
-                return getFullDate(new Date(this.message.time * 1000))
+                // this.$emit('on-show-time',this.message.time);
+
+                if((this.isShowTime === this.message.time) || (this.message.time - this.isShowTime >= 5*60)){
+                    return getFullDate(new Date(this.message.time * 1000))
+                }else{
+                    return ''
+                }
+                // return getFullDate(new Date(this.message.time * 1000))
             },
             messagePosition() {
                 if (
@@ -138,6 +148,14 @@
                     return 'position-left'
                 }
             },
+        },
+        watch:{
+            message(){
+                if(this.message){
+                    console.log('aaa')
+                    this.$emit('on-show-time',this.message.time)
+                }
+            }
         }
     }
 </script>
