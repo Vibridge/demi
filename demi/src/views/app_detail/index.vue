@@ -61,7 +61,7 @@
                     </div>
                 </div>
             </swiper-slide>
-            <div class="swiper-pagination"></div>
+            <!--<div class="swiper-pagination"></div>-->
         </swiper>
 
     </div>
@@ -77,8 +77,8 @@
                     direction : 'vertical',
                     mousewheelControl:true,
                     height : window.innerHeight,
-                    pagination: '.swiper-pagination',
-                    paginationClickable :true,
+                    // pagination: '.swiper-pagination',
+                    // paginationClickable :true,
                     speed:700,
                 }
             }

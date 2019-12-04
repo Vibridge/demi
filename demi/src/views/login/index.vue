@@ -24,13 +24,13 @@
             <div class="right">
                 <div class="right_wrap">
                     <div style="width: 20%; border:1px solid rgba(230, 230, 230, 1);border-radius:6px;margin-right: 3%;padding: 1%">
-                        <img src="../../assets/img/download.png" alt="" @click="dialogVisible = true">
+                        <img src="../../assets/img/download.png" alt="">
                     </div>
                     <div style="align-self: flex-end;width: 30%">
-                        <div class="download"><span><img src="../../assets/img/Iphone@2x.png" alt=""></span>
-                            <p>iphone</p><span><img src="../../assets/img/download@2x.png"></span></div>
-                        <div class="download"><span><img src="../../assets/img/Android@2x.png" alt=""></span>
-                            <p>Android</p><span><img src="../../assets/img/download@2x.png"></span></div>
+                        <a href="https://apps.apple.com/cn/app/%E5%BE%97%E7%B1%B3%E5%BF%AB%E6%89%BE/id1465445907" class="download"><span><img src="../../assets/img/Iphone@2x.png" alt=""></span>
+                            <p>iphone</p><span><img src="../../assets/img/download@2x.png"></span></a>
+                        <a href="http://produce.jmzhipin.com/demi_jiagu_signed_hanyuedemi.apk" class="download"><span><img src="../../assets/img/Android@2x.png" alt=""></span>
+                            <p>Android</p><span><img src="../../assets/img/download@2x.png"></span></a>
                     </div>
                 </div>
                 <div class="text">
@@ -49,12 +49,7 @@
             <p>聚天下之英才而用之</p>
             <p>Gather the talent of the world</p>
         </div>
-        <el-dialog
-                title="请扫码下载"
-                :visible.sync="dialogVisible"
-        >
-            <img src="../../assets/img/wx.png" alt="">
-        </el-dialog>
+
     </div>
 </template>
 
@@ -76,7 +71,7 @@
                 isCaptcha: false,
                 type: '',
                 start: false,
-                dialogVisible: false
+
             }
         },
         mounted() {
@@ -247,7 +242,12 @@
 </script>
 
 <style type="text/less" lang="less">
-
+    a{
+        text-decoration: none;
+    }
+    a:active{
+        color: #666666;
+    }
     .login_wrap {
         width: 100%;
         height: 100vh;
@@ -377,6 +377,7 @@
                     }
 
                     .download {
+                        color: #666666;
                         width: 100%;
                         background: rgba(255, 255, 255, 1);
                         border: 1px solid rgba(230, 230, 230, 1);

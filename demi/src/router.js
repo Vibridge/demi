@@ -165,9 +165,9 @@ router.beforeEach((to, from, next) => {
     }
 });
 
-/*router.afterEach((to,from) => {
-    document.getElementsByClassName('B_index_wrapper')[0].scrollTo(0,0);
-});*/
+router.afterEach((to,from) => {
+    document.getElementById('app').scrollTo(0,0);
+});
 
 
 export default router;

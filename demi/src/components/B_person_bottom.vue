@@ -8,9 +8,9 @@
             </div>
             <div>
                 <p style="color: #4d4d4d;font-size: 14px;margin-bottom: 21px">服务支持</p>
-                <p>得米VIP服务</p>
-                <p>人才搜索</p>
-                <p>得米APP</p>
+                <p @click="hanldeVip">得米VIP服务</p>
+                <p @click="handleWork">人才搜索</p>
+                <p @click="handleApp">得米APP</p>
             </div>
             <div>
                 <p style="color: #4d4d4d;font-size: 14px;margin-bottom: 21px">意见服务</p>
@@ -48,6 +48,23 @@
         data(){
             return{
                 dialogVisible:false
+            }
+        },
+        methods:{
+            handleApp(){
+                this.$router.push({
+                    name: "App",
+                });
+            },
+            handleWork(){
+                this.$router.push({
+                    name: "work_resume",
+                });
+            },
+            hanldeVip(){
+                this.$router.push({
+                    name: "VIP",
+                });
             }
         }
     }

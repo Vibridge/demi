@@ -93,6 +93,7 @@
     mounted(){
       this.$store.commit('loading', true);
       this.apiGet('/api/user/info').then((res) => {
+        console.log(res)
         if(res.type === 2){
           if(res.card && res.card.status === 3){
             this.is_real = true;
@@ -103,8 +104,11 @@
               this.denial_reason = res.card.denial_reason;
             }
             this.is_real = false;
+            this.loading = false;
+          }else if((!res.card) || (res.card && res.card.status === 1)){
+            this.is_real = true;
+            this.loading = false;
           }
-          console.log(res)
         }else{
           this.$message({
             showClose: true,
@@ -172,6 +176,10 @@
         }else{
           this.apiPost('/api/user/update',this.card).then((res)=>{
             console.log(res)
+            if(res){
+              this.is_real = true;
+              this.loading = false;
+            }
           })
         }
       }
@@ -276,7 +284,8 @@
           margin-bottom: 94px;
         }
         p{
-          font-size: 14px;
+          color: #4D4D4D;
+          font-size: 16px;
           margin-bottom: 10px;
         }
       }

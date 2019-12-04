@@ -440,7 +440,7 @@
             <div class="go_left" @click="goBack" v-if="this.index > 0">
                 <img src="../../assets/img/left@2x.png" alt="">
             </div>
-            <div class="go_right" @click="goNext" v-if="this.index < this.last_page">
+            <div class="go_right" @click="goNext" v-if="this.index < this.ability_resume.length">
                 <img src="../../assets/img/right@2x.png" alt="">
             </div>
         </el-dialog>
@@ -527,7 +527,7 @@
                 searchBarFixed: false,
 
                 //收藏跳转
-                collect_id:this.$route.params.id
+                // collect_id:this.$route.params.id
             }
         },
         mounted() {
@@ -852,7 +852,7 @@
 
         },
         mixins: [http],
-        watch:{
+        /*watch:{
             collect_id(){
                 console.log('aaa')
                 if(this.collect_id){
@@ -860,7 +860,7 @@
                     this.handleDetail(0,this.collect_id)
                 }
             }
-        }
+        }*/
 
 
     }

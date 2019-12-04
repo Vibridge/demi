@@ -141,6 +141,8 @@
                 }
                 if (this.preScrollHeight - messageListNode.clientHeight - scrollTop < 20) {
                     this.isShowScrollButtomTips = false
+                }else{
+                    this.isShowScrollButtomTips = true
                 }
             },
 
@@ -376,7 +378,7 @@
             .newMessageTips {
                 position: absolute;
                 cursor: pointer;
-                padding: 10px;
+                padding: 5px;
                 width: 100px;
                 margin: auto;
                 left: 0;

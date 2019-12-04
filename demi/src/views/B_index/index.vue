@@ -121,6 +121,7 @@
                     title="得米在线客服"
                     :visible.sync="chatCustomer"
                     width="700px"
+                    top="10vh"
             >
                 <div style="position: relative">
                     <div class="message-list" ref="message-list" @scroll="this.onScroll">
@@ -176,56 +177,56 @@
                     {
                         path: '/B_index/B_person',
                         title: '<span>首&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;页</span>',
-                        img:'../../assets/img/home@2x.png',
-                        img_active:'../../assets/img/home_active@2x.png'
+                        img:require('../../assets/img/home@2x.png'),
+                        img_active:require('../../assets/img/home_active@2x.png')
                     },
                     {
                         path: '/B_index/B_person/work',
                         title: '职位管理',
-                        img:'../../assets/img/home@2x.png',
-                        img_active:'../../assets/img/home_active@2x.png'
+                        img:require('../../assets/img/post@2x.png'),
+                        img_active:require('../../assets/img/post_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/interview',
                         title: '面试管理',
-                        img:'../../assets/img/home@2x.png',
-                        img_active:'../../assets/img/home_active@2x.png'
+                        img:require('../../assets/img/interview@2x.png'),
+                        img_active:require('../../assets/img/interview_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/task',
                         title: '任务管理',
-                        img:'../../assets/img/home@2x.png',
-                        img_active:'../../assets/img/home_active@2x.png'
+                        img:require('../../assets/img/assignment@2x.png'),
+                        img_active:require('../../assets/img/assignment_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/order',
                         title: '订单列表',
-                        img:'../../assets/img/home@2x.png',
-                        img_active:'../../assets/img/home_active@2x.png'
+                        img:require('../../assets/img/indent@2x.png'),
+                        img_active:require('../../assets/img/indent_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/collect',
                         title: '人才收藏',
-                        img:'../../assets/img/home@2x.png',
-                        img_active:'../../assets/img/home_active@2x.png'
+                        img:require('../../assets/img/enshrine@2x.png'),
+                        img_active:require('../../assets/img/enshrine_in@2x.png')
                     },
                     {
                         path: '/B_index/B_person/wallet',
                         title: '我的钱包',
-                        img:'../../assets/img/home@2x.png',
-                        img_active:'../../assets/img/home_active@2x.png'
+                        img:require('../../assets/img/burse@2x.png'),
+                        img_active:require('../../assets/img/burse_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/real',
                         title: '实名认证',
-                        img:'../../assets/img/home@2x.png',
-                        img_active:'../../assets/img/home_active@2x.png'
+                        img:require('../../assets/img/autonym@2x.png'),
+                        img_active:require('../../assets/img/autonym_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/VIP',
                         title: '得米 VIP',
-                        img:'../../assets/img/home@2x.png',
-                        img_active:'../../assets/img/home_active@2x.png'
+                        img:require('../../assets/img/vip@2x.png'),
+                        img_active:require('../../assets/img/vip_on@2x.png')
                     },
                 ],
                 active_class: '/B_index/B_person',
@@ -363,20 +364,22 @@
             },
 
             onScroll({target: {scrollTop}}) {
-                console.log('aaa')
-                let messageListNode = this.$refs['message-list']
+                let messageListNode = this.$refs['message-list'];
                 if (!messageListNode) {
                     return
                 }
+                console.log(messageListNode.clientHeight);
                 if (this.preScrollHeight - messageListNode.clientHeight - scrollTop < 20) {
                     this.isShowScrollButtomTips = false
+                }else{
+                    this.isShowScrollButtomTips = true
                 }
             },
 
             // 直接滚到底部
             scrollMessageListToButtom() {
                 this.$nextTick(() => {
-                    let messageListNode = this.$refs['message-list']
+                    let messageListNode = this.$refs['message-list'];
                     if (!messageListNode) {
                         return
                     }
@@ -764,9 +767,43 @@
 
         .chatCustomer{
             text-align: left;
+            .el-dialog__body{
+                .message-list{
+                    height: 45vh;
+                    overflow-y: auto;
+                    .no-more{
+                        text-align: center;
+                        color: #999999;
+                    }
+                }
+                .newMessageTips {
+                    position: absolute;
+                    cursor: pointer;
+                    padding: 5px;
+                    width: 100px;
+                    margin: auto;
+                    left: 0;
+                    right: 0;
+                    bottom: 5px;
+                    font-size: 12px;
+                    text-align: center;
+                    border-radius: 10px;
+                    border: 1px solid #e9eaec;
+                    background: #fff;
+                    color:  #2d8cf0;
+                    /*border: $border-light 1px solid;
+                    background-color: $white;
+                    color: $primary;*/
+                }
+                .message-list::-webkit-scrollbar {
+                    width: 2px;
+                }
+            }
+
             .el-dialog__footer{
                 margin: 0 auto;
                 padding: 0;
+
                 .send{
                     margin: 0;
                 }

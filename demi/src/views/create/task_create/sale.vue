@@ -35,7 +35,7 @@
                                          :props="{ label:'name', value:'label_id',multiple: true,}"
                                          :placeholder="edit" @focus="handleType"
                                          @change="handleLabel"></el-cascader>
-                            <p class="edit_show" v-if="isUpdata && industry_arr.length < 1 || isHistory"><span
+                            <p class="edit_show" v-if="(isUpdata && !type_list) || isHistory"><span
                                     style="color: #808080"
                                     v-for="item in form.industry"
                                     :key="item.label_id">{{item.name}}/</span>
@@ -245,7 +245,7 @@
                         showClose: true,
                         message: '最多只能选3个',
                         type: 'error',
-                        duration: 500
+                        duration: 1000
                     })
                 } else {
                     this.industry_arr = [];
@@ -322,6 +322,7 @@
                     form.append('files[]', this.files[i].raw)
                 }
                 this.apiPost('/file/uploads', form).then((res) => {
+                    console.log(res)
                     if (res) {
                         this.form.image_arr = res;
                     } else {
@@ -386,13 +387,22 @@
                         .drawImage(video, 0, 0, canvas.width, canvas.width);
                     let imgsrc = canvas.toDataURL("image/png");
                     this.cover = imgsrc;
+                    if (this.cover) {
+                        let fileImg = this.base64ToBlob(this.cover);
+                        var form = new FormData();
+                        form.append("files", fileImg, 'image.jpg');
+                        this.apiPost('/file/uploads', form).then((res) => {
+                            // cover_path = res[0];
+                            this.cover = res[0]
+                        });
+                    }
                 }.bind(this));
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 form.append('files', this.video);
                 form.append('type', 'video');
                 this.apiPost('/file/uploads', form).then((res) => {
-                    this.real_video_path = res
+                    this.real_video_path = res[0]
                 })
             },
             //base64解码，解码视频第一帧
@@ -413,7 +423,6 @@
                 });
             },
             handleSubmit() {
-                console.log(this.industry_arr)
                 if (!this.form.task_title) {
                     this.$message({
                         showClose: true,
@@ -478,19 +487,11 @@
                         duration: 500
                     })
                 } else {
-                    if (this.cover) {
-                        let fileImg = this.base64ToBlob(this.cover);
-                        var form = new FormData();
-                        var cover_path;
-                        form.append("files", fileImg, 'image.jpg');
-                        this.apiPost('/file/uploads', form).then((res) => {
-                            cover_path = res;
-                        });
-                    }
+                    // var cover_path = '';
                     if (this.form.city === '不限') {
                         this.form.city = [0, 0]
                     }
-                    var data;
+                    var data,
                     data = {
                         type_label_id: 1091,
                         quantity_max: this.form.quantity_max,
@@ -503,10 +504,10 @@
                         goods_title: this.form.goods_title,
                         goods_price: this.form.goods_price,
                         goods_desc: this.form.goods_desc,
-                        image_arr: this.image_arr,
+                        image_arr: this.form.image_arr,
                         status: 1,
                         video_path: this.real_video_path,
-                        video_cover: cover_path,
+                        video_cover: this.cover,
                     };
                     console.log(data)
                     if (this.isUpdata) {
@@ -552,12 +553,7 @@
                         this.cityName = res.city.city_name;
                     } else {
                         this.form.city = "不限"
-                    }
-                    if (res.images.length > 0) {
-                        this.show_pic = res.images;
-                    }
-                    if (res.video) {
-                        this.form.video_path = res.video.file_path
+                        this.cityName = "不限"
                     }
                     this.form.industry = res.industry;
                     forEach(res.industry, item => {
@@ -566,6 +562,18 @@
                     this.form.goods_desc = res.goods.description;
                     this.form.goods_title = res.goods.goods_title;
                     this.form.goods_price = res.goods.goods_price;
+                    if (res.images.length > 0) {
+                        this.show_pic = res.images;
+                        // console.log(res)
+                        forEach(res.images,item=>{
+                            this.form.image_arr.push(item.file_path.split('com')[1])
+                        })
+                    }
+                    if (res.video) {
+                        this.form.video_path = res.video.file_path;
+                        this.real_video_path = res.video.file_path.split('com')[1];
+                        this.cover = res.video.cover.split('com')[1]
+                    }
                 });
             }
         },
