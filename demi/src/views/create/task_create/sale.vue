@@ -34,7 +34,9 @@
                                          v-model="form.industry"
                                          :props="{ label:'name', value:'label_id',multiple: true,}"
                                          :placeholder="edit" @focus="handleType"
-                                         @change="handleLabel"></el-cascader>
+                                         @change="handleLabel"
+                                         v-loading="labelLoading"
+                            ></el-cascader>
                             <p class="edit_show" v-if="(isUpdata && !type_list) || isHistory"><span
                                     style="color: #808080"
                                     v-for="item in form.industry"
@@ -45,7 +47,8 @@
                         <el-form-item label="发布城市：">
                             <el-cascader :options="city_tree" v-model="form.city" :show-all-levels="false"
                                          :props="{ label:'city_name', value:'city_id'}" :placeholder="edit"
-                                         @focus="handleCity"></el-cascader>
+                                         @focus="handleCity"
+                                         v-loading="areaLoading"></el-cascader>
                             <p class="edit_show" v-if="isUpdata && !city_tree || isHistory">{{this.cityName}}</p>
 
                         </el-form-item>
@@ -166,6 +169,8 @@
         },
         data() {
             return {
+                labelLoading:true,
+                areaLoading:true,
                 form: {
                     task_title: '',
                     payment_money: null,
@@ -226,6 +231,7 @@
             handleType() {
                 this.apiGet('/labels?id=1025&mode=tree').then((res) => {
                     this.type_list = res;
+                    this.labelLoading = false
                 })
 
             },
@@ -281,6 +287,7 @@
                         });
                     });
                     this.city_tree = res;
+                    this.areaLoading = false
                     this.city_tree.unshift(first_city)
                     this.$store.commit('loading', false);
                 })

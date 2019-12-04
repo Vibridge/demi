@@ -180,11 +180,11 @@
                         </div>
                         <div class="my_name">
                             <p>我的姓名</p>
-                            <el-input v-model="user_info.name" placeholder="请输入工作地点"></el-input>
+                            <el-input v-model="user_info.nickname" placeholder="请输入昵称"></el-input>
                         </div>
                         <div class="my_work">
                             <p>我的职位</p>
-                            <el-input v-model="user_info.work" placeholder="请输入工作地点"></el-input>
+                            <el-input v-model="user_info.company_position" placeholder="请输入任职职位"></el-input>
                         </div>
                     </div>
                 </div>
@@ -324,8 +324,8 @@
                     latitude: '',
                 },
                 user_info: {
-                    name: '',
-                    work: '',
+                    nickname: '',
+                    company_position: '',
                     avatar: ''
                 },
 
@@ -345,42 +345,7 @@
         },
         mounted() {
             handleMap();
-            this.apiGet('/api/user/info').then((res) => {
-                if (res.type === 2) {
-                    this.user_info.name = res.nickname;
-                    this.user_info.work = res.company_position;
-                    this.user_info.avatar = res.avatar;
-                    this.apiGet('/api/company/info/' + res.company_id).then((res) => {
-                        console.log(res)
-                        this.company_info = res;
-                        if(res.files.length > 0){
-                            forEach(res.files, item => {
-                                if (item.type === 2) {
-                                    this.edPic.push(item)
-                                }
-                            });
-                        }
-                        this.form.address = res.address;
-                        this.form.abbreviation = res.abbreviation;
-                        this.form.industry_label = res.industry_label_id;
-                        this.form.employee = res.employee;
-                        this.form.financing = res.financing;
-                        this.form.description = res.description;
-                    });
-                    this.apiGet('/labels?id=992').then((res) => {
-                        this.options = res;
-                    });
-                } else {
-                    this.$message({
-                        showClose: true,
-                        message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
-                        duration: 1000
-                    });
-                    this.$router.push({
-                        name: "login"
-                    });
-                }
-            })
+            this.initialize()
         },
 
         // created() {
@@ -392,6 +357,45 @@
             // getRouterData() {
             //     this.id = this.$route.query.id
             // },
+            initialize(){
+                this.apiGet('/api/user/info').then((res) => {
+                    if (res.type === 2) {
+                        console.log(res);
+                        this.user_info.nickname = res.nickname;
+                        this.user_info.company_position = res.company_position;
+                        this.user_info.avatar = res.avatar;
+                        this.apiGet('/api/company/info/' + res.company_id).then((res) => {
+                            console.log(res);
+                            this.company_info = res;
+                            if(res.files.length > 0){
+                                forEach(res.files, item => {
+                                    if (item.type === 2) {
+                                        this.edPic.push(item)
+                                    }
+                                });
+                            }
+                            this.form.address = res.address;
+                            this.form.abbreviation = res.abbreviation;
+                            this.form.industry_label = res.industry_label_id;
+                            this.form.employee = res.employee;
+                            this.form.financing = res.financing;
+                            this.form.description = res.description;
+                        });
+                        this.apiGet('/labels?id=992').then((res) => {
+                            this.options = res;
+                        });
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                            duration: 1000
+                        });
+                        this.$router.push({
+                            name: "login"
+                        });
+                    }
+                })
+            },
 
             //上传logo
             handleChange(file) {
@@ -587,6 +591,7 @@
                 this.apiPost('/file/uploads', form).then((res) => {
                     if (res) {
                         this.ava_loading = false;
+                        this.user_info.avatar = baseUrl + res[0];
                         this.avatar = res[0];
                     }
                 })
@@ -594,15 +599,18 @@
 
             //提交
             handleUpdata() {
-                console.log(this.form)
+                this.user_info.avatar = this.user_info.avatar.split('com')[1]
                 var id = this.company_info.company_id;
                 this.apiPost('/api/company/update/' + id, this.form).then((res) => {
-                    if (res) {
-                        this.$router.push({
-                            name: "B_index",
-                        });
-                    }
-                })
+                    console.log(res)
+                    this.initialize()
+                });
+                this.apiPost('/api/user/update', this.user_info).then((res) => {
+                    console.log(res)
+                    this.initialize()
+                });
+
+
             }
         },
         watch: {

@@ -122,7 +122,9 @@
                 <div>
                     <el-cascader-panel v-model="label_name" ref="tree" :show-all-levels="false" @change="handleChange2"
                                        :options="work_tree"
-                                       :props="{ label:'name', value:'label_id'}"></el-cascader-panel>
+                                       :props="{ label:'name', value:'label_id'}"
+                                        v-loading="labelLoading"
+                    ></el-cascader-panel>
                 </div>
             </el-dialog>
         </div>
@@ -142,6 +144,7 @@
                                 @change="handleProvince"
                                 ref="city"
                                 :show-all-levels="false"
+                                v-loading="areaLoading"
                         ></el-cascader>
                     </div>
                     <div class="info">
@@ -181,6 +184,8 @@
         name: 'work',
         data() {
             return {
+                labelLoading:true,
+                areaLoading:true,
                 work_dialog: false,
                 area_dialog: false,
                 form: {
@@ -256,6 +261,7 @@
                         });
                     });
                     this.city_tree = res;
+                    this.areaLoading = false
                     this.$store.commit('loading', false);
                 })
 
@@ -265,6 +271,7 @@
                 this.$store.commit('loading', true);
                 this.apiGet('/labels?id=967&mode=tree').then((res) => {
                     this.work_tree = res;
+                    this.labelLoading = false;
                     this.$store.commit('loading', false);
                 });
                 this.apiGet('/labels?id=967').then((res) => {
