@@ -253,7 +253,7 @@
 
                     //只岗位显示三条数据
                     this.apiGet('/api/work/paginate?user_id=' + res.user_id + '&per_page=3&page=1').then((res) => {
-                        console.log(res)
+                        // console.log(res)
                         this.work_list3 = res.data;
                         this.$store.commit('loading', false);
                     });
@@ -294,7 +294,7 @@
 
                     //面试记录三条
                     this.apiGet('/api/work/interview/lists?per_page=3&page=1').then((res) => {
-                        console.log(res)
+                        // console.log(res)
                         forEach(res.data, item => {
                             if (item.vita.work_start_date) {
                                 item.vita.work_start_date = new Date().getFullYear() - parseInt(item.vita.work_start_date.split('-')[0]);
@@ -354,7 +354,7 @@
             //取消面试
             canleIv(id){
                 this.apiPost('/api/work/interview/update/' + id).then((res)=>{
-                    console.log(res)
+                    // console.log(res)
                 })
             },
             //聊天

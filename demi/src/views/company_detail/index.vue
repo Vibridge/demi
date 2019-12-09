@@ -360,12 +360,12 @@
             initialize(){
                 this.apiGet('/api/user/info').then((res) => {
                     if (res.type === 2) {
-                        console.log(res);
+                        // console.log(res);
                         this.user_info.nickname = res.nickname;
                         this.user_info.company_position = res.company_position;
                         this.user_info.avatar = res.avatar;
                         this.apiGet('/api/company/info/' + res.company_id).then((res) => {
-                            console.log(res);
+                            // console.log(res);
                             this.company_info = res;
                             if(res.files.length > 0){
                                 forEach(res.files, item => {
@@ -417,7 +417,7 @@
                 // 后端接受参数 ，可以接受多个参数
                 form.append("files", this.file);
                 this.apiPost('/file/uploads', form).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     if (res) {
                         this.logo_loading = false;
                         this.form.logo_path = res[0];
@@ -427,7 +427,7 @@
 
             //上传视频
             beforeVidUpload(file) {
-                console.log(file)
+                // console.log(file)
                 this.vid_loading = true;
                 if (!/\.(?:mp4|rmvb|avi|ts|ogg|flv|wmv|mkv)$/.test(file.name.toLowerCase())) {
                     this.$message.error('上传头像图片只限 mp4,rmvb,avi,ts,ogg,flv,wmv,mkv 格式!');
@@ -443,7 +443,7 @@
                 form.append("files", this.file);
                 form.append('type', 'video')
                 this.apiPost('/file/uploads', form).then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     if (res) {
                         this.vid_loading = false;
                         this.form.video_path = res[0]
@@ -454,7 +454,7 @@
 
             //上传图片
             handlePictureCardPreview(file) {
-                console.log(file)
+                // console.log(file)
                 this.dialogImageUrl = file.url;
                 if (file.file_path) {
                     this.dialogImageUrl = file.file_path;
@@ -499,7 +499,7 @@
                 this.apiPost('/file/uploads', form).then((res) => {
                     if (res) {
                         this.form.image_path = res;
-                        console.log(this.form.image_path)
+                        // console.log(this.form.image_path)
                     } else {
                         this.form.image_path = []
                     }
@@ -509,9 +509,9 @@
             //删除图片
             handleRemove(file, fileList) {
                 if (typeof file == "number") {
-                    console.log(fileList[file].file_id)
+                    // console.log(fileList[file].file_id)
                     this.apiDelete('/api/company/file/delete/' + fileList[file].file_id).then((res) => {
-                        console.log(res)
+                        // console.log(res)
                     });
                 }
                 this.files = fileList;
@@ -602,11 +602,11 @@
                 this.user_info.avatar = this.user_info.avatar.split('com')[1]
                 var id = this.company_info.company_id;
                 this.apiPost('/api/company/update/' + id, this.form).then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.initialize()
                 });
                 this.apiPost('/api/user/update', this.user_info).then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.initialize()
                 });
 

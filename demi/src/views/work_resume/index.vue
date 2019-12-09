@@ -361,12 +361,12 @@
                                 <div>
                                     <img src="../../assets/img/phone@2x.png" alt="">
                                     <span v-if="isVip">{{detail_info && detail_info.user.phone}}</span>
-                                    <span v-if="!isVip && detail_info">{{this.vipShow(detail_info.user.phone,3,4)}}</span>
+                                    <span v-if="!isVip && detail_info">{{vipShow(detail_info.user.phone,3,4)}}</span>
                                 </div>
                                 <div>
                                     <img src="../../assets/img/postbox@2x.png" alt="" style="width: 16px">
                                     <span v-if="isVip">{{detail_info && detail_info.user.email}}</span>
-                                    <span v-if="!isVip && detail_info">{{this.vipShow(detail_info.user.email,3,3)}}</span>
+                                    <span v-if="!isVip && detail_info">{{vipShow(detail_info.user.email,3,3)}}</span>
                                 </div>
                             </div>
                             <div class="vip" v-if="!isVip" @click="handleOpenVip">开通<img src="../../assets/img/vip_detail@2x.png">查看完整联系方式</div>
@@ -668,7 +668,7 @@
                 this.handleCity();
                 this.initialize(this.page);
                 this.apiGet('/api/user/info').then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     if (res.type === 2) {
                         this.company_id = res.company_real.company_id;
                         var start = time.Time(res.vip_start, 'Y-M-D');
@@ -716,7 +716,7 @@
             handleCity() {
                 this.apiGet('/city/lists').then((res) => {
                     this.$store.commit('loading', true);
-                    console.log(res)
+                    // console.log(res)
                     forEach(res, item => {
                         if (item.municipalities !== 0) {
                             let muniCity = [{
@@ -828,7 +828,6 @@
             },
 
             beforeToggle(){
-                console.log('aaa')
                 if(this.show_matching){
                     return false
                 }else{
@@ -844,7 +843,7 @@
                         forEach(res.data, item => {
                             this.work_resume.push(item)
                         });
-                        console.log(res.data)
+                        // console.log(res.data)
                     });
                 } else {
                     this.apiGet('/api/vita/paginate?page=' + page).then((res) => {
@@ -852,7 +851,7 @@
                         forEach(res.data, item => {
                             this.work_resume.push(item)
                         });
-                        console.log(res.data)
+                        // console.log(res.data)
 
                     })
                 }
@@ -865,14 +864,14 @@
                 };
                 if (!this.detail_info.favorites) {
                     this.apiPost('/api/user/favorite', data).then((res) => {
-                        console.log(res);
+                        // console.log(res);
                         if(res){
                             this.handleDetail(this.index)
                         }
                     })
                 }else{
                     this.apiDelete('/api/user/favorite/delete/' + item.favorites.favorite_id).then((res)=>{
-                        console.log(res);
+                        // console.log(res);
                         if(res){
                             this.handleDetail(this.index)
                         }
@@ -949,7 +948,7 @@
 
             //与我匹配筛选
             HandleSelectMatching(id) {
-                console.log(id);
+                // console.log(id);
                 // var work_label_id = id;
                 /*if (this.select_job_label_id !== 0 && this.select_job_label_id !== null) {
                     work_label_id = this.select_job_label_id;
@@ -1009,7 +1008,7 @@
                 this.index = index;
                 this.dialogVisible = true;
                 this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.detail_info = res;
                 })
             },
@@ -1049,7 +1048,7 @@
                     this.index = this.index - 1;
                     this.dialogVisible = true;
                     this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res) => {
-                        console.log(res)
+                        // console.log(res)
                         this.detail_info = res;
                     })
                 } else {
@@ -1066,7 +1065,7 @@
                     this.index = this.index + 1;
                     this.dialogVisible = true;
                     this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res) => {
-                        console.log(res)
+                        // console.log(res)
                         this.detail_info = res;
                     })
                 } else {
@@ -1235,7 +1234,7 @@
                     align-self: center;
                     font-size: 14px;
                     color: rgba(77, 77, 77, 1);
-                    margin-right: 20px;
+                    margin-right: 18px;
                     cursor: pointer;
                     display: inline-block;
                 }

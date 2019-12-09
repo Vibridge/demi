@@ -9,7 +9,7 @@
 
         <div class="list_wrap" v-if="handleList.length > 0">
             <div v-for="(item,index) in handleList" :key="index" @click="showMessage(item,item.conversationID)" class="list"
-                 :class="{ 'active_list': item.conversationID === currentConversation.conversationID }">
+                 :class="{ 'active_list': item.conversationID === currentConversation.conversationID }" v-if="newList[Corresponding(item.conversationID)]">
                 <div class="list_info">
                     <div class="avatar">
                         <el-badge :value="item.unreadCount"
@@ -88,22 +88,18 @@
             this.apiGet('/labels?id=967').then((res) => {
                 this.work_label = res
             });
-
             //路由参数
             this.getRouterData();
             let data = null;
             data = sessionStorage.getItem('id');
             if (data) {
-                console.log(JSON.parse(data).type)
                 let userID = JSON.parse(data).recipient + 'a';
-                console.log(userID);
                 let a = {
                     type: JSON.parse(data).type,
                     recipient: JSON.parse(data).recipient,
                     foreign_key: JSON.parse(data).foreign_key
                 };
                 this.apiPost('/converse/create', a).then((res) => {
-                    console.log(res);
                     sessionStorage.removeItem('id');
                     if (res) {
                         /*if (this.currentConversation.conversationID) {
@@ -120,6 +116,8 @@
                 })
 
             }
+            console.log(this.handleList)
+            console.log(this.handleList)
         },
 
         destroyed() {
@@ -130,9 +128,13 @@
             ...mapState({
                 handleList(state) {
                     let id = "C2C" +  sessionStorage.getItem('service_id') + 'b';
+                    let id1 = "C2C" +  sessionStorage.getItem('userID') + 'a';
                     for(let i in state.conversation.conversationList){
                         if(state.conversation.conversationList[i].conversationID === id){
                             this.deleteConversation(id)
+                        }
+                        if(state.conversation.conversationList[i].conversationID === id1){
+                            this.deleteConversation(id1)
                         }
                     }
                     return state.conversation.conversationList
@@ -164,8 +166,11 @@
                 this.apiGet('/converse/lists?mode=object').then((res) => {
                     this.newList = res;
                     // this.isRefresh = false;
+                    console.log(this.newList)
+
                     this.$emit('on-msg-refresh', false);
                 });
+                // console.log(this.newList)
             },
             handleKeydown(event) {
                 if (event.keyCode !== 38 && event.keyCode !== 40 || this.isCheckouting) {
@@ -286,12 +291,11 @@
         mixins: [http],
         watch: {
             isRefresh() {
-                console.log(this.isRefresh);
                 if (this.isRefresh) {
                     this.handleMsgList();
                 }
             },
-            newList() {
+           /* newList() {
                 let data = null;
                 console.log(this.currentConversation.conversationID)
                 if(this.currentConversation.conversationID){
@@ -305,7 +309,7 @@
                     this.$emit('on-msg-header', data);
                 }
 
-            }
+            }*/
         }
     }
 </script>

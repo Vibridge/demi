@@ -22,7 +22,7 @@
                 <p>得米APP</p>
             </div>
         </div>
-        <div class="all_bottom_copy">
+        <div class="all_bottom_copy" v-if="false">
             <span style="margin-right: 61px">@2019得米快找网  京ICP备14023790号-2</span>
             <span style="margin-right: 58px">京公网安备 11010802024043号</span>
             <span>电子营业执照</span>

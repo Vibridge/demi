@@ -320,7 +320,7 @@
             handleSendCustomer() {
                 let service_id = sessionStorage.getItem('service_id');
                 let user_id = sessionStorage.getItem('userID');
-                console.log(service_id)
+                // console.log(service_id)
                 if(service_id){
                     let data = {
                         type: 3,
@@ -335,7 +335,7 @@
                                 .dispatch('checkoutConversation', `C2C${res.recipient_mark}`)
                                 .then(() => {
                                     this.customer = this.handleList;
-                                    console.log(this.handleList)
+                                    // console.log(this.handleList)
                                 })
                         }
                     })
@@ -368,7 +368,7 @@
                 if (!messageListNode) {
                     return
                 }
-                console.log(messageListNode.clientHeight);
+                // console.log(messageListNode.clientHeight);
                 if (this.preScrollHeight - messageListNode.clientHeight - scrollTop < 20) {
                     this.isShowScrollButtomTips = false
                 }else{
@@ -393,7 +393,6 @@
         computed: {
             //是否是左边导航
             IsShow() {
-                console.log(this.$route.path)
                 if (this.$route.meta['parent'] !== 'B_person') {
                     this.active_top = '/B_index/B_person';
                     if (this.$route.meta['parent'] !== 'create') {
@@ -436,8 +435,10 @@
 
             //显示客服
             showCustomer() {
-                if ((this.$route.name !== 'App') && (this.$route.name !== 'IM')) {
-                    console.log(this.$route.name);
+                let Customer = sessionStorage.getItem('service_id');
+                let userID = sessionStorage.getItem('userID')
+                if ((this.$route.name !== 'App') && (this.$route.name !== 'IM') && (Customer != userID)) {
+                    // console.log(this.$route.name);
                     if(this.isLogin && this.isSDKReady){
                         this.handleSendCustomer();
                     }

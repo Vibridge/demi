@@ -82,6 +82,32 @@ export function isToday(date) {
     return date.toDateString() === new Date().toDateString()
 }
 
+export function getDay(date) {
+    var day = date.getDay();
+    var week = '';
+    if (day === 1){
+        week = "星期一" + ' ';
+    }
+    else if (day === 2){
+        week = "星期二" + ' ';
+    }
+    else if (day === 3){
+        week = "星期三" + ' ';
+    }
+    else if (day === 4){
+        week = "星期四" + ' ';
+    }
+    else if (day === 5){
+        week = "星期五" + ' ';
+    }
+    else if (day === 6){
+        week = "星期六" + ' ';
+    }
+    else if (day === 7){
+        week = "星期日" + ' ';
+    }
+    return week
+}
 
 /**
  * 个位数，加0前缀

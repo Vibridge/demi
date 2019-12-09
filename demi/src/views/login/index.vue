@@ -181,7 +181,7 @@
                                 name: 'B_index',
                             });
                             this.apiGet('/api/service').then((res) => {
-                                if (res && (res.service_id !== user_id)) {
+                                if (res && (res.service_id != user_id)) {
                                     sessionStorage.setItem('service_id', res.service_id);
                                     let data = {
                                         type:3,

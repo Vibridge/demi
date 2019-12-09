@@ -5,9 +5,18 @@
                 class="c2c-layout"
                 :class="messagePosition"
         >
-            <div class="col-1">
+            <div class="col-1" v-if="messageDetail">
                 <!-- 头像 -->
-                <img v-if="message.from !== 'dominator'" class="avatar" :src="avatar"/>
+                <img class="avatar" v-if="isMine" :src="avatar" alt="">
+                <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id)"
+                     :src="messageDetail.sender.avatar" alt="">
+                <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id) && !messageDetail.sender.avatar"
+                     src="../../assets/img/toxiang@2x.png" alt="">
+                <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id)"
+                     :src="messageDetail.recipient.avatar" alt="">
+                <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id) && !messageDetail.recipient.avatar"
+                     src="../../assets/img/toxiang@2x.png" alt="">
+                <!--<img v-if="message.from !== 'dominator'" class="avatar" :src="avatar"/>-->
                 <img v-if="message.from === 'dominator'" class="avatar" src="../../assets/img/notification.png"/>
             </div>
             <div class="col-2">
@@ -69,7 +78,6 @@
     /*import GroupTipElement from './message-elements/group-tip-element.vue'
     import GroupSystemNoticeElement from './message-elements/group-system-notice-element.vue'*/
     import CustomElement from './message-elements/custom-element.vue'
-    import { getFullDate } from '../../libs/time'
 
 
     export default {
@@ -79,9 +87,8 @@
                 type: Object,
                 required: true
             },
-            isShowTime:{
-                type:Number,
-            }
+
+            messageDetail: {type: Object, default: null}
         },
         components: {
             /*MessageHeader,
@@ -95,11 +102,17 @@
             CustomElement,
             VideoElement
         },
+        data(){
+            return{
+                user_id:null,
+            }
+        },
         created() {
             // console.log(new Date().getTime())
         },
         mounted(){
-
+            // console.log(this.isShowTime)
+            this.user_id = sessionStorage.getItem('userID');
         },
         computed: {
             ...mapState({
@@ -124,15 +137,13 @@
                 }
             },
             date() {
-                // console.log(this.message.time)
-                // this.$emit('on-show-time',this.message.time);
 
-                if((this.isShowTime === this.message.time) || (this.message.time - this.isShowTime >= 5*60)){
-                    return getFullDate(new Date(this.message.time * 1000))
+                if(this.message.time){
+                    return this.message.time
                 }else{
                     return ''
                 }
-                // return getFullDate(new Date(this.message.time * 1000))
+
             },
             messagePosition() {
                 if (
@@ -149,14 +160,6 @@
                 }
             },
         },
-        watch:{
-            message(){
-                if(this.message){
-                    console.log('aaa')
-                    this.$emit('on-show-time',this.message.time)
-                }
-            }
-        }
     }
 </script>
 

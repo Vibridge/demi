@@ -452,7 +452,7 @@
                 } else {
                     this.apiGet('/api/task/order/paginate', this.searchParams).then((res) => {
                         this.task_list = res.data;
-                        console.log(res.data)
+                        // console.log(res.data)
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
@@ -502,7 +502,7 @@
             //拒绝任务
             handleRefuse(index, id, user_id) {
                 this.apiPost('/api/task/order/status/' + id, {status: 2}).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     if (res) {
                         if (index === 0) {
                             this.initialize()

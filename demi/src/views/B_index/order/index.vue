@@ -354,7 +354,7 @@
                             this.searchParams.page = parseInt(res.current_page);
                             this.searchParams.total = parseInt(res.total);
                             this.searchParams.per_page = parseInt(res.per_page);
-                            console.log(this.order_list)
+                            // console.log(this.order_list)
                         });
                     } else {
                         this.apiGet('/api/order/paginate' + '?status=' + status1, this.searchParams).then((res) => {
@@ -362,7 +362,7 @@
                             this.searchParams.page = parseInt(res.current_page);
                             this.searchParams.total = parseInt(res.total);
                             this.searchParams.per_page = parseInt(res.per_page);
-                            console.log(this.order_list)
+                            // console.log(this.order_list)
                         });
                     }
                 } else {
@@ -371,7 +371,7 @@
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
-                        console.log(this.order_list)
+                        // console.log(this.order_list)
                     })
                 }
             },

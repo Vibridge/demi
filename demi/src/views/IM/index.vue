@@ -20,14 +20,14 @@
                         </el-button>
                     </div>
                     <div class="no-more" v-else>没有更多了</div>
-                    <MessageItem class="detail" v-for="item in this.handleMessageList" :key="item.ID"
-                                 :message="item" :is-show-time="timeTamp"></MessageItem>
+                    <MessageItem :message-detail="messageDetail" class="detail" v-for="item in this.handleMessageList" :key="item.ID"
+                                 :message="item" @on-show-time="handleUpdataTime"></MessageItem>
                 </div>
                 <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置</div>
             </div>
 
             <!--发送框@on-msg-refresh="handleRefresh"-->
-            <MessageBox v-show="messageDetail && !messageDetail.dominator"></MessageBox>
+            <MessageBox v-show="messageDetail && !messageDetail.dominator" @on-show-time="handleUpdataTime"></MessageBox>
         </div>
 
     </div>
@@ -46,7 +46,11 @@
     import MessageItem from './message_detail'
     import MessageHeader from './message_header'
     import MessageBox from './message_box'
-    import { getDate } from '../../libs/time'
+    import { getTime } from '../../libs/time'
+    import { isToday } from '../../libs/time'
+    import { getFullDate } from '../../libs/time'
+    import { getDay } from '../../libs/time'
+
 
 
     export default {
@@ -60,7 +64,6 @@
         data() {
             return {
                 time,
-                getDate,
                 messageDetail: null,
                 isShowScrollButtomTips: false,
                 preScrollHeight: 0,
@@ -69,7 +72,6 @@
         },
         mounted() {
             // this.initListener();
-
             //发送后消息到底部
             this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
 
@@ -103,13 +105,10 @@
         },
 
         methods: {
-            showTime(index){
-                console.log(this.handleMessageList[index])
-            },
-
             handleMsgHeader(data){
-                console.log(data)
                 this.messageDetail = data;
+                // console.log(this.messageDetail)
+
             },
 
             handleRefresh(item){
@@ -180,12 +179,39 @@
                 handleMessageList(state) {
                     if(state.conversation.currentMessageList.length > 0){
                         this.timeTamp = state.conversation.currentMessageList[0].time;
+                        // console.log(this.timeTamp);
+                        forEach(state.conversation.currentMessageList,item => {
+                            if(typeof item.time == 'string'){
+                                // console.log(item.time)
+                            }else{
+                                if((Math.abs(item.time - this.timeTamp) >= 5*60) || (item.time - this.timeTamp === 0)) {
+                                    this.timeTamp = item.time;
+                                    // console.log(this.timeTamp);
+                                    if(isToday(new Date(item.time * 1000))){
+                                        item.time = getTime((new Date(item.time * 1000)));
+                                    }else{
+                                        if((new Date(item.time * 1000).getFullYear() == new Date().getFullYear()) && (new Date(item.time * 1000).getMonth() == new Date().getMonth())){
+                                            if(parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) == 1){
+                                                item.time = '昨天' + ' ' + getTime((new Date(item.time * 1000)));
+                                            }else if((parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) > 1) && (parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) <= 7)){
+                                                item.time = getDay(new Date(item.time * 1000)) + getTime((new Date(item.time * 1000)))
+                                            }
+                                        }else{
+                                            item.time = getFullDate(new Date(item.time * 1000))
+                                        }
+                                    }
+                                }else{
+                                    this.timeTamp = item.time;
+                                    // console.log(this.timeTamp);
+                                    item.time = '';
+                                }
+                            }
+                        })
                     }
                     return state.conversation.currentMessageList
                 },
                 isCompleted: state => state.conversation.isCompleted,
             }),
-
         },
         mixins: [http],
     }
@@ -322,13 +348,13 @@
                         align-self: center;
                         display: flex;
 
-                        p:nth-child(1) {
+                       /* p:nth-child(1) {
                             font-size: 14px;
                             line-height: 14px;
                             color: rgba(255, 78, 77, 1);
-                        }
+                        }*/
 
-                        p:nth-child(2) {
+                        p:nth-child(1) {
                             margin-left: 67px;
 
                             img {

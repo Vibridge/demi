@@ -623,7 +623,7 @@
             },
             handleEdit(id) {
                 this.apiGet('/api/task/info/' + id).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     this.form.task_title = res.task_title;
                     this.form.payment_money = res.payment_money;
                     this.form.quantity_max = res.quantity_max;
@@ -661,7 +661,6 @@
         },
         watch: {
             isUpdata() {
-                console.log('aaa')
                 if (this.isUpdata && this.isShow) {
                     this.edit = '';
                     var task_edit = JSON.parse(sessionStorage.getItem('task'));
@@ -669,7 +668,6 @@
                 }
             },
             isHistory() {
-                console.log('aaa')
                 if (this.isHistory && this.isHistoryId && this.isShow) {
                     this.edit = '';
                     this.handleEdit(this.isHistoryId)

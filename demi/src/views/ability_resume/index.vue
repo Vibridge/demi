@@ -590,7 +590,7 @@
                             }
                         }
                     } else {
-                        console.log(result.info);
+                        // console.log(result.info);
                     }
                 }.bind(this));
             },
@@ -632,7 +632,7 @@
                         forEach(res.data, item => {
                             this.ability_resume.push(item)
                         });
-                        console.log(res)
+                        // console.log(res)
                     });
                 } else {
                     this.apiGet('/api/ability/paginate?page=' + page).then((res) => {
@@ -698,7 +698,7 @@
                 this.show_matching = true;
                 this.apiGet('/api/task/paginate?user_id=' + this.user_id).then((res) => {
                     this.matching_task = res.data;
-                    console.log(this.matching_task)
+                    // console.log(this.matching_task)
                 });
             },
 
@@ -734,7 +734,7 @@
                 if(id){
                     this.apiGet("/api/ability/info/" + id).then((res) => {
                         this.detail_info = res;
-                        console.log(res);
+                        // console.log(res);
                         if (res) {
                             this.handCard(this.card_page)
                         }
@@ -742,7 +742,7 @@
                 }else{
                     this.apiGet("/api/ability/info/" + this.ability_resume[this.index].ability_id).then((res) => {
                         this.detail_info = res;
-                        console.log(res);
+                        // console.log(res);
                         if (res) {
                             this.handCard(this.card_page)
                         }

@@ -233,7 +233,7 @@
                 this.apiGet('/api/user/info').then((res) => {
                     this.apiGet('/api/task/paginate?user_id=' + res.user_id, this.task_work_Params).then((res) => {
                         this.task_list = res.data;
-                        console.log(this.task_list)
+                        // console.log(this.task_list)
                         this.task_work_Params.page = parseInt(res.current_page);
                         this.task_work_Params.total = parseInt(res.total);
                         this.task_work_Params.per_page = parseInt(res.per_page);
@@ -286,7 +286,7 @@
 
             //跳编辑全职或兼职路由
             handleEdit(index, data, type) {
-                console.log(type);
+                // console.log(type);
                 if (index === 1) {
                     var work_data = {
                         info: data,

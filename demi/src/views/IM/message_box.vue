@@ -9,9 +9,16 @@
                 </div>
                 <img src="../../assets/img/expression@2x.png" alt="" class="iconfont icon-smile" slot="reference" title="发表情">
             </el-popover>
-            <div class="sendImg">
-                常用语
-            </div>
+            <el-popover placement="top" width="400" trigger="click">
+                <div class="emojis">
+                    <div v-for="item in emojiName" class="emoji" :key="item" @click="chooseEmoji(item)">
+                        <img :src="emojiUrl + emojiMap[item]" style="width:30px;height:30px"/>
+                    </div>
+                </div>
+                <div slot="reference" class="sendImg" @click="handleSendCommon">
+                    常用语
+                </div>
+            </el-popover>
             <div class="sendImg" @click="handleSendImageClick">
                 图片文件
             </div>
@@ -53,6 +60,7 @@
 </template>
 
 <script>
+    import http from '../../libs/http'
     import { mapGetters, mapState } from 'vuex'
     import { emojiMap, emojiName, emojiUrl } from '../../libs/emojiMap'
     export default {
@@ -66,6 +74,12 @@
                 file: '',
                 // timeout:null,
             }
+        },
+        mounted(){
+            var user_id = sessionStorage.getItem('userID');
+            this.apiGet('/api/greet/paginate?user_id=' + user_id).then((res)=>{
+                console.log(res)
+            })
         },
         computed: {
             ...mapGetters(['toAccount', 'currentConversationType']),
@@ -173,7 +187,8 @@
                         type: 'error'
                     })
                 })
-                this.$refs.imagePicker.value = null
+                this.$refs.imagePicker.value = null;
+                this.$emit("on-show-time",message.time);
             },
             sendFile() {
                 const message = this.tim.createFileMessage({
@@ -193,9 +208,15 @@
                         type: 'error'
                     })
                 })
-                this.$refs.filePicker.value = null
+                this.$refs.filePicker.value = null;
+                this.$emit("on-show-time",message.time);
+            },
+
+            handleSendCommon(){
+
             }
-        }
+        },
+        mixins:[http]
 
     }
 </script>

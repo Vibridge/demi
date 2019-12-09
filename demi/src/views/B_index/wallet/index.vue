@@ -126,7 +126,7 @@
                         }
                         this.apiGet('/api/user/wallet/details', this.searchParams).then((res) => {
                             this.wallet_list = res.data;
-                            console.log(res);
+                            // console.log(res);
                             this.searchParams.page = parseInt(res.current_page);
                             this.searchParams.total = parseInt(res.total);
                             this.searchParams.per_page = parseInt(res.per_page);

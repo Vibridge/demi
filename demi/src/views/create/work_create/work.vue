@@ -302,7 +302,7 @@
                 let length = val.length;
                 this.label_id = val[length - 1];
                 this.work_dialog = false;
-                console.log(this.form.work)
+                // console.log(this.form.work)
                 if (this.label_name) {
                     this.search = '';
                 }
@@ -505,7 +505,7 @@
             },
             work_edit() {
                 if (this.work_edit) {
-                    console.log(this.work_edit)
+                    // console.log(this.work_edit)
                     this.form.name = this.work_edit.work_name;
                     this.label_id = this.work_edit.work_label_id;
                     if (this.work_edit) {

@@ -327,7 +327,7 @@
         mounted() {
             handleMap();
             this.apiGet('/api/user/info').then((res) => {
-                console.log(res);
+                // console.log(res);
                 this.company_id = res.company_real.company_id;
                 this.enterprise_step = res.enterprise_step;
                 this.user_avatar =res.avatar.split('com')[1];
@@ -335,7 +335,7 @@
                 this.work = res.company_real.company_position;
                 this.company_name = res.company_real.company_name;
                 this.apiGet('/api/company/info/' + this.company_id).then((result)=>{
-                    console.log(result);
+                    // console.log(result);
                     if(result){
                         this.company_address = result.address;
                         this.company_industry = result.industry_label.name;
@@ -412,7 +412,7 @@
                 // 后端接受参数 ，可以接受多个参数
                 form.append("files", this.file);
                 this.apiPost('/file/uploads', form).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     if (res) {
                         this.ava_loading = false;
                         this.user_avatar = res[0];
@@ -428,7 +428,7 @@
                 // 后端接受参数 ，可以接受多个参数
                 form.append("files", this.file);
                 this.apiPost('/file/uploads', form).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     if (res) {
                         this.logo_loading = false;
                         this.logo = res[0];
@@ -442,10 +442,10 @@
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 form.append("files", this.file);
-                console.log(this.file)
+                // console.log(this.file)
 
                 this.apiPost('/api/tools/ocr/bizlicense', form).then((res) => {
-                    console.log(res);
+                    // console.log(res);
                     if (res) {
                         this.pass_loading = false;
                         this.license_path = res[0].file_path;
@@ -492,7 +492,7 @@
                     };
                     if(this.enterprise_step === 2){
                         this.apiPost('/api/company/update/' + this.company_id,data).then((res)=>{
-                            console.log(res);
+                            // console.log(res);
                             if (res) {
                                 this.first = false;
                                 this.second = true;
@@ -502,7 +502,7 @@
                     }else{
                         data.enterprise_step = 2;
                         this.apiPost('/api/company/create', data).then((res) => {
-                            console.log(res);
+                            // console.log(res);
                             if (res) {
                                 this.first = false;
                                 this.second = true;

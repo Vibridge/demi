@@ -27,7 +27,6 @@
             handleScroll() {
                 let dom = document.getElementById('app');
                 this.scrollTop = dom.scrollTop;
-                console.log(this.scrollTop)
                 if (this.scrollTop > 300) {
                     this.toTopShow = true;
                 }else {

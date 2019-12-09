@@ -93,7 +93,7 @@
     mounted(){
       this.$store.commit('loading', true);
       this.apiGet('/api/user/info').then((res) => {
-        console.log(res)
+        // console.log(res)
         if(res.type === 2){
           if(res.card && res.card.status === 3){
             this.is_real = true;
@@ -148,10 +148,10 @@
         form.append("files", this.file);
         form.append('card_side','FRONT')
         this.apiPost('/api/tools/ocr/idcard', form).then((res) => {
-          console.log(res)
+          // console.log(res)
           if(res){
             this.card.image_front = res[0].file_path
-            console.log(this.card.image_front)
+            // console.log(this.card.image_front)
 
           }
         })
@@ -166,7 +166,7 @@
 
           if(res){
             this.card.image_behind = res[0].file_path;
-            console.log(this.card.image_behind)
+            // console.log(this.card.image_behind)
           }
         })
       },
@@ -175,7 +175,7 @@
           this.$message("请上传完整的信息！")
         }else{
           this.apiPost('/api/user/update',this.card).then((res)=>{
-            console.log(res)
+            // console.log(res)
             if(res){
               this.is_real = true;
               this.loading = false;

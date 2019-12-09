@@ -73,7 +73,7 @@
             this.$nextTick(() =>{
                 this.getRouterData();
                 this.task_edit = JSON.parse(sessionStorage.getItem('task'));
-                console.log(this.task_edit)
+                // console.log(this.task_edit)
                 if(this.task_edit){
                     if(this.task_edit.isHistory){
                         this.history = true;
@@ -84,7 +84,6 @@
                             this.sale = true;
                         }
                     }else{
-                        console.log('aaa')
                         this.is_Edit = true;
                         if(this.task_edit.payment_method !== 1){
                             this.common = true;
@@ -97,7 +96,7 @@
             this.apiGet('/api/user/info').then((res) => {
                 if (res.type === 2) {
                     this.apiGet('/api/task/paginate?user_id=' + res.user_id,).then((res) => {
-                        console.log(res)
+                        // console.log(res)
                         this.history_list = res.data
                     })
                 }else{

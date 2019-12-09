@@ -329,7 +329,7 @@
                     form.append('files[]', this.files[i].raw)
                 }
                 this.apiPost('/file/uploads', form).then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     if (res) {
                         this.form.image_arr = res;
                     } else {
@@ -516,9 +516,8 @@
                         video_path: this.real_video_path,
                         video_cover: this.cover,
                     };
-                    console.log(data)
+                    // console.log(data)
                     if (this.isUpdata) {
-                        console.log('aaa')
                         var task_edit = JSON.parse(sessionStorage.getItem('task'));
                         this.apiPost('/api/task/update/' + task_edit.id).then((res) => {
                             if (res) {
@@ -550,7 +549,7 @@
             },
             handleEdit(id) {
                 this.apiGet('/api/task/info/' + id).then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     this.form.task_title = res.task_title;
                     this.form.payment_money = res.payment_money;
                     this.form.quantity_max = res.quantity_max;

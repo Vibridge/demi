@@ -209,7 +209,7 @@
                 if(status){
                     this.apiGet('/api/work/interview/lists' + '?status[0]=0&status[1]=1&status[2]=2&status[3]=' + status, this.searchParams ).then((res) => {
                         this.interview_list = res.data;
-                        console.log(res)
+                        // console.log(res)
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
@@ -224,7 +224,7 @@
                             }
                         });
                         this.interview_list = res.data;
-                        console.log(res);
+                        // console.log(res);
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
@@ -236,7 +236,7 @@
             handleSizeChange(status,per_page){
                 this.searchParams.per_page = per_page;
                 this.initialize(status);
-                console.log(this.searchParams.per_page);
+                // console.log(this.searchParams.per_page);
             },
             handleCurrentPageChange(status,page){
                 this.searchParams.page = page;
