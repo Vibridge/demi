@@ -407,29 +407,6 @@
                 })
             },
 
-            //删除会话
-            deleteConversation(id) {
-                this.tim
-                    .deleteConversation(id)
-                    .then(() => {
-                        /*this.$store.commit('showMessage', {
-                            message: `会话${this.conversation.conversationID}删除成功!`,
-                            type: 'success'
-                        })*/
-                        // this.popoverVisible = false
-                        this.$store.commit('resetCurrentConversation')
-                        console.log('success')
-                    })
-                    .catch(error => {
-                        /*this.$store.commit('showMessage', {
-                            message: `会话${this.conversation.conversationID}删除失败!, error=${error.message}`,
-                            type: 'error'
-                        })*/
-                        console.log(error)
-
-                        // this.popoverVisible = false
-                    })
-            },
 
         },
         computed: {
@@ -470,10 +447,6 @@
             }*/
 
             ...mapGetters(['totalUnreadCount']),
-            /*// 是否显示 Loading 状态
-            showLoading() {
-                return !this.isSDKReady
-            }*/
 
             //显示客服
             showCustomer() {
@@ -493,16 +466,11 @@
             ...mapState({
                 handleList(state) {
                     let id = "C2C" + sessionStorage.getItem('service_id') + 'b';
-                    this.service_id = id
-                    let user_id = "C2C" + sessionStorage.getItem('userID') + 'a';
+                    this.service_id = id;
                     let message = null;
                     for (let i in state.conversation.conversationList) {
                         if (state.conversation.conversationList[i].conversationID == id) {
                             message = state.conversation.conversationList[i];
-                            this.deleteConversation(id)
-                        }
-                        if(state.conversation.conversationList[i].conversationID == user_id){
-                            this.deleteConversation(user_id)
                         }
                     }
                     return message

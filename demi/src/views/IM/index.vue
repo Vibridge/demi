@@ -142,7 +142,7 @@
 
             handleUpdataTime(data) {
                 this.chatTime = data;
-            }
+            },
 
         },
         computed: {
@@ -151,6 +151,7 @@
                 currentConversation: state => state.conversation.currentConversation,
 
                 handleMessageList(state) {
+                    console.log(state.conversation.currentMessageList)
                     /*forEach(state.conversation.currentMessageList, item => {
                         if (typeof item.time != 'string') {
                             if (this.chatTime) {
