@@ -122,24 +122,25 @@
                     :visible.sync="chatCustomer"
                     width="700px"
                     top="10vh"
+                    :destroy-on-close="true"
             >
                 <div style="position: relative">
                     <div class="message-list" ref="message-list" @scroll="this.onScroll">
                         <div class="more" v-if="!isCompleted">
                             <el-button
                                     type="text"
-                                    @click="$store.dispatch('getMessageList', currentConversation.conversationID)"
+                                    @click="$store.dispatch('getMessageList', service_id)"
                             >查看更多
                             </el-button>
                         </div>
                         <div class="no-more" v-else>没有更多了</div>
-                        <MessageItem class="detail" v-for="(item,index) in this.handleMessageList" :key="item.ID"
+                        <MessageItem :message-detail="messageDetail" class="detail" v-for="(item,index) in this.handleMessageList" :key="item.ID"
                                      :message="item"></MessageItem>
                     </div>
                     <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置</div>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                    <MessageBox></MessageBox>
+                    <MessageBox @on-show-time="handleUpdataTime"></MessageBox>
                 </span>
             </el-dialog>
         </div>
@@ -156,6 +157,11 @@
     // import scroll from '../../components/scroll'
     import MessageBox from '../../views/IM/message_box'
     import MessageItem from '../../views/IM/message_detail'
+    import {forEach} from "../../libs/tools";
+    import { getTime } from '../../libs/time'
+    import { isToday } from '../../libs/time'
+    import { getFullDate } from '../../libs/time'
+    import { getDay } from '../../libs/time'
 
     /* eslint-disable */
     export default {
@@ -236,6 +242,10 @@
                 chatCustomer:false,
                 isShowScrollButtomTips: false,
                 preScrollHeight: 0,
+                timeTamp:0,
+                chatTime:0,
+                messageDetail:null,
+                service_id:null
             }
         },
         mounted() {
@@ -331,6 +341,10 @@
                     };
                     this.apiPost('/converse/create', data).then((res) => {
                         if (res) {
+                            let message = {
+                                service:true
+                            };
+                            this.messageDetail = message;
                             this.$store
                                 .dispatch('checkoutConversation', `C2C${res.recipient_mark}`)
                                 .then(() => {
@@ -343,6 +357,10 @@
             },
             handleCustomer(){
                 this.chatCustomer = true
+            },
+
+            handleUpdataTime(data){
+                this.chatTime = data;
             },
 
             // 如果滚到底部就保持在底部，否则提示是否要滚到底部
@@ -387,6 +405,30 @@
                     this.preScrollHeight = messageListNode.scrollHeight
                     this.isShowScrollButtomTips = false
                 })
+            },
+
+            //删除会话
+            deleteConversation(id) {
+                this.tim
+                    .deleteConversation(id)
+                    .then(() => {
+                        /*this.$store.commit('showMessage', {
+                            message: `会话${this.conversation.conversationID}删除成功!`,
+                            type: 'success'
+                        })*/
+                        // this.popoverVisible = false
+                        this.$store.commit('resetCurrentConversation')
+                        console.log('success')
+                    })
+                    .catch(error => {
+                        /*this.$store.commit('showMessage', {
+                            message: `会话${this.conversation.conversationID}删除失败!, error=${error.message}`,
+                            type: 'error'
+                        })*/
+                        console.log(error)
+
+                        // this.popoverVisible = false
+                    })
             },
 
         },
@@ -451,15 +493,20 @@
             ...mapState({
                 handleList(state) {
                     let id = "C2C" + sessionStorage.getItem('service_id') + 'b';
-                    let message = null
+                    this.service_id = id
+                    let user_id = "C2C" + sessionStorage.getItem('userID') + 'a';
+                    let message = null;
                     for (let i in state.conversation.conversationList) {
                         if (state.conversation.conversationList[i].conversationID == id) {
-                            message = state.conversation.conversationList[i]
+                            message = state.conversation.conversationList[i];
+                            this.deleteConversation(id)
+                        }
+                        if(state.conversation.conversationList[i].conversationID == user_id){
+                            this.deleteConversation(user_id)
                         }
                     }
                     return message
                 },
-                currentConversation: state => state.conversation.currentConversation,
                 isLogin: state => state.user.isLogin,
                 isSDKReady: state => state.user.isSDKReady,
                 handleMessageList(state) {
@@ -772,9 +819,13 @@
                 .message-list{
                     height: 45vh;
                     overflow-y: auto;
+                    .more{
+                        text-align: center;
+                    }
                     .no-more{
                         text-align: center;
                         color: #999999;
+                        margin-bottom: 20px;
                     }
                 }
                 .newMessageTips {

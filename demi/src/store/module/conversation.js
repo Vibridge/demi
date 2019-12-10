@@ -124,7 +124,7 @@ const conversationModules = {
         window.$message('已经没有更多的历史消息了哦')
         return
       }
-      const { nextReqMessageID, currentMessageList } = context.state
+      const { nextReqMessageID, currentMessageList } = context.state;
       tim.getMessageList({ conversationID, nextReqMessageID, count: 15 }).then(imReponse => {
         // 更新messageID，续拉时要用到
         context.state.nextReqMessageID = imReponse.data.nextReqMessageID

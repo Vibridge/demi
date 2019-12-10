@@ -5,13 +5,15 @@
         <MessageList @on-msg-header="handleMsgHeader" @on-msg-refresh="handleRefresh"></MessageList>
 
         <!--消息内容-->
-        <div class="main" @click="onScroll" :style="(messageDetail && messageDetail.dominator) ? 'justify-content:flex-start' : ''" >
+        <div class="main" @click="onScroll"
+             :style="(messageDetail && messageDetail.dominator) ? 'justify-content:flex-start' : ''">
 
             <!--头部信息-->
             <MessageHeader :message-detail="messageDetail"></MessageHeader>
 
             <div style="position: relative">
-                <div class="message-list" :style="messageDetail.dominator ? 'max-height:calc(100vh - 145px)' : ''" ref="message-list" @scroll="this.onScroll" v-if="messageDetail">
+                <div class="message-list" :style="messageDetail.dominator ? 'max-height:calc(100vh - 145px)' : ''"
+                     ref="message-list" @scroll="this.onScroll" v-if="messageDetail">
                     <div class="more" v-if="!isCompleted">
                         <el-button
                                 type="text"
@@ -20,14 +22,17 @@
                         </el-button>
                     </div>
                     <div class="no-more" v-else>没有更多了</div>
-                    <MessageItem :message-detail="messageDetail" class="detail" v-for="item in this.handleMessageList" :key="item.ID"
-                                 :message="item" @on-show-time="handleUpdataTime"></MessageItem>
+                    <MessageItem :message-detail="messageDetail" class="detail" v-for="item in this.handleMessageList"
+                                 :key="item.ID"
+                                 :message="item"></MessageItem>
                 </div>
-                <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置</div>
+                <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置
+                </div>
             </div>
 
             <!--发送框@on-msg-refresh="handleRefresh"-->
-            <MessageBox v-show="messageDetail && !messageDetail.dominator" @on-show-time="handleUpdataTime"></MessageBox>
+            <MessageBox v-show="messageDetail && !messageDetail.dominator"
+                        @on-show-time="handleUpdataTime"></MessageBox>
         </div>
 
     </div>
@@ -46,11 +51,10 @@
     import MessageItem from './message_detail'
     import MessageHeader from './message_header'
     import MessageBox from './message_box'
-    import { getTime } from '../../libs/time'
-    import { isToday } from '../../libs/time'
-    import { getFullDate } from '../../libs/time'
-    import { getDay } from '../../libs/time'
-
+    import {getTime} from '../../libs/time'
+    import {isToday} from '../../libs/time'
+    import {getFullDate} from '../../libs/time'
+    import {getDay} from '../../libs/time'
 
 
     export default {
@@ -67,7 +71,8 @@
                 messageDetail: null,
                 isShowScrollButtomTips: false,
                 preScrollHeight: 0,
-                timeTamp:0
+                timeTamp: 0,
+                chatTime: 0,
             }
         },
         mounted() {
@@ -75,29 +80,6 @@
             //发送后消息到底部
             this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
 
-            /*//路由参数
-            this.getRouterData();
-            let data = null;
-            data = sessionStorage.getItem('id');
-            if (data) {
-                let userID = JSON.parse(data).recipient + 'a';
-                this.$store
-                    .dispatch('checkoutConversation', `C2C${userID}`)
-                    .then(() => {
-                        let a ={
-                            type:JSON.parse(data).type,
-                            recipient:JSON.parse(data).recipient,
-                            foreign_key:JSON.parse(data).foreign_key
-                        };
-                        this.apiPost('/converse/create',a).then((res)=>{
-                            if(res){
-                                this.messageDetail = res;
-                                sessionStorage.removeItem('id');
-                                this.isRefresh = true
-                            }
-                        })
-                    })
-            }*/
         },
 
         updated() {
@@ -105,13 +87,13 @@
         },
 
         methods: {
-            handleMsgHeader(data){
+            handleMsgHeader(data) {
                 this.messageDetail = data;
                 // console.log(this.messageDetail)
 
             },
 
-            handleRefresh(item){
+            handleRefresh(item) {
                 this.isRefresh = item
             },
 
@@ -140,7 +122,7 @@
                 }
                 if (this.preScrollHeight - messageListNode.clientHeight - scrollTop < 20) {
                     this.isShowScrollButtomTips = false
-                }else{
+                } else {
                     this.isShowScrollButtomTips = true
                 }
             },
@@ -158,56 +140,52 @@
                 })
             },
 
-            handleUpdataTime(data){
-                this.timeTamp = data;
-                console.log(this.timeTamp)
+            handleUpdataTime(data) {
+                this.chatTime = data;
             }
 
-            /*getRouterData() {
-                if (this.$route.params.id) {
-                    sessionStorage.setItem('id', this.$route.params.id);
-                }
-            },*/
         },
         computed: {
             ...mapState({
                 // conversationList: state => state.conversation.conversationList,
                 currentConversation: state => state.conversation.currentConversation,
-               /* handleList(state) {
-                    return state.conversation.conversationList
-                },*/
+
                 handleMessageList(state) {
-                    if(state.conversation.currentMessageList.length > 0){
-                        this.timeTamp = state.conversation.currentMessageList[0].time;
-                        // console.log(this.timeTamp);
-                        forEach(state.conversation.currentMessageList,item => {
-                            if(typeof item.time == 'string'){
-                                // console.log(item.time)
-                            }else{
-                                if((Math.abs(item.time - this.timeTamp) >= 5*60) || (item.time - this.timeTamp === 0)) {
+                    /*forEach(state.conversation.currentMessageList, item => {
+                        if (typeof item.time != 'string') {
+                            if (this.chatTime) {
+                                if (item.time - this.timeTamp > 300) {
                                     this.timeTamp = item.time;
-                                    // console.log(this.timeTamp);
-                                    if(isToday(new Date(item.time * 1000))){
+                                    item.time = getTime((new Date(item.time * 1000)));
+                                } else {
+                                    item.time = '';
+                                }
+                                this.chatTime = 0;
+                            } else {
+                                if (item.time - this.timeTamp > 300) {
+                                    this.timeTamp = item.time;
+                                    if (isToday(new Date(item.time * 1000))) {
                                         item.time = getTime((new Date(item.time * 1000)));
-                                    }else{
-                                        if((new Date(item.time * 1000).getFullYear() == new Date().getFullYear()) && (new Date(item.time * 1000).getMonth() == new Date().getMonth())){
-                                            if(parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) == 1){
+                                    } else {
+                                        if ((new Date(item.time * 1000).getFullYear() == new Date().getFullYear()) && (new Date(item.time * 1000).getMonth() == new Date().getMonth())) {
+                                            if (parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) == 1) {
                                                 item.time = '昨天' + ' ' + getTime((new Date(item.time * 1000)));
-                                            }else if((parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) > 1) && (parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) <= 7)){
+                                            } else if ((parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) > 1) && (parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) <= 7)) {
                                                 item.time = getDay(new Date(item.time * 1000)) + getTime((new Date(item.time * 1000)))
                                             }
-                                        }else{
+                                        } else {
                                             item.time = getFullDate(new Date(item.time * 1000))
                                         }
                                     }
-                                }else{
+                                } else {
                                     this.timeTamp = item.time;
                                     // console.log(this.timeTamp);
                                     item.time = '';
                                 }
                             }
-                        })
-                    }
+                        }
+
+                    });*/
                     return state.conversation.currentMessageList
                 },
                 isCompleted: state => state.conversation.isCompleted,
@@ -241,16 +219,18 @@
                 /*border-right: 1px solid rgba(230, 230, 230, 1);*/
             }
 
-            .none_list{
+            .none_list {
                 text-align: center;
                 margin-top: 23px;
                 height: calc(100vh - 177px);
 
             }
+
             .list_wrap::-webkit-scrollbar {
                 width: 2px;
             }
-            .list_wrap{
+
+            .list_wrap {
                 height: calc(100vh - 177px);
                 overflow-y: auto;
                 overflow-x: hidden;
@@ -348,11 +328,11 @@
                         align-self: center;
                         display: flex;
 
-                       /* p:nth-child(1) {
-                            font-size: 14px;
-                            line-height: 14px;
-                            color: rgba(255, 78, 77, 1);
-                        }*/
+                        /* p:nth-child(1) {
+                             font-size: 14px;
+                             line-height: 14px;
+                             color: rgba(255, 78, 77, 1);
+                         }*/
 
                         p:nth-child(1) {
                             margin-left: 67px;
@@ -401,6 +381,7 @@
 
 
             }
+
             .newMessageTips {
                 position: absolute;
                 cursor: pointer;
@@ -415,11 +396,12 @@
                 border-radius: 10px;
                 border: 1px solid #e9eaec;
                 background: #fff;
-                color:  #2d8cf0;
+                color: #2d8cf0;
                 /*border: $border-light 1px solid;
                 background-color: $white;
                 color: $primary;*/
             }
+
             .message-list::-webkit-scrollbar {
                 width: 2px;
             }

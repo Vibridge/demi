@@ -8,6 +8,7 @@
             <div class="col-1" v-if="messageDetail">
                 <!-- 头像 -->
                 <img class="avatar" v-if="isMine" :src="avatar" alt="">
+                <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail && messageDetail.service" src="http://produce.jmzhipin.com/h5/images/customer.png" alt="">
                 <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id)"
                      :src="messageDetail.sender.avatar" alt="">
                 <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id) && !messageDetail.sender.avatar"
@@ -78,6 +79,7 @@
     /*import GroupTipElement from './message-elements/group-tip-element.vue'
     import GroupSystemNoticeElement from './message-elements/group-system-notice-element.vue'*/
     import CustomElement from './message-elements/custom-element.vue'
+    import { getFullDate } from '../../libs/time'
 
 
     export default {
@@ -137,12 +139,12 @@
                 }
             },
             date() {
-
-                if(this.message.time){
+                return getFullDate(new Date(this.message.time * 1000))
+                /*if(this.message.time){
                     return this.message.time
                 }else{
                     return ''
-                }
+                }*/
 
             },
             messagePosition() {

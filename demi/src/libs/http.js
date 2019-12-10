@@ -6,7 +6,7 @@ import {encode, decode, uuid} from "./tools";
 
 const service = axios.create({
     baseURL: config.baseUrl,
-    timeout: 30000,
+    timeout: 300000,
 });
 service.interceptors.request.use(function (config) {
     const token = getToken();

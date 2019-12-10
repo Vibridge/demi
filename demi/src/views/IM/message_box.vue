@@ -9,16 +9,19 @@
                 </div>
                 <img src="../../assets/img/expression@2x.png" alt="" class="iconfont icon-smile" slot="reference" title="发表情">
             </el-popover>
+
             <el-popover placement="top" width="400" trigger="click">
-                <div class="emojis">
-                    <div v-for="item in emojiName" class="emoji" :key="item" @click="chooseEmoji(item)">
-                        <img :src="emojiUrl + emojiMap[item]" style="width:30px;height:30px"/>
+                <p style="height: 33px;font-size: 16px;padding: 10px 0 0 20px">常用语</p>
+                <div class="common_list">
+                    <div v-for="item in common" class="common" :key="item.greet_id" @click="chooseCommon(item)">
+                        <p>{{item.text}}</p>
                     </div>
                 </div>
-                <div slot="reference" class="sendImg" @click="handleSendCommon">
+                <div slot="reference" class="sendImg">
                     常用语
                 </div>
             </el-popover>
+
             <div class="sendImg" @click="handleSendImageClick">
                 图片文件
             </div>
@@ -72,13 +75,15 @@
                 emojiName: emojiName,
                 emojiUrl: emojiUrl,
                 file: '',
+                common:[]
                 // timeout:null,
             }
         },
         mounted(){
             var user_id = sessionStorage.getItem('userID');
             this.apiGet('/api/greet/paginate?user_id=' + user_id).then((res)=>{
-                console.log(res)
+                console.log(res);
+                this.common = res.data;
             })
         },
         computed: {
@@ -212,8 +217,16 @@
                 this.$emit("on-show-time",message.time);
             },
 
-            handleSendCommon(){
-
+            chooseCommon(item){
+                const message = this.tim.createTextMessage({
+                    to: this.toAccount,
+                    conversationType: this.currentConversationType,
+                    payload: { text: item.text }
+                });
+                this.$store.commit('pushCurrentMessageList', message);
+                this.$bus.$emit('scroll-bottom');
+                this.tim.sendMessage(message);
+                this.$emit("on-show-time",message.time);
             }
         },
         mixins:[http]
@@ -298,7 +311,11 @@
             }
         }
     }
+    .el-popover{
+        padding: 0;
+    }
     .emojis {
+        padding: 12px;
         height: 160px;
         box-sizing: border-box;
         display: flex;
@@ -306,10 +323,31 @@
         flex-wrap: wrap;
         overflow-y: scroll;
     }
+    .emojis::-webkit-scrollbar{
+        width: 10px;
+    }
 
     .emoji {
         height: 40px;
         width: 40px;
         box-sizing: border-box;
+    }
+
+    .common_list{
+        height: 160px;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
+    .common{
+        height: 40px;
+        line-height: 40px;
+        box-sizing: border-box;
+        border: 1px solid #d6d6d6;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+        padding:0 20px;
+        p{
+
+        }
     }
 </style>
