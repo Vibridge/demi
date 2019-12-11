@@ -323,24 +323,30 @@
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 let length = this.files.length;
+                let o = 0;
                 for (let i = 0; i < length; i++) {
-                    form.append('files[]', this.files[i].raw)
+                    form.append('files[]', this.files[i].raw);
+                    o = i
                 }
-                this.apiPost('/file/uploads', form).then((res) => {
-                    console.log(res)
-                    if (res) {
-                        this.form.image_arr = res;
-                    } else {
-                        this.form.image_arr = []
-                    }
-                    if (this.show_pic) {
-                        let length = this.show_pic.length;
-                        for (let i = 0; i < length; i++) {
-                            var path = this.show_pic[i].file_path.split('com')[1];
-                            this.form.image_arr.unshift(path);
+                if(o == (length-1)){
+                    console.log(o == (length-1))
+                    this.apiPost('/file/uploads', form).then((res) => {
+                        console.log(res)
+                        if (res) {
+                            this.form.image_arr = res;
+                        } else {
+                            this.form.image_arr = []
                         }
-                    }
-                });
+                        if (this.show_pic) {
+                            let length = this.show_pic.length;
+                            for (let i = 0; i < length; i++) {
+                                var path = this.show_pic[i].file_path.split('com')[1];
+                                this.form.image_arr.unshift(path);
+                            }
+                        }
+                    });
+                }
+
             },
             handleRemove(file, fileList) {
                 if (typeof file == "number") {
