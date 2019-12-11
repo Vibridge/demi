@@ -35,7 +35,6 @@
                                          :props="{ label:'name', value:'label_id',multiple: true,}"
                                          :placeholder="edit" @focus="handleType"
                                          @change="handleLabel"
-                                         v-loading="labelLoading"
                             ></el-cascader>
                             <p class="edit_show" v-if="(isUpdata && !type_list) || isHistory"><span
                                     style="color: #808080"
@@ -48,7 +47,7 @@
                             <el-cascader :options="city_tree" v-model="form.city" :show-all-levels="false"
                                          :props="{ label:'city_name', value:'city_id'}" :placeholder="edit"
                                          @focus="handleCity"
-                                         v-loading="areaLoading"></el-cascader>
+                                         ></el-cascader>
                             <p class="edit_show" v-if="isUpdata && !city_tree || isHistory">{{this.cityName}}</p>
 
                         </el-form-item>
@@ -87,10 +86,9 @@
                             <div class="picture">
                                 <p>必填</p>
                                 <div class="show_pic" v-if="(isUpdata && show_pic) || (isHistory && show_pic)">
-                                    <div @mouseover="show_icon = true" @mouseleave="show_icon = false"
-                                         v-for="(item,index) in show_pic" :key="item.file_id">
+                                    <div v-for="(item,index) in show_pic" :key="item.file_id" @mouseover="show_icon = item.file_id" @mouseleave="show_icon = null">
                                         <img :src="item.file_path" alt="">
-                                        <span v-if="show_icon">
+                                        <span v-if="show_icon === item.file_id">
                                             <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
                                             <i class="icon el-icon-delete" @click="handleRemove(index,show_pic)"></i>
                                         </span>
@@ -169,8 +167,8 @@
         },
         data() {
             return {
-                labelLoading:true,
-                areaLoading:true,
+                /*labelLoading:true,
+                areaLoading:true,*/
                 form: {
                     task_title: '',
                     payment_money: null,
@@ -195,7 +193,7 @@
                 cityName: null,
                 dialogImageUrl: '',
                 dialogVisible: false,
-                show_icon: false,
+                show_icon: null,
                 show_pic: [],
                 loading: false
             }
@@ -231,7 +229,7 @@
             handleType() {
                 this.apiGet('/labels?id=1025&mode=tree').then((res) => {
                     this.type_list = res;
-                    this.labelLoading = false
+                    // this.labelLoading = false
                 })
 
             },
@@ -287,7 +285,7 @@
                         });
                     });
                     this.city_tree = res;
-                    this.areaLoading = false
+                    // this.areaLoading = false
                     this.city_tree.unshift(first_city)
                     this.$store.commit('loading', false);
                 })
@@ -329,7 +327,7 @@
                     form.append('files[]', this.files[i].raw)
                 }
                 this.apiPost('/file/uploads', form).then((res) => {
-                    // console.log(res)
+                    console.log(res)
                     if (res) {
                         this.form.image_arr = res;
                     } else {
@@ -519,7 +517,7 @@
                     // console.log(data)
                     if (this.isUpdata) {
                         var task_edit = JSON.parse(sessionStorage.getItem('task'));
-                        this.apiPost('/api/task/update/' + task_edit.id).then((res) => {
+                        this.apiPost('/api/task/update/' + task_edit.id, data).then((res) => {
                             if (res) {
                                 sessionStorage.removeItem('task');
                                 this.$router.push({
@@ -935,7 +933,6 @@
     }
 
     .show_pic {
-        position: relative;
         float: left;
 
         div {
@@ -943,7 +940,7 @@
             height: 140px;
             display: inline-block;
             margin-right: 8px;
-
+            position: relative;
             img {
                 width: 100%;
                 height: 100%;

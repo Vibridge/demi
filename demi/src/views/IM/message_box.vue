@@ -13,7 +13,7 @@
             <el-popover placement="top" width="400" trigger="click">
                 <p style="height: 33px;font-size: 16px;padding: 10px 0 0 20px">常用语</p>
                 <div class="common_list">
-                    <div v-for="item in common" class="common" :key="item.greet_id" @click="chooseCommon(item)">
+                    <div v-for="item in common" class="common_info" :key="item.greet_id" @click="chooseCommon(item)">
                         <p>{{item.text}}</p>
                     </div>
                 </div>
@@ -338,7 +338,7 @@
         box-sizing: border-box;
         overflow-y: auto;
     }
-    .common{
+    .common_info{
         height: 40px;
         line-height: 40px;
         box-sizing: border-box;

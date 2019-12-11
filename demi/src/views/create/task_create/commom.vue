@@ -574,7 +574,7 @@
                         payment_money: this.form.payment_money,
                         industry_arr: this.industry_arr,
                         city_id: this.form.city[1],
-                        image_arr: this.image_arr,
+                        image_arr: this.form.image_arr,
                         status: 1,
                         video_path: this.real_video_path,
                         video_cover: cover_path,
@@ -593,7 +593,7 @@
                     }
                     if (this.isUpdata) {
                         var task_edit = JSON.parse(sessionStorage.getItem('task'));
-                        this.apiPost('/api/task/update/' + task_edit.id).then((res) => {
+                        this.apiPost('/api/task/update/' + task_edit.id, data).then((res) => {
                             if (res) {
                                 sessionStorage.removeItem('task');
                                 this.$router.push({

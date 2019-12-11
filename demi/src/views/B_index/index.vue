@@ -314,16 +314,19 @@
 
             //退出登录
             handleLoginOut() {
+
                 this.tim.logout().then(function(imResponse) {
                     console.log(imResponse.data); // 登出成功
                 }).catch(function(imError) {
                     console.warn('logout error:', imError);
                 });
                 // this.$store.dispatch('logout');
-                sessionStorage.clear();
-                this.$router.push({
-                    name: "login"
-                });
+                if (this.removeToken()) {
+                    sessionStorage.clear();
+                    setTimeout(() => {
+                        window.location = '/';
+                    }, 800);
+                }
             },
 
             //客服聊天
@@ -493,7 +496,7 @@
         width: 100%;
         height: 100%;
         font-family: MicrosoftYaHeiLight;
-        overflow-y: auto;
+        /*overflow-y: auto;*/
 
         .active_app {
             background: rgba(69, 201, 255, 1) !important;
