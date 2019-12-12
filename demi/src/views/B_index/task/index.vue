@@ -88,7 +88,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="paging" v-show="task_list.length>0">
+                    <!--<div class="paging" v-show="task_list.length>0">
                         <el-pagination
                                 :hide-on-single-page="true"
                                 background
@@ -103,7 +103,7 @@
                                 :pager-count='5'
                         >
                         </el-pagination>
-                    </div>
+                    </div>-->
                 </el-tab-pane>
 
                 <!--//待处理-->
@@ -136,7 +136,8 @@
                                     <div class="task_operate" v-if="task.status === 0">
                                         <button @click="handleRefuse(1,task.task_order_id,task.user.user_id)" class="first active_over">拒绝
                                         </button>
-                                        <button @click="handlePass(1,task.task_order_id,task.user.user_id)">通过</button>
+                                        <button v-if="!task.front_money" @click="handlePass(1,task.task_order_id,task.user.user_id)">通过</button>
+                                        <button v-if="task.front_money" @click="pay">通过&支付定金</button>
                                     </div>
                                 </div>
                                 <div class="line"></div>
@@ -149,7 +150,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="paging" v-show="task_list.length>0">
+                    <!--<div class="paging" v-show="task_list.length>0">
                         <el-pagination
                                 background
                                 layout="prev, pager, next"
@@ -163,7 +164,7 @@
                                 @size-change="handleSizeChange(0)"
                                 @current-change="handleCurrentPageChange(0)">
                         </el-pagination>
-                    </div>
+                    </div>-->
                 </el-tab-pane>
 
                 <!--//进行中-->
@@ -223,7 +224,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="paging" v-show="task_list.length>0">
+                   <!-- <div class="paging" v-show="task_list.length>0">
                         <el-pagination
                                 background
                                 layout="prev, pager, next"
@@ -237,7 +238,7 @@
                                 @size-change="handleSizeChange(1,3)"
                                 @current-change="handleCurrentPageChange(1,3)">
                         </el-pagination>
-                    </div>
+                    </div>-->
                 </el-tab-pane>
 
                 <!--已结束-->
@@ -294,7 +295,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="paging" v-show="task_list.length>0">
+                    <!--<div class="paging" v-show="task_list.length>0">
                         <el-pagination
                                 background
                                 :hide-on-single-page="true"
@@ -308,9 +309,26 @@
                                 @size-change="handleSizeChange(2,4)"
                                 @current-change="handleCurrentPageChange(2,4)">
                         </el-pagination>
-                    </div>
+                    </div>-->
                 </el-tab-pane>
             </el-tabs>
+
+            <div class="paging" v-show="task_list.length>0">
+                <el-pagination
+                        :hide-on-single-page="true"
+                        background
+                        layout="prev, pager, next"
+                        prev-text="上一页"
+                        next-text="下一页"
+                        :total="searchParams.total"
+                        :current-page="searchParams.page"
+                        :page-size="searchParams.per_page"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentPageChange"
+                        :pager-count='5'
+                >
+                </el-pagination>
+            </div>
 
             <el-dialog
                     :visible.sync="discuss"
@@ -394,6 +412,7 @@
                     description: null
                 },
                 index:0,
+                active_index:'0'
             };
         },
         mounted() {
@@ -416,25 +435,37 @@
         },
         methods: {
             // 切换状态导航
+
             handleClick(tab, event) {
+                var array = [];
+                this.active_index = tab.index;
                 if (tab.index === '0') {
                     this.initialize();
                 }
                 if (tab.index === '1') {
-                    this.initialize(0);
+                    array = [0,5];
+                    this.initialize(array);
                 }
                 if (tab.index === '2') {
-                    this.initialize(1, 3);
+                    array = [1, 3];
+                    this.initialize(array);
                 }
                 if (tab.index === '3') {
-                    this.initialize(2, 4);
+                    array = [2, 4, 7];
+                    this.initialize(array);
                 }
             },
 
             //数据接口
-            initialize(status1, status2) {
-                if (status1 || status1 === 0) {
-                    if (status2) {
+            initialize(array) {
+                if (array) {
+                    this.apiGet('/api/task/order/paginate' + '?status=' + array, this.searchParams).then((res) => {
+                        this.task_list = res.data;
+                        this.searchParams.page = parseInt(res.current_page);
+                        this.searchParams.total = parseInt(res.total);
+                        this.searchParams.per_page = parseInt(res.per_page);
+                    });
+                    /*if (status2) {
                         this.apiGet('/api/task/order/paginate' + '?status[0]=' + status1 + '&status[1]=' + status2, this.searchParams).then((res) => {
                             this.task_list = res.data;
                             this.searchParams.page = parseInt(res.current_page);
@@ -448,24 +479,48 @@
                             this.searchParams.total = parseInt(res.total);
                             this.searchParams.per_page = parseInt(res.per_page);
                         });
-                    }
+                    }*/
                 } else {
                     this.apiGet('/api/task/order/paginate', this.searchParams).then((res) => {
                         this.task_list = res.data;
-                        // console.log(res.data)
+                        console.log(res)
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
                     })
                 }
             },
-            handleSizeChange(status1, status2, per_page) {
+            handleSizeChange(per_page) {
+                var array = [];
                 this.searchParams.per_page = per_page;
-                this.initialize(status1, status2);
+                if(this.active_index === '0'){
+                    this.initialize()
+                }else if(this.active_index === '1'){
+                    array = [0,5];
+                    this.initialize(array);
+                }else if(this.active_index === '2'){
+                    array = [1, 3];
+                    this.initialize(array);
+                }else{
+                    array = [2, 4, 7];
+                    this.initialize(array);
+                }
             },
-            handleCurrentPageChange(status1, status2, page) {
+            handleCurrentPageChange(page) {
+                var array = [];
                 this.searchParams.page = page;
-                this.initialize(status1, status2);
+                if(this.active_index === '0'){
+                    this.initialize()
+                }else if(this.active_index === '1'){
+                    array = [0,5];
+                    this.initialize(array);
+                }else if(this.active_index === '2'){
+                    array = [1, 3];
+                    this.initialize(array);
+                }else{
+                    array = [2, 4, 7];
+                    this.initialize(array);
+                }
             },
 
             //通过任务
