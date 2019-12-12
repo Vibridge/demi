@@ -8,11 +8,11 @@
                 <div class="login_header_right">
                     <el-input class="phone" v-model="phone" placeholder="手机号" @input="changePhone"></el-input>
                     <el-input class="yzm" placeholder="验证码" v-model="yzm">
-                        <div slot="append" @click="Getyzm()" v-text="this.success ? this.timeText : '获取'"></div>
+                        <div slot="append" @click="Getyzm" v-text="this.success ? this.timeText : '获取'"></div>
                     </el-input>
-                    <div class="captcha-container" v-show="isCaptcha">
+                   <!-- <div class="captcha-container" v-show="isCaptcha">
                         <div id="captcha"></div>
-                    </div>
+                    </div>-->
                     <button @click="login">企业登录/注册</button>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                 isCaptcha: false,
                 type: '',
                 start: false,
-
+                jigsaw:null
             }
         },
         mounted() {
@@ -96,14 +96,6 @@
         methods: {
 
             Getyzm() {
-                /*else if (!/^((13[0-9])|(166)|(17[0-9])|(15[^4\\D])|(18[0,2,5-9]))\d{8}$/.test(this.phone)) {
-                    this.$message({
-                        showClose: true,
-                        message: '请输入正确的手机号',
-                        type: 'error',
-                        duration: 500
-                    })
-                }*/
                 if (!this.phone) {
                     this.$message({
                         showClose: true,
@@ -112,10 +104,29 @@
                         duration: 500
                     })
                 } else {
-                    this.isCaptcha = true;
-                    document.getElementsByClassName('captcha-container')[0].style.display = 'block'
+                    // this.isCaptcha = true;
+                    // document.getElementsByClassName('captcha-container')[0].style.display = 'block';
                     if (this.time === 60) {
-                        let target = document.getElementById('captcha');
+                        this.apiPost('/sms/captcha', {
+                            phone: this.phone,
+                            mode: 3
+                        }).then((res) => {
+                            if (res) {
+                                // this.isCaptcha = false;
+                                this.success = true;
+                                this.$message({
+                                    showClose: true,
+                                    message: '发送成功',
+                                    type: 'success',
+                                    duration: 500
+                                })
+                            }
+                           /* setTimeout(() => {
+                                this.isCaptcha = false;
+                                this.jigsaw.reset();
+                            }, 1000);*/
+                        })
+                        /*let target = document.getElementById('captcha');
                         let captcha = target.getElementsByTagName('div');
                         let length = captcha.length;
                         if (length === 0) {
@@ -144,8 +155,7 @@
                                 });
                             });
                             this.jigsaw.init();
-                        }
-
+                        }*/
                     }
                 }
 
@@ -301,6 +311,7 @@
                         margin-right: 10px;
                         border-radius: 20px;
                         border: none;
+                        cursor: pointer;
 
                         .el-input__inner {
                             border-radius: 20px 0 0 20px;

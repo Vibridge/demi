@@ -20,7 +20,7 @@
                             <span style="margin-right: 82px;">×{{order.buy_quantity}}</span>
                             <span>¥{{order.pay_amount}}</span>
                         </div>
-                        <div class="status" v-if="order.status === 0 && !order.pay_amount">
+                        <div class="status" v-if="order.status === 0">
                             <!--<button>待支付</button>-->
                             <img src="../../../assets/img/arrearage@2x.png" alt="">
                         </div>
@@ -28,8 +28,8 @@
                             <!--<button>已取消</button>-->
                             <img src="../../../assets/img/arrearage@2x.png" alt="">
                         </div>
-                        <div class="status" v-if="order.status === 2">
-                            <button>确认发货</button>
+                        <div class="status" v-if="(order.status === 2) && (order.contact_phone != my_info.phone)">
+                            <button @click="handleDelivery(order.order_id)">确认发货</button>
                         </div>
                         <div class="status" v-if="order.status === 3">
                             <!--<button>去发货</button>-->
@@ -69,6 +69,7 @@
                     @current-change="handleCurrentPageChange()">
             </el-pagination>
         </div>-->
+
     </div>
 
 </template>
@@ -78,6 +79,10 @@
         name: 'orderList',
         props:{
             order_list:{type:Array},
+            my_info:{
+                type: Object,
+                default:null
+            }
         },
         data(){
             return{
@@ -94,7 +99,11 @@
                     total: 0,
                     per_page: 15
                 },*/
+
             }
+        },
+        mounted(){
+
         },
         methods:{
             /*handleSizeChange(per_page) {

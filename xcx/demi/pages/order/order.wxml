@@ -1,0 +1,5 @@
+<toolTag prop-a="true" title="我的订单"/>
+<login wx:if="{{login}}" prop-a="{{select}}" bindmyevent="onMyEvent" />
+<view class="contain">
+  a
+</view>

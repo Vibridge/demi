@@ -9,7 +9,7 @@
 
                 <!--全部-->
                 <el-tab-pane label="全部" name="all">
-                    <orderList :order_list="order_list"></orderList>
+                    <orderList :order_list="order_list" :my_info="my_info"></orderList>
                     <div class="paging" v-show="order_list.length > 0">
                         <el-pagination
                                 background
@@ -29,7 +29,7 @@
 
                 <!--已付款-->
                 <el-tab-pane label="已付款" name="paid">
-                    <orderList :order_list="order_list"></orderList>
+                    <orderList :order_list="order_list" :my_info="my_info"></orderList>
                     <div class="paging" v-show="order_list.length > 0">
                         <el-pagination
                                 background
@@ -106,7 +106,7 @@
 
                 <!--未付款-->
                 <el-tab-pane label="未付款" name="unpaid">
-                    <orderList :order_list="order_list"></orderList>
+                    <orderList :order_list="order_list" :my_info="my_info"></orderList>
                     <div class="paging" v-show="order_list.length > 0">
                         <el-pagination
                                 background
@@ -188,7 +188,7 @@
                 </el-tab-pane>
 
                 <!--已发货-->
-                <el-tab-pane label="已发货" name="shipped">
+                <el-tab-pane label="已发货" name="shipped" :my_info="my_info">
                     <orderList :order_list="order_list"></orderList>
                     <div class="paging" v-show="order_list.length > 0">
                         <el-pagination
@@ -304,9 +304,14 @@
                 },
                 order_list:[],
                 active_index: 0,
+                my_info: null
             };
         },
         mounted(){
+            if(this.user_info){
+                this.my_info = this.user_info
+            }
+            /*console.log(this.user_info)
             this.apiGet('/api/user/info').then((res) => {
                 if (res.type !== 2) {
                     this.$message({
@@ -317,8 +322,10 @@
                     this.$router.push({
                         name: "login"
                     });
+                }else{
+                    this.my_info = res
                 }
-            });
+            });*/
             this.initialize();
         },
         created(){
@@ -338,7 +345,7 @@
                     this.initialize(2);
                 }
                 if (tab.index === '2') {
-                    this.initialize(0, 1);
+                    this.initialize(0);
                 }
                 if (tab.index === '3') {
                     this.initialize(3);
@@ -346,25 +353,15 @@
             },
 
             //数据接口
-            initialize(status1,status2){
-                if (status1 || status1 === 0) {
-                    if (status2) {
-                        this.apiGet('/api/order/paginate' + '?status[0]=' + status1 + '&status[1]=' + status2, this.searchParams).then((res) => {
-                            this.order_list = res.data;
-                            this.searchParams.page = parseInt(res.current_page);
-                            this.searchParams.total = parseInt(res.total);
-                            this.searchParams.per_page = parseInt(res.per_page);
-                            // console.log(this.order_list)
-                        });
-                    } else {
-                        this.apiGet('/api/order/paginate' + '?status=' + status1, this.searchParams).then((res) => {
-                            this.order_list = res.data;
-                            this.searchParams.page = parseInt(res.current_page);
-                            this.searchParams.total = parseInt(res.total);
-                            this.searchParams.per_page = parseInt(res.per_page);
-                            // console.log(this.order_list)
-                        });
-                    }
+            initialize(status){
+                if (status|| (status === 0)) {
+                    this.apiGet('/api/order/paginate' + '?status=' + status, this.searchParams).then((res) => {
+                        this.order_list = res.data;
+                        this.searchParams.page = parseInt(res.current_page);
+                        this.searchParams.total = parseInt(res.total);
+                        this.searchParams.per_page = parseInt(res.per_page);
+                        // console.log(this.order_list)
+                    });
                 } else {
                     this.apiGet('/api/order/paginate', this.searchParams).then((res) => {
                         this.order_list = res.data;
@@ -381,11 +378,11 @@
                 if(this.active_index === '0'){
                     this.initialize();
                 }else if(this.active_index === '1'){
-                    this.initialize(2,0);
+                    this.initialize(2);
                 }else if(this.active_index === '2'){
-                    this.initialize(0, 1);
+                    this.initialize(0);
                 }else if(this.active_index === '2'){
-                    this.initialize(3,0);
+                    this.initialize(3);
                 }
             },
             handleCurrentPageChange(page) {
@@ -393,11 +390,11 @@
                 if(this.active_index === '0'){
                     this.initialize();
                 }else if(this.active_index === '1'){
-                    this.initialize(2,0);
+                    this.initialize(2);
                 }else if(this.active_index === '2'){
-                    this.initialize(0, 1);
+                    this.initialize(0);
                 }else if(this.active_index === '2'){
-                    this.initialize(3,0);
+                    this.initialize(3);
                 }
             },
            /* handleSizeChange(status1, status2, per_page) {

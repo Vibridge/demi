@@ -11,9 +11,9 @@ Page({
     task_list:[],
     index:1,
     level:1,
-    over:0,
-    to:null,
-    total:null,
+    // over:0,
+    // to:null,
+    // total:null,
     img_level:null,
     img_level1:'../asset/img/x.png',
     img_level2: '../asset/img/z.png',
@@ -40,9 +40,17 @@ Page({
    */
   onShow: function () {
     this.handleList();
+    if (typeof this.getTabBar === 'function' &&
+      this.getTabBar()) {
+      this.getTabBar().setData({
+        selected: 0
+      })
+    }
   },
 
   handleList(page){
+    var current_page = 0;
+    var last_page = 0;
     var img1 = this.data.img_level1;
     var img2 = this.data.img_level2;
     var img3 = this.data.img_level3;
@@ -51,139 +59,161 @@ Page({
     common.http(util.baseUrl + '/api/task/paginate?page=' + page, 'get', function (res) {
       console.log(res)
       if(res){
-        wx.stopPullDownRefresh()
-      }
-      res.data.forEach(item => {
-        var that = this
-        if (4 <= item.company.reputation && item.company.reputation <= 10) {
-          that.setData({
-            level: 1,
-            img_level: img1
-          });
+        current_page = res.current_page;
+        last_page = res.last_page
+        wx.stopPullDownRefresh();
+        if (current_page < last_page){
+          res.data.forEach(item => {
+            var that = this
+            if (4 <= item.company.reputation && item.company.reputation <= 10) {
+              that.setData({
+                level: 1,
+                img_level: img1
+              });
+            }
+            if (11 <= item.company.reputation && item.company.reputation <= 40) {
+              that.setData({
+                level: 2,
+                img_level: img1
+              });
+            }
+            if (41 <= item.company.reputation && item.company.reputation <= 90) {
+              that.setData({
+                level: 3,
+                img_level: img1
+              });
+            }
+            if (91 <= item.company.reputation && item.company.reputation <= 150) {
+              that.setData({
+                level: 4,
+                img_level: img1
+              });
+            }
+            if (151 <= item.company.reputation && item.company.reputation <= 250) {
+              that.setData({
+                level: 5,
+                img_level: img1
+              });
+            }
+            if (251 <= item.company.reputation && item.company.reputation <= 500) {
+              that.setData({
+                level: 1,
+                img_level: img2
+              });
+            }
+            if (501 <= item.company.reputation && item.company.reputation <= 1000) {
+              that.setData({
+                level: 2,
+                img_level: img2
+              });
+            }
+            if (1001 <= item.company.reputation && item.company.reputation <= 2000) {
+              that.setData({
+                level: 3,
+                img_level: img2
+              });
+            }
+            if (2001 <= item.company.reputation && item.company.reputation <= 5000) {
+              that.setData({
+                level: 4,
+                img_level: img2
+              });
+            }
+            if (5001 <= item.company.reputation && item.company.reputation <= 10000) {
+              that.setData({
+                level: 5,
+                img_level: img2
+              });
+            }
+            if (10001 <= item.company.reputation && item.company.reputation <= 20000) {
+              that.setData({
+                level: 1,
+                img_level: img3
+              });
+            }
+            if (20001 <= item.company.reputation && item.company.reputation <= 50000) {
+              that.setData({
+                level: 2,
+                img_level: img3
+              });
+            }
+            if (50001 <= item.company.reputation && item.company.reputation <= 100000) {
+              that.setData({
+                level: 3,
+                img_level: img3
+              });
+            }
+            if (100001 <= item.company.reputation && item.company.reputation <= 200000) {
+              that.setData({
+                level: 4,
+                img_level: img3
+              });
+            }
+            if (200001 <= item.company.reputation && item.company.reputation <= 500000) {
+              that.setData({
+                level: 5,
+                img_level: img3
+              });
+            }
+            if (500001 <= item.company.reputation && item.company.reputation <= 1000000) {
+              that.setData({
+                level: 1,
+                img_level: img4
+              });
+            }
+            if (1000001 <= item.company.reputation && item.company.reputation <= 2000000) {
+              that.setData({
+                level: 2,
+                img_level: img4
+              });
+            }
+            if (2000001 <= item.company.reputation && item.company.reputation <= 5000000) {
+              that.setData({
+                level: 3,
+                img_level: img4
+              });
+            }
+            if (5000001 <= item.company.reputation && item.company.reputation <= 10000000) {
+              that.setData({
+                level: 4,
+                img_level: img4
+              });
+            }
+            if (item.company.reputation > 1000000) {
+              that.setData({
+                level: 5,
+                img_level: img4
+              });
+            }
+            task_list.push(item)
+          })
+          this.setData({
+            task_list: task_list,
+            // total: res.total,
+            // to: res.to
+          })
+        }else{
+          wx.showToast({
+            title: '已加载全部'
+          })
+          // var over = this.data.over;
+          // if (over === 1) {
+          //   return true
+          // } else {
+          //   var that = this;
+          //   wx.showToast({
+          //     title: '已加载全部',
+          //     success: function () {
+          //       that.setData({
+          //         index: 1,
+          //         over: 1,
+          //       })
+          //     }
+          //   })
+          // }
         }
-        if (11 <= item.company.reputation && item.company.reputation <= 40) {
-          that.setData({
-            level: 2,
-            img_level: img1
-          });
-        }
-        if (41 <= item.company.reputation && item.company.reputation <= 90) {
-          that.setData({
-            level: 3,
-            img_level: img1
-          });
-        }
-        if (91 <= item.company.reputation && item.company.reputation <= 150) {
-          that.setData({
-            level: 4,
-            img_level: img1
-          });
-        }
-        if (151 <= item.company.reputation && item.company.reputation <= 250) {
-          that.setData({
-            level: 5,
-            img_level: img1
-          });
-        }
-        if (251 <= item.company.reputation && item.company.reputation <= 500) {
-          that.setData({
-            level: 1,
-            img_level: img2
-          });
-        }
-        if (501 <= item.company.reputation && item.company.reputation <= 1000) {
-          that.setData({
-            level: 2,
-            img_level: img2
-          });
-        }
-        if (1001 <= item.company.reputation && item.company.reputation <= 2000) {
-          that.setData({
-            level: 3,
-            img_level: img2
-          });
-        }
-        if (2001 <= item.company.reputation && item.company.reputation <= 5000) {
-          that.setData({
-            level: 4,
-            img_level: img2
-          });
-        }
-        if (5001 <= item.company.reputation && item.company.reputation <= 10000) {
-          that.setData({
-            level: 5,
-            img_level: img2
-          });
-        }
-        if (10001 <= item.company.reputation && item.company.reputation <= 20000) {
-          that.setData({
-            level: 1,
-            img_level: img3
-          });
-        }
-        if (20001 <= item.company.reputation && item.company.reputation <= 50000) {
-          that.setData({
-            level: 2,
-            img_level: img3
-          });
-        }
-        if (50001 <= item.company.reputation && item.company.reputation <= 100000) {
-          that.setData({
-            level: 3,
-            img_level: img3
-          });
-        }
-        if (100001 <= item.company.reputation && item.company.reputation <= 200000) {
-          that.setData({
-            level: 4,
-            img_level: img3
-          });
-        }
-        if (200001 <= item.company.reputation && item.company.reputation <= 500000) {
-          that.setData({
-            level: 5,
-            img_level: img3
-          });
-        }
-        if (500001 <= item.company.reputation && item.company.reputation <= 1000000) {
-          that.setData({
-            level: 1,
-            img_level: img4
-          });
-        }
-        if (1000001 <= item.company.reputation && item.company.reputation <= 2000000) {
-          that.setData({
-            level: 2,
-            img_level: img4
-          });
-        }
-        if (2000001 <= item.company.reputation && item.company.reputation <= 5000000) {
-          that.setData({
-            level: 3,
-            img_level: img4
-          });
-        }
-        if (5000001 <= item.company.reputation && item.company.reputation <= 10000000) {
-          that.setData({
-            level: 4,
-            img_level: img4
-          });
-        }
-        if (item.company.reputation > 1000000) {
-          that.setData({
-            level: 5,
-            img_level: img4
-          });
-        }
-        task_list.push(item)
         
-      })
-      this.setData({
-        task_list: task_list,
-        total: res.total,
-        to: res.to
-      })
-
+      }
     }.bind(this))
   },
   /**
@@ -214,34 +244,16 @@ Page({
    */
   onReachBottom: function () {
     var index = this.data.index;
-    var to = this.data.to;
-    var total = this.data.total;
-    var over = this.data.over
+    // var to = this.data.to;
+    // var total = this.data.total;
+    // var over = this.data.over;
     console.log(index)
-    if (to < total){
-      console.log(to < total)
-      index++;
-      this.setData({
-        index: index,
-        over: 0,
-      })
-      this.handleList(index)
-    }else{
-      if(over === 1){
-        return true
-      }else{
-        var that = this;
-        wx.showToast({
-          title: '已加载全部',
-          success: function () {
-            that.setData({
-              index: 1,
-              over: 1,
-            })
-          }
-        })
-      }
-    }
+    index++;
+    this.setData({
+      index: index,
+      // over: 0,
+    })
+    this.handleList(index)
   },
   handleDetail(event){
     var id = event.currentTarget.dataset.id;

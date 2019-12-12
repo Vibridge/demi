@@ -41,7 +41,7 @@
                                     <div class="task_operate" v-if="task.status === 0">
                                         <button @click="handleRefuse(0,task.task_order_id,task.user.user_id)" class="first active_over">拒绝
                                         </button>
-                                        <button @click="handlePass(0,task.task_order_id,task.user.user_id)">通过</button>
+                                        <button v-if="parseInt(task.snapshot.front_money) <= 0" @click="handlePass(0,task.task_order_id,task.user.user_id)">通过</button>
                                         <button v-if="parseInt(task.snapshot.front_money)>0"
                                                 @click="pay()">通过&支付定金
                                         </button>

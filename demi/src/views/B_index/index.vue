@@ -175,6 +175,7 @@
                     user_id: null,
                     name: '',
                     company_position: '',
+                    phone:''
                 },
                 company_info: {},
                 active_left: '/B_index/B_person',
@@ -286,6 +287,7 @@
                     this.user_info.user_id = res.user_id;
                     this.user_info.name = res.nickname;
                     this.user_info.company_position = res.company_position;
+                    this.user_info.phone = res.phone
                 });
             },
             /*scrollTop(){

@@ -1,0 +1,4 @@
+.contain {
+  margin: 129rpx auto 0 auto;
+  overflow-x: hidden
+}

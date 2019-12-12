@@ -8,7 +8,7 @@
                             <img src="../../assets/img/detail_3.png" alt="">
                         </div>
                         <div class="e-w-m">
-                            <img src="../../assets/img/wx.png" alt="">
+                            <img src="../../assets/img/download.png" alt="">
                             <p>扫二维码下载得米APP</p>
                         </div>
                         <div class="index">
@@ -1309,13 +1309,16 @@
                     left: 93px;*/
                     width: 15.59%;
                     padding: 13vh 0 0 21.1%;
+
                     img {
                         width: 100%;
                         margin-bottom: 2vh;
+                        border: 5px solid white;
                     }
                     p{
                         color: rgba(255, 255, 255, 1);
                         margin: 0 auto;
+                        text-align: center;
                     }
                     @media screen and (max-width: 800px){
                         p {

@@ -5,7 +5,7 @@
     <view class="list" data-id="{{item.task_id}}" bindtap="handleDetail" wx:for="{{task_list}}" wx:for-item="item" wx:key="{{item.task_id}}">
       <view class="title">{{item.task_title}}</view>
       <view class="info">
-        <view class="logo"><image src="{{item.company.logo_path}}"></image></view>
+        <view class="logo"><image mode="aspectFit" src="{{item.company.logo_path}}"></image></view>
         <view class="level">
           <view class="sign" wx:for="{{level}}" wx:for-item="star" wx:key="index">
             <image wx:if="{{level == 1}}" src="{{img_level}}"></image>

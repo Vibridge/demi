@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/order/order",
     "pages/ability_work/ability_work",
     "pages/ability_info/ability_info",
     "pages/work_info/work_info",
@@ -14,6 +15,27 @@
     "pages/accept/pic/pic",
     "pages/accept/video/video"
   ],
+  "tabBar": {
+    "custom": true,
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "pages/asset/img/home@2x.png",
+        "selectedIconPath": "pages/asset/img/home_active@2x.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/order/order",
+        "iconPath": "pages/asset/img/indent@2x.png",
+        "selectedIconPath": "pages/asset/img/indent_on@2x.png",
+        "text": "我的订单"
+      }
+    ]
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

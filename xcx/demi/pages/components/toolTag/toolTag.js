@@ -62,8 +62,8 @@ Component({
       console.log(propC)
       if(propC){
         let that = this
-        wx.navigateTo({
-          url: '../index/index',
+        wx.navigateBack({
+          delta: 1,
           success(){
             that.setData({
               propC:null

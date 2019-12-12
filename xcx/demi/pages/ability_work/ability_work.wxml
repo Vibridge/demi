@@ -1,6 +1,6 @@
 <toolTag prop-b="true" prop-c="true" title="{{task_info.task_title}}" />
 <login wx:if="{{login}}" prop-a="{{select}}" bindmyevent="onMyEvent" />
-<loading wx:if="{{loading}}" class="loading" />
+<!-- <loading wx:if="{{loading}}" class="loading" /> -->
 <view class="contain" wx:if="{{!loading}}">
   <view>
     <view class="header">
