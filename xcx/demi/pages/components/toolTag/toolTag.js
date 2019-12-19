@@ -59,7 +59,7 @@ Component({
       var id = this.data.select_id;
       var select = this.data.select;
       var propC = this.data.propC;
-      console.log(propC)
+      var propB = this.data.propB;
       if(propC){
         let that = this
         wx.navigateBack({
@@ -70,7 +70,7 @@ Component({
             })
           }
         })
-      }else if (id.length > 0){
+      } else if (propB && id.length > 0){
         var pages = getCurrentPages();
         var currPage = pages[pages.length - 1];   //当前页面
         var prevPage = pages[pages.length - 2];  //上一个页面
@@ -82,7 +82,7 @@ Component({
         wx.navigateBack({
           delta: 1
         })
-      }else{
+      } else if (propB && id.length < 1){
         var pages = getCurrentPages();
         var currPage = pages[pages.length - 1];   //当前页面
         var prevPage = pages[pages.length - 2];  //上一个页面
@@ -91,6 +91,10 @@ Component({
           industry_id: [],
           industry_name: []
         });
+        wx.navigateBack({
+          delta: 1
+        })
+      }else{
         wx.navigateBack({
           delta: 1
         })

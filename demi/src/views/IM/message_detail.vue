@@ -139,12 +139,17 @@
                 }
             },
             date() {
-                return getFullDate(new Date(this.message.time * 1000))
+                // return getFullDate(new Date(this.message.time * 1000))
                 /*if(this.message.time){
                     return this.message.time
                 }else{
                     return ''
                 }*/
+                if(typeof this.message.time == 'number'){
+                    return ''
+                }else{
+                    return this.message.time
+                }
 
             },
             messagePosition() {

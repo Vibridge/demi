@@ -10,41 +10,11 @@
                 <!--全部-->
                 <el-tab-pane label="全部" name="all">
                     <orderList :order_list="order_list" :my_info="my_info"></orderList>
-                    <div class="paging" v-show="order_list.length > 0">
-                        <el-pagination
-                                background
-                                :hide-on-single-page="true"
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange()"
-                                @current-change="handleCurrentPageChange()">
-                        </el-pagination>
-                    </div>
                 </el-tab-pane>
 
                 <!--已付款-->
                 <el-tab-pane label="已付款" name="paid">
                     <orderList :order_list="order_list" :my_info="my_info"></orderList>
-                    <div class="paging" v-show="order_list.length > 0">
-                        <el-pagination
-                                background
-                                :hide-on-single-page="true"
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange()"
-                                @current-change="handleCurrentPageChange()">
-                        </el-pagination>
-                    </div>
                     <!--<div class="all-wrap">
                         <div class="second_nav">
                             <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
@@ -107,21 +77,6 @@
                 <!--未付款-->
                 <el-tab-pane label="未付款" name="unpaid">
                     <orderList :order_list="order_list" :my_info="my_info"></orderList>
-                    <div class="paging" v-show="order_list.length > 0">
-                        <el-pagination
-                                background
-                                :hide-on-single-page="true"
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange()"
-                                @current-change="handleCurrentPageChange()">
-                        </el-pagination>
-                    </div>
 <!--
                     <div class="all-wrap">
                         <div class="second_nav">
@@ -188,23 +143,8 @@
                 </el-tab-pane>
 
                 <!--已发货-->
-                <el-tab-pane label="已发货" name="shipped" :my_info="my_info">
-                    <orderList :order_list="order_list"></orderList>
-                    <div class="paging" v-show="order_list.length > 0">
-                        <el-pagination
-                                background
-                                :hide-on-single-page="true"
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange()"
-                                @current-change="handleCurrentPageChange()">
-                        </el-pagination>
-                    </div>
+                <el-tab-pane label="已发货" name="shipped">
+                    <orderList :order_list="order_list" :my_info="my_info"></orderList>
                     <!--<div class="all-wrap">
                         <div class="second_nav">
                             <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
@@ -265,6 +205,21 @@
                     </div>-->
                 </el-tab-pane>
             </el-tabs>
+            <div class="paging" v-show="order_list.length > 0">
+                <el-pagination
+                        background
+                        :hide-on-single-page="true"
+                        layout="prev, pager, next"
+                        prev-text="上一页"
+                        next-text="下一页"
+                        :pager-count='5'
+                        :total="searchParams.total"
+                        :current-page="searchParams.page"
+                        :page-size="searchParams.per_page"
+                        @size-change="handleSizeChange()"
+                        @current-change="handleCurrentPageChange()">
+                </el-pagination>
+            </div>
         </div>
     </div>
 </template>
@@ -311,7 +266,7 @@
             if(this.user_info){
                 this.my_info = this.user_info
             }
-            /*console.log(this.user_info)
+            console.log(this.user_info)
             this.apiGet('/api/user/info').then((res) => {
                 if (res.type !== 2) {
                     this.$message({
@@ -322,10 +277,8 @@
                     this.$router.push({
                         name: "login"
                     });
-                }else{
-                    this.my_info = res
                 }
-            });*/
+            });
             this.initialize();
         },
         created(){
@@ -338,6 +291,7 @@
             // 切换状态导航
             handleClick(tab, event) {
                 this.active_index = tab.index;
+                this.searchParams.page = 1;
                 if (tab.index === '0') {
                     this.initialize();
                 }
@@ -384,6 +338,8 @@
                 }else if(this.active_index === '2'){
                     this.initialize(3);
                 }
+                document.getElementById('app').scrollTo(0,0)
+
             },
             handleCurrentPageChange(page) {
                 this.searchParams.page = page;
@@ -396,16 +352,8 @@
                 }else if(this.active_index === '2'){
                     this.initialize(3);
                 }
+                document.getElementById('app').scrollTo(0,0)
             },
-           /* handleSizeChange(status1, status2, per_page) {
-                this.searchParams.per_page = per_page;
-                this.initialize(status1, status2);
-                console.log(this.searchParams.per_page);
-            },
-            handleCurrentPageChange(status1, status2, page) {
-                this.searchParams.page = page;
-                this.initialize(status1, status2);
-            },*/
 
             getRouterData() {
                 if(this.$route.params.activeName){

@@ -2,6 +2,7 @@
     <div class="IM_wrap">
 
         <!--聊天列表-->
+        <!-- @on-msg-refresh="handleRefresh"-->
         <MessageList @on-msg-header="handleMsgHeader" @on-msg-refresh="handleRefresh"></MessageList>
 
         <!--消息内容-->
@@ -17,7 +18,7 @@
                     <div class="more" v-if="!isCompleted">
                         <el-button
                                 type="text"
-                                @click="$store.dispatch('getMessageList', currentConversation.conversationID)"
+                                @click="$store.dispatch('getMessageList', currentConversation.conversationID);timeTamp=0"
                         >查看更多
                         </el-button>
                     </div>
@@ -72,7 +73,8 @@
                 isShowScrollButtomTips: false,
                 preScrollHeight: 0,
                 timeTamp: 0,
-                chatTime: 0,
+                lastTime: 0,
+                // upData:false,
             }
         },
         mounted() {
@@ -93,8 +95,8 @@
 
             },
 
-            handleRefresh(item) {
-                this.isRefresh = item
+            handleRefresh(time) {
+                this.timeTamp = time;
             },
 
             // 如果滚到底部就保持在底部，否则提示是否要滚到底部
@@ -141,7 +143,7 @@
             },
 
             handleUpdataTime(data) {
-                this.chatTime = data;
+                this.lastTime = data;
             },
 
         },
@@ -149,21 +151,20 @@
             ...mapState({
                 // conversationList: state => state.conversation.conversationList,
                 currentConversation: state => state.conversation.currentConversation,
-
                 handleMessageList(state) {
-                    console.log(state.conversation.currentMessageList)
-                    /*forEach(state.conversation.currentMessageList, item => {
-                        if (typeof item.time != 'string') {
-                            if (this.chatTime) {
-                                if (item.time - this.timeTamp > 300) {
-                                    this.timeTamp = item.time;
-                                    item.time = getTime((new Date(item.time * 1000)));
-                                } else {
-                                    item.time = '';
-                                }
-                                this.chatTime = 0;
-                            } else {
-                                if (item.time - this.timeTamp > 300) {
+                    let length = state.conversation.currentMessageList.length;
+                    console.log(this.lastTime - this.timeTamp);
+                    if(this.lastTime){
+                        if(this.lastTime - this.timeTamp > 300){
+                            console.log('aaa');
+                            this.timeTamp = this.lastTime;
+                            // state.conversation.currentMessageList[length - 1].time = getTime((new Date(this.timeTamp * 1000)))
+                        }
+                        this.lastTime = 0;
+                    }else{
+                        forEach(state.conversation.currentMessageList, item => {
+                            if (typeof item.time != 'string') {
+                                if (Math.abs(item.time - this.timeTamp) > 300) {
                                     this.timeTamp = item.time;
                                     if (isToday(new Date(item.time * 1000))) {
                                         item.time = getTime((new Date(item.time * 1000)));
@@ -180,13 +181,11 @@
                                     }
                                 } else {
                                     this.timeTamp = item.time;
-                                    // console.log(this.timeTamp);
-                                    item.time = '';
+                                    item.time =""
                                 }
                             }
-                        }
-
-                    });*/
+                        })
+                    }
                     return state.conversation.currentMessageList
                 },
                 isCompleted: state => state.conversation.isCompleted,

@@ -53,18 +53,34 @@ Page({
     bigImg: false,
     show: false,
     height: 0,
-    loading: true
+    loading: true,
+    type:2,
+    good_price:'',
+    goods_name:''
   },
   onLoad: function(option) {
-    this.setData({
-      userID: option.user_id,
-      company_name: option.company_name,
-      task_id: option.task_id,
-      task_username: option.user_name,
-      moeny: option.payment_money,
-      task_avatar: option.avatar,
-      task_name: option.task_name
-    })
+    if(option.type == 2){
+      this.setData({
+        userID: option.user_id,
+        company_name: option.company_name,
+        task_id: option.task_id,
+        task_username: option.user_name,
+        moeny: option.payment_money,
+        task_avatar: option.avatar,
+        task_name: option.task_name,
+        type:option.type
+      })
+    }else{
+      this.setData({
+        userID: option.user_id,
+        company_name: option.company_name,
+        type: option.type,
+        goods_name: option.goods_name,
+        good_price: option.good_price,
+
+      })
+    }
+    
   },
 
   onShow: function() {
@@ -76,22 +92,32 @@ Page({
     var that = this
     var id = app.globalData.data.user_id + 'a'
     var userSig = app.globalData.userSig
-    var token = wx.getStorageSync('token')
+    var token = wx.getStorageSync('token');
     //im登录
     tim.tim.login({
       userID: id, //登录人账号
       userSig: userSig
     }).then(function(imResponse) {
-      var recipient = that.data.userID //聊天对象id
-      var foreign_key = that.data.task_id //创建对话详情的任务id
       var name = null
       tim.tim.on(TIM.EVENT.SDK_READY, function(event) {
         // 收到离线消息和会话列表同步完毕通知，接入侧可以调用 login 等 API
         // event.name - TIM.EVENT.SDK_READY
         name = event.name
         if (name) {
+          if (that.data.type == 2) {
+            var item = {
+              recipient: that.data.userID, //聊天对象id
+              foreign_key: that.data.task_id, //创建对话详情的任务id
+              type: that.data.type
+            }
+          } else {
+            var item = {
+              account: that.data.userID + 'b', //聊天对象id
+              type: that.data.type
+            }
+          }
           common.http(util.baseUrl + '/converse/create', "post", function(res) { //创建对话详情
-            var chat = "C2C" + recipient + 'b' //聊天对象账号
+            var chat = "C2C" + that.data.userID + 'b' //聊天对象账号
             //获取某会话的消息列表
             tim.tim.getMessageList({
               conversationID: chat, //会话 ID
@@ -134,11 +160,7 @@ Page({
             tim.tim.setMessageRead({
               conversationID: chat
             });
-          }, {
-            type: 2,
-            recipient: recipient,
-            foreign_key: foreign_key
-          }, token)
+          }, item, token)
         }
       });
 

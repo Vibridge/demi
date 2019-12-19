@@ -106,6 +106,9 @@
 
         },
         methods:{
+            handleDelivery(){
+
+            }
             /*handleSizeChange(per_page) {
                 this.searchParams.per_page = per_page;
                 if(this.active_index === '0'){

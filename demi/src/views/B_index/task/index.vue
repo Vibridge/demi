@@ -11,7 +11,8 @@
                 <el-tab-pane label="全部" name="all">
                     <div class="all-wrap">
                         <div class="task_list" v-show="task_list.length>0">
-                            <div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
+                            <taskList :index="active_index" :task-list="task_list" @on-show-discuss="handleDiscuss_dia" @on-reset="initialize"></taskList>
+                            <!--<div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
                                 <div class="task_list_info">
                                     <div class="task_title">
                                         <p>{{task.task_title}}</p>
@@ -63,8 +64,8 @@
                                         <button @click="pay">任务完成&支付尾款</button>
                                     </div>
                                     <div class="task_operate" v-if="task.status === 2">
-                                        <!--<button style="visibility: hidden;width: 82px;margin-right: 10px;"></button>-->
-                                        <!--<button style="background: #EBEBEB;color: #999999;">已拒绝</button>-->
+                                        &lt;!&ndash;<button style="visibility: hidden;width: 82px;margin-right: 10px;"></button>&ndash;&gt;
+                                        &lt;!&ndash;<button style="background: #EBEBEB;color: #999999;">已拒绝</button>&ndash;&gt;
                                         <button style="visibility: hidden;width:136px;margin-right: 10px;"></button>
                                         <button style="width: 82px;background: #EBEBEB;color: #999999;">已拒绝</button>
                                     </div>
@@ -79,7 +80,7 @@
                                     </div>
                                 </div>
                                 <div class="line"></div>
-                            </div>
+                            </div>-->
                         </div>
                         <div class="none_list" v-show="task_list.length === 0">
                             <div>
@@ -88,29 +89,13 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div class="paging" v-show="task_list.length>0">
-                        <el-pagination
-                                :hide-on-single-page="true"
-                                background
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange"
-                                @current-change="handleCurrentPageChange"
-                                :pager-count='5'
-                        >
-                        </el-pagination>
-                    </div>-->
                 </el-tab-pane>
 
                 <!--//待处理-->
                 <el-tab-pane label="待处理" name="todo">
                     <div class="all-wrap">
                         <div class="task_list" v-show="task_list.length>0">
-                            <div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
+                            <!--<div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
                                 <div class="task_list_info">
                                     <div class="task_title">
                                         <p>{{task.task_title}}</p>
@@ -141,7 +126,8 @@
                                     </div>
                                 </div>
                                 <div class="line"></div>
-                            </div>
+                            </div>-->
+                            <taskList :index="active_index" :task-list="task_list" @on-show-discuss="handleDiscuss_dia" @on-reset="initialize"></taskList>
                         </div>
                         <div class="none_list" v-show="task_list.length===0">
                             <div>
@@ -150,28 +136,13 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div class="paging" v-show="task_list.length>0">
-                        <el-pagination
-                                background
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :hide-on-single-page="true"
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange(0)"
-                                @current-change="handleCurrentPageChange(0)">
-                        </el-pagination>
-                    </div>-->
                 </el-tab-pane>
 
                 <!--//进行中-->
                 <el-tab-pane label="进行中" name="doing">
                     <div class="all-wrap">
                         <div class="task_list" v-show="task_list.length>0">
-                            <div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
+                            <!--<div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
                                 <div class="task_list_info">
                                     <div class="task_title">
                                         <p>{{task.task_title}}</p>
@@ -215,7 +186,9 @@
                                     </div>
                                 </div>
                                 <div class="line"></div>
-                            </div>
+                            </div>-->
+                            <taskList :index="active_index" :task-list="task_list" @on-show-discuss="handleDiscuss_dia" @on-reset="initialize"></taskList>
+
                         </div>
                         <div class="none_list" v-show="task_list.length===0">
                             <div>
@@ -224,28 +197,13 @@
                             </div>
                         </div>
                     </div>
-                   <!-- <div class="paging" v-show="task_list.length>0">
-                        <el-pagination
-                                background
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :hide-on-single-page="true"
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange(1,3)"
-                                @current-change="handleCurrentPageChange(1,3)">
-                        </el-pagination>
-                    </div>-->
                 </el-tab-pane>
 
                 <!--已结束-->
                 <el-tab-pane label="已结束" name="end">
                     <div class="all-wrap">
                         <div class="task_list" v-show="task_list.length>0">
-                            <div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
+                            <!--<div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
                                 <div class="task_list_info">
                                     <div class="task_title">
                                         <p>{{task.task_title}}</p>
@@ -286,7 +244,8 @@
                                     </div>
                                 </div>
                                 <div class="line"></div>
-                            </div>
+                            </div>-->
+                            <taskList :index="active_index" :task-list="task_list" @on-show-discuss="handleDiscuss_dia" @on-reset="initialize"></taskList>
                         </div>
                         <div class="none_list" v-show="task_list.length===0">
                             <div>
@@ -295,21 +254,6 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div class="paging" v-show="task_list.length>0">
-                        <el-pagination
-                                background
-                                :hide-on-single-page="true"
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange(2,4)"
-                                @current-change="handleCurrentPageChange(2,4)">
-                        </el-pagination>
-                    </div>-->
                 </el-tab-pane>
             </el-tabs>
 
@@ -391,9 +335,13 @@
 <script>
     /* eslint-disable */
     import http from '../../../libs/http'
+    import taskList from './taskList'
 
     export default {
         name: 'task',
+        components:{
+            taskList
+        },
         data() {
             return {
                 activeName: 'all',
@@ -439,15 +387,16 @@
             handleClick(tab, event) {
                 var array = [];
                 this.active_index = tab.index;
+                this.searchParams.page = 1;
                 if (tab.index === '0') {
                     this.initialize();
                 }
                 if (tab.index === '1') {
-                    array = [0,5];
+                    array = [0];
                     this.initialize(array);
                 }
                 if (tab.index === '2') {
-                    array = [1, 3];
+                    array = [1, 3, 5];
                     this.initialize(array);
                 }
                 if (tab.index === '3') {
@@ -459,8 +408,10 @@
             //数据接口
             initialize(array) {
                 if (array) {
-                    this.apiGet('/api/task/order/paginate' + '?status=' + array, this.searchParams).then((res) => {
+                    this.searchParams.status = array;
+                    this.apiGet('/api/task/order/paginate', this.searchParams).then((res) => {
                         this.task_list = res.data;
+                        console.log(res)
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
@@ -481,6 +432,7 @@
                         });
                     }*/
                 } else {
+                    this.searchParams.status = [];
                     this.apiGet('/api/task/order/paginate', this.searchParams).then((res) => {
                         this.task_list = res.data;
                         console.log(res)
@@ -505,6 +457,7 @@
                     array = [2, 4, 7];
                     this.initialize(array);
                 }
+                document.getElementById('app').scrollTo(0,0)
             },
             handleCurrentPageChange(page) {
                 var array = [];
@@ -521,9 +474,10 @@
                     array = [2, 4, 7];
                     this.initialize(array);
                 }
+                document.getElementById('app').scrollTo(0,0)
             },
 
-            //通过任务
+            /*//通过任务
             handlePass(index, id, user_id) {
                 this.apiPost('/api/task/order/status/' + id, {status: 1}).then((res) => {
                     if (res) {
@@ -552,9 +506,9 @@
                         });
                     }
                 })
-            },
+            },*/
 
-            //拒绝任务
+            /*//拒绝任务
             handleRefuse(index, id, user_id) {
                 this.apiPost('/api/task/order/status/' + id, {status: 2}).then((res) => {
                     // console.log(res);
@@ -584,9 +538,9 @@
                         });
                     }
                 })
-            },
+            },*/
 
-            //结束任务
+            /*//结束任务
             handleOver(index, id, user_id) {
                 this.apiPost('/api/task/order/status/' + id, {status: 4}).then((res) => {
                     if (res) {
@@ -615,11 +569,11 @@
                         });
                     }
                 })
-            },
+            },*/
 
             //评价
-            handleDiscuss_dia(index, item) {
-                this.discuss = true;
+            handleDiscuss_dia(show, item ,index ) {
+                this.discuss = show;
                 this.discusser_info = item;
                 this.index = index
             },
@@ -651,13 +605,13 @@
                 if(this.discuss_info.reputation < 1){
                     this.$message({
                         showClose: true,
-                        message: '亲！给点分吧',
+                        message: '请评分',
                         duration:1000
                     })
                 }else if(this.discuss_info.description === null){
                     this.$message({
                         showClose: true,
-                        message: '亲！给点意见',
+                        message: '请填写评论',
                         duration:1000
                     })
                 }else{
@@ -667,10 +621,10 @@
                             this.discuss_ing = 5;
                             this.discuss_info.reputation = 0;
                             this.discuss_info.description = null;
-                            if (this.index === 0) {
+                            if (this.index === '0') {
                                 this.initialize()
-                            } else if (this.index === 3) {
-                                this.initialize(2, 4)
+                            } else if (this.index === '3') {
+                                this.initialize([2, 4, 7])
                             }
                         }
                     })

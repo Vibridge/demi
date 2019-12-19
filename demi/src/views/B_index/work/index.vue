@@ -82,9 +82,9 @@
                 </el-tab-pane>
 
                 <!--兼职-->
-                <el-tab-pane label="兼职职位" name="task_work">
+                <el-tab-pane label="任务职位" name="task_work">
                     <div class="work_wrap_operate">
-                        <button @click="handleRelease(2)">发布兼职职位</button>
+                        <button @click="handleRelease(2)">发布任务职位</button>
                     </div>
                     <div class="all-wrap">
                         <div class="work_list" v-show="task_list.length>0" v-for="task in task_list"

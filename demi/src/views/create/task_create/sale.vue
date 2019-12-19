@@ -15,8 +15,9 @@
                         注意：带 * 的内容，在确认发布后将不能修改
                     </p>
                     <el-form ref="form" :model="form" label-width="92px">
-                        <el-form-item label="* 职位名称：">
-                            <el-input v-model="form.task_title" placeholder="请输入职位名称"></el-input>
+                        <el-form-item label="* 任务名称：">
+                            <el-input v-model="form.task_title" placeholder="请输入任务名称" maxlength="30"
+                                      :show-word-limit="true"></el-input>
                         </el-form-item>
                         <el-form-item label="佣金/每单：">
                             <el-input v-model="form.payment_money" placeholder="请输入佣金"></el-input>
@@ -47,7 +48,7 @@
                             <el-cascader :options="city_tree" v-model="form.city" :show-all-levels="false"
                                          :props="{ label:'city_name', value:'city_id'}" :placeholder="edit"
                                          @focus="handleCity"
-                                         ></el-cascader>
+                            ></el-cascader>
                             <p class="edit_show" v-if="isUpdata && !city_tree || isHistory">{{this.cityName}}</p>
 
                         </el-form-item>
@@ -61,10 +62,11 @@
                 <div class="ask">
                     <el-form ref="form" :model="form" label-width="92px">
                         <el-form-item label="产品名称：">
-                            <el-input v-model="form.goods_title" placeholder="请输入职位名称"></el-input>
+                            <el-input v-model="form.goods_title" placeholder="请输入产品名称" maxlength="30"
+                                      :show-word-limit="true"></el-input>
                         </el-form-item>
                         <el-form-item label="产品价格：">
-                            <el-input v-model="form.goods_price" placeholder="请输入佣金"></el-input>
+                            <el-input v-model="form.goods_price" placeholder="请输入产品价格"></el-input>
                             <p>元</p>
                         </el-form-item>
                         <el-form-item label="产品描述：">
@@ -83,42 +85,46 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item label="产品图片：">
-                            <div class="picture">
+                            <div class="picture" v-loading="pic_loading">
                                 <p>必填</p>
-                                <div class="show_pic" v-if="(isUpdata && show_pic) || (isHistory && show_pic)">
-                                    <div v-for="(item,index) in show_pic" :key="item.file_id" @mouseover="show_icon = item.file_id" @mouseleave="show_icon = null">
+                                <div class="show_pic">
+                                    <div class="edit_img" v-for="(item,index) in show_pic" :key="item.file_id" v-if="(isUpdata && show_pic) || (isHistory && show_pic)"
+                                         @mouseover="show_icon = item.file_id" @mouseleave="show_icon = null">
                                         <img :src="item.file_path" alt="">
                                         <span v-if="show_icon === item.file_id">
                                             <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
                                             <i class="icon el-icon-delete" @click="handleRemove(index,show_pic)"></i>
                                         </span>
                                     </div>
+                                    <div class="upload_img">
+                                        <el-upload
+                                                action=""
+                                                list-type="picture-card"
+                                                :multiple="true"
+                                                :on-change="handleChange"
+                                                :before-upload="beforePicUpload"
+                                                :http-request="uploadFile"
+                                                :limit='9'
+                                                :on-exceed="handleSum"
+                                                :on-preview="handlePictureCardPreview"
+                                                :on-remove="handleRemove"
+                                                :on-success="handleSuccess"
+                                        >
+                                            <i class="el-icon-plus"></i>
+                                        </el-upload>
+                                    </div>
                                 </div>
-                                <el-upload
-                                        action=""
-                                        list-type="picture-card"
-                                        :multiple="true"
-                                        :on-change="handleChange"
-                                        :before-upload="beforePicUpload"
-                                        :http-request="uploadFile"
-                                        :limit='9'
-                                        :on-exceed="handleSum"
-                                        :on-preview="handlePictureCardPreview"
-                                        :on-remove="handleRemove"
-                                        :on-success="handleSuccess"
-                                        v-loading="loading">
-                                    <i class="el-icon-plus"></i>
-                                </el-upload>
+
                                 <el-dialog :visible.sync="dialogVisible" custom-class="bigPic">
                                     <img width="100%" :src="dialogImageUrl" alt="">
                                 </el-dialog>
                             </div>
                         </el-form-item>
                         <el-form-item label="产品视频：">
-                            <div class="video">
+                            <div class="video" v-loading="loading">
                                 <p>选填</p>
                                 <div class="operation" v-if="form.video_path">
-                                    <div class="delect" @click="form.video_path = ''">删除</div>
+                                    <!--<div class="delect" style="display: none" @click="form.video_path = '';cover = '';real_video_path = ''">删除</div>-->
                                     <el-upload action=""
                                                :show-file-list="false"
                                                :before-upload="beforeVidUpload"
@@ -134,7 +140,7 @@
                                         :before-upload="beforeVidUpload"
                                         :http-request="uploadVidFile"
                                         :on-change="handleVidChange"
-                                        v-loading="loading">
+                                        >
                                     <video id="video" class="avatar" :src="this.form.video_path"
                                            v-show="form.video_path !== ''" controls></video>
                                     <img src="../../../assets/img/my_videos@2x.png" v-show="form.video_path === ''"
@@ -145,7 +151,7 @@
                         </el-form-item>
                     </el-form>
                     <div class="line"></div>
-                    <p>我已阅读并同意<span> 《得米平台服务协议》</span></p>
+                    <p>确认发布代表同意<span> 《得米平台服务协议》</span></p>
                     <button class="submit" @click="handleSubmit">确认发布</button>
                 </div>
             </div>
@@ -156,6 +162,7 @@
 <script>
     import http from '../../../libs/http'
     import {forEach} from "../../../libs/tools";
+    import draggable from 'vuedraggable';
 
     export default {
         name: 'sale',
@@ -164,6 +171,9 @@
             isUpdata: {type: Boolean, default: false},
             isHistory: {type: Boolean, default: false},
             isHistoryId: {type: Number, default: null}
+        },
+        components: {
+            draggable,
         },
         data() {
             return {
@@ -195,10 +205,11 @@
                 dialogVisible: false,
                 show_icon: null,
                 show_pic: [],
-                loading: false
+                loading: false,
+                pic_loading:false
             }
         },
-        mounted(){
+        mounted() {
             this.apiGet('/api/user/info').then((res) => {
                 if (res.type !== 2) {
                     this.$message({
@@ -318,35 +329,33 @@
                     duration: 500
                 })
             },
-            uploadFile() {
+            uploadFile(edit) {
                 // 创建表单对象
+                this.pic_loading = true
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 let length = this.files.length;
-                let o = 0;
                 for (let i = 0; i < length; i++) {
                     form.append('files[]', this.files[i].raw);
-                    o = i
                 }
-                if(o == (length-1)){
-                    console.log(o == (length-1))
-                    this.apiPost('/file/uploads', form).then((res) => {
-                        console.log(res)
-                        if (res) {
-                            this.form.image_arr = res;
-                        } else {
-                            this.form.image_arr = []
-                        }
-                        if (this.show_pic) {
+                this.apiPost('/file/uploads', form).then((res) => {
+                    if (res) {
+                        this.form.image_arr = res;
+                        this.pic_loading = false
+                       /* if (this.show_pic) {
                             let length = this.show_pic.length;
                             for (let i = 0; i < length; i++) {
                                 var path = this.show_pic[i].file_path.split('com')[1];
                                 this.form.image_arr.unshift(path);
                             }
+                        }*/
+                    } else {
+                        if(edit == "number"){
+                            this.pic_loading = false
                         }
-                    });
-                }
-
+                        this.form.image_arr = []
+                    }
+                });
             },
             handleRemove(file, fileList) {
                 if (typeof file == "number") {
@@ -357,7 +366,7 @@
                     });
                 }
                 this.files = fileList;
-                this.uploadFile();
+                this.uploadFile(typeof file);
             },
             handleSuccess() {
                 this.loading = false
@@ -381,6 +390,7 @@
                 this.video = file.raw;
             },
             uploadVidFile() {
+                this.loading = true;
                 var windowURL = window.URL || window.webkitURL;
                 var videoURL = windowURL.createObjectURL(this.video);
                 var video = document.getElementById('video');
@@ -413,7 +423,8 @@
                 form.append('files', this.video);
                 form.append('type', 'video');
                 this.apiPost('/file/uploads', form).then((res) => {
-                    this.real_video_path = res[0]
+                    this.real_video_path = res[0];
+                    this.loading = false
                 })
             },
             //base64解码，解码视频第一帧
@@ -502,26 +513,27 @@
                     if (this.form.city === '不限') {
                         this.form.city = [0, 0]
                     }
-                    var data,
-                    data = {
-                        type_label_id: 1091,
-                        quantity_max: this.form.quantity_max,
-                        task_title: this.form.task_title,
-                        payment_method: 1,
-                        unit: '元',
-                        payment_money: this.form.payment_money,
-                        industry_arr: this.industry_arr,
-                        city_id: this.form.city[1],
-                        goods_title: this.form.goods_title,
-                        goods_price: this.form.goods_price,
-                        goods_desc: this.form.goods_desc,
-                        image_arr: this.form.image_arr,
-                        status: 1,
-                        video_path: this.real_video_path,
-                        video_cover: this.cover,
-                    };
-                    // console.log(data)
+                    var data = {
+                            type_label_id: 1091,
+                            quantity_max: this.form.quantity_max,
+                            task_title: this.form.task_title,
+                            payment_method: 1,
+                            unit: '元',
+                            payment_money: this.form.payment_money,
+                            industry_arr: this.industry_arr,
+                            city_id: this.form.city[1],
+                            goods_title: this.form.goods_title,
+                            goods_price: this.form.goods_price,
+                            goods_desc: this.form.goods_desc,
+                            image_arr: this.form.image_arr,
+                            status: 1,
+                            video_path: this.real_video_path,
+                            video_cover: this.cover,
+                        };
+                    console.log(data);
                     if (this.isUpdata) {
+                        // console.log(res)
+
                         var task_edit = JSON.parse(sessionStorage.getItem('task'));
                         this.apiPost('/api/task/update/' + task_edit.id, data).then((res) => {
                             if (res) {
@@ -533,7 +545,6 @@
                                     }
                                 });
                             }
-
                         })
                     } else {
                         this.apiPost('/api/task/create', data).then((res) => {
@@ -553,7 +564,7 @@
             },
             handleEdit(id) {
                 this.apiGet('/api/task/info/' + id).then((res) => {
-                    // console.log(res)
+                    console.log(res)
                     this.form.task_title = res.task_title;
                     this.form.payment_money = res.payment_money;
                     this.form.quantity_max = res.quantity_max;
@@ -574,10 +585,11 @@
                     this.form.goods_price = res.goods.goods_price;
                     if (res.images.length > 0) {
                         this.show_pic = res.images;
+                        this.form.image_path = res.images;
                         // console.log(res)
-                        forEach(res.images,item=>{
+                       /* forEach(res.images, item => {
                             this.form.image_arr.push(item.file_path.split('com')[1])
-                        })
+                        })*/
                     }
                     if (res.video) {
                         this.form.video_path = res.video.file_path;
@@ -832,7 +844,7 @@
                             display: flex;
                             margin-bottom: 18px;
 
-                            .delect {
+                            /*.delect {
                                 width: 80px;
                                 height: 30px;
                                 line-height: 30px;
@@ -845,9 +857,9 @@
                                 font-family: Microsoft YaHei;
                                 font-weight: 400;
                                 color: rgba(36, 191, 255, 1);
-                            }
+                            }*/
 
-                            div:nth-child(2) {
+                            div:nth-child(1) {
                                 width: 125px;
                                 height: 32px;
                                 line-height: 32px;
@@ -939,14 +951,13 @@
     }
 
     .show_pic {
-        float: left;
-
-        div {
+        .edit_img {
             width: 140px;
             height: 140px;
             display: inline-block;
             margin-right: 8px;
             position: relative;
+
             img {
                 width: 100%;
                 height: 100%;
@@ -976,6 +987,17 @@
             }
 
         }
+        .upload_img{
+            display: inline;
+            div{
+                display: inline;
+                .el-upload{
+                    display: inline-block;
+                }
+            }
+
+        }
+
     }
 
     .bigPic {
@@ -985,7 +1007,7 @@
             .el-dialog__headerbtn {
                 background: #24BFFF;
                 border-radius: 50%;
-                width: 30px;
+                width: 30px!important;
                 height: 30px;
                 line-height: 30px;
 

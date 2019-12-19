@@ -81,6 +81,7 @@
         },
 
         mounted() {
+            console.log(this.handleList)
             window.addEventListener('keydown', this.handleKeydown);
             this.$nextTick(function () {
                 this.handleMsgList();
@@ -164,8 +165,6 @@
                     this.newList = res;
                     // this.isRefresh = false;
                     console.log(this.newList)
-
-                    this.$emit('on-msg-refresh', false);
                 });
                 // console.log(this.newList)
             },
@@ -272,6 +271,8 @@
                         'checkoutConversation',
                         im.conversationID
                     );
+                    console.log(im.lastMessage.lastTime)
+                    this.$emit('on-msg-refresh', im.lastMessage.lastTime);
                 }
                 if (im.unreadCount === 0) {
                     return
@@ -282,6 +283,7 @@
                         lastMessageTime: im.lastMessage.lastTime
                     })
                 }
+
             },
 
         },

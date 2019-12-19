@@ -1,5 +1,5 @@
 <template>
-    <div class="B_index_wrapper" :style="active_top === '/B_index/Detail' ? 'overflow:hidden' : ''" v-show="this.start"
+    <div class="B_index_wrapper" v-show="this.start"
          element-loading-spinner="el-icon-loading" element-loading-customClass="el-loading">
         <!--//头部导航-->
         <div :class="active_top === '/B_index/Detail' ? 'header active_app' : 'header'"
@@ -417,6 +417,11 @@
         computed: {
             //是否是左边导航
             IsShow() {
+                if(this.$route.path == '/B_index/Detail'){
+                    document.getElementById('app').style.overflow = 'hidden';
+                }else{
+                    document.getElementById('app').style.overflow = 'auto';
+                }
                 if (this.$route.meta['parent'] !== 'B_person') {
                     this.active_top = '/B_index/B_person';
                     if (this.$route.meta['parent'] !== 'create') {

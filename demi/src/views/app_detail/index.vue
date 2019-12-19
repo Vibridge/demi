@@ -73,6 +73,7 @@
         name: 'index',
         data() {
             return {
+                clientHeight: document.documentElement.clientHeight,
                 swiperOption: {
                     direction : 'vertical',
                     mousewheelControl:true,
@@ -83,6 +84,24 @@
                 }
             }
         },
+        mounted() {
+            window.onresize = () => {
+                this.clientHeight = document.documentElement.clientHeight;
+            };
+        },
+        watch: {
+            /*clientHeight(newValue, oldValue) {
+                console.log(oldValue)
+                console.log(newValue)
+                if(newValue) {
+                    document.getElementById('app').style.overflow = 'unset';
+                    console.log(this.clientHeight);
+                }
+                if(newValue == oldValue){
+                    document.getElementById('app').style.overflow = 'hidden';
+                }
+            }*/
+        }
     }
 </script>
 

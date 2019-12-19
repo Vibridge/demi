@@ -7,7 +7,7 @@
                 </div>
                 <div class="login_header_right">
                     <el-input class="phone" v-model="phone" placeholder="手机号" @input="changePhone"></el-input>
-                    <el-input class="yzm" placeholder="验证码" v-model="yzm">
+                    <el-input class="yzm" placeholder="验证码" v-model="yzm" @keyup.enter.native="login">
                         <div slot="append" @click="Getyzm" v-text="this.success ? this.timeText : '获取'"></div>
                     </el-input>
                    <!-- <div class="captcha-container" v-show="isCaptcha">
@@ -49,7 +49,7 @@
             <p>聚天下之英才而用之</p>
             <p>Gather the talent of the world</p>
         </div>
-
+        <bottom></bottom>
     </div>
 </template>
 
@@ -58,10 +58,13 @@
     import '../../assets/css/reset.css'
     import http from '../../libs/http';
     import Jigsaw from '../../assets/js/slide';
-
+    import bottom from '../../components/B_person_bottom'
 
     export default {
         name: 'index',
+        components:{
+            bottom
+        },
         data() {
             return {
                 phone: '',
@@ -429,6 +432,7 @@
                     width: 100%;
                     margin: 0 auto;
                     text-align: left;
+                    position: relative;
 
                     ul {
                         li {

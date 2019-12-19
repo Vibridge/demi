@@ -16,7 +16,7 @@
                     </p>
                     <el-form ref="form" :model="form" label-width="92px">
                         <el-form-item label="* 职位名称：">
-                            <el-input v-model="form.task_title" placeholder="请输入职位名称"></el-input>
+                            <el-input v-model="form.task_title" placeholder="请输入职位名称" maxlength="30" :show-word-limit="true"></el-input>
                         </el-form-item>
                         <el-form-item label="职位类型：">
                             <el-cascader :options="type_list" :show-all-levels="false"
@@ -92,9 +92,36 @@
                         </el-form-item>
 
                         <el-form-item label="上传图片：">
-                            <div class="picture">
+                            <div class="picture" v-loading="pic_loading">
                                 <p>选填</p>
-                                <div class="show_pic" v-if="(isUpdata && show_pic) || (isHistory && show_pic)">
+                                <div class="show_pic">
+                                    <div class="edit_img" v-for="(item,index) in show_pic" :key="item.file_id" v-if="(isUpdata && show_pic) || (isHistory && show_pic)"
+                                         @mouseover="show_icon = item.file_id" @mouseleave="show_icon = null">
+                                        <img :src="item.file_path" alt="">
+                                        <span v-if="show_icon === item.file_id">
+                                            <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
+                                            <i class="icon el-icon-delete" @click="handleRemove(index,show_pic)"></i>
+                                        </span>
+                                    </div>
+                                    <div class="upload_img">
+                                        <el-upload
+                                                action=""
+                                                list-type="picture-card"
+                                                :multiple="true"
+                                                :on-change="handleChange"
+                                                :before-upload="beforePicUpload"
+                                                :http-request="uploadFile"
+                                                :limit='9'
+                                                :on-exceed="handleSum"
+                                                :on-preview="handlePictureCardPreview"
+                                                :on-remove="handleRemove"
+                                                :on-success="handleSuccess"
+                                        >
+                                            <i class="el-icon-plus"></i>
+                                        </el-upload>
+                                    </div>
+                                </div>
+                                <!--<div class="show_pic" v-if="(isUpdata && show_pic) || (isHistory && show_pic)">
                                     <div @mouseover="show_icon = true" @mouseleave="show_icon = false"
                                          v-for="(item,index) in show_pic" :key="item.file_id">
                                         <img :src="item.file_path" alt="">
@@ -103,31 +130,17 @@
                                             <i class="icon el-icon-delete" @click="handleRemove(index,show_pic)"></i>
                                         </span>
                                     </div>
-                                </div>
-                                <el-upload
-                                        action=""
-                                        list-type="picture-card"
-                                        :multiple="true"
-                                        :on-preview="handlePictureCardPreview"
-                                        :on-remove="handleRemove"
-                                        :on-change="handleChange"
-                                        :before-upload="beforePicUpload"
-                                        :http-request="uploadFile"
-                                        :limit='9'
-                                        :on-exceed="handleSum"
-                                >
-                                    <i class="el-icon-plus"></i>
-                                </el-upload>
+                                </div>-->
                                 <el-dialog :visible.sync="dialogVisible" custom-class="bigPic">
                                     <img width="100%" :src="dialogImageUrl" alt="">
                                 </el-dialog>
                             </div>
                         </el-form-item>
                         <el-form-item label="上传视频：">
-                            <div class="video">
+                            <div class="video" v-loading="vid_loading">
                                 <p>选填</p>
                                 <div class="operation" v-if="form.video_path">
-                                    <div class="delect" @click="form.video_path = ''">删除</div>
+                                    <!--<div class="delect" @click="form.video_path = ''">删除</div>-->
                                     <el-upload action=""
                                                :show-file-list="false"
                                                :before-upload="beforeVidUpload"
@@ -145,7 +158,7 @@
                                         :on-change="handleVidChange">
                                     <video id="video" class="avatar" :src="this.form.video_path"
                                            v-show="form.video_path !== ''" controls></video>
-                                    <img src="../../../assets/img/my_videos@2x.png"
+                                    <img src="../../../assets/img/my_videos@2x.png" v-show="form.video_path === ''"
                                          class="el-icon-plus avatar-uploader-icon">
                                     <p v-show="form.video_path === ''">点击上传视频</p>
                                 </el-upload>
@@ -181,7 +194,7 @@
                         </div>
                     </el-collapse-transition>
                     <div class="line"></div>
-                    <p>我已阅读并同意<span> 《得米平台服务协议》</span></p>
+                    <p>确认发布代表同意<span> 《得米平台服务协议》</span></p>
                     <button @click="handleSubmit">确认发布</button>
                 </div>
 
@@ -242,7 +255,9 @@
                 city_tree: null,
                 edit: '请选择',
                 show_icon: false,
-                show_pic: []
+                show_pic: [],
+                pic_loading:false,
+                vid_loading:false
             }
         },
         mounted() {
@@ -414,30 +429,35 @@
             },
             uploadFile() {
                 // 创建表单对象
+                this.pic_loading = true;
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 let length = this.files.length;
+                console.log(this.files);
                 for (let i = 0; i < length; i++) {
                     form.append('files[]', this.files[i].raw)
                 }
                 this.apiPost('/file/uploads', form).then((res) => {
                     if (res) {
+                        this.pic_loading = false;
                         this.form.image_arr = res;
+                        if (this.show_pic) {
+                            let length = this.show_pic.length;
+                            for (let i = 0; i < length; i++) {
+                                var path = this.show_pic[i].file_path.split('com')[1];
+                                this.form.image_arr.unshift(path);
+                            }
+                        }
                     } else {
                         this.form.image_arr = []
                     }
-                    if (this.show_pic) {
-                        let length = this.show_pic.length;
-                        for (let i = 0; i < length; i++) {
-                            var path = this.show_pic[i].file_path.split('com')[1];
-                            this.form.image_arr.unshift(path);
-                        }
-                    }
+
                 })
             },
             handleRemove(file, fileList) {
                 if (typeof file == "number") {
                     this.apiDelete('/api/task/delete/file/' + fileList[file].file_id).then((res) => {
+                        console.log(res);
                         if (res) {
                             fileList.splice(file, 1);
                         }
@@ -465,6 +485,7 @@
                 this.video = file.raw;
             },
             uploadVidFile() {
+                this.vid_loading = true
                 var windowURL = window.URL || window.webkitURL;
                 var videoURL = windowURL.createObjectURL(this.video);
                 var video = document.getElementById('video');
@@ -489,7 +510,11 @@
                 form.append('type', 'video');
                 this.apiPost('/file/uploads', form).then((res) => {
                     this.real_video_path = res
+                    console.log(this.real_video_path)
+                    this.vid_loading = false
                 })
+                console.log(this.real_video_path)
+
             },
             //base64解码，解码视频第一帧
             base64ToBlob(urlData) {
@@ -509,6 +534,7 @@
                 });
             },
             handleSubmit() {
+                console.log(this.form.image_path)
                 if (!this.form.task_title) {
                     this.$message({
                         showClose: true,
@@ -591,6 +617,7 @@
                         data.latitude = this.latitude;
                         data.address = this.form.address;
                     }
+                    console.log(this.real_video_path)
                     if (this.isUpdata) {
                         var task_edit = JSON.parse(sessionStorage.getItem('task'));
                         this.apiPost('/api/task/update/' + task_edit.id, data).then((res) => {
@@ -938,7 +965,7 @@
                             display: flex;
                             margin-bottom: 18px;
 
-                            .delect {
+                            /*.delect {
                                 width: 80px;
                                 height: 30px;
                                 line-height: 30px;
@@ -951,9 +978,9 @@
                                 font-family: Microsoft YaHei;
                                 font-weight: 400;
                                 color: rgba(36, 191, 255, 1);
-                            }
+                            }*/
 
-                            div:nth-child(2) {
+                            div:nth-child(1) {
                                 width: 125px;
                                 height: 32px;
                                 line-height: 32px;
@@ -1092,7 +1119,78 @@
             }
         }
     }
+    .show_pic {
+        .edit_img {
+            width: 140px;
+            height: 140px;
+            display: inline-block;
+            margin-right: 8px;
+            position: relative;
 
+            img {
+                width: 100%;
+                height: 100%;
+            }
+
+            span {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 140px;
+                height: 140px;
+                background: rgba(0, 0, 0, .3);
+                display: flex;
+                justify-content: center;
+
+                .icon {
+                    align-self: center;
+                    color: white;
+                    font-size: 20px;
+                    margin-right: 20px;
+                    cursor: pointer;
+                }
+
+                .icon:nth-last-child(1) {
+                    margin: 0;
+                }
+            }
+
+        }
+        .upload_img{
+            display: inline;
+            div{
+                display: inline;
+                .el-upload{
+                    display: inline-block;
+                }
+            }
+
+        }
+
+    }
+    .bigPic {
+
+        .el-dialog__header {
+            padding: 0;
+            .el-dialog__headerbtn {
+                background: #24BFFF;
+                border-radius: 50%;
+                width: 30px!important;
+                height: 30px;
+                line-height: 30px;
+
+                .el-icon {
+                    color: white;
+
+                }
+            }
+        }
+
+        .el-dialog__body {
+            padding: 0;
+            line-height: 0;
+        }
+    }
     .edit_show {
         position: absolute;
         z-index: 2;

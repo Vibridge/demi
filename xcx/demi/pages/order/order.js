@@ -9,13 +9,15 @@ Page({
   data: {
     login: false,
     select: null,
+    choose: 'all',
+    orderList:[]
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    
+    this.onlogin()
   },
 
   /**
@@ -35,8 +37,14 @@ Page({
         selected: 1
       });
     }
-    this.chat()
-    this.orderList()
+    let status = this.data.choose;
+    if(status == 'pay'){
+      this.orderList(2)
+    } else if (status == 'unpay'){
+      this.orderList(0)
+    }else{
+      this.orderList()
+    }
   },
 
   //没有绑定手机号的情况
@@ -51,7 +59,7 @@ Page({
   },
 
   //“咨询”
-  chat: function (event) {
+  onlogin: function (event) {
     console.log('aaa')
     let token = wx.getStorageSync('token')
     // if (token) {
@@ -89,13 +97,84 @@ Page({
       })
     }
   },
-  orderList(){
+  orderList(status){
     let token = wx.getStorageSync('token');
     console.log(token)
-    let phone = app.globalData.data.phone
-    common.http(util.baseUrl + '/api/order/paginate?contact_phone=' + phone, "get", function (res) {
-      console.log(res)
-    },null,token)
+    let phone = app.globalData.data.phone;
+    if(status){
+      console.log(status)
+      common.http(util.baseUrl + '/api/order/paginate?contact_phone=' + phone + '&per_page=11111111' + '&status=' +status, "get", function (res) {
+        console.log(res)
+        this.setData({
+          orderList: res.data
+        })
+      }.bind(this), null, token)
+    }else{
+      common.http(util.baseUrl + '/api/order/paginate?contact_phone=' + phone + '&per_page=11111111', "get", function (res) {
+        console.log(res)
+        this.setData({
+          orderList: res.data
+        })
+      }.bind(this), null, token)
+    }
+    
+  },
+
+  handleSelect(e){
+    let choose = e.currentTarget.dataset.active;
+    this.setData({
+      choose:choose
+    });
+    if (choose === 'pay'){
+      this.orderList(2)
+    } else if (choose === 'unpay'){
+      this.orderList(0)
+    }else{
+      this.orderList()
+    }
+  },
+
+  //“咨询”
+  chat: function (event) {
+    let token = wx.getStorageSync('token')
+    if (token) {
+      if (event.detail.formId && event.detail.formId != "the formId is a mock one") {
+        common.http(util.baseUrl + '/api/user/formid/create', 'post', function (res) {
+          console.log(res)
+        }, {
+            formid: event.detail.formId
+          }, token)
+      }
+    }
+    let user_id = event.currentTarget.dataset.id;
+    let goods = event.currentTarget.dataset.goods;
+    let price = event.currentTarget.dataset.price
+    console.log(user_id)
+    let company_name = event.currentTarget.dataset.name
+    console.log(app.globalData.data)
+    if (app.globalData.data === null || !token || app.globalData.data.type == 2) {
+      if (app.globalData.data.type == 2) {
+        wx.showToast({
+          title: '当前身份不正确，请在app上切换为个人身份',
+          icon: 'none',
+          duration: 2000,
+        })
+      }
+      this.setData({
+        login: true,
+        select: 1
+      })
+    } else {
+      this.setData({
+        login: false
+      })
+      wx.navigateTo({
+        url: "../IM/IM?user_id=" + "&company_name=" + company_name + "&type=4" + "&goods_name=" + goods + '&good_price=' + price,
+        success: function (res) {
+          console.log(res)
+        }
+      })
+    }
   },
 
   /**

@@ -7,11 +7,15 @@
       <view class="info">
         <view class="logo"><image mode="aspectFit" src="{{item.company.logo_path}}"></image></view>
         <view class="level">
-          <view class="sign" wx:for="{{level}}" wx:for-item="star" wx:key="index">
-            <image wx:if="{{level == 1}}" src="{{img_level}}"></image>
-            <image wx:if="{{level == 2}}" src="{{img_level}}"></image>
+          <view class="sign">
+            <image wx:if="{{0 < item.company.reputation && item.company.reputation <= 250}}" src="{{img_level1}}"></image>
+            <image wx:if="{{250 < item.company.reputation && item.company.reputation <= 10000}}" src="{{img_level2}}"></image>
+            <image wx:if="{{10000 < item.company.reputation &&item.company.reputation <= 50000}}" src="{{img_level3}}"></image>
+            <image wx:if="{{500000 < item.company.reputation}}" src="{{img_level4}}"></image>
+
+            <!-- <image wx:if="{{level == 2}}" src="{{img_level}}"></image>
             <image wx:if="{{level == 3}}" src="{{img_level}}"></image>
-            <image wx:if="{{level == 4}}" src="{{img_level}}"></image>
+            <image wx:if="{{level == 4}}" src="{{img_level}}"></image> -->
           </view>
           <view class="city" wx:if="{{item.city != null}}">{{item.city.city_name}}</view>
           <view class="city" wx:if="{{item.city == null}}">不限城市</view>

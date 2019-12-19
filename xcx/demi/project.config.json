@@ -50,6 +50,10 @@
 			"currentL": -1,
 			"list": []
 		},
+		"gamePlugin": {
+			"current": -1,
+			"list": []
+		},
 		"miniprogram": {
 			"current": 0,
 			"list": [
@@ -57,6 +61,13 @@
 					"id": 0,
 					"name": "pages/ability_work/ability_work",
 					"pathName": "pages/ability_work/ability_work",
+					"query": "id=160",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/order/order",
+					"pathName": "pages/order/order",
 					"query": "id=160",
 					"scene": null
 				}

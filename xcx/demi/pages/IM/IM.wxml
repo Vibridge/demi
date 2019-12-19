@@ -3,12 +3,15 @@
 <view class="container">
   <view class="task_info_wrap">
     <view class="task_info">
-      <text class="task_title">{{task_name}}</text>
+      <text class="task_title" wx:if="{{type == 2}}">{{task_name}}</text>
+      <text class="task_title" wx:if="{{type == 4}}">{{goods_name}}</text>
       <view class="task_price">
-        <text>{{moeny}}</text>
-        <text>元/单</text>
+        <text wx:if="{{type == 2}}">{{moeny}}</text>
+        <text wx:if="{{type == 4}}">{{good_price}}</text>
+        <text wx:if="{{type == 2}}">元/单</text>
+        <text wx:if="{{type == 4}}">元</text>
       </view>
-      <rich-text nodes="{{nodes}}"></rich-text>
+      <rich-text nodes="{{nodes}}" wx:if="{{type == 2}}"></rich-text>
     </view>
   </view>
   <loading class="loading" wx:if="{{loading}}"/>
