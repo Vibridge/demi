@@ -292,6 +292,8 @@
             handleClick(tab, event) {
                 this.active_index = tab.index;
                 this.searchParams.page = 1;
+                this.searchParams.total = 0;
+                this.searchParams.per_page = 15;
                 if (tab.index === '0') {
                     this.initialize();
                 }

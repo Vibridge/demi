@@ -108,11 +108,11 @@
         },
         methods: {
             handleWalletSizeChange(per_page) {
-                this.task_work_Params.per_page = per_page;
+                this.searchParams.per_page = per_page;
                 this.handleWallet_list();
             },
             handleWalletCurrentPageChange(page) {
-                this.task_work_Params.page = page;
+                this.searchParams.page = page;
                 this.handleWallet_list();
             },
             handleWallet_list() {

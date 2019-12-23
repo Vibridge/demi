@@ -7,15 +7,19 @@
         >
             <div class="col-1" v-if="messageDetail">
                 <!-- 头像 -->
-                <img class="avatar" v-if="isMine" :src="avatar" alt="">
+                <!--<img class="avatar" v-if="isMine" :src="avatar" alt="">-->
                 <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail && messageDetail.service" src="http://produce.jmzhipin.com/h5/images/customer.png" alt="">
                 <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id)"
                      :src="messageDetail.sender.avatar" alt="">
-                <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id) && !messageDetail.sender.avatar"
+                <img class="avatar" v-if="isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id)"
+                     :src="messageDetail.recipient.avatar" alt="">
+                <img class="avatar" v-if="(isMine || !isMine) && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id) && !messageDetail.sender.avatar"
                      src="../../assets/img/toxiang@2x.png" alt="">
                 <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id)"
                      :src="messageDetail.recipient.avatar" alt="">
-                <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id) && !messageDetail.recipient.avatar"
+                <img class="avatar" v-if="isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id)"
+                     :src="messageDetail.sender.avatar" alt="">
+                <img class="avatar" v-if="(isMine || !isMine) && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id) && !messageDetail.recipient.avatar"
                      src="../../assets/img/toxiang@2x.png" alt="">
                 <!--<img v-if="message.from !== 'dominator'" class="avatar" :src="avatar"/>-->
                 <img v-if="message.from === 'dominator'" class="avatar" src="../../assets/img/notification.png"/>

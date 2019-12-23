@@ -85,19 +85,41 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item label="产品图片：">
-                            <div class="picture" v-loading="pic_loading">
+                            <div class="picture">
                                 <p>必填</p>
-                                <div class="show_pic">
-                                    <div class="edit_img" v-for="(item,index) in show_pic" :key="item.file_id" v-if="(isUpdata && show_pic) || (isHistory && show_pic)"
+                                <div class="show_pic" v-loading="pic_loading">
+                                    <!--<div class="edit_img" v-for="(item,index) in show_pic" :key="item.file_id" v-if="(isUpdata && show_pic) || (isHistory && show_pic)"
                                          @mouseover="show_icon = item.file_id" @mouseleave="show_icon = null">
                                         <img :src="item.file_path" alt="">
                                         <span v-if="show_icon === item.file_id">
                                             <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
                                             <i class="icon el-icon-delete" @click="handleRemove(index,show_pic)"></i>
                                         </span>
+                                    </div>-->
+                                    <div class="edit_img" v-for="(item,index) in show_pic" :key="index"
+                                         @mouseover="show_icon = index" @mouseleave="show_icon = null">
+                                        <img :src="item.file_path" alt="">
+                                        <span v-if="show_icon === index">
+                                            <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
+                                            <i class="icon el-icon-delete"
+                                               @click="handleRemove(index,item.file_path)"></i>
+                                        </span>
                                     </div>
                                     <div class="upload_img">
-                                        <el-upload
+                                        <div class="upload_img">
+                                            <el-upload
+                                                    action=""
+                                                    :show-file-list="false"
+                                                    :on-change="handleChange"
+                                                    :before-upload="beforePicUpload"
+                                                    :http-request="uploadFile"
+                                                    :limit='limit'
+                                                    :on-exceed="handleSum"
+                                            >
+                                                <i class="el-icon-plus"></i>
+                                            </el-upload>
+                                        </div>
+                                        <!--<el-upload
                                                 action=""
                                                 list-type="picture-card"
                                                 :multiple="true"
@@ -108,10 +130,9 @@
                                                 :on-exceed="handleSum"
                                                 :on-preview="handlePictureCardPreview"
                                                 :on-remove="handleRemove"
-                                                :on-success="handleSuccess"
                                         >
                                             <i class="el-icon-plus"></i>
-                                        </el-upload>
+                                        </el-upload>-->
                                     </div>
                                 </div>
 
@@ -162,8 +183,10 @@
 <script>
     import http from '../../../libs/http'
     import {forEach} from "../../../libs/tools";
-    import draggable from 'vuedraggable';
+    // import draggable from 'vuedraggable';
+    import config from '../../../config'
 
+    const baseUrl = config.baseUrl;
     export default {
         name: 'sale',
         props: {
@@ -172,11 +195,10 @@
             isHistory: {type: Boolean, default: false},
             isHistoryId: {type: Number, default: null}
         },
-        components: {
-            draggable,
-        },
+
         data() {
             return {
+                baseUrl,
                 /*labelLoading:true,
                 areaLoading:true,*/
                 form: {
@@ -206,7 +228,9 @@
                 show_icon: null,
                 show_pic: [],
                 loading: false,
-                pic_loading:false
+                pic_loading:false,
+                sum:0,
+                limit:0
             }
         },
         mounted() {
@@ -303,12 +327,9 @@
 
             },
             handleChange(file, fileList) {
+                console.log(this.show_pic.length);
                 if (this.show_pic) {
-                    if (this.form.image_arr.length < 9 - this.show_pic.length) {
-                        this.files = fileList;
-                    }
-                } else {
-                    if (this.form.image_arr.length < 9) {
+                    if (this.show_pic.length < 9) {
                         this.files = fileList;
                     }
                 }
@@ -329,7 +350,7 @@
                     duration: 500
                 })
             },
-            uploadFile(edit) {
+            /*uploadFile(edit) {
                 // 创建表单对象
                 this.pic_loading = true
                 let form = new FormData();
@@ -342,13 +363,13 @@
                     if (res) {
                         this.form.image_arr = res;
                         this.pic_loading = false
-                       /* if (this.show_pic) {
+                       /!* if (this.show_pic) {
                             let length = this.show_pic.length;
                             for (let i = 0; i < length; i++) {
                                 var path = this.show_pic[i].file_path.split('com')[1];
                                 this.form.image_arr.unshift(path);
                             }
-                        }*/
+                        }*!/
                     } else {
                         if(edit == "number"){
                             this.pic_loading = false
@@ -356,8 +377,58 @@
                         this.form.image_arr = []
                     }
                 });
+            },*/
+            uploadFile() {
+                // 创建表单对象
+                this.pic_loading = true;
+                console.log(this.files)
+                let form = new FormData();
+                // 后端接受参数 ，可以接受多个参数
+                let length = this.files.length;
+                for (let i = 0; i < length; i++) {
+                    form.append('files', this.files[i].raw);
+                }
+                this.handleUpload(length, form)
+
             },
-            handleRemove(file, fileList) {
+            handleUpload(length, form) {
+                this.apiPost('/file/uploads', form).then((res) => {
+                    if (res) {
+                        let data = {
+                            file_id: '',
+                            file_path: baseUrl + res[0]
+                        };
+                        this.show_pic.push(data);
+                        this.form.image_arr.push(res[0]);
+                        this.sum = this.sum + 1;
+                        if(this.sum === length){
+                            this.pic_loading = false;
+                        }
+                    }
+                });
+            },
+            handleRemove(index, path) {
+                if (this.show_pic[index].file_id) {
+                    this.apiDelete('/api/task/delete/file/' + this.show_pic[index].file_id).then((res) => {
+                        console.log(res);
+                        if (res) {
+                            this.show_pic.splice(index, 1);
+                            this.limit = this.limit + 1;
+                        }
+                    });
+                } else {
+                    this.show_pic.splice(index, 1);
+                    let length = this.form.image_arr.length;
+                    // console.log(this.form.image_path)
+                    for (let i = 0; i < length; i++) {
+                        if (this.form.image_arr[i] === path.split('com')[1]) {
+                            this.form.image_arr.splice(i, 1)
+                            this.limit = this.limit + 1;
+                        }
+                    }
+                }
+            },
+            /*handleRemove(file, fileList) {
                 if (typeof file == "number") {
                     this.apiDelete('/api/task/delete/file/' + fileList[file].file_id).then((res) => {
                         if (res) {
@@ -367,10 +438,8 @@
                 }
                 this.files = fileList;
                 this.uploadFile(typeof file);
-            },
-            handleSuccess() {
-                this.loading = false
-            },
+            },*/
+
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
                 if (file.file_path) {
@@ -501,7 +570,7 @@
                         type: 'error',
                         duration: 500
                     })
-                } else if (!this.form.image_arr) {
+                } else if (!this.form.image_arr && !this.show_pic) {
                     this.$message({
                         showClose: true,
                         message: '请上传产品图片',
@@ -512,6 +581,24 @@
                     // var cover_path = '';
                     if (this.form.city === '不限') {
                         this.form.city = [0, 0]
+                    }
+                    let length = this.show_pic.length;
+                    this.form.image_arr = [];
+                    if (this.isHistory) {
+                        let path;
+                        for (let i = 0; i < length; i++) {
+                            path = this.show_pic[i].file_path.split('com')[1];
+                            this.form.image_arr.push(path);
+                        }
+                    }
+                    if(this.isUpdata){
+                        let path;
+                        for (let i = 0; i < length; i++) {
+                            if(this.show_pic[i].file_id == 0){
+                                path = this.show_pic[i].file_path.split('com')[1];
+                                this.form.image_arr.push(path);
+                            }
+                        }
                     }
                     var data = {
                             type_label_id: 1091,
@@ -533,7 +620,6 @@
                     console.log(data);
                     if (this.isUpdata) {
                         // console.log(res)
-
                         var task_edit = JSON.parse(sessionStorage.getItem('task'));
                         this.apiPost('/api/task/update/' + task_edit.id, data).then((res) => {
                             if (res) {
@@ -585,16 +671,20 @@
                     this.form.goods_price = res.goods.goods_price;
                     if (res.images.length > 0) {
                         this.show_pic = res.images;
-                        this.form.image_path = res.images;
                         // console.log(res)
                        /* forEach(res.images, item => {
                             this.form.image_arr.push(item.file_path.split('com')[1])
                         })*/
                     }
+                    this.limit = this.limit - res.images.length;
                     if (res.video) {
                         this.form.video_path = res.video.file_path;
                         this.real_video_path = res.video.file_path.split('com')[1];
                         this.cover = res.video.cover.split('com')[1]
+                    }else {
+                        this.form.video_path = ''
+                        this.real_video_path = ''
+                        this.cover = ''
                     }
                 });
             }
@@ -987,12 +1077,21 @@
             }
 
         }
-        .upload_img{
+        .upload_img {
             display: inline;
-            div{
+
+            div {
                 display: inline;
-                .el-upload{
-                    display: inline-block;
+
+                .el-upload {
+                    display: table-caption;
+                    background-color: #fbfdff;
+                    border: 1px dashed #c0ccda;
+
+                    i {
+                        font-size: 28px;
+                        color: #8c939d;
+                    }
                 }
             }
 

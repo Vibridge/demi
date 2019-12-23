@@ -5,7 +5,7 @@
             <span>职位管理</span>
         </div>
         <div class="work_main">
-            <el-tabs v-model="activeName" type="card">
+            <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <!--全职-->
                 <el-tab-pane label="全职职位" name="work">
                     <div class="work_wrap_operate">
@@ -63,16 +63,16 @@
                     </div>
 
                     <!--分页控制器-->
-                    <div class="paging" v-show="a">
+                    <div class="paging">
                         <el-pagination
                                 :hide-on-single-page="true"
                                 background
                                 layout="prev, pager, next"
                                 prev-text="上一页"
                                 next-text="下一页"
-                                :total="workParams.total"
-                                :current-page="workParams.page"
-                                :page-size="workParams.per_page"
+                                :total="searchParams.total"
+                                :current-page="searchParams.page"
+                                :page-size="searchParams.per_page"
                                 @size-change="handleSizeChange"
                                 @current-change="handleCurrentPageChange"
                                 :pager-count='5'
@@ -129,18 +129,18 @@
                     </div>
 
                     <!--分页控制器-->
-                    <div class="paging" v-show="a">
+                    <div class="paging">
                         <el-pagination
                                 :hide-on-single-page="true"
                                 background
                                 layout="prev, pager, next"
                                 prev-text="上一页"
                                 next-text="下一页"
-                                :total="task_work_Params.total"
-                                :current-page="task_work_Params.page"
-                                :page-size="task_work_Params.per_page"
-                                @size-change="handleTaskSizeChange"
-                                @current-change="handleTaskCurrentPageChange"
+                                :total="searchParams.total"
+                                :current-page="searchParams.page"
+                                :page-size="searchParams.per_page"
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentPageChange"
                                 :pager-count='5'
                         >
                         </el-pagination>
@@ -166,16 +166,16 @@
                 show_copy: null,
                 work_list: [],
                 task_list: [],
-                workParams: {
+                searchParams: {
                     page: 1,
                     total: 0,
                     per_page: 15
                 },
-                task_work_Params: {
+                /*task_work_Params: {
                     page: 1,
                     total: 0,
                     per_page: 15
-                },
+                },*/
                 area_dialog: false
             };
         },
@@ -203,16 +203,28 @@
         },
         methods: {
 
+            //选项卡切换
+            handleClick(tab, event) {
+                this.searchParams.page = 1;
+                this.searchParams.total = 0;
+                this.searchParams.per_page = 15;
+                /*if (tab.index === 'work') {
+                    this.handleWork_list();
+                }else{
+                    this.handleTask_Work_list()
+                }*/
+            },
+
             //岗位数据列表
             handleWork_list() {
                 this.$store.commit('loading', true);
                 this.apiGet('/api/user/info').then((res) => {
                     if (res.type === 2) {
-                        this.apiGet('/api/work/paginate?user_id=' + res.user_id, this.workParams).then((res) => {
+                        this.apiGet('/api/work/paginate?user_id=' + res.user_id, this.searchParams).then((res) => {
                             this.work_list = res.data;
-                            this.workParams.page = parseInt(res.current_page);
-                            this.workParams.total = parseInt(res.total);
-                            this.workParams.per_page = parseInt(res.per_page);
+                            this.searchParams.page = parseInt(res.current_page);
+                            this.searchParams.total = parseInt(res.total);
+                            this.searchParams.per_page = parseInt(res.per_page);
                             this.$store.commit('loading', false);
                         });
                     } else {
@@ -231,12 +243,12 @@
             //兼职数据列表
             handleTask_Work_list() {
                 this.apiGet('/api/user/info').then((res) => {
-                    this.apiGet('/api/task/paginate?user_id=' + res.user_id, this.task_work_Params).then((res) => {
+                    this.apiGet('/api/task/paginate?user_id=' + res.user_id, this.searchParams).then((res) => {
                         this.task_list = res.data;
                         // console.log(this.task_list)
-                        this.task_work_Params.page = parseInt(res.current_page);
-                        this.task_work_Params.total = parseInt(res.total);
-                        this.task_work_Params.per_page = parseInt(res.per_page);
+                        this.searchParams.page = parseInt(res.current_page);
+                        this.searchParams.total = parseInt(res.total);
+                        this.searchParams.per_page = parseInt(res.per_page);
                         this.$store.commit('loading', false);
                     });
                 })
@@ -244,15 +256,15 @@
 
             //岗位分页事件
             handleSizeChange(per_page) {
-                this.workParams.per_page = per_page;
+                this.searchParams.per_page = per_page;
                 this.handleWork_list();
             },
             handleCurrentPageChange(page) {
-                this.workParams.page = page;
+                this.searchParams.page = page;
                 this.handleWork_list();
             },
 
-            //兼职分页事件
+            /*//兼职分页事件
             handleTaskSizeChange(per_page) {
                 this.task_work_Params.per_page = per_page;
                 this.handleTask_Work_list();
@@ -260,7 +272,7 @@
             handleTaskCurrentPageChange(page) {
                 this.task_work_Params.page = page;
                 this.handleTask_Work_list();
-            },
+            },*/
 
             //首页跳路由时的参数
             getRouterData() {
@@ -586,7 +598,7 @@
 
                 .el-pagination.is-background .el-pager li:not(.disabled).active {
                     background: rgba(36, 191, 255, 1);
-                    color: #fff;
+                    color: #fff!important;
                 }
 
                 .el-pagination button, .el-pagination span:not([class*=suffix]) {

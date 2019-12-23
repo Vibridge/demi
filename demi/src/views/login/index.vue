@@ -181,6 +181,7 @@
                     if (res && (res.type === 2) && (res.enterprise_step > 4)) {
                         let user_id = res.user_id;
                         let userSig = res.usersig;
+                        console.log(res);
                         sessionStorage.setItem('userID', user_id);
                         sessionStorage.setItem('userSig', userSig);
                         this.tim.login({

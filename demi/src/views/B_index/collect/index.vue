@@ -300,6 +300,9 @@
 
             //切换导航
             handleClick(tab, event) {
+                this.searchParams.page = 1;
+                this.searchParams.total = 0;
+                this.searchParams.per_page = 15;
                 if (tab.index === '0') {
                     //全职人才
                     this.initialize(1);

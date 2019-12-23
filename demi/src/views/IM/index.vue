@@ -144,6 +144,7 @@
 
             handleUpdataTime(data) {
                 this.lastTime = data;
+                console.log(this.lastTime)
             },
 
         },
@@ -152,19 +153,17 @@
                 // conversationList: state => state.conversation.conversationList,
                 currentConversation: state => state.conversation.currentConversation,
                 handleMessageList(state) {
-                    let length = state.conversation.currentMessageList.length;
-                    console.log(this.lastTime - this.timeTamp);
-                    if(this.lastTime){
-                        if(this.lastTime - this.timeTamp > 300){
-                            console.log('aaa');
-                            this.timeTamp = this.lastTime;
-                            // state.conversation.currentMessageList[length - 1].time = getTime((new Date(this.timeTamp * 1000)))
-                        }
-                        this.lastTime = 0;
-                    }else{
-                        forEach(state.conversation.currentMessageList, item => {
-                            if (typeof item.time != 'string') {
-                                if (Math.abs(item.time - this.timeTamp) > 300) {
+                    forEach(state.conversation.currentMessageList, item => {
+                        if (typeof item.time != 'string') {
+                            if (this.lastTime > 0) {
+                                if (this.lastTime - this.timeTamp > 300) {
+                                    item.time = getTime((new Date(item.time * 1000)));
+                                } else {
+                                    item.time = ""
+                                }
+                                this.lastTime = 0;
+                            } else {
+                                if ((Math.abs(item.time - this.timeTamp) > 300) || (item.time - this.timeTamp == 0)) {
                                     this.timeTamp = item.time;
                                     if (isToday(new Date(item.time * 1000))) {
                                         item.time = getTime((new Date(item.time * 1000)));
@@ -181,11 +180,13 @@
                                     }
                                 } else {
                                     this.timeTamp = item.time;
-                                    item.time =""
+                                    item.time = ""
                                 }
+                                console.log(item.time)
                             }
-                        })
-                    }
+                        }
+                    });
+                    // }
                     return state.conversation.currentMessageList
                 },
                 isCompleted: state => state.conversation.isCompleted,

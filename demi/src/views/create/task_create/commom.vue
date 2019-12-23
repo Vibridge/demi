@@ -16,7 +16,8 @@
                     </p>
                     <el-form ref="form" :model="form" label-width="92px">
                         <el-form-item label="* 职位名称：">
-                            <el-input v-model="form.task_title" placeholder="请输入职位名称" maxlength="30" :show-word-limit="true"></el-input>
+                            <el-input v-model="form.task_title" placeholder="请输入职位名称" maxlength="30"
+                                      :show-word-limit="true"></el-input>
                         </el-form-item>
                         <el-form-item label="职位类型：">
                             <el-cascader :options="type_list" :show-all-levels="false"
@@ -25,7 +26,8 @@
                                          :placeholder="edit" @visible-change="handleType"
                                          @change="handleLabel"
                             ></el-cascader>
-                            <p class="edit_show" v-if="isUpdata && typeof this.form.type_label === 'string' || isHistory">
+                            <p class="edit_show"
+                               v-if="isUpdata && typeof this.form.type_label === 'string' || isHistory">
                                 {{this.form.type_label}}</p>
                         </el-form-item>
                         <el-form-item label="基本工资：">
@@ -61,7 +63,7 @@
                                          @visible-change="handleInd"
                                          @change="handleIndLabel"
                             ></el-cascader>
-                            <p class="edit_show" v-if="isUpdata || isHistory"><span
+                            <p class="edit_show" v-if="(isUpdata || isHistory) && !industry_list"><span
                                     style="color: #808080" v-for="item in form.industry" :key="item.label_id">{{item.name}}/</span>
                             </p>
                         </el-form-item>
@@ -70,7 +72,7 @@
                                          :props="{ label:'city_name', value:'city_id'}" :placeholder="edit"
                                          @focus="handleCity"
                                          @change="handleProvince"></el-cascader>
-                            <p class="edit_show" v-if="isUpdata && !city_tree || isHistory">{{this.cityName}}</p>
+                            <p class="edit_show" v-if="(isUpdata || isHistory) && !city_tree">{{this.cityName}}</p>
                         </el-form-item>
                         <el-form-item label="职位描述：">
                             <el-input
@@ -92,18 +94,32 @@
                         </el-form-item>
 
                         <el-form-item label="上传图片：">
-                            <div class="picture" v-loading="pic_loading">
+                            <div class="picture">
                                 <p>选填</p>
-                                <div class="show_pic">
-                                    <div class="edit_img" v-for="(item,index) in show_pic" :key="item.file_id" v-if="(isUpdata && show_pic) || (isHistory && show_pic)"
-                                         @mouseover="show_icon = item.file_id" @mouseleave="show_icon = null">
+                                <div class="show_pic" v-loading="pic_loading">
+                                    <div class="edit_img" v-for="(item,index) in show_pic" :key="index"
+                                         @mouseover="show_icon = index" @mouseleave="show_icon = null">
                                         <img :src="item.file_path" alt="">
-                                        <span v-if="show_icon === item.file_id">
+                                        <span v-if="show_icon === index">
                                             <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
-                                            <i class="icon el-icon-delete" @click="handleRemove(index,show_pic)"></i>
+                                            <i class="icon el-icon-delete"
+                                               @click="handleRemove(index,item.file_path)"></i>
                                         </span>
                                     </div>
                                     <div class="upload_img">
+                                        <el-upload
+                                                action=""
+                                                :show-file-list="false"
+                                                :on-change="handleChange"
+                                                :before-upload="beforePicUpload"
+                                                :http-request="uploadFile"
+                                                :limit='limit'
+                                                :on-exceed="handleSum"
+                                        >
+                                            <i class="el-icon-plus"></i>
+                                        </el-upload>
+                                    </div>
+                                    <!--<div class="upload_img">
                                         <el-upload
                                                 action=""
                                                 list-type="picture-card"
@@ -115,22 +131,11 @@
                                                 :on-exceed="handleSum"
                                                 :on-preview="handlePictureCardPreview"
                                                 :on-remove="handleRemove"
-                                                :on-success="handleSuccess"
                                         >
                                             <i class="el-icon-plus"></i>
                                         </el-upload>
-                                    </div>
+                                    </div>-->
                                 </div>
-                                <!--<div class="show_pic" v-if="(isUpdata && show_pic) || (isHistory && show_pic)">
-                                    <div @mouseover="show_icon = true" @mouseleave="show_icon = false"
-                                         v-for="(item,index) in show_pic" :key="item.file_id">
-                                        <img :src="item.file_path" alt="">
-                                        <span v-if="show_icon">
-                                            <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
-                                            <i class="icon el-icon-delete" @click="handleRemove(index,show_pic)"></i>
-                                        </span>
-                                    </div>
-                                </div>-->
                                 <el-dialog :visible.sync="dialogVisible" custom-class="bigPic">
                                     <img width="100%" :src="dialogImageUrl" alt="">
                                 </el-dialog>
@@ -208,6 +213,9 @@
     import http from '../../../libs/http'
     import {forEach} from "../../../libs/tools";
     import {handleMap} from '../../../libs/Amap'
+    import config from '../../../config'
+
+    const baseUrl = config.baseUrl;
 
     export default {
         name: 'sale',
@@ -219,6 +227,7 @@
         },
         data() {
             return {
+                baseUrl,
                 form: {
                     task_title: '',
                     payment_money: null,
@@ -251,13 +260,15 @@
                 dialogImageUrl: '',
                 dialogVisible: false,
                 type_list: null,
-                industry_list:null,
+                industry_list: null,
                 city_tree: null,
                 edit: '请选择',
                 show_icon: false,
                 show_pic: [],
-                pic_loading:false,
-                vid_loading:false
+                pic_loading: false,
+                vid_loading: false,
+                sum:0,
+                limit:9
             }
         },
         mounted() {
@@ -276,6 +287,7 @@
             this.$nextTick(() => {
                 handleMap();
             })
+            console.log(this.show_pic)
         },
         methods: {
             handleBack() {
@@ -302,6 +314,38 @@
                 var length = res.length;
                 this.type_label = null;
                 this.type_label = res[length - 1];
+            },
+            handleInd(res) {
+                if (res) {
+                    this.apiGet('/labels?id=1025&mode=tree').then((res) => {
+                        this.industry_list = res;
+                    })
+                }
+            },
+            handleIndLabel(res) {
+                var length = res.length;
+                if (length > 3) {
+                    let showLabel = [];
+                    showLabel.push(res[0]);
+                    showLabel.push(res[1]);
+                    showLabel.push(res[2]);
+                    this.form.industry = showLabel;
+                    this.industry_arr = [];
+                    forEach(showLabel, item => {
+                        this.industry_arr.push(item[1])
+                    });
+                    this.$message({
+                        showClose: true,
+                        message: '最多只能选3个',
+                        type: 'error',
+                        duration: 500
+                    })
+                } else {
+                    this.industry_arr = [];
+                    forEach(res, item => {
+                        this.industry_arr.push(item[1])
+                    });
+                }
             },
             handleCity() {
                 let first_city = {
@@ -337,38 +381,7 @@
                 let dataRecieve = this.$refs.city.getCheckedNodes();
                 this.cityName = dataRecieve[0].label;
             },
-            handleInd(res) {
-                if (res) {
-                    this.apiGet('/labels?id=1025&mode=tree').then((res) => {
-                        this.industry_list = res;
-                    })
-                }
-            },
-            handleIndLabel(res) {
-                var length = res.length;
-                if (length > 3) {
-                    let showLabel = [];
-                    showLabel.push(res[0]);
-                    showLabel.push(res[1]);
-                    showLabel.push(res[2]);
-                    this.form.industry = showLabel;
-                    this.industry_arr = [];
-                    forEach(showLabel, item => {
-                        this.industry_arr.push(item[1])
-                    });
-                    this.$message({
-                        showClose: true,
-                        message: '最多只能选3个',
-                        type: 'error',
-                        duration: 500
-                    })
-                } else {
-                    this.industry_arr = [];
-                    forEach(res, item => {
-                        this.industry_arr.push(item[1])
-                    });
-                }
-            },
+
             init() {
                 AMap.plugin('AMap.Autocomplete', function () {
                     // 实例化Autocomplete
@@ -401,12 +414,9 @@
 
             },
             handleChange(file, fileList) {
+                console.log(this.show_pic.length);
                 if (this.show_pic) {
-                    if (this.form.image_arr.length < 9 - this.show_pic.length) {
-                        this.files = fileList;
-                    }
-                } else {
-                    if (this.form.image_arr.length < 9) {
+                    if (this.show_pic.length < 9) {
                         this.files = fileList;
                     }
                 }
@@ -430,6 +440,20 @@
             uploadFile() {
                 // 创建表单对象
                 this.pic_loading = true;
+                console.log(this.files)
+                let form = new FormData();
+                // 后端接受参数 ，可以接受多个参数
+                let length = this.files.length;
+                for (let i = 0; i < length; i++) {
+                    form.append('files', this.files[i].raw);
+                }
+                this.handleUpload(length, form)
+
+            },
+
+            /*uploadFile(edit) {
+                // 创建表单对象
+                this.pic_loading = true;
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 let length = this.files.length;
@@ -441,20 +465,58 @@
                     if (res) {
                         this.pic_loading = false;
                         this.form.image_arr = res;
-                        if (this.show_pic) {
-                            let length = this.show_pic.length;
-                            for (let i = 0; i < length; i++) {
-                                var path = this.show_pic[i].file_path.split('com')[1];
-                                this.form.image_arr.unshift(path);
+                        forEach(res,item =>{
+                            let data ={
+                                file_id:'',
+                                file_path:item
                             }
+                            this.show_pic.push(data)
+                        })
+                    }else{
+                        if(edit == "number"){
+                            this.pic_loading = false
                         }
-                    } else {
-                        this.form.image_arr = []
                     }
-
                 })
+            },*/
+            handleUpload(length, form) {
+                this.apiPost('/file/uploads', form).then((res) => {
+                    if (res) {
+                        let data = {
+                            file_id: '',
+                            file_path: baseUrl + res[0]
+                        };
+                        this.show_pic.push(data);
+                        this.form.image_arr.push(res[0]);
+                        this.sum = this.sum + 1;
+                        if(this.sum === length){
+                            this.pic_loading = false;
+                        }
+                    }
+                });
             },
-            handleRemove(file, fileList) {
+            handleRemove(index, path) {
+                if (this.show_pic[index].file_id) {
+                    this.apiDelete('/api/task/delete/file/' + this.show_pic[index].file_id).then((res) => {
+                        console.log(res);
+                        if (res) {
+                            this.show_pic.splice(index, 1);
+                            this.limit = this.limit + 1;
+                        }
+                    });
+                } else {
+                    this.show_pic.splice(index, 1);
+                    let length = this.form.image_arr.length;
+                    // console.log(this.form.image_path)
+                    for (let i = 0; i < length; i++) {
+                        if (this.form.image_arr[i] === path.split('com')[1]) {
+                            this.form.image_arr.splice(i, 1)
+                            this.limit = this.limit + 1;
+                        }
+                    }
+                }
+            },
+            /*handleRemove(file, fileList) {
                 if (typeof file == "number") {
                     this.apiDelete('/api/task/delete/file/' + fileList[file].file_id).then((res) => {
                         console.log(res);
@@ -464,8 +526,8 @@
                     });
                 }
                 this.files = fileList;
-                this.uploadFile();
-            },
+                this.uploadFile(typeof file);
+            },*/
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
                 if (file.file_path) {
@@ -590,6 +652,24 @@
                     if (this.form.city === '不限') {
                         this.form.city = [0, 0]
                     }
+                    let length = this.show_pic.length;
+                    this.form.image_arr = [];
+                    if (this.isHistory) {
+                        let path;
+                        for (let i = 0; i < length; i++) {
+                            path = this.show_pic[i].file_path.split('com')[1];
+                            this.form.image_arr.push(path);
+                        }
+                    }
+                    if(this.isUpdata){
+                        let path;
+                        for (let i = 0; i < length; i++) {
+                            if(this.show_pic[i].file_id == 0){
+                                path = this.show_pic[i].file_path.split('com')[1];
+                                this.form.image_arr.push(path);
+                            }
+                        }
+                    }
                     var data;
                     data = {
                         task_title: this.form.task_title,
@@ -617,7 +697,7 @@
                         data.latitude = this.latitude;
                         data.address = this.form.address;
                     }
-                    console.log(this.real_video_path)
+                    console.log(data)
                     if (this.isUpdata) {
                         var task_edit = JSON.parse(sessionStorage.getItem('task'));
                         this.apiPost('/api/task/update/' + task_edit.id, data).then((res) => {
@@ -650,25 +730,35 @@
             },
             handleEdit(id) {
                 this.apiGet('/api/task/info/' + id).then((res) => {
-                    // console.log(res);
+                    console.log(res);
                     this.form.task_title = res.task_title;
                     this.form.payment_money = res.payment_money;
                     this.form.quantity_max = res.quantity_max;
                     this.form.type_label = res.type_label.name;
                     this.type_label = res.type_label.label_id;
                     this.form.address = res.address;
+                    this.latitude = res.latitude;
+                    this.longitude = res.longitude;
                     if (res.city) {
                         this.form.city = [0];
-                        this.form.city.push(res.city.city_id)
+                        this.form.city.push(res.city.city_id);
+                        this.city_id = res.city.city_id;
                         this.cityName = res.city.city_name;
                     } else {
-                        this.form.city = "不限"
+                        this.form.city = "不限";
+                        this.city_id = 0;
+                        this.cityName = "不限";
                     }
                     if (res.images.length > 0) {
                         this.show_pic = res.images;
                     }
+                    this.limit = this.limit - res.images.length;
                     if (res.video) {
                         this.form.video_path = res.video.file_path
+                        this.cover = res.video.cover
+                    } else {
+                        this.form.video_path = ''
+                        this.cover = ''
                     }
                     this.form.industry = res.industry;
                     this.form.front_money = res.front_money;
@@ -1119,6 +1209,7 @@
             }
         }
     }
+
     .show_pic {
         .edit_img {
             width: 140px;
@@ -1156,26 +1247,38 @@
             }
 
         }
-        .upload_img{
+
+        .upload_img {
             display: inline;
-            div{
+
+            div {
                 display: inline;
-                .el-upload{
-                    display: inline-block;
+
+                .el-upload {
+                    display: table-caption;
+                    background-color: #fbfdff;
+                    border: 1px dashed #c0ccda;
+
+                    i {
+                        font-size: 28px;
+                        color: #8c939d;
+                    }
                 }
             }
 
         }
 
     }
+
     .bigPic {
 
         .el-dialog__header {
             padding: 0;
+
             .el-dialog__headerbtn {
                 background: #24BFFF;
                 border-radius: 50%;
-                width: 30px!important;
+                width: 30px !important;
                 height: 30px;
                 line-height: 30px;
 
@@ -1191,6 +1294,7 @@
             line-height: 0;
         }
     }
+
     .edit_show {
         position: absolute;
         z-index: 2;

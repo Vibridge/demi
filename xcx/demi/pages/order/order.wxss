@@ -165,7 +165,8 @@
 }
 .go_pay{
   border:1rpx solid #e4e4e4;
-  color: red;
-  margin: 0
+  color: #999999;
+  margin: 0；
+
 }
 

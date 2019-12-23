@@ -129,7 +129,7 @@
                         <div class="more" v-if="!isCompleted">
                             <el-button
                                     type="text"
-                                    @click="$store.dispatch('getMessageList', service_id)"
+                                    @click="$store.dispatch('getMessageList', service_id);timeTamp=0"
                             >查看更多
                             </el-button>
                         </div>
@@ -243,8 +243,8 @@
                 chatCustomer:false,
                 isShowScrollButtomTips: false,
                 preScrollHeight: 0,
-                timeTamp:0,
-                chatTime:0,
+                timeTamp: 0,
+                lastTime: 0,
                 messageDetail:null,
                 service_id:null
             }
@@ -254,6 +254,7 @@
             this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
 
             this.apiGet('/api/user/info').then((res) => {
+                console.log(res);
                 if (res.type !== 2) {
                     this.$message({
                         showClose: true,
@@ -263,6 +264,27 @@
                     this.$router.push({
                         name: "login"
                     });
+                }else{
+                    if(this.isSDKReady && (this.currentUserProfile.avatar == res.company.logo_path)){
+                        let name = res.nickname;
+                        let avatar = res.company.logo_path;
+                        let options={
+                            nick:name,
+                            avatar:avatar
+                        };
+                        this.tim
+                            .updateMyProfile(options)
+                            .then(() => {
+                                console.log('修改成功')
+                            })
+                            .catch(imError => {
+                                this.$store.commit('showMessage', {
+                                    message: imError.message,
+                                    type: 'error'
+                                })
+                            })
+                    }
+
                 }
             });
             //回到顶部
@@ -361,11 +383,16 @@
                 }
             },
             handleCustomer(){
-                this.chatCustomer = true
+                this.chatCustomer = true;
+                this.timeTamp = this.handleList.lastMessage.lastTime;
+                this.tim.setMessageRead({
+                    conversationID: this.handleList.conversationID,
+                    lastMessageTime: this.handleList.lastMessage.lastTime
+                })
             },
 
-            handleUpdataTime(data){
-                this.chatTime = data;
+            handleUpdataTime(data) {
+                this.lastTime = data;
             },
 
             // 如果滚到底部就保持在底部，否则提示是否要滚到底部
@@ -485,9 +512,45 @@
                     }
                     return message
                 },
+                currentUserProfile: state => state.user.currentUserProfile,
                 isLogin: state => state.user.isLogin,
                 isSDKReady: state => state.user.isSDKReady,
                 handleMessageList(state) {
+                    if(this.showCustomer){
+                        forEach(state.conversation.currentMessageList, item => {
+                            if (typeof item.time != 'string') {
+                                if (this.lastTime > 0) {
+                                    if (this.lastTime - this.timeTamp > 300) {
+                                        item.time = getTime((new Date(item.time * 1000)));
+                                    } else {
+                                        item.time = ""
+                                    }
+                                    this.lastTime = 0;
+                                } else {
+                                    if ((Math.abs(item.time - this.timeTamp) > 300) || (item.time - this.timeTamp == 0)) {
+                                        this.timeTamp = item.time;
+                                        if (isToday(new Date(item.time * 1000))) {
+                                            item.time = getTime((new Date(item.time * 1000)));
+                                        } else {
+                                            if ((new Date(item.time * 1000).getFullYear() == new Date().getFullYear()) && (new Date(item.time * 1000).getMonth() == new Date().getMonth())) {
+                                                if (parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) == 1) {
+                                                    item.time = '昨天' + ' ' + getTime((new Date(item.time * 1000)));
+                                                } else if ((parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) > 1) && (parseInt(new Date().getDate()) - parseInt(new Date(item.time * 1000).getDate()) <= 7)) {
+                                                    item.time = getDay(new Date(item.time * 1000)) + getTime((new Date(item.time * 1000)))
+                                                }
+                                            } else {
+                                                item.time = getFullDate(new Date(item.time * 1000))
+                                            }
+                                        }
+                                    } else {
+                                        this.timeTamp = item.time;
+                                        item.time = ""
+                                    }
+                                    console.log(item.time)
+                                }
+                            }
+                        })
+                    }
                     return state.conversation.currentMessageList
                 },
                 isCompleted: state => state.conversation.isCompleted,

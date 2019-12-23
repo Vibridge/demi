@@ -3,11 +3,11 @@
         <div class="title">
             最近联系人
         </div>
-        <div class="none_list" v-if="handleList.length < 1">
+        <div class="none_list" v-if="!handleList">
             <p>暂无聊天记录</p>
         </div>
 
-        <div class="list_wrap" v-if="handleList.length > 0">
+        <div class="list_wrap" v-if="handleList">
             <div v-for="(item,index) in handleList" :key="index" @click="showMessage(item,item.conversationID)" class="list"
                  :class="{ 'active_list': item.conversationID === currentConversation.conversationID }" v-if="newList[Corresponding(item.conversationID)]">
                 <div class="list_info">
@@ -81,7 +81,6 @@
         },
 
         mounted() {
-            console.log(this.handleList)
             window.addEventListener('keydown', this.handleKeydown);
             this.$nextTick(function () {
                 this.handleMsgList();
@@ -125,18 +124,22 @@
 
         computed: {
             ...mapState({
+                isSDKReady: state => state.user.isSDKReady,
                 handleList(state) {
-                    let id = "C2C" + sessionStorage.getItem('service_id') + 'b';
-                    let user_id = "C2C" + sessionStorage.getItem('userID') + 'a';
-                    for (let i in state.conversation.conversationList) {
-                        if (state.conversation.conversationList[i].conversationID == id) {
-                            this.deleteConversation(id)
+                    if(this.isSDKReady){
+                        let id = "C2C" + sessionStorage.getItem('service_id') + 'b';
+                        let user_id = "C2C" + sessionStorage.getItem('userID') + 'a';
+                        for (let i in state.conversation.conversationList) {
+                            if (state.conversation.conversationList[i].conversationID == id) {
+                                this.deleteConversation(id)
+                            }
+                            if(state.conversation.conversationList[i].conversationID == user_id){
+                                this.deleteConversation(user_id)
+                            }
                         }
-                        if(state.conversation.conversationList[i].conversationID == user_id){
-                            this.deleteConversation(user_id)
-                        }
+                        return state.conversation.conversationList
                     }
-                    return state.conversation.conversationList
+
                 },
                 currentConversation: state => state.conversation.currentConversation,
             }),
@@ -164,6 +167,8 @@
                 this.apiGet('/converse/lists?mode=object').then((res) => {
                     this.newList = res;
                     // this.isRefresh = false;
+                    console.log(this.handleList);
+
                     console.log(this.newList)
                 });
                 // console.log(this.newList)
