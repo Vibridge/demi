@@ -26,9 +26,26 @@ function http(url, method, callback, data = null, token = null){
           } else {
             callback(true)
           }
-        } else {
+        } else if (res.data.code === 403){
+          console.log(res.data.message)
+          wx.removeStorage({
+            key: "token",
+            success(res) {
+              console.log(res)
+            }
+          })
+        } else{
           let title = res.data.message
           console.log(title)
+          if ((title == 'Token Signature could not be verified') || (title == 'Token not provided')){
+            console.log(res.data.message)
+            wx.removeStorage({
+              key: "token",
+              success(res) {
+                console.log(res)
+              }
+            })
+          }
           if (title != "执行成功"){
             if (title == "不存在的任务招募信息" || title == "你要查看的岗位信息不存在") {
               wx.showToast({

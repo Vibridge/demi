@@ -7,7 +7,7 @@
 
         <!--消息内容-->
         <div class="main" @click="onScroll"
-             :style="(messageDetail && messageDetail.dominator) ? 'justify-content:flex-start' : ''">
+             :style="(messageDetail && messageDetail.dominator) ? 'justify-content:flex-start' : ''"  v-if="showCurrentConversation">
 
             <!--头部信息-->
             <MessageHeader :message-detail="messageDetail"></MessageHeader>
@@ -81,7 +81,7 @@
             // this.initListener();
             //发送后消息到底部
             this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
-
+            console.log(sessionStorage.getItem('userSig'))
         },
 
         updated() {
@@ -191,6 +191,9 @@
                 },
                 isCompleted: state => state.conversation.isCompleted,
             }),
+            showCurrentConversation() {
+                return !!this.currentConversation.conversationID
+            },
         },
         mixins: [http],
     }

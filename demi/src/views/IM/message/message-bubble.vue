@@ -34,73 +34,45 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.chat-bubble{
-  position:relative;
-  .message-content{
-    font-size: 14px;
-    position: relative;
-    max-width: 350px;
-    word-wrap: break-word;
-    word-break: break-all;
+<style lang="stylus" scoped>
+.chat-bubble
+  position relative
+  .message-content
+    font-size 14px
+    position relative
+    max-width 350px
+    word-wrap break-word
+    word-break break-all
     padding: 11px 26px;
-    span{
-      white-space: pre-wrap;
-      margin: 0;
-      /*text-shadow: $regular 0 0 0.05em;*/
-    }
+    border 1px solid #eeeeee
+    span
+      white-space pre-wrap
+      margin 0
+      /*text-shadow $regular 0 0 0.05em*/
+    img
+      vertical-align bottom
 
-    img{
-      vertical-align: bottom;
-    }
-    img::before{
-      position: absolute;
-      top: 0;
-      width: 12px;
-      height: 40px;
-      content: "\e900";
-        // content "\e906"
-      font-family: 'tim' !important;
-      font-size: 24px // 32px 在mac上会模糊 24px正常 , window 24px模糊 28px 32px正常  36px windows mac 基本一致，但是太大
-    }
-    .message-received{
-      /*background-color $white;*/
-      margin-left: 15px;
-      border-radius: 0 18px 18px 18px;
-      .new{
-        transform: scale(0);
-        transform-origin: top left;
-        animation: bounce 500ms linear both;
-        .message-send{
-          /*background-color: $light-primary;*/
-          margin-right: 15px;
-          border-radius: 18px 0 18px 18px;
-          /*color: $white;*/
-        }
-        .message-send::before{
-          right: -10px;
-          /*color $light-primary*/
-          .new{
-            transform: scale(0);
-            transform-origin: top right;
-            animation: bounce 500ms linear both;
-          }
-        }
-      }
-      }
-    }
-    .message-received::before{
-      left: -10px;
-      transform: scaleX(-1);
-      /*color: $white;*/
-    }
-  }
+  .message-received
+    background-color $white
+    margin-left 15px
+    border-radius: 0 18px 18px 18px;
 
+    &.new
+      transform: scale(0);
+      transform-origin: top left;
+      animation: bounce 500ms linear both;
+  .message-send
+    background-color $light-primary
+    margin-right 15px
+    border-radius: 18px 0 18px 18px;
+    color $white
 
+    &.new
+      transform: scale(0);
+      transform-origin: top right;
+      animation: bounce 500ms linear both;
 
-
-    
-@keyframes bounce { 
+@keyframes bounce {
   0% { transform: matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
   4.7% { transform: matrix3d(0.45, 0, 0, 0, 0, 0.45, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
   9.41% { transform: matrix3d(0.883, 0, 0, 0, 0, 0.883, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
@@ -113,6 +85,6 @@ export default {
   52.15% { transform: matrix3d(0.991, 0, 0, 0, 0, 0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
   63.26% { transform: matrix3d(1.007, 0, 0, 0, 0, 1.007, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
   85.49% { transform: matrix3d(0.999, 0, 0, 0, 0, 0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
-  100% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); } 
-}      
+  100% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
+}
 </style>

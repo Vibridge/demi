@@ -9,16 +9,22 @@
                 <!-- 头像 -->
                 <!--<img class="avatar" v-if="isMine" :src="avatar" alt="">-->
                 <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail && messageDetail.service" src="http://produce.jmzhipin.com/h5/images/customer.png" alt="">
+
                 <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id)"
                      :src="messageDetail.sender.avatar" alt="">
+
                 <img class="avatar" v-if="isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id)"
                      :src="messageDetail.recipient.avatar" alt="">
+
                 <img class="avatar" v-if="(isMine || !isMine) && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id) && !messageDetail.sender.avatar"
                      src="../../assets/img/toxiang@2x.png" alt="">
+
                 <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id)"
                      :src="messageDetail.recipient.avatar" alt="">
+
                 <img class="avatar" v-if="isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id)"
                      :src="messageDetail.sender.avatar" alt="">
+
                 <img class="avatar" v-if="(isMine || !isMine) && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id) && !messageDetail.recipient.avatar"
                      src="../../assets/img/toxiang@2x.png" alt="">
                 <!--<img v-if="message.from !== 'dominator'" class="avatar" :src="avatar"/>-->
@@ -63,6 +69,10 @@
                 <span v-else>暂未支持的消息类型：{{message.type}}</span>
             </div>
 
+            <div class="col-3">
+                <!-- 消息状态 -->
+                <message-status-icon :message="message" />
+            </div>
         </div>
     </div>
 
@@ -74,6 +84,7 @@
     /*import MessageStatusIcon from './message-status-icon.vue'
     import MessageHeader from './message-header'
     import MessageFooter from './message-footer'*/
+    import MessageStatusIcon from './message-status-icon.vue'
     import FileElement from './message-elements/file-element.vue'
     import FaceElement from './message-elements/face-element.vue'
     import ImageElement from './message-elements/image-element.vue'
@@ -83,7 +94,7 @@
     /*import GroupTipElement from './message-elements/group-tip-element.vue'
     import GroupSystemNoticeElement from './message-elements/group-system-notice-element.vue'*/
     import CustomElement from './message-elements/custom-element.vue'
-    import { getFullDate } from '../../libs/time'
+    // import { getFullDate } from '../../../libs/time'
 
 
     export default {
@@ -100,6 +111,7 @@
             /*MessageHeader,
             MessageFooter,
             MessageStatusIcon,*/
+            MessageStatusIcon,
             FileElement,
             FaceElement,
             ImageElement,
@@ -200,6 +212,10 @@
                 display: flex;
                 flex-direction: column;
                 // max-width 50% // 此设置可以自适应宽度，目前由bubble限制
+            }
+
+            .col-3 {
+                width: 30px;
             }
         }
 

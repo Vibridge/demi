@@ -52,6 +52,7 @@ Page({
         selected: 0
       })
     }
+  
   },
 
   handleList(page){

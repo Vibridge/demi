@@ -45,6 +45,7 @@ Page({
     }else{
       this.orderList()
     }
+    
   },
 
   //没有绑定手机号的情况
@@ -62,6 +63,7 @@ Page({
   onlogin: function (event) {
     console.log('aaa')
     let token = wx.getStorageSync('token')
+    console.log(token)
     // if (token) {
     //   if (event.detail.formId && event.detail.formId != "the formId is a mock one") {
     //     common.http(util.baseUrl + '/api/user/formid/create', 'post', function (res) {
@@ -117,7 +119,6 @@ Page({
         })
       }.bind(this), null, token)
     }
-    
   },
 
   handleSelect(e){
