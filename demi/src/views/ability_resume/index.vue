@@ -437,10 +437,10 @@
                 </div>
 
             </div>
-            <div class="go_left" @click="goBack" v-if="this.index > 0">
+            <div class="go_left" @click="goBack" v-if="this.index > 0 && !this.open_id">
                 <img src="../../assets/img/left@2x.png" alt="">
             </div>
-            <div class="go_right" @click="goNext" v-if="this.index < this.ability_resume.length">
+            <div class="go_right" @click="goNext" v-if="this.index < this.ability_resume.length && !this.open_id">
                 <img src="../../assets/img/right@2x.png" alt="">
             </div>
         </el-dialog>
@@ -527,6 +527,7 @@
                 searchBarFixed: false,
 
                 //收藏跳转
+                open_id:''
                 // collect_id:this.$route.params.id
             }
         },
@@ -558,6 +559,9 @@
                 });
                 // document.addEventListener('scroll', this.handleScroll)
             });
+        },
+        created() {
+            this.getParams();
         },
         methods: {
 
@@ -843,6 +847,12 @@
                 });
             },
 
+            getParams() {
+                // 取到路由带过来的参数
+                this.open_id = this.$route.query.id;
+                console.log("接受的pdf的值：", this.open_id);
+            }
+
             /*handePhoneEmail(id){
                 this.apiGet('/api/user/info/' + id).then((res)=>{
                     this.phone = res.phone;
@@ -852,6 +862,17 @@
 
         },
         mixins: [http],
+        watch:{
+            open_id(){
+                if(this.open_id){
+                    this.dialogVisible = true;
+                    this.apiGet("/api/ability/info/" + this.open_id).then((res) => {
+                        // console.log(res)
+                        this.detail_info = res;
+                    })
+                }
+            }
+        },
         /*watch:{
             collect_id(){
                 console.log('aaa')
@@ -1449,7 +1470,7 @@
                     position: fixed;
                     top: 50%;
                     right: calc(50% - 500px);;
-                    transform: translate3d(20%, -50%, 0);
+                    transform: translate3d(50%, -50%, 0);
 
                     img {
                         width: 20px;

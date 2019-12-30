@@ -207,7 +207,7 @@
 
 
             initialize(status){
-                this.$store.commit('loading', true);
+                // this.$store.commit('loading', true);
                 //已邀请参数
                 if(status){
                     this.apiGet('/api/work/interview/lists' + '?status[0]=0&status[1]=1&status[2]=2&status[3]=' + status, this.searchParams ).then((res) => {
@@ -216,7 +216,7 @@
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     })
                 }else{
                     //已面试需要多个参数
@@ -231,7 +231,7 @@
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     })
                 }
 

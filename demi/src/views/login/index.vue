@@ -191,6 +191,7 @@
                             this.$store.commit('toggleIsLogin', true);
                             this.$store.commit('startComputeCurrent');
                             console.log('im登陆成功');
+
                             this.$router.push({
                                 name: 'B_index',
                             });

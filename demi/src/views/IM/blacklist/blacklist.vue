@@ -2,7 +2,7 @@
   <div class="blacklist-wrapper" :class="{'default': !hasBlacklist}">
     <div v-if="hasBlacklist">
       <blacklist-item
-        v-for="item in blacklist"
+        v-for="item in this.blacklist"
         :key="item.userID"
         :profile="item"
       />

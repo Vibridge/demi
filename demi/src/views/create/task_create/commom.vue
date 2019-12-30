@@ -357,7 +357,7 @@
                     }]
                 };
                 this.apiGet('/city/lists?mode=tree').then((res) => {
-                    this.$store.commit('loading', true);
+                    // this.$store.commit('loading', true);
                     forEach(res, item => {
                         if (item.municipalities !== 0) {
                             let muniCity = [{
@@ -374,7 +374,7 @@
                     });
                     this.city_tree = res;
                     this.city_tree.unshift(first_city);
-                    this.$store.commit('loading', false);
+                    // this.$store.commit('loading', false);
                 })
             },
             handleProvince(value) {

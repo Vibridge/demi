@@ -245,7 +245,7 @@
             handleCity() {
 
                 this.apiGet('/city/lists?mode=tree').then((res) => {
-                    this.$store.commit('loading', true);
+                    // this.$store.commit('loading', true);
                     forEach(res, item => {
                         if (item.municipalities !== 0) {
                             let muniCity = [{
@@ -262,17 +262,17 @@
                     });
                     this.city_tree = res;
                     this.areaLoading = false
-                    this.$store.commit('loading', false);
+                    // this.$store.commit('loading', false);
                 })
 
             },
             handleLabel() {
 
-                this.$store.commit('loading', true);
+                // this.$store.commit('loading', true);
                 this.apiGet('/labels?id=967&mode=tree').then((res) => {
                     this.work_tree = res;
                     this.labelLoading = false;
-                    this.$store.commit('loading', false);
+                    // this.$store.commit('loading', false);
                 });
                 this.apiGet('/labels?id=967').then((res) => {
                     forEach(res, item => {
@@ -280,7 +280,7 @@
                             this.work_list.push(item)
                         }
                     });
-                    this.$store.commit('loading', false);
+                    // this.$store.commit('loading', false);
                 });
 
 
@@ -517,7 +517,7 @@
                                     }
                                 }
                             });
-                            this.$store.commit('loading', false);
+                            // this.$store.commit('loading', false);
                         });
                     }
                     this.form.area = this.work_edit.address;

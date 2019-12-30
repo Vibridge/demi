@@ -1,13 +1,13 @@
 <template>
   <div>
     <el-form :model="form" :rules="rules" ref="createGroupForm" label-width="100px">
-      <el-form-item label="群ID">
+      <el-form-item label="群ID" style="display: none">
         <el-input v-model="form.groupID"></el-input>
       </el-form-item>
       <el-form-item label="群名称" prop="name">
         <el-input v-model="form.name"></el-input>
       </el-form-item>
-      <el-form-item label="群类型">
+      <el-form-item label="群类型" style="display: none">
         <el-select v-model="form.type">
           <el-option label="Private" value="Private"></el-option>
           <el-option label="Public" value="Public"></el-option>
@@ -24,7 +24,7 @@
       <el-form-item label="群公告">
         <el-input type="textarea" v-model="form.notification" :maxlength="300"></el-input>
       </el-form-item>
-      <el-form-item label="加群方式">
+      <el-form-item label="加群方式" style="display: none">
         <el-radio-group v-model="form.joinOption" :disabled="joinOptionDisabled">
           <el-radio label="FreeAccess">自由加群</el-radio>
           <el-radio label="NeedPermission">需要验证</el-radio>
@@ -55,25 +55,7 @@
 </template>
 
 <script>
-import {
-  Form,
-  FormItem,
-  Input,
-  Select,
-  Option,
-  Radio,
-  RadioGroup
-} from 'element-ui'
 export default {
-  components: {
-    ElForm: Form,
-    ElFormItem: FormItem,
-    ElInput: Input,
-    ElSelect: Select,
-    ElOption: Option,
-    ElRadioGroup: RadioGroup,
-    ElRadio: Radio
-  },
   data() {
     return {
       form: {
@@ -115,7 +97,8 @@ export default {
       this.$store.commit('updateCreateGroupModelVisible', false)
     },
     createGroup() {
-      this.tim.createGroup(this.getOptions()).then(() => {
+      this.tim.createGroup(this.getOptions()).then((res) => {
+        console.log(res)
         this.closeCreateGroupModel()
       })
     },
@@ -127,6 +110,7 @@ export default {
       if (['Private', 'AVChatRoom'].includes(this.form.type)) {
         delete options.joinOption
       }
+      console.log(options)
       return options
     },
     handleSearchUser(userID) {

@@ -249,47 +249,47 @@
                     //钱包
                     this.user_info.available_amount_b = res.available_amount_b;
                     this.user_info.unusable_amount_b = res.unusable_amount_b;
-                    this.$store.commit('loading', true);
+                    // this.$store.commit('loading', true);
 
                     //只岗位显示三条数据
                     this.apiGet('/api/work/paginate?user_id=' + res.user_id + '&per_page=3&page=1').then((res) => {
                         // console.log(res)
                         this.work_list3 = res.data;
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     });
 
                     //只任务显示三条数据
                     this.apiGet('/api/task/paginate?user_id=' + res.user_id + '&per_page=3&page=1').then((res) => {
                         this.task_list3 = res.data;
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     });
 
                     //我的任务状态总数
                     this.apiGet('/api/task/order/paginate?status=0').then((res) => {
                         this.task_status[0].num = res.total;
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     });
                     this.apiGet('/api/task/order/paginate?status[0]=1&status[1]=3').then((res) => {
                         this.task_status[1].num = res.total;
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     });
                     this.apiGet('/api/task/order/paginate?status[0]=2&status[1]=4').then((res) => {
                         this.task_status[2].num = res.total;
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     });
 
                     //我的订单状态总数
                     this.apiGet('/api/order/paginate?status=2').then((res) => {
                         this.order_status[0].num = res.total;
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     });
                     this.apiGet('/api/order/paginate?status[0]=0&status[1]=1').then((res) => {
                         this.order_status[1].num = res.total;
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     });
                     this.apiGet('/api/order/paginate?status=3').then((res) => {
                         this.order_status[2].num = res.total;
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     });
 
                     //面试记录三条
@@ -301,7 +301,7 @@
                             }
                         });
                         this.interview_list3 = res.data;
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     });
                 } else {
                     this.$message({

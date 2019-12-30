@@ -290,7 +290,7 @@
                             </div>
                         </div>
                         <div class="cop">
-                            <p>发布于2019</p>
+                            <!--<p>发布于2019</p>-->
                             <div>
                                 <button @mouseover="show_collect = true"
                                         @mouseleave="show_collect = false"
@@ -429,10 +429,10 @@
                             <img src="../../assets/img/snail@2x.png" alt="">
                         </div>
                     </div>
-                    <div class="go_left" @click="goBack">
+                    <div class="go_left" @click="goBack" v-if="this.index > 0 && !this.open_id">
                         <img src="../../assets/img/left@2x.png" alt="">
                     </div>
-                    <div class="go_right" @click="goNext">
+                    <div class="go_right" @click="goNext" v-if="this.index < this.work_resume.length && !this.open_id">
                         <img src="../../assets/img/right@2x.png" alt="">
                     </div>
                 </el-dialog>
@@ -660,6 +660,7 @@
                 dialogVisible: false,
                 detail_info: null,
                 index: null,
+                open_id:''
 
             }
         },
@@ -691,6 +692,9 @@
                 });
             });
         },
+        created() {
+            this.getParams();
+        },
         methods: {
             //滚动效果
             load() {
@@ -715,7 +719,7 @@
             //城市数据
             handleCity() {
                 this.apiGet('/city/lists').then((res) => {
-                    this.$store.commit('loading', true);
+                    // this.$store.commit('loading', true);
                     // console.log(res)
                     forEach(res, item => {
                         if (item.municipalities !== 0) {
@@ -734,7 +738,7 @@
                         //     }
                         // });
                     });
-                    this.$store.commit('loading', false);
+                    // this.$store.commit('loading', false);
                 })
 
             },
@@ -1044,7 +1048,7 @@
 
             //返回上一个
             goBack() {
-                if (0 <= this.index < this.work_resume.length) {
+                if ((0 < this.index) && (this.index < this.work_resume.length)) {
                     this.index = this.index - 1;
                     this.dialogVisible = true;
                     this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res) => {
@@ -1061,7 +1065,7 @@
 
             //下一个
             goNext() {
-                if (0 <= this.index < this.work_resume.length) {
+                if ((0 <= this.index) && (this.index < this.work_resume.length)) {
                     this.index = this.index + 1;
                     this.dialogVisible = true;
                     this.apiGet("/api/job/info/" + this.work_resume[this.index].user_job_id).then((res) => {
@@ -1075,6 +1079,23 @@
                     });
                 }
             },
+
+            getParams() {
+                // 取到路由带过来的参数
+                this.open_id = this.$route.query.id;
+                // console.log("接受的pdf的值：", routerParams);
+            }
+        },
+        watch:{
+            open_id(){
+                if(this.open_id){
+                    this.dialogVisible = true;
+                    this.apiGet("/api/job/info/" + this.open_id).then((res) => {
+                        // console.log(res)
+                        this.detail_info = res;
+                    })
+                }
+            }
         },
         mixins: [http]
 
@@ -1830,7 +1851,7 @@
                 position: fixed;
                 top: 50%;
                 right: calc(50% - 500px);;
-                transform: translate3d(20%, -50%, 0);
+                transform: translate3d(50%, -50%, 0);
                 img {
                     width: 20px;
                 }

@@ -2,7 +2,7 @@
   <div class="list-container">
     <div class="group-container">
       <div class="header-bar">
-        <el-autocomplete
+        <!--<el-autocomplete
           :value-key="'name' || 'groupID'"
           :debounce="500"
           size="mini"
@@ -14,12 +14,16 @@
           :hide-loading="hideSearchLoading"
           @input="hideSearchLoading = false"
           @select="applyJoinGroup"
-        ></el-autocomplete>
+        ></el-autocomplete>-->
+        <div class="group-seach-bar">
+          群列表
+        </div>
         <button title="创建群组" @click="showCreateGroupModel">
           <i class="tim-icon-add"></i>
         </button>
       </div>
-      <group-item v-for="group in groupList" :key="group.groupID" :group="group" />
+      <group-item v-if="groupList" v-for="group in groupList" :key="group.groupID" :group="group" />
+      <div style="color:gray;" v-else>暂无加入的群聊</div>
       <el-dialog title="创建群组" :visible="createGroupModelVisible" @close="closeCreateGroupModel" width="30%">
         <create-group></create-group>
       </el-dialog>
@@ -29,7 +33,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Dialog, Autocomplete } from 'element-ui'
 import CreateGroup from './create-group.vue'
 import GroupItem from './group-item.vue'
 export default {
@@ -41,9 +44,10 @@ export default {
   },
   components: {
     GroupItem,
-    ElDialog: Dialog,
     CreateGroup,
-    ElAutocomplete: Autocomplete
+  },
+  mounted(){
+    console.log(this.tim)
   },
   computed: {
     groupList: function() {
@@ -64,6 +68,7 @@ export default {
       this.$store.commit('updateCreateGroupModelVisible', false)
     },
     searchGroupByID(queryString, showInSearchResult) {
+
       if (queryString.trim().length > 0) {
         this.hideSearchLoading = false
         this.tim
@@ -120,18 +125,22 @@ export default {
   .header-bar
     display: flex;
     flex-shrink 0
-    height 50px
-    border-bottom 1px solid $background-deep-dark
-    padding 10px 10px 10px 20px
+    height 60px
+    border-bottom 1px solid #E6E6E6
+    padding 15px 10px 10px 20px
+    line-height: 32px;
     .group-seach-bar
       width 100%
       margin-right 10px
+      /*padding: 23px 20px;*/
+      font-size: 14px;
+      color: #999;
       >>> .el-input
         input
           color $first
           border none
           border-radius 30px
-          background-color $deep-background !important
+          background-color #E6E6E6 !important
           &::placeholder
             color $font-dark
         .el-icon-search
@@ -140,7 +149,7 @@ export default {
       float right
       display: inline-block;
       cursor: pointer;
-      background $background-deep-dark
+      background #E6E6E6
       border: none
       color: $font-dark;
       box-sizing: border-box;

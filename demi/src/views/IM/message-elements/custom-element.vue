@@ -19,7 +19,6 @@
 
 <script>
 import MessageBubble from '../message-bubble'
-import { Rate } from 'element-ui'
 export default {
   name: 'CustomElement',
   props: {
@@ -33,7 +32,6 @@ export default {
   },
   components: {
     MessageBubble,
-    ElRate: Rate
   },
   computed: {
     text() {
@@ -46,7 +44,6 @@ export default {
   methods: {
     translateCustomMessage(payload) {
       return payload.description
-
     }
   }
 }

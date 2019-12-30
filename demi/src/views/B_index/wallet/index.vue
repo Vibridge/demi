@@ -116,7 +116,7 @@
                 this.handleWallet_list();
             },
             handleWallet_list() {
-                this.$store.commit('loading', true);
+                // this.$store.commit('loading', true);
                 this.apiGet('/api/user/info').then((res) => {
                     if (res.type === 2) {
                         this.Available_amount = res.available_amount_b;
@@ -130,7 +130,7 @@
                             this.searchParams.page = parseInt(res.current_page);
                             this.searchParams.total = parseInt(res.total);
                             this.searchParams.per_page = parseInt(res.per_page);
-                            this.$store.commit('loading', false);
+                            // this.$store.commit('loading', false);
                         });
                     } else {
                         this.$message({

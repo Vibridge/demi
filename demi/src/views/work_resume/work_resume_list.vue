@@ -78,7 +78,8 @@
                     <span v-if="item.diploma && item.diploma.school">{{item.diploma.school.school_name}}</span>
                     <span v-if="item.diploma && item.diploma.major">{{item.diploma.major}}</span>
                 </div>
-                <p class="time">2018.06-2019.09</p>
+                <!--<p class="time">2018.06-2019.09</p>-->
+                <p class="time">&nbsp;</p>
             </div>
         </div>
         <div class="line"></div>

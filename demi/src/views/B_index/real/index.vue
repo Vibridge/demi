@@ -91,7 +91,7 @@
       };
     },
     mounted(){
-      this.$store.commit('loading', true);
+      // this.$store.commit('loading', true);
       this.apiGet('/api/user/info').then((res) => {
         // console.log(res)
         if(res.type === 2){
@@ -119,7 +119,7 @@
             name: "login"
           });
         }
-        this.$store.commit('loading', false);
+        // this.$store.commit('loading', false);
       })
     },
     methods: {

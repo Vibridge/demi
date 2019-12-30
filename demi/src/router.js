@@ -99,6 +99,23 @@ const router = new Router({
                     component: () => import('./views/B_index/VIP/index.vue')
 
                 },
+
+                {
+                    path: '/B_index/B_person/goods',
+                    name: 'goods',
+                    meta: {title: 'goods',parent:'B_person'},
+                    component: () => import('./views/B_index/goods/index.vue')
+
+                },
+                {
+                    path: '/B_index/B_person/goods_massage',
+                    name: 'goodsMassage',
+                    meta: {title: 'goodsMassage',parent:'B_person'},
+                    component: () => import('./views/B_index/goods_massage/index.vue')
+
+                },
+
+
                 {
                     path: '/B_index/B_person/company_info',
                     name: 'company_info',
@@ -120,9 +137,17 @@ const router = new Router({
                 {
                     path: '/B_index/B_person/withdraw',
                     name: 'withdraw',
-                    meta: {title: 'create_work',parent:'withdraw'},
+                    meta: {title: 'create_withdraw',parent:'create'},
                     component: () => import('./views/withdraw/index.vue')
                 },
+
+                {
+                    path: '/B_index/B_person/create/goods',
+                    name: 'create_goods',
+                    meta: {title: 'create_goods',parent:'create'},
+                    component: () => import('./views/B_index/goods/create_goods.vue')
+                },
+
                 {
                     path: '/B_index/work_resume',
                     name: 'work_resume',

@@ -155,8 +155,8 @@
     import {mapState} from 'vuex'
     import {mapGetters} from 'vuex'
     // import scroll from '../../components/scroll'
-    import MessageBox from '../../views/IM/message_box'
-    import MessageItem from '../../views/IM/message_detail'
+    import MessageBox from '../../views/IM/message/message-send-box'
+    import MessageItem from '../../views/IM/message/message-item'
     import {forEach} from "../../libs/tools";
     import { getTime } from '../../libs/time'
     import { isToday } from '../../libs/time'
@@ -235,6 +235,18 @@
                         img:require('../../assets/img/vip@2x.png'),
                         img_active:require('../../assets/img/vip_on@2x.png')
                     },
+                    {
+                        path: '/B_index/B_person/goods',
+                        title: '发布商品',
+                        img:require('../../assets/img/goods.png'),
+                        img_active:require('../../assets/img/goods_on.png')
+                    },
+                    {
+                        path: '/B_index/B_person/goods_massage',
+                        title: '商品管理',
+                        img:require('../../assets/img/goods_manage.png'),
+                        img_active:require('../../assets/img/goods_manage_on.png')
+                    },
                 ],
                 active_class: '/B_index/B_person',
                 read: 0,
@@ -251,8 +263,8 @@
         },
         mounted() {
             //发送后消息到底部
+            console.log(this.tim.context)
             this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
-
             this.apiGet('/api/user/info').then((res) => {
                 console.log(res);
                 if (res.type !== 2) {
@@ -265,7 +277,7 @@
                         name: "login"
                     });
                 }else{
-                    if(this.isSDKReady && (this.currentUserProfile.avatar == res.company.logo_path)){
+                    if(this.isSDKReady && (this.currentUserProfile.avatar != res.company.logo_path)){
                         let name = res.nickname;
                         let avatar = res.company.logo_path;
                         let options={
@@ -742,7 +754,7 @@
 
                 .left {
                     width: 260px;
-                    height: 837px;
+                    height: 977px;
                     margin-right: 17px;
                     background: #fff;
                     border: 1px solid rgba(235, 235, 235, 1);

@@ -48,16 +48,19 @@ export default {
                 this.checkResponseStatus(resolve, reject, service.get(url, {params:params}));
             });
         },
+
         apiPost(url, params) {
             return new Promise((resolve, reject) => {
                 this.checkResponseStatus(resolve, reject, service.post(url, params));
             });
         },
+
         apiDelete(url, params) {
             return new Promise((resolve, reject) => {
                 this.checkResponseStatus(resolve, reject, service.delete(url, {params}));
             });
         },
+
         removeToken(){
             return delToken();
         },
@@ -91,6 +94,10 @@ export default {
                 this.$message.error(error.message);
                 reject(false);
             });
-        }
+        },
+
+        apiAll(){
+
+        },
     }
 }

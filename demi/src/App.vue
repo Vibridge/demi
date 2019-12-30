@@ -29,7 +29,7 @@
 
 <script>
     import http from './libs/http'
-
+    import { translateGroupSystemNotice } from './libs/common'
     import {mapState} from 'vuex'
 
     export default {
@@ -78,35 +78,36 @@
                 this.tim.on(this.TIM.EVENT.CONVERSATION_LIST_UPDATED, event => {
                     this.$store.commit('updateConversationList', event.data)
                 })
-                /*// 群组列表更新
+                // 群组列表更新
                 this.tim.on(this.TIM.EVENT.GROUP_LIST_UPDATED, event => {
                     this.$store.commit('updateGroupList', event.data)
-                })*/
-                /*  // 收到新的群系统通知
-                  this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, event => {
-                      const isKickedout = event.data.type === 4
-                      const isCurrentConversation =
-                          `GROUP${event.data.message.payload.groupProfile.groupID}` === this.currentConversation.conversationID
-                      // 在当前会话被踢，需reset当前会话
-                      if (isKickedout && isCurrentConversation) {
-                          this.$store.commit('resetCurrentConversation')
-                      }
-                      Notification({
-                          title: '新系统通知',
-                          message: translateGroupSystemNotice(event.data.message),
-                          duration: 3000,
-                          onClick: () => {
-                              const SystemConversationID = '@TIM#SYSTEM'
-                              this.$store.dispatch('checkoutConversation', SystemConversationID)
-                          }
-                      })
-                  })*/
+                })
+                // 收到新的群系统通知
+                this.tim.on(this.TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, event => {
+                    const isKickedout = event.data.type === 4
+                    const isCurrentConversation =
+                        `GROUP${event.data.message.payload.groupProfile.groupID}` === this.currentConversation.conversationID
+                    // 在当前会话被踢，需reset当前会话
+                    if (isKickedout && isCurrentConversation) {
+                        this.$store.commit('resetCurrentConversation')
+                    }
+                    console.log(event)
+                    Notification({
+                        title: '新系统通知',
+                        message: translateGroupSystemNotice(event.data.message),
+                        duration: 3000,
+                        onClick: () => {
+                            const SystemConversationID = '@TIM#SYSTEM'
+                            this.$store.dispatch('checkoutConversation', SystemConversationID)
+                        }
+                    })
+                })
             },
-            onReceiveMessage({data: messageList}) {
+            onReceiveMessage({ data: messageList }) {
                 this.handleAt(messageList)
                 this.$store.commit('pushCurrentMessageList', messageList)
             },
-            onError({data}) {
+            onError({ data }) {
                 if (data.message !== 'Network Error') {
                     this.$store.commit('showMessage', {
                         message: data.message,
@@ -114,14 +115,15 @@
                     })
                 }
             },
-            onReadyStateUpdate({name}) {
+            onReadyStateUpdate({ name }) {
                 const isSDKReady = name === this.TIM.EVENT.SDK_READY ? true : false
                 this.$store.commit('toggleIsSDKReady', isSDKReady)
+
                 if (isSDKReady) {
-                    this.tim.getMyProfile().then(({data}) => {
+                    this.tim.getMyProfile().then(({ data }) => {
                         this.$store.commit('updateCurrentUserProfile', data)
                     })
-                    // this.$store.dispatch('getBlacklist')
+                    this.$store.dispatch('getBlacklist')
                 }
             },
             /**
@@ -151,7 +153,7 @@
                             duration: 3000
                         })
                         this.$bus.$emit('new-messsage-at-me', {
-                            data: {conversationID: message.conversationID}
+                            data: { conversationID: message.conversationID }
                         })
                     }
                 }

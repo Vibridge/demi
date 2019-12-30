@@ -1,11 +1,13 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import conversation from './module/conversation'
-import user from './module/user'
+import Vue from 'vue'
+import Vuex from 'vuex'
+import conversation from './modules/conversation'
+import group from './modules/group'
+import user from './modules/user'
+import friend from './modules/friend'
+import blacklist from './modules/blacklist'
 import {Message} from 'element-ui'
-import app from './module/app';
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
@@ -20,7 +22,7 @@ export default new Vuex.Store({
       }, 1000)
     },
     stopComputeCurrent(state) {
-      clearInterval(state.intervalID);
+      clearInterval(state.intervalID)
       state.intervalID = 0
     },
     showMessage(state, options) {
@@ -35,10 +37,11 @@ export default new Vuex.Store({
       })
     }
   },
-  actions: {},
   modules: {
-    app,
     conversation,
+    group,
+    friend,
+    blacklist,
     user
   }
-});
+})

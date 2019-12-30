@@ -217,7 +217,7 @@
 
             //岗位数据列表
             handleWork_list() {
-                this.$store.commit('loading', true);
+                // this.$store.commit('loading', true);
                 this.apiGet('/api/user/info').then((res) => {
                     if (res.type === 2) {
                         this.apiGet('/api/work/paginate?user_id=' + res.user_id, this.searchParams).then((res) => {
@@ -225,7 +225,7 @@
                             this.searchParams.page = parseInt(res.current_page);
                             this.searchParams.total = parseInt(res.total);
                             this.searchParams.per_page = parseInt(res.per_page);
-                            this.$store.commit('loading', false);
+                            // this.$store.commit('loading', false);
                         });
                     } else {
                         this.$message({
@@ -249,7 +249,7 @@
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
-                        this.$store.commit('loading', false);
+                        // this.$store.commit('loading', false);
                     });
                 })
             },

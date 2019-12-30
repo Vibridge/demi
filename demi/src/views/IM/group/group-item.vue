@@ -31,6 +31,9 @@ export default {
       ]
     }
   },
+  mounted(){
+    console.log(this.group)
+  },
   methods: {
     handleGroupClick() {
       const conversationID = `GROUP${this.group.groupID}`
@@ -55,15 +58,15 @@ export default {
     overflow hidden
     transition .2s
     &:hover
-      background-color $background
+      background-color #E6E6E6
     .avatar
-      width 30px
-      height 30px
+      width 40px
+      height 40px
       border-radius 50%
       margin-right 10px
       flex-shrink 0
     .group-name
-      flex 1
-      color $font-light
+
+      color #333333
       line-height 30px
 </style>

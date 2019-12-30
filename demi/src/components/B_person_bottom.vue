@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="all_bottom_copy">
-            <!--<span style="margin-right: 61px">@2019得米快找网</span>-->
+            <span style="margin-right: 61px">Copyright © 2019 得米快找</span>
             <span style="margin-right: 58px"><a style="color: #999999" href="http://www.beian.miit.gov.cn">粤ICP备18126421号</a></span>
             <span>电子营业执照</span>
         </div>

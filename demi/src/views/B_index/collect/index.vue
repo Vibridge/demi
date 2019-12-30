@@ -78,8 +78,8 @@
                 <el-tab-pane label="兼职人才" name="second">
                     <div class="all-wrap">
                         <div class="collect_list" v-show="collect_ability.length>0">
-                            <div class="collect_list_wrap" v-for="collect in collect_ability" :key="collect.ability_id" @mouseover="show_delect = collect.ability_id"
-                                 @mouseleave="show_delect = null" @click="handleDetail('ability_resume',collect.ability_id)">
+                            <div class="collect_list_wrap" v-for="collect in collect_ability" :key="collect.ability.ability_id" @mouseover="show_delect = collect.ability_id"
+                                 @mouseleave="show_delect = null" @click="handleDetail('ability_resume',collect.ability.ability_id)">
                                 <div class="collect_info">
                                     <div style="display: flex">
                                         <div class="collect_avatar">
@@ -312,7 +312,7 @@
                 }
             },
             initialize(status) {
-                this.$store.commit('loading', true);
+                // this.$store.commit('loading', true);
                 this.apiGet('/api/user/favorite/paginate' + '?mode=' + status, this.searchParams).then((res) => {
                     if(status === 1){
                         this.collect_list = res.data;
@@ -324,7 +324,7 @@
                     this.searchParams.page = parseInt(res.current_page);
                     this.searchParams.total = parseInt(res.total);
                     this.searchParams.per_page = parseInt(res.per_page);
-                    this.$store.commit('loading', false);
+                    // this.$store.commit('loading', false);
                 })
             },
 
@@ -360,6 +360,7 @@
                         id:id
                     },
                 });
+                console.log(id)
                 window.open(routeData.href, '_blank');
             }
         },
