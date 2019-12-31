@@ -154,7 +154,7 @@
                     <p class="goods_pic_label"><span style="color:#FF0000">* </span>商品主图</p>
                     <div class="main_pic">
                         <p>商品主图大小不能超过3MB；建议800x800以上图片。</p>
-                        <div>
+                        <div class="upload-container">
                             <el-upload
                                     class="avatar-uploader"
                                     action=""
@@ -163,8 +163,87 @@
                                     :before-upload="beforeAvatarUpload">
                                 <img v-if="imageUrl" :src="imageUrl" class="avatar">
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                <p class="add-pic">添加图片</p>
+                            </el-upload>
+                            <el-upload
+                                    class="avatar-uploader"
+                                    action=""
+                                    :on-success="handleAvatarSuccess"
+                                    :show-file-list="false"
+                                    :before-upload="beforeAvatarUpload">
+                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                <p class="add-pic">添加图片</p>
+                            </el-upload>
+                            <el-upload
+                                    class="avatar-uploader"
+                                    action=""
+                                    :on-success="handleAvatarSuccess"
+                                    :show-file-list="false"
+                                    :before-upload="beforeAvatarUpload">
+                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                <p class="add-pic">添加图片</p>
+                            </el-upload>
+                            <el-upload
+                                    class="avatar-uploader"
+                                    action=""
+                                    :on-success="handleAvatarSuccess"
+                                    :show-file-list="false"
+                                    :before-upload="beforeAvatarUpload">
+                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                <p class="add-pic">添加图片</p>
+                            </el-upload>
+                            <el-upload
+                                    class="avatar-uploader"
+                                    action=""
+                                    :on-success="handleAvatarSuccess"
+                                    :show-file-list="false"
+                                    :before-upload="beforeAvatarUpload">
+                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                <p class="add-pic">添加图片</p>
                             </el-upload>
                         </div>
+                    </div>
+                </div>
+                <div class="goods_video_upload">
+                    <p class="goods_video_label"><span style="color:#FF0000">* </span>主图视频</p>
+                    <div class="main_video">
+                        <div class="upload-container">
+                            <el-upload
+                                    class="avatar-uploader"
+                                    action=""
+                                    :on-success="handleAvatarSuccess"
+                                    :show-file-list="false"
+                                    :before-upload="beforeAvatarUpload">
+                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                <p class="add-pic">添加视频</p>
+                            </el-upload>
+                        </div>
+                    </div>
+                    <div class="goods_video_note">
+                        <p>1.尺寸：建议1:1或16:9比例视频</p>
+                        <p>2.时长：建议30秒到60秒以内短视频</p>
+                    </div>
+                </div>
+                <div class="goods_look">
+                    <p class="goods_look_label"><span style="color:#FF0000;visibility: hidden">* </span>商品详情图</p>
+                    <div class="main_look">
+                        <!--<div class="upload-container">
+                            <el-upload
+                                    class="avatar-uploader"
+                                    action=""
+                                    :on-success="handleAvatarSuccess"
+                                    :show-file-list="false"
+                                    :before-upload="beforeAvatarUpload">
+                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                <p class="add-pic">添加视频</p>
+                            </el-upload>
+                        </div>-->
                     </div>
                 </div>
             </div>
@@ -480,16 +559,52 @@
                 border-bottom: 1px solid rgba(228, 228, 228, 1);
             .goods_upload
                 padding-left 31px
-                .goods_pic_upload
+                .goods_pic_upload,.goods_video_upload,.goods_look
                     margin-top 35px
                     display flex
-                    .goods_pic_label
+                    .goods_look_label
+                        margin-right 15px
+                    .goods_pic_label,.goods_video_label
                         margin-right 28px
-                    .main_pic
+                    .main_pic,.main_video
+                        margin-bottom 34px
                         p
                             font-size:14px;
                             color:rgba(204,204,204,1);
                             margin-bottom 14px
+                        .avatar-uploader .el-upload {
+                            border: 1px dashed #d9d9d9;
+                            cursor: pointer;
+                            position: relative;
+                            overflow: hidden;
+                            margin-right 15px
+                        }
+                        .avatar-uploader .el-upload:hover {
+                            border-color: #409EFF;
+                        }
+                        .avatar-uploader-icon {
+                            font-size: 29px;
+                            color: #24BFFF;
+                            width: 100px;
+                            height: 70px;
+                            line-height: 70px;
+                            text-align: center;
+                        }
+                        .avatar {
+                            width: 100px;
+                            height: 100px;
+                            display: block;
+                        }
+                        .add-pic
+                            font-size:12px;
+                            color:rgba(102,102,102,1);
+                        .upload-container
+                            display flex
+                    .goods_video_note
+                        color:rgba(204,204,204,1);
+                        align-self flex-start
+                        p
+                            margin-bottom 18px
 
         .goods_other
             margin-bottom 128px
