@@ -21,12 +21,12 @@
                 </div>
                 <div class="main">
                     <div class="category_list" v-for="(item,index) in 5" :key="index">
-                        <div class="category_title" @click="open = !open;active_first_category = index">
+                        <div class="category_title" @click="handleShowFirst(index)">
                             家用电器
-                            <i :class="(active_first_category === index) && open ? 'active el-icon-arrow-right' : 'el-icon-arrow-right'"></i>
+                            <i :class="(active_first_category.length > 0) && (active_first_category[index] === index) ? 'active el-icon-arrow-right' : 'el-icon-arrow-right'"></i>
                         </div>
                         <transition name="slide-fade">
-                            <div class="category_connect" v-if="(active_first_category === index) && open">
+                            <div class="category_connect" v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
                                 <ul>
                                     <li v-for="item in 5">
                                         <p>服装配件/皮带/帽子/围巾</p>
@@ -34,7 +34,6 @@
                                 </ul>
                             </div>
                         </transition>
-
                     </div>
                 </div>
 
@@ -47,22 +46,44 @@
                             v-model="second_category">
                     </el-input>
                 </div>
-
+                <div class="main">
+                    <div class="category_list" v-for="(item,index) in 5" :key="index">
+                        <div class="category_title" @click="handleShowFirst(index)">
+                            家用电器
+                            <i :class="(active_first_category.length > 0) && (active_first_category[index] === index) ? 'active el-icon-arrow-right' : 'el-icon-arrow-right'"></i>
+                        </div>
+                        <transition name="slide-fade">
+                            <div class="category_connect" v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
+                                <ul>
+                                    <li v-for="item in 5">
+                                        <p>服装配件/皮带/帽子/围巾</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </transition>
+                    </div>
+                </div>
             </div>
             <div></div>
+        </div>
+        <div class="select_result">
+            <p>已选类目：服装配件/皮带/帽子/围巾>耳套</p>
+        </div>
+        <div class="next">
+            <el-button type="primary" @click="handleCreateInfo">下一步</el-button>
         </div>
     </div>
 </template>
 
 <script>
+
     export default {
         name: 'create_goods',
         data() {
             return {
                 first_category: '',
                 second_category: '',
-                open:false,
-                active_first_category:null,
+                active_first_category: [],
                 options: [{
                     value: 'zhinan',
                     label: '指南',
@@ -259,6 +280,27 @@
                     }]
                 }]
             }
+        },
+        methods: {
+            handleShowFirst(index) {
+                let length = this.active_first_category.length;
+                if (length > 0) {
+                    if(this.active_first_category[index] === index){
+                        this.$set(this.active_first_category, index, '')
+                    }else{
+                        this.$set(this.active_first_category, index, index)
+                    }
+                } else {
+                    console.log('d')
+                    this.$set(this.active_first_category, index, index)
+                }
+                console.log(this.active_first_category)
+            },
+            handleCreateInfo(){
+                this.$router.push({
+                    name:"create_goods_info"
+                })
+            }
         }
     }
 </script>
@@ -310,7 +352,7 @@
 
                 .search
                     background: #fff;
-                    padding  14px 19px
+                    padding 14px 19px
 
                     .el-input
                         .el-input__inner
@@ -323,44 +365,75 @@
                 .slide-fade-enter-active {
                     transition: all .3s ease;
                 }
+
                 .slide-fade-leave-active {
                     transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
                 }
+
                 .slide-fade-enter, .slide-fade-leave-to {
                     transform: translateY(-10px);
                     opacity: 0;
                 }
+
                 .main
                     height 382px
                     overflow-y scroll
                     background: #fff;
+
                     .category_list
-                        border-bottom:1px dashed rgba(204,204,204,1);
+                        border-bottom: 1px dashed rgba(204, 204, 204, 1);
+
                     .category_title
                         padding 8px 4px
-                        color:rgba(36,191,255,1);
+                        color: rgba(36, 191, 255, 1);
 
                         .active
-                            transform:rotate(90deg);
+                            transform: rotate(90deg);
                             transition-property: all;
                             transition-duration: 0.3s;
                             transition-timing-function: linear;
+
                         i
-                            transform:rotate(0deg);
+                            transform: rotate(0deg);
                             transition-property: all;
                             transition-duration: 0.3s;
                             transition-timing-function: linear;
-                            color:rgba(36,191,255,1);
+                            color: rgba(36, 191, 255, 1);
+
                     .category_connect
                         ul
                             li:hover
-                                background:rgba(240,240,240,1);
+                                background: rgba(240, 240, 240, 1);
+
                             li
-                                font-size:14px;
+                                font-size: 14px;
                                 color #333333
                                 padding 7px 18px
                                 overflow: hidden;
                                 white-space: nowrap;
-                                text-overflow:ellipsis;
+                                text-overflow: ellipsis;
+
+        .select_result
+            height:58px;
+            width:1000px;
+            font-size:14px;
+            margin 25px 0
+            line-height 58px
+            color:rgba(51,51,51,1);
+            background:rgba(240,240,240,1);
+            p
+                margin-left 25px
+        .next
+            text-align center
+            .el-button
+                width:222px;
+                border none
+                padding 17px 74px
+                font-size:24px;
+                border-radius:4px
+                box-sizing border-box
+                color:rgba(255,255,255,1);
+                background:rgba(36,191,255,1);
+
 
 </style>

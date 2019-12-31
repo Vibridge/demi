@@ -147,6 +147,12 @@ const router = new Router({
                     meta: {title: 'create_goods',parent:'create'},
                     component: () => import('./views/B_index/goods/create_goods.vue')
                 },
+                {
+                    path: '/B_index/B_person/create/goods_info',
+                    name: 'create_goods_info',
+                    meta: {title: 'create_goods_info',parent:'create'},
+                    component: () => import('./views/B_index/goods/create_goods_info.vue')
+                },
 
                 {
                     path: '/B_index/work_resume',

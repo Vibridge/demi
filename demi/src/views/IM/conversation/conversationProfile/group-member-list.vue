@@ -1,6 +1,6 @@
 <template>
   <div class="group-member-list-wrapper">
-    <div class="group_header">
+    <div class="group_header" >
       <span class="member-count text-ellipsis">群成员：{{currentConversation.groupProfile.memberNum}}</span>
       <popover v-model="addGroupMemberVisible">
         <add-group-member></add-group-member>

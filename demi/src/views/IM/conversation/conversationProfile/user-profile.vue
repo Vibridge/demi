@@ -47,14 +47,14 @@
 
     <div class="edc">
       <div class="title_label">教育经历</div>
-      <p>私立华联学院</p>
-      <div>
+      <p v-if="resume && resume[0].diploma.school">{{resume[0].diploma.school.school_name}}</p>
+     <!-- <div>
         <p>在校时间</p>
         <span>1988.10.23-1999.10.23</span>
-      </div>
+      </div>-->
       <div>
         <p>专业</p>
-        <span>土木工程学</span>
+        <span>{{resume[0].diploma.major}}</span>
       </div>
       <div>
         <p>学历</p>
@@ -115,13 +115,13 @@ export default {
         this.user_info.birthday = res.card.birthday
       }
       this.user_info.email = res.email
-      if(this.user_info && this.user_info.type === 1 && this.user_info.job_count > 0){
+      if(res.type === 1 && res.job_count > 0){
         this.apiGet('/api/vita/paginate?user_id=' + this.userProfile.userID).then((res)=>{
           console.log(res)
           this.resume = res.data
         })
       }
-      if(this.user_info && this.user_info.type === 1 && this.user_info.ability_count > 0){
+      if(res.type === 1 && res.ability_count > 0){
         this.apiGet('/api/ability/paginate?user_id=' + this.userProfile.userID).then((res)=>{
           console.log(res)
           this.ability = res.data
