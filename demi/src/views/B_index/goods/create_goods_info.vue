@@ -1,293 +1,307 @@
 <template>
-    <div class="create_goods_info">
-        <div class="create_title">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="用户管理" name="first"></el-tab-pane>
-                <el-tab-pane label="配置管理" name="second"></el-tab-pane>
-                <el-tab-pane label="角色管理" name="third"></el-tab-pane>
-                <el-tab-pane label="定时任务补偿" name="fourth"></el-tab-pane>
-            </el-tabs>
-            <div class="select_category">
-                <p>当前类目：服饰配件/皮带/帽子/围巾/耳套</p>
-                <el-button type="primary">切换类目</el-button>
-            </div>
-        </div>
-        <div class="goods_basic">
-            <div class="goods_basic_title">
-                基础信息
-            </div>
-            <div class="goods_basic_input">
-                <div class="goods_basic_name">
-                    <p class="goods_basic_label"><span style="color:#FF0000">* </span>宝贝标题</p>
-                    <el-input
-                            size="small"
-                            placeholder="最多输入20个汉字和字符"
-                            maxlength="20"
-                            show-word-limit
-                            v-model="goods.goods_name">
-                    </el-input>
+    <div>
+        <div class="create_goods_info" v-if="!success">
+            <div class="create_title">
+                <el-tabs v-model="activeName" @tab-click="handleClick">
+                    <el-tab-pane label="用户管理" name="first"></el-tab-pane>
+                    <el-tab-pane label="配置管理" name="second"></el-tab-pane>
+                    <el-tab-pane label="角色管理" name="third"></el-tab-pane>
+                    <el-tab-pane label="定时任务补偿" name="fourth"></el-tab-pane>
+                </el-tabs>
+                <div class="select_category">
+                    <p>当前类目：服饰配件/皮带/帽子/围巾/耳套</p>
+                    <el-button type="primary">切换类目</el-button>
                 </div>
-                <div class="goods_basic_category">
-                    <p class="goods_basic_label"><span style="visibility: hidden">* </span>类目属性</p>
-                    <div class="goods_basic_category_input">
-                        <div class="left">
-                            <div class="brand">
-                                <p class="brand_label">品牌</p>
-                                <el-input
-                                        size="mini"
-                                        clearable
-                                        v-model="goods.goods_name">
-                                </el-input>
+            </div>
+            <div class="goods_basic">
+                <div class="goods_basic_title">
+                    基础信息
+                </div>
+                <div class="goods_basic_input">
+                    <div class="goods_basic_name">
+                        <p class="goods_basic_label"><span style="color:#FF0000">* </span>宝贝标题</p>
+                        <el-input
+                                size="small"
+                                placeholder="最多输入20个汉字和字符"
+                                maxlength="20"
+                                show-word-limit
+                                v-model="goods.goods_name">
+                        </el-input>
+                    </div>
+                    <div class="goods_basic_category">
+                        <p class="goods_basic_label"><span style="visibility: hidden">* </span>类目属性</p>
+                        <div class="goods_basic_category_input">
+                            <div class="left">
+                                <div class="brand">
+                                    <p class="brand_label">品牌</p>
+                                    <el-input
+                                            size="mini"
+                                            clearable
+                                            v-model="goods.goods_name">
+                                    </el-input>
+                                </div>
+                                <div class="number">
+                                    <p class="number_label">货号</p>
+                                    <el-input
+                                            size="mini"
+                                            clearable
+                                            v-model="goods.goods_name">
+                                    </el-input>
+                                </div>
                             </div>
-                            <div class="number">
-                                <p class="number_label">货号</p>
-                                <el-input
-                                        size="mini"
-                                        clearable
-                                        v-model="goods.goods_name">
-                                </el-input>
+                            <div class="right">
+                                <div class="material">
+                                    <p class="material_label">材质</p>
+                                    <el-input
+                                            size="mini"
+                                            clearable
+                                            v-model="goods.goods_name">
+                                    </el-input>
+                                </div>
                             </div>
+
                         </div>
-                        <div class="right">
-                            <div class="material">
-                                <p class="material_label">材质</p>
+                    </div>
+                </div>
+            </div>
+            <div class="goods_sale">
+                <div class="goods_sale_title">
+                    销售信息
+                </div>
+                <div class="goods_sale_info">
+                    <div class="goods_sale_category">
+                        <p class="goods_sale_label">颜色分类</p>
+                        <div class="select_category_value">
+                            <el-checkbox-group v-model="checkList">
+                                <el-checkbox label="复选框 A"></el-checkbox>
+                                <el-checkbox label="复选框 B"></el-checkbox>
+                                <el-checkbox label="复选框 C"></el-checkbox>
+                                <el-checkbox label="禁用"></el-checkbox>
+                                <el-checkbox label="选中且禁用"></el-checkbox>
+                                <el-checkbox label="选中且禁用"></el-checkbox>
+                                <el-checkbox label="选中且禁用"></el-checkbox>
+                                <el-checkbox label="选中且禁用"></el-checkbox>
+                                <el-checkbox label="选中且禁用"></el-checkbox>
+                                <el-checkbox label="选中且禁用"></el-checkbox>
+                                <el-checkbox label="选中且禁用"></el-checkbox>
+                                <el-checkbox label="选中且禁用"></el-checkbox>
+                                <el-checkbox label="选中且禁用"></el-checkbox>
+                                <el-checkbox label="选中且禁用"></el-checkbox>
+                            </el-checkbox-group>
+                            <el-input v-model="custom" placeholder="请输入自定义值" size="medium"></el-input>
+                            <el-button type="primary" size="small">添加</el-button>
+                        </div>
+                    </div>
+                    <div class="goods_table">
+                        <div class="table_title">
+                            <p>宝贝销售规格 在标题栏中输入或选择内容可以进行筛选和批量填充</p>
+                            <el-button type="primary" size="small">批量填充</el-button>
+                        </div>
+                        <div>
+                            <el-table
+                                    :data="tableData"
+                                    height="250"
+                                    border
+                                    style="width: 100%">
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址">
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </div>
+                    <div class="goods_price">
+                        <p class="goods_price_label"><span style="color:#FF0000">* </span>一口价</p>
+                        <div class="goods_price_input">
+                            <div style="display: flex">
                                 <el-input
-                                        size="mini"
-                                        clearable
+                                        size="small"
                                         v-model="goods.goods_name">
                                 </el-input>
+                                <span style="align-self: center">元</span>
                             </div>
+                            <p>商品价格不能低于0.10元</p>
                         </div>
 
                     </div>
+                    <div class="goods_code">
+                        <p class="goods_code_label">商品条形码</p>
+                        <el-input
+                                size="small"
+                                placeholder="最多输入32个汉字和字符"
+                                maxlength="32"
+                                show-word-limit
+                                v-model="goods.goods_name">
+                        </el-input>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="goods_sale">
-            <div class="goods_sale_title">
-                销售信息
-            </div>
-            <div class="goods_sale_info">
-                <div class="goods_sale_category">
-                    <p class="goods_sale_label">颜色分类</p>
-                    <div class="select_category_value">
-                        <el-checkbox-group v-model="checkList">
-                            <el-checkbox label="复选框 A"></el-checkbox>
-                            <el-checkbox label="复选框 B"></el-checkbox>
-                            <el-checkbox label="复选框 C"></el-checkbox>
-                            <el-checkbox label="禁用"></el-checkbox>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                            <el-checkbox label="选中且禁用"></el-checkbox>
-                        </el-checkbox-group>
-                        <el-input v-model="custom" placeholder="请输入自定义值" size="medium"></el-input>
-                        <el-button type="primary" size="small">添加</el-button>
-                    </div>
+            <div class="goods_pic">
+                <div class="goods_pic_title">
+                    图文描述
                 </div>
-                <div class="goods_table">
-                    <div class="table_title">
-                        <p>宝贝销售规格 在标题栏中输入或选择内容可以进行筛选和批量填充</p>
-                        <el-button type="primary" size="small">批量填充</el-button>
-                    </div>
-                    <div>
-                        <el-table
-                                :data="tableData"
-                                height="250"
-                                border
-                                style="width: 100%">
-                            <el-table-column
-                                    prop="date"
-                                    label="日期"
-                                    width="180">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="name"
-                                    label="姓名"
-                                    width="180">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="address"
-                                    label="地址">
-                            </el-table-column>
-                        </el-table>
-                    </div>
-                </div>
-                <div class="goods_price">
-                    <p class="goods_price_label"><span style="color:#FF0000">* </span>一口价</p>
-                    <div class="goods_price_input">
-                        <div style="display: flex">
-                            <el-input
-                                    size="small"
-                                    v-model="goods.goods_name">
-                            </el-input>
-                            <span style="align-self: center">元</span>
+                <div class="goods_upload">
+                    <div class="goods_pic_upload">
+                        <p class="goods_pic_label"><span style="color:#FF0000">* </span>商品主图</p>
+                        <div class="main_pic">
+                            <p>商品主图大小不能超过3MB；建议800x800以上图片。</p>
+                            <div class="upload-container">
+                                <el-upload
+                                        class="avatar-uploader"
+                                        action=""
+                                        :on-success="handleAvatarSuccess"
+                                        :show-file-list="false"
+                                        :before-upload="beforeAvatarUpload">
+                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                    <p class="add-pic">添加图片</p>
+                                </el-upload>
+                                <el-upload
+                                        class="avatar-uploader"
+                                        action=""
+                                        :on-success="handleAvatarSuccess"
+                                        :show-file-list="false"
+                                        :before-upload="beforeAvatarUpload">
+                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                    <p class="add-pic">添加图片</p>
+                                </el-upload>
+                                <el-upload
+                                        class="avatar-uploader"
+                                        action=""
+                                        :on-success="handleAvatarSuccess"
+                                        :show-file-list="false"
+                                        :before-upload="beforeAvatarUpload">
+                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                    <p class="add-pic">添加图片</p>
+                                </el-upload>
+                                <el-upload
+                                        class="avatar-uploader"
+                                        action=""
+                                        :on-success="handleAvatarSuccess"
+                                        :show-file-list="false"
+                                        :before-upload="beforeAvatarUpload">
+                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                    <p class="add-pic">添加图片</p>
+                                </el-upload>
+                                <el-upload
+                                        class="avatar-uploader"
+                                        action=""
+                                        :on-success="handleAvatarSuccess"
+                                        :show-file-list="false"
+                                        :before-upload="beforeAvatarUpload">
+                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                    <p class="add-pic">添加图片</p>
+                                </el-upload>
+                            </div>
                         </div>
-                        <p>商品价格不能低于0.10元</p>
                     </div>
-
-                </div>
-                <div class="goods_code">
-                    <p class="goods_code_label">商品条形码</p>
-                    <el-input
-                            size="small"
-                            placeholder="最多输入32个汉字和字符"
-                            maxlength="32"
-                            show-word-limit
-                            v-model="goods.goods_name">
-                    </el-input>
-                </div>
-            </div>
-        </div>
-        <div class="goods_pic">
-            <div class="goods_pic_title">
-                图文描述
-            </div>
-            <div class="goods_upload">
-                <div class="goods_pic_upload">
-                    <p class="goods_pic_label"><span style="color:#FF0000">* </span>商品主图</p>
-                    <div class="main_pic">
-                        <p>商品主图大小不能超过3MB；建议800x800以上图片。</p>
-                        <div class="upload-container">
-                            <el-upload
-                                    class="avatar-uploader"
-                                    action=""
-                                    :on-success="handleAvatarSuccess"
-                                    :show-file-list="false"
-                                    :before-upload="beforeAvatarUpload">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                <p class="add-pic">添加图片</p>
-                            </el-upload>
-                            <el-upload
-                                    class="avatar-uploader"
-                                    action=""
-                                    :on-success="handleAvatarSuccess"
-                                    :show-file-list="false"
-                                    :before-upload="beforeAvatarUpload">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                <p class="add-pic">添加图片</p>
-                            </el-upload>
-                            <el-upload
-                                    class="avatar-uploader"
-                                    action=""
-                                    :on-success="handleAvatarSuccess"
-                                    :show-file-list="false"
-                                    :before-upload="beforeAvatarUpload">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                <p class="add-pic">添加图片</p>
-                            </el-upload>
-                            <el-upload
-                                    class="avatar-uploader"
-                                    action=""
-                                    :on-success="handleAvatarSuccess"
-                                    :show-file-list="false"
-                                    :before-upload="beforeAvatarUpload">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                <p class="add-pic">添加图片</p>
-                            </el-upload>
-                            <el-upload
-                                    class="avatar-uploader"
-                                    action=""
-                                    :on-success="handleAvatarSuccess"
-                                    :show-file-list="false"
-                                    :before-upload="beforeAvatarUpload">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                <p class="add-pic">添加图片</p>
-                            </el-upload>
+                    <div class="goods_video_upload">
+                        <p class="goods_video_label"><span style="color:#FF0000">* </span>主图视频</p>
+                        <div class="main_video">
+                            <div class="upload-container">
+                                <el-upload
+                                        class="avatar-uploader"
+                                        action=""
+                                        :on-success="handleAvatarSuccess"
+                                        :show-file-list="false"
+                                        :before-upload="beforeAvatarUpload">
+                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                    <p class="add-pic">添加视频</p>
+                                </el-upload>
+                            </div>
+                        </div>
+                        <div class="goods_video_note">
+                            <p>1.尺寸：建议1:1或16:9比例视频</p>
+                            <p>2.时长：建议30秒到60秒以内短视频</p>
+                        </div>
+                    </div>
+                    <div class="goods_look">
+                        <p class="goods_look_label"><span style="color:#FF0000;visibility: hidden">* </span>商品详情图</p>
+                        <div class="main_look">
+                            <div class="demo-image__lazy">
+                                <el-image v-for="url in urls" :key="url" :src="url"></el-image>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="goods_video_upload">
-                    <p class="goods_video_label"><span style="color:#FF0000">* </span>主图视频</p>
-                    <div class="main_video">
-                        <div class="upload-container">
-                            <el-upload
-                                    class="avatar-uploader"
-                                    action=""
-                                    :on-success="handleAvatarSuccess"
-                                    :show-file-list="false"
-                                    :before-upload="beforeAvatarUpload">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                <p class="add-pic">添加视频</p>
-                            </el-upload>
-                        </div>
-                    </div>
-                    <div class="goods_video_note">
-                        <p>1.尺寸：建议1:1或16:9比例视频</p>
-                        <p>2.时长：建议30秒到60秒以内短视频</p>
-                    </div>
-                </div>
-                <div class="goods_look">
-                    <p class="goods_look_label"><span style="color:#FF0000;visibility: hidden">* </span>商品详情图</p>
-                    <div class="main_look">
-                        <!--<div class="upload-container">
-                            <el-upload
-                                    class="avatar-uploader"
-                                    action=""
-                                    :on-success="handleAvatarSuccess"
-                                    :show-file-list="false"
-                                    :before-upload="beforeAvatarUpload">
-                                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                <p class="add-pic">添加视频</p>
-                            </el-upload>
-                        </div>-->
-                    </div>
-                </div>
             </div>
-        </div>
-        <div class="goods_other">
-            <div class="goods_other_title">
-                其他信息
-            </div>
-            <div class="goods_other_time">
-                <p class="goods_other_label"><span style="color:#FF0000">* </span>上架时间 </p>
-                <span class="goods_other_note">
+            <div class="goods_other">
+                <div class="goods_other_title">
+                    其他信息
+                </div>
+                <div class="goods_other_time">
+                    <p class="goods_other_label"><span style="color:#FF0000">* </span>上架时间 </p>
+                    <span class="goods_other_note">
                     未上架的商品在上架前请到“仓库中的宝贝”里编辑商品。
                 </span>
-                <div class="select_buy">
-                    <div class="select_online">
-                        <div style="align-self: center">
-                            <img src="../../../assets/img/weixuanz@2x.png" alt="" @click="handleSelect(1)"
-                                 v-show="active === 2">
-                            <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 1">
+                    <div class="select_buy">
+                        <div class="select_online">
+                            <div style="align-self: center">
+                                <img src="../../../assets/img/weixuanz@2x.png" alt="" @click="handleSelect(1)"
+                                     v-show="active === 2">
+                                <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 1">
+                            </div>
+                            <p :style="active === 2 ? 'color: #999999': 'color: #4d4d4d'">立即上架</p>
                         </div>
-                        <p :style="active === 2 ? 'color: #999999': 'color: #4d4d4d'">立即上架</p>
-                    </div>
-                    <div class="select_store">
-                        <div style="align-self: center">
-                            <img src="../../../assets/img/weixuanz@2x.png" alt="" @click="handleSelect(2)"
-                                 v-show="active === 1">
-                            <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 2">
+                        <div class="select_store">
+                            <div style="align-self: center">
+                                <img src="../../../assets/img/weixuanz@2x.png" alt="" @click="handleSelect(2)"
+                                     v-show="active === 1">
+                                <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 2">
+                            </div>
+                            <p :style="active === 2 ? 'color: #4d4d4d': 'color: #999999'">放入仓库</p>
                         </div>
-                        <p :style="active === 2 ? 'color: #4d4d4d': 'color: #999999'">放入仓库</p>
                     </div>
-                </div>
 
+                </div>
+            </div>
+            <div class="create_goods_sumbit">
+                <el-button type="primary" size="medium" @click="success=true">提交商品信息</el-button>
             </div>
         </div>
-        <div class="create_goods_sumbit">
-            <el-button type="primary" size="medium">提交商品信息</el-button>
-        </div>
+        <div class="create_call_back" v-if="success">
+            <div class="call_back_title">
+                <div>
+                    <img src="../../../assets/img/create_call_back.png" alt="">
+                </div>
+                <div class="call_back_contain">
+                    <p>商品发布成功</p>
+                    <p v-if="false">商品已经放到仓库</p>
+                    <p>商品ID=6100876915</p>
+                </div>
+            </div>
+            <div class="next_coc">
+                <el-button type="primary" size="medium" @click="handleLook">查看出售中的商品</el-button>
+                <el-button type="primary" size="medium" @click="handleAgain">继续发布</el-button>
+            </div>
 
+        </div>
+        <bottom :style="success ? 'position:fixed;bottom:0' : 'margin-bottom: 84px'"></bottom>
     </div>
+
 </template>
 
 <script>
+    import bottom from '../../../components/B_person_bottom'
+
     export default {
         name: 'create_goods_info',
+        components: {bottom},
         data() {
             return {
                 activeName: 'second',
@@ -295,6 +309,7 @@
                 goods: {
                     goods_name: ""
                 },
+                success:false,
                 imageUrl:'',
                 checkList: ['选中且禁用', '复选框 A'],
                 custom: '',
@@ -326,7 +341,16 @@
                     date: '2016-05-07',
                     name: '王小虎',
                     address: '上海市普陀区金沙江路 1518 弄'
-                }]
+                }],
+                urls: [
+                    'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
+                    'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
+                    'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
+                    'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
+                    'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
+                    'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
+                    'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg'
+                ]
             };
         },
         methods: {
@@ -350,6 +374,16 @@
                     this.$message.error('上传头像图片大小不能超过 2MB!');
                 }
                 return isJPG && isLt2M;
+            },
+            handleLook(){
+                this.$router.push({
+                    name:'goods_massage'
+                })
+            },
+            handleAgain(){
+                this.$router.push({
+                    name:'create_goods'
+                })
             }
         }
     }
@@ -564,6 +598,15 @@
                     display flex
                     .goods_look_label
                         margin-right 15px
+                    .main_look
+                        width 651px
+                        height 503px
+                        padding-left 11px
+                        border:1px solid rgba(204,204,204,1);
+                        .demo-image__lazy
+                            height 442px
+                            overflow auto
+
                     .goods_pic_label,.goods_video_label
                         margin-right 28px
                     .main_pic,.main_video
@@ -607,7 +650,7 @@
                             margin-bottom 18px
 
         .goods_other
-            margin-bottom 128px
+            margin-bottom 62px
             background: rgba(255, 255, 255, 1);
 
             .goods_other_title
@@ -645,19 +688,56 @@
             position fixed
             bottom 0
             left 0
-            height 103px
+            height 83px
             width 100%
-            line-height 103px
+            line-height 83px
             background-color: #fff;
             text-align center
             z-index:2;
             border-top:1px solid rgba(36,191,255,1)
             .el-button
                 width:255px;
-                height:59px;
-                font-size:20px;
+                height:39px;
+                font-size:15px;
                 border-radius:4px;
                 color:rgba(36,191,255,1);
                 background:rgba(228,240,253,1);
                 border:1px solid rgba(36,191,255,1);
+    .create_call_back
+        width 1000px;
+        text-align center
+        position absolute
+        left 50%
+        top:calc(50vh - 176px);
+        transform translate3d(-50%,-50%,0)
+        .call_back_title
+            display flex
+            margin-bottom 71px
+            justify-content center
+            img
+                width 56px
+                margin-right 21px
+                align-self flex-start
+            .call_back_contain
+                color #24BFFF
+                text-align left
+                p:first-child
+                    font-size:38px
+                p
+                    font-size:11px;
+                    margin-bottom 7px
+
+        .next_coc
+            .el-button:first-child
+                margin-right 75px
+                color:rgba(36,191,255,1);
+                background:rgba(228,240,253,1);
+                border:1px solid rgba(36,191,255,1);
+            .el-button
+                width:194px;
+                font-size:16px;
+                border none
+                border-radius:4px;
+                color:rgba(252,252,252,1);
+                background:rgba(36,191,255,1);
 </style>

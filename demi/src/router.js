@@ -107,14 +107,27 @@ const router = new Router({
                     component: () => import('./views/B_index/goods/index.vue')
 
                 },
+
+                {
+                    path: '/B_index/B_person/create/goods',
+                    name: 'create_goods',
+                    meta: {title: 'create_goods',parent:'create'},
+                    component: () => import('./views/B_index/goods/create_goods.vue')
+                },
+                {
+                    path: '/B_index/B_person/create/goods_info',
+                    name: 'create_goods_info',
+                    meta: {title: 'create_goods_info',parent:'create'},
+                    component: () => import('./views/B_index/goods/create_goods_info.vue')
+                },
+
                 {
                     path: '/B_index/B_person/goods_massage',
-                    name: 'goodsMassage',
+                    name: 'goods_massage',
                     meta: {title: 'goodsMassage',parent:'B_person'},
                     component: () => import('./views/B_index/goods_massage/index.vue')
 
                 },
-
 
                 {
                     path: '/B_index/B_person/company_info',
@@ -139,19 +152,6 @@ const router = new Router({
                     name: 'withdraw',
                     meta: {title: 'create_withdraw',parent:'create'},
                     component: () => import('./views/withdraw/index.vue')
-                },
-
-                {
-                    path: '/B_index/B_person/create/goods',
-                    name: 'create_goods',
-                    meta: {title: 'create_goods',parent:'create'},
-                    component: () => import('./views/B_index/goods/create_goods.vue')
-                },
-                {
-                    path: '/B_index/B_person/create/goods_info',
-                    name: 'create_goods_info',
-                    meta: {title: 'create_goods_info',parent:'create'},
-                    component: () => import('./views/B_index/goods/create_goods_info.vue')
                 },
 
                 {

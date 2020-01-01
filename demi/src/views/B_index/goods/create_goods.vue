@@ -1,84 +1,89 @@
 <template>
-    <div class="create_wrap">
-        <div class="search_all">
-            <div class="block">
-                <el-cascader
-                        placeholder="请输入你要查找的类目"
-                        :options="options"
-                        filterable></el-cascader>
-                <el-button type="primary">搜索</el-button>
+    <div>
+        <div class="create_wrap">
+            <div class="search_all">
+                <div class="block">
+                    <el-cascader
+                            placeholder="请输入你要查找的类目"
+                            :options="options"
+                            filterable></el-cascader>
+                    <el-button type="primary">搜索</el-button>
+                </div>
             </div>
-        </div>
-        <p class="create_history">发布历史：五金>仪表>电阻测试仪</p>
-        <div class="category">
-            <div class="first_category">
-                <div class="search">
-                    <el-input
-                            placeholder="名称/拼音"
-                            suffix-icon="el-icon-search"
-                            v-model="first_category">
-                    </el-input>
-                </div>
-                <div class="main">
-                    <div class="category_list" v-for="(item,index) in 5" :key="index">
-                        <div class="category_title" @click="handleShowFirst(index)">
-                            家用电器
-                            <i :class="(active_first_category.length > 0) && (active_first_category[index] === index) ? 'active el-icon-arrow-right' : 'el-icon-arrow-right'"></i>
-                        </div>
-                        <transition name="slide-fade">
-                            <div class="category_connect" v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
-                                <ul>
-                                    <li v-for="item in 5">
-                                        <p>服装配件/皮带/帽子/围巾</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </transition>
+            <p class="create_history">发布历史：五金>仪表>电阻测试仪</p>
+            <div class="category">
+                <div class="first_category">
+                    <div class="search">
+                        <el-input
+                                placeholder="名称/拼音"
+                                suffix-icon="el-icon-search"
+                                v-model="first_category">
+                        </el-input>
                     </div>
-                </div>
+                    <div class="main">
+                        <div class="category_list" v-for="(item,index) in 5" :key="index">
+                            <div class="category_title" @click="handleShowFirst(index)">
+                                家用电器
+                                <i :class="(active_first_category.length > 0) && (active_first_category[index] === index) ? 'active el-icon-arrow-right' : 'el-icon-arrow-right'"></i>
+                            </div>
+                            <transition name="slide-fade">
+                                <div class="category_connect" v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
+                                    <ul>
+                                        <li v-for="item in 5">
+                                            <p>服装配件/皮带/帽子/围巾</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </transition>
+                        </div>
+                    </div>
 
-            </div>
-            <div class="second_category">
-                <div class="search">
-                    <el-input
-                            placeholder="名称/拼音"
-                            suffix-icon="el-icon-search"
-                            v-model="second_category">
-                    </el-input>
                 </div>
-                <div class="main">
-                    <div class="category_list" v-for="(item,index) in 5" :key="index">
-                        <div class="category_title" @click="handleShowFirst(index)">
-                            家用电器
-                            <i :class="(active_first_category.length > 0) && (active_first_category[index] === index) ? 'active el-icon-arrow-right' : 'el-icon-arrow-right'"></i>
-                        </div>
-                        <transition name="slide-fade">
-                            <div class="category_connect" v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
-                                <ul>
-                                    <li v-for="item in 5">
-                                        <p>服装配件/皮带/帽子/围巾</p>
-                                    </li>
-                                </ul>
+                <div class="second_category">
+                    <div class="search">
+                        <el-input
+                                placeholder="名称/拼音"
+                                suffix-icon="el-icon-search"
+                                v-model="second_category">
+                        </el-input>
+                    </div>
+                    <div class="main">
+                        <div class="category_list" v-for="(item,index) in 5" :key="index">
+                            <div class="category_title" @click="handleShowFirst(index)">
+                                家用电器
+                                <i :class="(active_first_category.length > 0) && (active_first_category[index] === index) ? 'active el-icon-arrow-right' : 'el-icon-arrow-right'"></i>
                             </div>
-                        </transition>
+                            <transition name="slide-fade">
+                                <div class="category_connect" v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
+                                    <ul>
+                                        <li v-for="item in 5">
+                                            <p>服装配件/皮带/帽子/围巾</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </transition>
+                        </div>
                     </div>
                 </div>
+                <div></div>
             </div>
-            <div></div>
+            <div class="select_result">
+                <p>已选类目：服装配件/皮带/帽子/围巾>耳套</p>
+            </div>
+            <div class="next">
+                <el-button type="primary" @click="handleCreateInfo">下一步</el-button>
+            </div>
         </div>
-        <div class="select_result">
-            <p>已选类目：服装配件/皮带/帽子/围巾>耳套</p>
-        </div>
-        <div class="next">
-            <el-button type="primary" @click="handleCreateInfo">下一步</el-button>
-        </div>
+        <bottom></bottom>
     </div>
 </template>
 
 <script>
+    import bottom from '../../../components/B_person_bottom'
 
     export default {
         name: 'create_goods',
+        components: {bottom},
         data() {
             return {
                 first_category: '',
