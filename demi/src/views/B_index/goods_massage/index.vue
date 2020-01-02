@@ -9,8 +9,13 @@
                     <el-tab-pane label="全部商品">
                         <goods></goods>
                     </el-tab-pane>
-                    <el-tab-pane label="出售中的商品">出售中的商品</el-tab-pane>
-                    <el-tab-pane label="仓库中的商品">仓库中的商品</el-tab-pane>
+                    <el-tab-pane label="出售中的商品">
+                        <goods></goods>
+                    </el-tab-pane>
+                    <el-tab-pane label="仓库中的商品">
+                        <goods></goods>
+                        <!--<goods></goods>-->
+                    </el-tab-pane>
                 </el-tabs>
             </div>
 
@@ -35,9 +40,12 @@
             .el-tabs--border-card
                 border none
                 box-shadow:none
+                .el-tabs__content
+                    padding 15px 0
                 .el-tabs__header
                     background-color #EEEFF2
                     border-bottom 1px solid #fff
+
                     .el-tabs__item
                         height 43px
                         color #666666

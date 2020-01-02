@@ -43,7 +43,8 @@
 
                 <div class="logout">
                     <el-menu default-active="1" class="el-menu-demo" mode="horizontal" active-text-color="#fff"
-                             :background-color="active_top === '/B_index/Detail' ? '#45c9ff' : '#2D3238'">
+                             :background-color="active_top === '/B_index/Detail' ? '#45c9ff' : '#2D3238'"
+                             popper-class="self-coc">
                         <el-submenu index="1">
                             <template slot="title">
                                 <div class="Avatar" :class="active_top === '/B_index/Detail' ? 'active_app_item' : ''">
@@ -52,7 +53,8 @@
                                     <img :src="user_info.avatar" alt="" :title="user_info.name">
                                 </div>
                             </template>
-                            <el-menu-item index="2-1" @click="handleLoginOut">退出登录</el-menu-item>
+                            <el-menu-item index="2-1" @click="handleStore">店铺资料</el-menu-item>
+                            <el-menu-item index="2-2" @click="handleLoginOut">退出登录</el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </div>
@@ -134,10 +136,13 @@
                             </el-button>
                         </div>
                         <div class="no-more" v-else>没有更多了</div>
-                        <MessageItem :message-detail="messageDetail" class="detail" v-for="(item,index) in this.handleMessageList" :key="item.ID"
+                        <MessageItem :message-detail="messageDetail" class="detail"
+                                     v-for="(item,index) in this.handleMessageList" :key="item.ID"
                                      :message="item"></MessageItem>
                     </div>
-                    <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">回到最新位置</div>
+                    <div v-show="isShowScrollButtomTips" class="newMessageTips" @click="scrollMessageListToButtom">
+                        回到最新位置
+                    </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <MessageBox @on-show-time="handleUpdataTime"></MessageBox>
@@ -158,15 +163,15 @@
     import MessageBox from '../../views/IM/message/message-send-box'
     import MessageItem from '../../views/IM/message/message-item'
     import {forEach} from "../../libs/tools";
-    import { getTime } from '../../libs/time'
-    import { isToday } from '../../libs/time'
-    import { getFullDate } from '../../libs/time'
-    import { getDay } from '../../libs/time'
+    import {getTime} from '../../libs/time'
+    import {isToday} from '../../libs/time'
+    import {getFullDate} from '../../libs/time'
+    import {getDay} from '../../libs/time'
 
     /* eslint-disable */
     export default {
         name: 'index',
-        components: {bottom,MessageBox,MessageItem},
+        components: {bottom, MessageBox, MessageItem},
         data() {
             return {
                 user_info: {
@@ -175,7 +180,7 @@
                     user_id: null,
                     name: '',
                     company_position: '',
-                    phone:''
+                    phone: ''
                 },
                 company_info: {},
                 active_left: '/B_index/B_person',
@@ -184,81 +189,81 @@
                     {
                         path: '/B_index/B_person',
                         title: '<span>首&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;页</span>',
-                        img:require('../../assets/img/home@2x.png'),
-                        img_active:require('../../assets/img/home_active@2x.png')
+                        img: require('../../assets/img/home@2x.png'),
+                        img_active: require('../../assets/img/home_active@2x.png')
                     },
                     {
                         path: '/B_index/B_person/work',
                         title: '职位管理',
-                        img:require('../../assets/img/post@2x.png'),
-                        img_active:require('../../assets/img/post_on@2x.png')
+                        img: require('../../assets/img/post@2x.png'),
+                        img_active: require('../../assets/img/post_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/interview',
                         title: '面试管理',
-                        img:require('../../assets/img/interview@2x.png'),
-                        img_active:require('../../assets/img/interview_on@2x.png')
+                        img: require('../../assets/img/interview@2x.png'),
+                        img_active: require('../../assets/img/interview_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/task',
                         title: '任务管理',
-                        img:require('../../assets/img/assignment@2x.png'),
-                        img_active:require('../../assets/img/assignment_on@2x.png')
+                        img: require('../../assets/img/assignment@2x.png'),
+                        img_active: require('../../assets/img/assignment_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/order',
                         title: '订单列表',
-                        img:require('../../assets/img/indent@2x.png'),
-                        img_active:require('../../assets/img/indent_on@2x.png')
+                        img: require('../../assets/img/indent@2x.png'),
+                        img_active: require('../../assets/img/indent_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/collect',
                         title: '人才收藏',
-                        img:require('../../assets/img/enshrine@2x.png'),
-                        img_active:require('../../assets/img/enshrine_in@2x.png')
+                        img: require('../../assets/img/enshrine@2x.png'),
+                        img_active: require('../../assets/img/enshrine_in@2x.png')
                     },
                     {
                         path: '/B_index/B_person/wallet',
                         title: '我的钱包',
-                        img:require('../../assets/img/burse@2x.png'),
-                        img_active:require('../../assets/img/burse_on@2x.png')
+                        img: require('../../assets/img/burse@2x.png'),
+                        img_active: require('../../assets/img/burse_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/real',
                         title: '实名认证',
-                        img:require('../../assets/img/autonym@2x.png'),
-                        img_active:require('../../assets/img/autonym_on@2x.png')
+                        img: require('../../assets/img/autonym@2x.png'),
+                        img_active: require('../../assets/img/autonym_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/VIP',
                         title: '得米 VIP',
-                        img:require('../../assets/img/vip@2x.png'),
-                        img_active:require('../../assets/img/vip_on@2x.png')
+                        img: require('../../assets/img/vip@2x.png'),
+                        img_active: require('../../assets/img/vip_on@2x.png')
                     },
                     {
                         path: '/B_index/B_person/goods',
                         title: '发布商品',
-                        img:require('../../assets/img/goods.png'),
-                        img_active:require('../../assets/img/goods_on.png')
+                        img: require('../../assets/img/goods.png'),
+                        img_active: require('../../assets/img/goods_on.png')
                     },
                     {
                         path: '/B_index/B_person/goods_massage',
                         title: '商品管理',
-                        img:require('../../assets/img/goods_manage.png'),
-                        img_active:require('../../assets/img/goods_manage_on.png')
+                        img: require('../../assets/img/goods_manage.png'),
+                        img_active: require('../../assets/img/goods_manage_on.png')
                     },
                 ],
                 active_class: '/B_index/B_person',
                 read: 0,
                 active_app_class: '',
                 customer: null,
-                chatCustomer:false,
+                chatCustomer: false,
                 isShowScrollButtomTips: false,
                 preScrollHeight: 0,
                 timeTamp: 0,
                 lastTime: 0,
-                messageDetail:null,
-                service_id:null
+                messageDetail: null,
+                service_id: null
             }
         },
         mounted() {
@@ -276,13 +281,13 @@
                     this.$router.push({
                         name: "login"
                     });
-                }else{
-                    if(this.isSDKReady && (this.currentUserProfile.avatar != res.company.logo_path)){
+                } else {
+                    if (this.isSDKReady && (this.currentUserProfile.avatar != res.company.logo_path)) {
                         let name = res.nickname;
                         let avatar = res.company.logo_path;
-                        let options={
-                            nick:name,
-                            avatar:avatar
+                        let options = {
+                            nick: name,
+                            avatar: avatar
                         };
                         this.tim
                             .updateMyProfile(options)
@@ -351,9 +356,9 @@
             //退出登录
             handleLoginOut() {
 
-                this.tim.logout().then(function(imResponse) {
+                this.tim.logout().then(function (imResponse) {
                     console.log(imResponse.data); // 登出成功
-                }).catch(function(imError) {
+                }).catch(function (imError) {
                     console.warn('logout error:', imError);
                 });
                 // this.$store.dispatch('logout');
@@ -365,12 +370,19 @@
                 }
             },
 
+            //店铺信息
+            handleStore() {
+                this.$router.push({
+                    name: "store_info"
+                })
+            },
+
             //客服聊天
             handleSendCustomer() {
                 let service_id = sessionStorage.getItem('service_id');
                 let user_id = sessionStorage.getItem('userID');
                 // console.log(service_id)
-                if(service_id){
+                if (service_id) {
                     let data = {
                         type: 3,
                         recipient: service_id,
@@ -381,7 +393,7 @@
                     this.apiPost('/converse/create', data).then((res) => {
                         if (res) {
                             let message = {
-                                service:true
+                                service: true
                             };
                             this.messageDetail = message;
                             this.$store
@@ -394,7 +406,7 @@
                     })
                 }
             },
-            handleCustomer(){
+            handleCustomer() {
                 this.chatCustomer = true;
                 this.timeTamp = this.handleList.lastMessage.lastTime;
                 this.tim.setMessageRead({
@@ -433,7 +445,7 @@
                 // console.log(messageListNode.clientHeight);
                 if (this.preScrollHeight - messageListNode.clientHeight - scrollTop < 20) {
                     this.isShowScrollButtomTips = false
-                }else{
+                } else {
                     this.isShowScrollButtomTips = true
                 }
             },
@@ -456,9 +468,9 @@
         computed: {
             //是否是左边导航
             IsShow() {
-                if(this.$route.path == '/B_index/Detail'){
+                if (this.$route.path == '/B_index/Detail') {
                     document.getElementById('app').style.overflow = 'hidden';
-                }else{
+                } else {
                     document.getElementById('app').style.overflow = 'auto';
                 }
                 if (this.$route.meta['parent'] !== 'B_person') {
@@ -503,7 +515,7 @@
                 let userID = sessionStorage.getItem('userID')
                 if ((this.$route.name !== 'App') && (this.$route.name !== 'IM') && (Customer != userID)) {
                     // console.log(this.$route.name);
-                    if(this.isLogin && this.isSDKReady){
+                    if (this.isLogin && this.isSDKReady) {
                         this.handleSendCustomer();
                     }
                     return true
@@ -528,7 +540,7 @@
                 isLogin: state => state.user.isLogin,
                 isSDKReady: state => state.user.isSDKReady,
                 handleMessageList(state) {
-                    if(this.showCustomer){
+                    if (this.showCustomer) {
                         forEach(state.conversation.currentMessageList, item => {
                             if (typeof item.time != 'string') {
                                 if (this.lastTime > 0) {
@@ -685,7 +697,7 @@
                     /*width: 200px;*/
                     height: 100%;
                     float: right;
-                    padding: 0 10px;
+                    /*padding: 0 10px;*/
                     /*padding: 0 10px;*/
 
                     ul {
@@ -866,21 +878,25 @@
             }
         }
 
-        .chatCustomer{
+        .chatCustomer {
             text-align: left;
-            .el-dialog__body{
-                .message-list{
+
+            .el-dialog__body {
+                .message-list {
                     height: 45vh;
                     overflow-y: auto;
-                    .more{
+
+                    .more {
                         text-align: center;
                     }
-                    .no-more{
+
+                    .no-more {
                         text-align: center;
                         color: #999999;
                         margin-bottom: 20px;
                     }
                 }
+
                 .newMessageTips {
                     position: absolute;
                     cursor: pointer;
@@ -895,21 +911,22 @@
                     border-radius: 10px;
                     border: 1px solid #e9eaec;
                     background: #fff;
-                    color:  #2d8cf0;
+                    color: #2d8cf0;
                     /*border: $border-light 1px solid;
                     background-color: $white;
                     color: $primary;*/
                 }
+
                 .message-list::-webkit-scrollbar {
                     width: 2px;
                 }
             }
 
-            .el-dialog__footer{
+            .el-dialog__footer {
                 margin: 0 auto;
                 padding: 0;
 
-                .send{
+                .send {
                     margin: 0;
                 }
             }
@@ -935,26 +952,29 @@
         color: white;
     }
 
-    .el-menu--horizontal {
-        border-bottom: none;
+    .self-coc {
+        .el-menu--horizontal {
+            border-bottom: none;
 
-        .el-menu--popup {
-            font-size: 16px;
-            /*height: 50px;*/
-            margin: 0 16px;
-            /*padding: 0 5px;*/
-            /*line-height: 50px;*/
-            background-color: #fff !important;
+            .el-menu--popup {
+                font-size: 16px;
+                /*height: 50px;*/
+                margin: 0 16px;
+                /*padding: 0 5px;*/
+                /*line-height: 50px;*/
+                background-color: #fff !important;
 
-            li {
-                background: none !important;
+                li {
+                    background: none !important;
+                }
+            }
+
+            .el-menu-item.is-active {
+                color: #ffffff !important;
+                border-bottom: 3px solid #00e0ba;
             }
         }
-
-        .el-menu-item.is-active {
-            color: #ffffff !important;
-            border-bottom: 3px solid #00e0ba;
-        }
     }
+
 
 </style>

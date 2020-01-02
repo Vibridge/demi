@@ -92,7 +92,17 @@
                         this.$store.commit('resetCurrentConversation')
                     }
                     console.log(event)
-                    Notification({
+                    const h = this.$createElement;
+                    this.$notify({
+                        title: '新系统通知',
+                        message: h('i', { style: 'color: teal'}, translateGroupSystemNotice(event.data.message)),
+                        duration: 3000,
+                        onClick: () => {
+                            const SystemConversationID = '@TIM#SYSTEM'
+                            this.$store.dispatch('checkoutConversation', SystemConversationID)
+                        }
+                    });
+                    /*Notification({
                         title: '新系统通知',
                         message: translateGroupSystemNotice(event.data.message),
                         duration: 3000,
@@ -100,7 +110,7 @@
                             const SystemConversationID = '@TIM#SYSTEM'
                             this.$store.dispatch('checkoutConversation', SystemConversationID)
                         }
-                    })
+                    })*/
                 })
             },
             onReceiveMessage({ data: messageList }) {

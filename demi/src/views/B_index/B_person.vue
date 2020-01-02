@@ -218,6 +218,8 @@
     import http from '../../libs/http'
     import {forEach} from "../../libs/tools";
 
+
+
     export default {
         name: 'B_person',
         components: {bottom},
@@ -240,6 +242,7 @@
                     {activeName: 'unpaid', name: '未付款', num: 0},
                     {activeName: 'paid', name: '已付款', num: 0},
                     {activeName: 'shipped', name: '已发货', num: 0},
+                    {activeName: 'refund', name: '退款中', num: 0},
                 ],
             }
         },
@@ -775,14 +778,10 @@
             }
 
             .none_interview_lists {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate3d(-50%, -50%, 0);
-
+                padding: 20px 0;
                 img {
                     width: 145px;
-                    margin-bottom: 44px;
+                    margin-bottom: 24px;
                 }
 
                 p {
