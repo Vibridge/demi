@@ -873,17 +873,6 @@
                 }
             }
         },
-        /*watch:{
-            collect_id(){
-                console.log('aaa')
-                if(this.collect_id){
-                    console.log('aaa')
-                    this.handleDetail(0,this.collect_id)
-                }
-            }
-        }*/
-
-
     }
 </script>
 

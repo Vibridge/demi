@@ -340,7 +340,7 @@
             //左边导航选中状态
             handleOpen(key, keyPath) {
                 // this.scrollTop();
-                this.active_class = key
+                this.active_class = key;
             },
 
             //跳转公司详情
@@ -975,6 +975,22 @@
             }
         }
     }
+    .el-menu--horizontal{
+        .el-menu--popup{
+            background-color: white!important;
+            .is-active{
+                color: #000!important;
+            }
+            .el-menu-item{
+                border-bottom: 1px solid #d9d9d9;
+                background-color: white!important;
+            }
+            .el-menu-item:last-child{
+                border-bottom:none
+            }
+        }
+    }
+
 
 
 </style>

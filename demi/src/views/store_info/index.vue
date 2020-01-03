@@ -103,7 +103,7 @@
             handleChange(file, fileList) {
                 this.files = fileList;
             },
-            beforePicUpload(file) {
+            beforeUpload(file) {
                 const isJPG = file.type === 'image/jpeg';
                 const isPNG = file.type === 'image/png';
                 if (!isJPG && !isPNG) {
@@ -111,7 +111,7 @@
                 }
                 return isJPG || isPNG;
             },
-            uploadFile() {
+            upLogoloadFile() {
                 // 创建表单对象
                 this.imageUrl = URL.createObjectURL(this.files.raw);
                 this.pic_loading = true;

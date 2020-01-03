@@ -525,7 +525,7 @@
 
                         li {
                             width: 100%;
-                            height: 63.5px;
+                            height: 47.7px;
                             cursor: pointer;
 
                             .order_list_wrap {

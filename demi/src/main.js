@@ -11,6 +11,7 @@ import Avatar from './views/IM/avatar.vue'
 import Avatars from './views/IM/avatars.vue'
 import './assets/icon/iconfont.css'
 import './assets/icon/tim.css'
+import config from './config';
 Vue.use(ElementUI);
 
 import tim from '../src/libs/im'
@@ -19,6 +20,7 @@ window.tim = tim;
 window.TIM = TIM;
 window.store = store
 Vue.prototype.$bus = new Vue(); // event Bus 用于无关系组件间的通信。
+Vue.prototype.$config = config;
 Vue.config.productionTip = false;
 Vue.prototype.tim = tim;
 Vue.prototype.TIM = TIM;

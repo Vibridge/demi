@@ -1,18 +1,65 @@
 <template>
     <div>
         <div class="create_wrap">
+            <div v-if="category_popper" class="category_popper">
+                <!--<searchCategory v-for="level1 in options" :row="level1">
+                    <searchCategory v-if="level1.children"></searchCategory>
+                </searchCategory>-->
+                <ul v-for="level1 in options" :key="level1.sort_id">
+
+                    <li v-for="level2 in level1.children" :key="level2.sort_id">
+
+                        <p v-if="!level2.children && (handleCategory(level1.title + level2.title,level2.sort_id) == level2.sort_id)">
+                            {{level1.title}} > {{level2.title}}
+                        </p>
+
+                        <div v-for="level3 in level2.children" :key="level3.sort_id">
+                            <p v-if="level2.children && !level3.children && (handleCategory(level1.title + level2.title + level3.title,level3.sort_id) == level3.sort_id)" >
+                                {{level1.title}} > {{level2.title}} > {{level3.title}}
+                            </p>
+
+                            <div v-for="level4 in level3.children" :key="level4.sort_id">
+                                <p v-if="level3.children && (handleCategory(level1.title + level2.title + level3.title + level4.title,level4.sort_id) == level4.sort_id)" >
+                                    {{level1.title}} > {{level2.title}} > {{level3.title}} > {{level4.title}}
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
             <div class="search_all">
-                <div class="block">
+                <el-input v-model.trim="category" placeholder="请输入内容" clearable @input="category_popper = false"
+                          @clear="category_popper = false"></el-input>
+                <el-button type="primary" @click="handleSearch">搜索</el-button>
+
+                <!--<div class="block">
+                    &lt;!&ndash; <el-autocomplete
+                             v-model="category"
+                             :fetch-suggestions="querySearchAsync"
+                             placeholder="请输入你要查找的类目"
+                             @select="handleSelect"
+                             clearable
+                             value-key="title"
+                     ></el-autocomplete>&ndash;&gt;
                     <el-cascader
+                            ref="input"
                             placeholder="请输入你要查找的类目"
                             :options="options"
-                            filterable></el-cascader>
-                    <el-button type="primary">搜索</el-button>
-                </div>
+                            :props="{ label:'title', value:'sort_id'}"
+                            clearable
+                            filterable
+                            v-model = 'category'
+                            :popper-class="category_popper ? 'category_popper' : 'category_popper_hide'"
+                            @input="handleCategory"
+                    ></el-cascader>
+                    <el-button type="primary" @click="handleSearch">搜索</el-button>
+
+                </div>-->
             </div>
             <p class="create_history">发布历史：五金>仪表>电阻测试仪</p>
             <div class="category">
-                <div class="first_category">
+                <div class="category_contain">
                     <div class="search">
                         <el-input
                                 placeholder="名称/拼音"
@@ -27,34 +74,8 @@
                                 <i :class="(active_first_category.length > 0) && (active_first_category[index] === index) ? 'active el-icon-arrow-right' : 'el-icon-arrow-right'"></i>
                             </div>
                             <transition name="slide-fade">
-                                <div class="category_connect" v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
-                                    <ul>
-                                        <li v-for="item in 5">
-                                            <p>服装配件/皮带/帽子/围巾</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </transition>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="second_category">
-                    <div class="search">
-                        <el-input
-                                placeholder="名称/拼音"
-                                suffix-icon="el-icon-search"
-                                v-model="second_category">
-                        </el-input>
-                    </div>
-                    <div class="main">
-                        <div class="category_list" v-for="(item,index) in 5" :key="index">
-                            <div class="category_title" @click="handleShowFirst(index)">
-                                家用电器
-                                <i :class="(active_first_category.length > 0) && (active_first_category[index] === index) ? 'active el-icon-arrow-right' : 'el-icon-arrow-right'"></i>
-                            </div>
-                            <transition name="slide-fade">
-                                <div class="category_connect" v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
+                                <div class="category_connect"
+                                     v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
                                     <ul>
                                         <li v-for="item in 5">
                                             <p>服装配件/皮带/帽子/围巾</p>
@@ -65,7 +86,6 @@
                         </div>
                     </div>
                 </div>
-                <div></div>
             </div>
             <div class="select_result">
                 <p>已选类目：服装配件/皮带/帽子/围巾>耳套</p>
@@ -80,219 +100,66 @@
 
 <script>
     import bottom from '../../../components/B_person_bottom'
+    import category from './components/category'
+    // import searchCategory from './components/search_category'
+    import http from '../../../libs/http'
 
     export default {
         name: 'create_goods',
-        components: {bottom},
+        components: {bottom,category},
         data() {
             return {
                 first_category: '',
                 second_category: '',
                 active_first_category: [],
-                options: [{
-                    value: 'zhinan',
-                    label: '指南',
-                    children: [{
-                        value: 'shejiyuanze',
-                        label: '设计原则',
-                        children: [{
-                            value: 'yizhi',
-                            label: '一致'
-                        }, {
-                            value: 'fankui',
-                            label: '反馈'
-                        }, {
-                            value: 'xiaolv',
-                            label: '效率'
-                        }, {
-                            value: 'kekong',
-                            label: '可控'
-                        }]
-                    }, {
-                        value: 'daohang',
-                        label: '导航',
-                        children: [{
-                            value: 'cexiangdaohang',
-                            label: '侧向导航'
-                        }, {
-                            value: 'dingbudaohang',
-                            label: '顶部导航'
-                        }]
-                    }]
-                }, {
-                    value: 'zujian',
-                    label: '组件',
-                    children: [{
-                        value: 'basic',
-                        label: 'Basic',
-                        children: [{
-                            value: 'layout',
-                            label: 'Layout 布局'
-                        }, {
-                            value: 'color',
-                            label: 'Color 色彩'
-                        }, {
-                            value: 'typography',
-                            label: 'Typography 字体'
-                        }, {
-                            value: 'icon',
-                            label: 'Icon 图标'
-                        }, {
-                            value: 'button',
-                            label: 'Button 按钮'
-                        }]
-                    }, {
-                        value: 'form',
-                        label: 'Form',
-                        children: [{
-                            value: 'radio',
-                            label: 'Radio 单选框'
-                        }, {
-                            value: 'checkbox',
-                            label: 'Checkbox 多选框'
-                        }, {
-                            value: 'input',
-                            label: 'Input 输入框'
-                        }, {
-                            value: 'input-number',
-                            label: 'InputNumber 计数器'
-                        }, {
-                            value: 'select',
-                            label: 'Select 选择器'
-                        }, {
-                            value: 'cascader',
-                            label: 'Cascader 级联选择器'
-                        }, {
-                            value: 'switch',
-                            label: 'Switch 开关'
-                        }, {
-                            value: 'slider',
-                            label: 'Slider 滑块'
-                        }, {
-                            value: 'time-picker',
-                            label: 'TimePicker 时间选择器'
-                        }, {
-                            value: 'date-picker',
-                            label: 'DatePicker 日期选择器'
-                        }, {
-                            value: 'datetime-picker',
-                            label: 'DateTimePicker 日期时间选择器'
-                        }, {
-                            value: 'upload',
-                            label: 'Upload 上传'
-                        }, {
-                            value: 'rate',
-                            label: 'Rate 评分'
-                        }, {
-                            value: 'form',
-                            label: 'Form 表单'
-                        }]
-                    }, {
-                        value: 'data',
-                        label: 'Data',
-                        children: [{
-                            value: 'table',
-                            label: 'Table 表格'
-                        }, {
-                            value: 'tag',
-                            label: 'Tag 标签'
-                        }, {
-                            value: 'progress',
-                            label: 'Progress 进度条'
-                        }, {
-                            value: 'tree',
-                            label: 'Tree 树形控件'
-                        }, {
-                            value: 'pagination',
-                            label: 'Pagination 分页'
-                        }, {
-                            value: 'badge',
-                            label: 'Badge 标记'
-                        }]
-                    }, {
-                        value: 'notice',
-                        label: 'Notice',
-                        children: [{
-                            value: 'alert',
-                            label: 'Alert 警告'
-                        }, {
-                            value: 'loading',
-                            label: 'Loading 加载'
-                        }, {
-                            value: 'message',
-                            label: 'Message 消息提示'
-                        }, {
-                            value: 'message-box',
-                            label: 'MessageBox 弹框'
-                        }, {
-                            value: 'notification',
-                            label: 'Notification 通知'
-                        }]
-                    }, {
-                        value: 'navigation',
-                        label: 'Navigation',
-                        children: [{
-                            value: 'menu',
-                            label: 'NavMenu 导航菜单'
-                        }, {
-                            value: 'tabs',
-                            label: 'Tabs 标签页'
-                        }, {
-                            value: 'breadcrumb',
-                            label: 'Breadcrumb 面包屑'
-                        }, {
-                            value: 'dropdown',
-                            label: 'Dropdown 下拉菜单'
-                        }, {
-                            value: 'steps',
-                            label: 'Steps 步骤条'
-                        }]
-                    }, {
-                        value: 'others',
-                        label: 'Others',
-                        children: [{
-                            value: 'dialog',
-                            label: 'Dialog 对话框'
-                        }, {
-                            value: 'tooltip',
-                            label: 'Tooltip 文字提示'
-                        }, {
-                            value: 'popover',
-                            label: 'Popover 弹出框'
-                        }, {
-                            value: 'card',
-                            label: 'Card 卡片'
-                        }, {
-                            value: 'carousel',
-                            label: 'Carousel 走马灯'
-                        }, {
-                            value: 'collapse',
-                            label: 'Collapse 折叠面板'
-                        }]
-                    }]
-                }, {
-                    value: 'ziyuan',
-                    label: '资源',
-                    children: [{
-                        value: 'axure',
-                        label: 'Axure Components'
-                    }, {
-                        value: 'sketch',
-                        label: 'Sketch Templates'
-                    }, {
-                        value: 'jiaohu',
-                        label: '组件交互文档'
-                    }]
-                }]
+                category: '',
+                category_popper: false,
+                options: [],
+                show_sort_id: null,
             }
         },
+        mounted() {
+            this.apiGet('/api/sort/paginate?format=tree').then((res) => {
+                this.options = res;
+                console.log(res)
+            })
+        },
         methods: {
+            handleSearch() {
+                if(this.category){
+                    this.category_popper = true
+                }
+            },
+            /*handleCategory(){
+                console.log(this.category)
+            },*/
+            handleCategory(value, id) {
+                console.log(value)
+                let array1 = value.split('');
+                let array2 = this.category.split('');
+                let length1 = array1.length;
+                let length2 = array2.length;
+                for (let i = 0; i < length1; i++) {
+                    for(let y = 0; y < length2;y++){
+                        if (array1[i] == array2[y]) {
+                            this.show_sort_id = id;
+                            return this.show_sort_id
+                            break
+                        } else {
+                            this.show_sort_id = null;
+                            break
+                        }
+                    }
+                }
+                // console.log(this.category[0])
+                // console.log(array1)
+            },
             handleShowFirst(index) {
                 let length = this.active_first_category.length;
                 if (length > 0) {
-                    if(this.active_first_category[index] === index){
+                    if (this.active_first_category[index] === index) {
                         this.$set(this.active_first_category, index, '')
-                    }else{
+                    } else {
                         this.$set(this.active_first_category, index, index)
                     }
                 } else {
@@ -301,12 +168,13 @@
                 }
                 console.log(this.active_first_category)
             },
-            handleCreateInfo(){
+            handleCreateInfo() {
                 this.$router.push({
-                    name:"create_goods_info"
+                    name: "create_goods_info"
                 })
             }
-        }
+        },
+        mixins: [http]
     }
 </script>
 
@@ -315,11 +183,13 @@
         width 1000px
         text-align left
         margin 32px auto
+        position relative
 
         .search_all
+            display flex
             margin-bottom 22px
 
-            .el-cascader
+            .el-input
                 width: 602px;
                 height: 37px;
                 margin-right 15px
@@ -350,7 +220,7 @@
             border-radius: 4px;
             border: 1px solid rgba(76, 176, 255, 1);
 
-            .first_category, .second_category
+            .category_contain
                 width 249px
                 box-sizing border-box
                 border-right 1px solid rgba(76, 176, 255, 1)
@@ -419,26 +289,58 @@
                                 text-overflow: ellipsis;
 
         .select_result
-            height:58px;
-            width:1000px;
-            font-size:14px;
+            height: 58px;
+            width: 1000px;
+            font-size: 14px;
             margin 25px 0
             line-height 58px
-            color:rgba(51,51,51,1);
-            background:rgba(240,240,240,1);
+            color: rgba(51, 51, 51, 1);
+            background: rgba(240, 240, 240, 1);
+
             p
                 margin-left 25px
+
         .next
             text-align center
+
             .el-button
-                width:222px;
+                width: 222px;
                 border none
                 padding 17px 74px
-                font-size:24px;
-                border-radius:4px
+                font-size: 24px;
+                border-radius: 4px
                 box-sizing border-box
-                color:rgba(255,255,255,1);
-                background:rgba(36,191,255,1);
+                color: rgba(255, 255, 255, 1);
+                background: rgba(36, 191, 255, 1);
 
+
+
+        .category_popper
+            position absolute
+            top: 37px
+            left 0
+            padding 8px 0
+            background-color #fff
+            width 602px !important
+            border: 1px solid #DCDEE3;
+
+            ul
+                max-height: 268px;
+                overflow-y: auto;
+                li:hover
+                    background-color #f2f3f7
+
+                li
+                    height 32px
+                    color #333333
+                    font-size 12px
+                    padding 0 20px
+                    line-height 32px
+
+
+    /*.category_popper
+        display block
+    .category_popper_hide
+        display none*/
 
 </style>
