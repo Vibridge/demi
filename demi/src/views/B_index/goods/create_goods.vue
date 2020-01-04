@@ -139,18 +139,20 @@
                 let array2 = this.category.split('');
                 let length1 = array1.length;
                 let length2 = array2.length;
-                for (let i = 0; i < length1; i++) {
-                    for(let y = 0; y < length2;y++){
+                var that = this
+                for(let y = 0; y < length2;y++){
+                    for (let i = 0; i < length1; i++) {
                         if (array1[i] == array2[y]) {
-                            this.show_sort_id = id;
-                            return this.show_sort_id
-                            break
-                        } else {
-                            this.show_sort_id = null;
+                            that.show_sort_id = id;
                             break
                         }
                     }
+
                 }
+                console.log(that.show_sort_id)
+                return that.show_sort_id
+
+
                 // console.log(this.category[0])
                 // console.log(array1)
             },
