@@ -7,19 +7,19 @@
                 </searchCategory>-->
                 <ul v-for="level1 in options" :key="level1.sort_id">
 
-                    <li v-for="level2 in level1.children" :key="level2.sort_id">
+                    <li v-for="level2 in level1.children" :key="level2.sort_id" v-show="handleShow(level2.sort_id)">
 
-                        <p v-if="!level2.children && (handleCategory(level1.title + level2.title,level2.sort_id) == level2.sort_id)">
+                        <p v-if="!level2.children && handleCategory(level1.title + level2.title,level2.sort_id)">
                             {{level1.title}} > {{level2.title}}
                         </p>
 
                         <div v-for="level3 in level2.children" :key="level3.sort_id">
-                            <p v-if="level2.children && !level3.children && (handleCategory(level1.title + level2.title + level3.title,level3.sort_id) == level3.sort_id)" >
+                            <p v-if="level2.children && !level3.children && handleCategory(level1.title + level2.title + level3.title,level2.sort_id)" >
                                 {{level1.title}} > {{level2.title}} > {{level3.title}}
                             </p>
 
                             <div v-for="level4 in level3.children" :key="level4.sort_id">
-                                <p v-if="level3.children && (handleCategory(level1.title + level2.title + level3.title + level4.title,level4.sort_id) == level4.sort_id)" >
+                                <p v-if="level3.children && handleCategory(level1.title + level2.title + level3.title + level4.title,level2.sort_id)" >
                                     {{level1.title}} > {{level2.title}} > {{level3.title}} > {{level4.title}}
                                 </p>
                             </div>
@@ -68,17 +68,17 @@
                         </el-input>
                     </div>
                     <div class="main">
-                        <div class="category_list" v-for="(item,index) in 5" :key="index">
-                            <div class="category_title" @click="handleShowFirst(index)">
-                                家用电器
+                        <div class="category_list" v-for="(level1,index) in options" :key="index">
+                            <div class="category_title" @click="handleShowFirst(level1.title,index)">
+                                {{level1.title}}
                                 <i :class="(active_first_category.length > 0) && (active_first_category[index] === index) ? 'active el-icon-arrow-right' : 'el-icon-arrow-right'"></i>
                             </div>
                             <transition name="slide-fade">
                                 <div class="category_connect"
                                      v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
                                     <ul>
-                                        <li v-for="item in 5">
-                                            <p>服装配件/皮带/帽子/围巾</p>
+                                        <li v-for="level2 in level1.children" @click="handleSecondCategory(level2)">
+                                            <p>{{level2.title}}</p>
                                         </li>
                                     </ul>
                                 </div>
@@ -86,6 +86,7 @@
                         </div>
                     </div>
                 </div>
+                <category v-for="(item,index) in paginate" :key="item.level" class="category_contain" :row="item.row" @handle-next-sort="handleNextSort" @handle-select-sort="handleSelectSort"></category>
             </div>
             <div class="select_result">
                 <p>已选类目：服装配件/皮带/帽子/围巾>耳套</p>
@@ -110,12 +111,16 @@
         data() {
             return {
                 first_category: '',
-                second_category: '',
+                // second_category: '',
                 active_first_category: [],
                 category: '',
                 category_popper: false,
                 options: [],
                 show_sort_id: null,
+                paginate:[],
+                select_sort_id:null,
+                first_category_title:'',
+                select_sort_title:''
             }
         },
         mounted() {
@@ -128,35 +133,48 @@
             handleSearch() {
                 if(this.category){
                     this.category_popper = true
+                    this.show_sort_id = null
                 }
             },
             /*handleCategory(){
                 console.log(this.category)
             },*/
+            handleShow(id){
+                console.log(this.show_sort_id)
+                if(this.show_sort_id == id){
+                    return true
+                }else{
+                    return false
+                }
+            },
             handleCategory(value, id) {
-                console.log(value)
                 let array1 = value.split('');
                 let array2 = this.category.split('');
                 let length1 = array1.length;
                 let length2 = array2.length;
-                var that = this
+                // var that = this;
                 for(let y = 0; y < length2;y++){
                     for (let i = 0; i < length1; i++) {
-                        if (array1[i] == array2[y]) {
-                            that.show_sort_id = id;
+                        if (array2[y] == array1[i]) {
+                            this.show_sort_id = id;
                             break
                         }
                     }
 
                 }
-                console.log(that.show_sort_id)
-                return that.show_sort_id
+                console.log(this.show_sort_id)
 
+                if(this.show_sort_id){
+                    return true
+                }else {
+                    return false
+                }
 
                 // console.log(this.category[0])
                 // console.log(array1)
             },
-            handleShowFirst(index) {
+            handleShowFirst(title,index) {
+                this.first_category_title = title
                 let length = this.active_first_category.length;
                 if (length > 0) {
                     if (this.active_first_category[index] === index) {
@@ -169,6 +187,71 @@
                     this.$set(this.active_first_category, index, index)
                 }
                 console.log(this.active_first_category)
+            },
+
+            handleSecondCategory(data){
+                this.paginate = [];
+                this.select_sort_title = '';
+                this.select_sort_title = this.first_category_title + '>' + data.title;
+
+                if(data.children){
+                    let item = {
+                        level:data.level,
+                        row:data.children
+                    };
+                    let length = this.paginate.length;
+                    if(length>0){
+                        for(let i=0;i<length;i++){
+                            if((this.paginate[i].level !== level) && (i === (length-1))){
+                                this.paginate.push(item)
+                            }
+                        }
+                    }else{
+                        this.paginate.push(item)
+                    }
+
+                }else{
+                    this.select_sort_id = data.sort_id;
+                }
+                console.log(this.select_sort_title)
+
+            },
+            handleNextSort(level,data){
+                let item = {
+                    level:level,
+                    row:data
+                };
+                let length = this.paginate.length;
+                if(length>0){
+                    for(let i=0;i<length;i++){
+                        if((this.paginate[i].level !== level) && (i === (length-1))){
+                            this.paginate.push(item)
+                        }
+                    }
+                }else{
+                    this.paginate.push(item)
+                }
+            },
+            handleSelectSort(id,title){
+                this.select_sort_id = id;
+                // this.select_sort_title = this.select_sort_title +title;
+                let length = this.paginate.length;
+                let sort_title = '';
+                if(length>0){
+                    for(let i=0;i<length;i++){
+                        if(i === (length - 1)){
+                            sort_title = sort_title + this.paginate[i].row[0].title
+                        }else{
+                            sort_title = sort_title + this.paginate[i].row[0].title + ' > '
+                        }
+                    }
+                }
+                if(this.select_sort_title.split(' > ')[this.select_sort_title.split(' > ').length - 1] != title){
+                    this.select_sort_title = this.select_sort_title + ' > ' + sort_title;
+                }
+
+                console.log(this.paginate)
+                console.log(this.select_sort_title)
             },
             handleCreateInfo() {
                 this.$router.push({
@@ -215,7 +298,8 @@
             color: rgba(51, 51, 51, 1);
 
         .category
-            width 100%
+            min-width 248px;
+            max-height 1000px
             height 434px
             display flex
             margin 24px auto

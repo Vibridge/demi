@@ -8,11 +8,11 @@
             </el-input>
         </div>
         <div class="main">
-            <div class="category_list" v-for="(item,index) in 5" :key="index">
+            <div class="category_list" v-for="(item,index) in row" :key="item.sort_id">
                 <div class="category_connect">
                     <ul>
-                        <li v-for="item in 5">
-                            <p>服装配件/皮带/帽子/围巾</p>
+                        <li @click="handleNextCategory(item)">
+                            <p>{{item.title}}</p>
                         </li>
                     </ul>
                 </div>
@@ -24,26 +24,28 @@
 <script>
     export default {
         name: 'category',
+        props:['row'],
         data(){
             return{
                 first_category:'',
                 active_first_category: [],
             }
         },
+        mounted(){
+            console.log(this.row)
+        },
         methods:{
-            handleShowFirst(index) {
-                let length = this.active_first_category.length;
-                if (length > 0) {
-                    if (this.active_first_category[index] === index) {
-                        this.$set(this.active_first_category, index, '')
-                    } else {
-                        this.$set(this.active_first_category, index, index)
-                    }
-                } else {
-                    console.log('d')
-                    this.$set(this.active_first_category, index, index)
+            handleNextCategory(data){
+                if(data.children){
+                    this.$emit('handle-next-sort',data.level,data.children)
+                }else{
+                    this.$emit('handle-select-sort',data.sort_id,data.title)
+/*
+                    this.second_category = false;
+                    this.second_category = [];
+                    this.select_sort_id = data.sort_id;
+                    this.select_sort_title = data.title;*/
                 }
-                console.log(this.active_first_category)
             },
         }
 
