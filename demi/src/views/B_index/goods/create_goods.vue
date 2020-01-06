@@ -25,38 +25,15 @@
                             </div>
                         </div>
                     </li>
-
                 </ul>
             </div>
+
             <div class="search_all">
                 <el-input v-model.trim="category" placeholder="请输入内容" clearable @input="category_popper = false"
                           @clear="category_popper = false"></el-input>
                 <el-button type="primary" @click="handleSearch">搜索</el-button>
-
-                <!--<div class="block">
-                    &lt;!&ndash; <el-autocomplete
-                             v-model="category"
-                             :fetch-suggestions="querySearchAsync"
-                             placeholder="请输入你要查找的类目"
-                             @select="handleSelect"
-                             clearable
-                             value-key="title"
-                     ></el-autocomplete>&ndash;&gt;
-                    <el-cascader
-                            ref="input"
-                            placeholder="请输入你要查找的类目"
-                            :options="options"
-                            :props="{ label:'title', value:'sort_id'}"
-                            clearable
-                            filterable
-                            v-model = 'category'
-                            :popper-class="category_popper ? 'category_popper' : 'category_popper_hide'"
-                            @input="handleCategory"
-                    ></el-cascader>
-                    <el-button type="primary" @click="handleSearch">搜索</el-button>
-
-                </div>-->
             </div>
+
             <p class="create_history">发布历史：五金>仪表>电阻测试仪</p>
             <div class="category">
                 <div class="category_contain">
@@ -77,7 +54,7 @@
                                 <div class="category_connect"
                                      v-if="(active_first_category.length > 0) && (active_first_category[index] === index)">
                                     <ul>
-                                        <li v-for="level2 in level1.children" @click="handleSecondCategory(level2)">
+                                        <li v-for="level2 in level1.children" :class="active_select === level2.sort_id ? 'active' : ''" @click="handleSecondCategory(level2)">
                                             <p>{{level2.title}}</p>
                                         </li>
                                     </ul>
@@ -89,10 +66,10 @@
                 <category v-for="(item,index) in paginate" :key="item.level" class="category_contain" :row="item.row" @handle-next-sort="handleNextSort" @handle-select-sort="handleSelectSort"></category>
             </div>
             <div class="select_result">
-                <p>已选类目：服装配件/皮带/帽子/围巾>耳套</p>
+                <p>已选类目：{{select_sort_title}}</p>
             </div>
             <div class="next">
-                <el-button type="primary" @click="handleCreateInfo">下一步</el-button>
+                <el-button type="primary" @click="handleCreateInfo" :disabled="!select_sort_id">下一步</el-button>
             </div>
         </div>
         <bottom></bottom>
@@ -120,7 +97,8 @@
                 paginate:[],
                 select_sort_id:null,
                 first_category_title:'',
-                select_sort_title:''
+                select_sort_title:'',
+                active_select:null
             }
         },
         mounted() {
@@ -136,23 +114,20 @@
                     this.show_sort_id = null
                 }
             },
-            /*handleCategory(){
-                console.log(this.category)
-            },*/
+
             handleShow(id){
-                console.log(this.show_sort_id)
                 if(this.show_sort_id == id){
                     return true
                 }else{
                     return false
                 }
             },
+
             handleCategory(value, id) {
                 let array1 = value.split('');
                 let array2 = this.category.split('');
                 let length1 = array1.length;
                 let length2 = array2.length;
-                // var that = this;
                 for(let y = 0; y < length2;y++){
                     for (let i = 0; i < length1; i++) {
                         if (array2[y] == array1[i]) {
@@ -160,18 +135,12 @@
                             break
                         }
                     }
-
                 }
-                console.log(this.show_sort_id)
-
                 if(this.show_sort_id){
                     return true
                 }else {
                     return false
                 }
-
-                // console.log(this.category[0])
-                // console.log(array1)
             },
             handleShowFirst(title,index) {
                 this.first_category_title = title
@@ -183,17 +152,16 @@
                         this.$set(this.active_first_category, index, index)
                     }
                 } else {
-                    console.log('d')
                     this.$set(this.active_first_category, index, index)
                 }
-                console.log(this.active_first_category)
             },
 
             handleSecondCategory(data){
                 this.paginate = [];
                 this.select_sort_title = '';
+                this.select_sort_id = null;
                 this.select_sort_title = this.first_category_title + '>' + data.title;
-
+                this.active_select = data.sort_id;
                 if(data.children){
                     let item = {
                         level:data.level,
@@ -213,9 +181,9 @@
                 }else{
                     this.select_sort_id = data.sort_id;
                 }
-                console.log(this.select_sort_title)
-
+                console.log(this.select_sort_id)
             },
+
             handleNextSort(level,data){
                 let item = {
                     level:level,
@@ -249,13 +217,15 @@
                 if(this.select_sort_title.split(' > ')[this.select_sort_title.split(' > ').length - 1] != title){
                     this.select_sort_title = this.select_sort_title + ' > ' + sort_title;
                 }
+                console.log(this.select_sort_id)
 
-                console.log(this.paginate)
-                console.log(this.select_sort_title)
             },
             handleCreateInfo() {
                 this.$router.push({
-                    name: "create_goods_info"
+                    path: "/B_index/B_person/create/goods_info",
+                    query: {
+                        title: this.select_sort_title, sort_id: this.select_sort_id
+                    }
                 })
             }
         },
@@ -303,18 +273,17 @@
             height 434px
             display flex
             margin 24px auto
-            border-radius: 4px;
-            border: 1px solid rgba(76, 176, 255, 1);
 
             .category_contain
                 width 249px
                 box-sizing border-box
-                border-right 1px solid rgba(76, 176, 255, 1)
+
 
                 .search
                     background: #fff;
                     padding 14px 19px
-
+                    border 1px solid rgba(76, 176, 255, 1)
+                    border-bottom none
                     .el-input
                         .el-input__inner
                             height 24px
@@ -340,6 +309,8 @@
                     height 382px
                     overflow-y scroll
                     background: #fff;
+                    border 1px solid rgba(76, 176, 255, 1)
+                    border-top none
 
                     .category_list
                         border-bottom: 1px dashed rgba(204, 204, 204, 1);
@@ -373,6 +344,11 @@
                                 overflow: hidden;
                                 white-space: nowrap;
                                 text-overflow: ellipsis;
+                                border-left: 2px solid transparent;
+                            .active
+                                border-left: 2px solid #0085D7!important;
+                                background: rgba(240, 240, 240, 1);
+
 
         .select_result
             height: 58px;
@@ -389,11 +365,15 @@
         .next
             text-align center
 
+            .is-disabled
+                background-color #f7f8fa!important
+                color #b3b3b3!important
+                border 1px solid #b3b3b3!important
             .el-button
-                width: 222px;
+                width: 200px;
                 border none
-                padding 17px 74px
-                font-size: 24px;
+                /*padding 17px 74px*/
+                font-size: 18px;
                 border-radius: 4px
                 box-sizing border-box
                 color: rgba(255, 255, 255, 1);

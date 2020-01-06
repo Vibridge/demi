@@ -3,17 +3,17 @@
         <div class="create_goods_info" v-if="!success">
             <div class="create_title">
                 <el-tabs v-model="activeName" @tab-click="handleClick">
-                    <el-tab-pane label="用户管理" name="first"></el-tab-pane>
-                    <el-tab-pane label="配置管理" name="second"></el-tab-pane>
-                    <el-tab-pane label="角色管理" name="third"></el-tab-pane>
-                    <el-tab-pane label="定时任务补偿" name="fourth"></el-tab-pane>
+                    <el-tab-pane label="基础信息" name="first"></el-tab-pane>
+                    <el-tab-pane label="销售信息" name="second"></el-tab-pane>
+                    <el-tab-pane label="图文描述" name="third"></el-tab-pane>
+                    <el-tab-pane label="其他信息" name="fourth"></el-tab-pane>
                 </el-tabs>
                 <div class="select_category">
-                    <p>当前类目：服饰配件/皮带/帽子/围巾/耳套</p>
-                    <el-button type="primary">切换类目</el-button>
+                    <p>当前类目：{{this.$route.query.title}}</p>
+                    <el-button type="primary" >切换类目</el-button>
                 </div>
             </div>
-            <div class="goods_basic">
+            <div id="1" class="goods_basic">
                 <div class="goods_basic_title">
                     基础信息
                 </div>
@@ -31,70 +31,39 @@
                     <div class="goods_basic_category">
                         <p class="goods_basic_label"><span style="visibility: hidden">* </span>类目属性</p>
                         <div class="goods_basic_category_input">
-                            <div class="left">
-                                <div class="brand">
-                                    <p class="brand_label">品牌</p>
-                                    <el-input
-                                            size="mini"
-                                            clearable
-                                            v-model="goods.goods_name">
-                                    </el-input>
-                                </div>
-                                <div class="number">
-                                    <p class="number_label">货号</p>
-                                    <el-input
-                                            size="mini"
-                                            clearable
-                                            v-model="goods.goods_name">
-                                    </el-input>
-                                </div>
+                            <div class="number">
+                                <p class="number_label">货号</p>
+                                <el-input
+                                        size="mini"
+                                        clearable
+                                        v-model="goods.goods_name">
+                                </el-input>
                             </div>
-                            <div class="right">
-                                <div class="material">
-                                    <p class="material_label">材质</p>
-                                    <el-input
-                                            size="mini"
-                                            clearable
-                                            v-model="goods.goods_name">
-                                    </el-input>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="goods_sale">
+            <div id="2" class="goods_sale">
                 <div class="goods_sale_title">
                     销售信息
                 </div>
-                <div class="goods_sale_info">
-                    <div class="goods_sale_category">
-                        <p class="goods_sale_label">颜色分类</p>
+                <div class="goods_sale_info" v-if="goods_info && goods_info.attrs">
+                    <div class="goods_sale_category" v-for="label in goods_info.attrs" :key="label.attribute_id">
+                        <p class="goods_sale_label">{{label.title}}分类</p>
                         <div class="select_category_value">
                             <el-checkbox-group v-model="checkList">
-                                <el-checkbox label="复选框 A"></el-checkbox>
-                                <el-checkbox label="复选框 B"></el-checkbox>
-                                <el-checkbox label="复选框 C"></el-checkbox>
-                                <el-checkbox label="禁用"></el-checkbox>
-                                <el-checkbox label="选中且禁用"></el-checkbox>
-                                <el-checkbox label="选中且禁用"></el-checkbox>
-                                <el-checkbox label="选中且禁用"></el-checkbox>
-                                <el-checkbox label="选中且禁用"></el-checkbox>
-                                <el-checkbox label="选中且禁用"></el-checkbox>
-                                <el-checkbox label="选中且禁用"></el-checkbox>
-                                <el-checkbox label="选中且禁用"></el-checkbox>
-                                <el-checkbox label="选中且禁用"></el-checkbox>
-                                <el-checkbox label="选中且禁用"></el-checkbox>
-                                <el-checkbox label="选中且禁用"></el-checkbox>
+                                <el-checkbox v-for="checkbox in label.children" :key="checkbox.attribute_id" :label="checkbox.title" @change="handleSelectAttr(label.title,checkbox.title)"></el-checkbox>
+                                <el-checkbox v-for="(custom,index) in custom_attr" :key="index" :label="custom" @change="handleSelectAttr(label.title,checkbox.title)"></el-checkbox>
                             </el-checkbox-group>
-                            <el-input v-model="custom" placeholder="请输入自定义值" size="medium"></el-input>
-                            <el-button type="primary" size="small">添加</el-button>
+                            <div style="display: flex">
+                                <el-input v-model="custom" placeholder="请输入自定义值" size="medium"></el-input>
+                                <el-button type="primary" size="small" @click="handleAddAttr">添加</el-button>
+                            </div>
                         </div>
                     </div>
                     <div class="goods_table">
                         <div class="table_title">
-                            <p>宝贝销售规格 在标题栏中输入或选择内容可以进行筛选和批量填充</p>
+                            <p>宝贝销售规格 <span>在标题栏中输入或选择内容可以进行筛选和批量填充</span></p>
                             <el-button type="primary" size="small">批量填充</el-button>
                         </div>
                         <div>
@@ -102,20 +71,69 @@
                                     :data="tableData"
                                     height="250"
                                     border
-                                    style="width: 100%">
+                                    style="max-width: 770px">
                                 <el-table-column
-                                        prop="date"
-                                        label="日期"
-                                        width="180">
+                                        v-if="goods_info && goods_info.attrs"
+                                        v-for="label in goods_info.attrs"
+                                        :label="label.title"
+                                        width="112">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="name"
-                                        label="姓名"
-                                        width="180">
+                                        width="160">
+                                    <template slot="header" slot-scope="scope">
+                                        <el-input
+                                                v-model="custom"
+                                                size="mini"
+                                                placeholder="价格（元）"/>
+                                    </template>
+                                    <template slot-scope="scope">
+                                        <el-input
+                                                v-model="custom"
+                                                size="mini"
+                                                placeholder="价格（元）"/>
+                                    </template>
                                 </el-table-column>
-                                <el-table-column
-                                        prop="address"
-                                        label="地址">
+                                <el-table-column width="160">
+                                    <template slot="header" slot-scope="scope">
+                                        <el-input
+                                                v-model="custom"
+                                                size="mini"
+                                                placeholder="数量（件）"/>
+                                    </template>
+                                    <template slot-scope="scope">
+                                        <el-input
+                                                v-model="custom"
+                                                size="mini"
+                                                placeholder="价格（元）"/>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column width="160">
+                                    <template slot="header" slot-scope="scope">
+                                        <el-input
+                                                v-model="custom"
+                                                size="mini"
+                                                placeholder="佣金（元）"/>
+                                    </template>
+                                    <template slot-scope="scope">
+                                        <el-input
+                                                v-model="custom"
+                                                size="mini"
+                                                placeholder="价格（元）"/>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column width="186">
+                                    <template slot="header" slot-scope="scope">
+                                        <el-input
+                                                v-model="custom"
+                                                size="mini"
+                                                placeholder="商品条形码"/>
+                                    </template>
+                                    <template slot-scope="scope">
+                                        <el-input
+                                                v-model="custom"
+                                                size="mini"
+                                                placeholder="价格（元）"/>
+                                    </template>
                                 </el-table-column>
                             </el-table>
                         </div>
@@ -146,7 +164,7 @@
                     </div>
                 </div>
             </div>
-            <div class="goods_pic">
+            <div id="3" class="goods_pic">
                 <div class="goods_pic_title">
                     图文描述
                 </div>
@@ -240,7 +258,7 @@
                     </div>
                 </div>
             </div>
-            <div class="goods_other">
+            <div id="4" class="goods_other">
                 <div class="goods_other_title">
                     其他信息
                 </div>
@@ -298,50 +316,24 @@
 
 <script>
     import bottom from '../../../components/B_person_bottom'
-
+    import http from '../../../libs/http'
     export default {
         name: 'create_goods_info',
         components: {bottom},
         data() {
             return {
+                goods_info:null,
                 activeName: 'second',
                 active: 1,
                 goods: {
                     goods_name: ""
                 },
                 success:false,
+                custom_attr:[],
                 imageUrl:'',
-                checkList: ['选中且禁用', '复选框 A'],
+                checkList: [],
                 custom: '',
-                tableData: [{
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-08',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-06',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-07',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }],
+                tableData: [],
                 urls: [
                     'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
                     'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
@@ -353,12 +345,30 @@
                 ]
             };
         },
+        mounted(){
+            console.log(this.$route.query.sort_id)
+            this.apiGet('/api/sort/info/' + this.$route.query.sort_id).then((res)=>{
+                console.log(res.attrs)
+                this.goods_info = res;
+                this.tableData = res.attrs
+            })
+        },
         methods: {
             handleClick(tab, event) {
                 console.log(tab, event);
             },
             handleSelect(active) {
                 this.active = active
+            },
+            handleAddAttr(){
+                this.custom_attr.push(this.custom)
+                this.custom = ''
+            },
+            handleSelectAttr(res,data){
+                
+                console.log(res)
+                console.log(data)
+
             },
             handleAvatarSuccess(res, file) {
                 this.imageUrl = URL.createObjectURL(file.raw);
@@ -385,7 +395,8 @@
                     name:'create_goods'
                 })
             }
-        }
+        },
+        mixins:[http]
     }
 </script>
 
@@ -485,9 +496,16 @@
                         width 695px
                         display flex
                         padding 28px 54px
-                        margin-bottom 15px
+                        /*margin-bottom 15px*/
 
-                        .left, .right
+                        .number
+                            display flex
+                            .number_label
+                                margin-right 8px
+                                align-self center
+                        .el-input
+                            width 197px
+                        /*.left, .right
                             width 50%
                             text-align center
 
@@ -500,7 +518,7 @@
                                     align-self center
 
                             .el-input
-                                width 197px
+                                width 197px*/
 
         .goods_sale
             margin-bottom 25px
@@ -531,13 +549,23 @@
 
                         .el-checkbox
                             margin-bottom 16px
-
+                            .el-checkbox__inner
+                                border-radius:4px;
+                            .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner
+                                background-color #E4F0FD
+                                border 1px solid #3BC7FF
+                            .el-checkbox__inner::after
+                                border: 1px solid #3BC7FF;
+                                border-top: 0;
+                                border-left: 0;
                         .el-input
                             width 214px
+                            align-self center
                             margin-right 15px
 
                         .el-button
                             color #333333
+                            align-self center
                             background-color #f7f8fa
                             border: 1px solid rgba(153, 153, 153, 1);
 
@@ -551,7 +579,9 @@
 
                         p
                             align-self center
-
+                            span
+                                font-size 12px
+                                color:#999999
                         .el-button
                             margin-right 193px
 
@@ -582,8 +612,8 @@
 
         .goods_pic
             margin-bottom 25px
+            padding-bottom: 41px;
             background: rgba(255, 255, 255, 1);
-
             .goods_pic_title
                 width 100%
                 font-size: 18px;
