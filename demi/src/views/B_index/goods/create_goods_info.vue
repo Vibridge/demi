@@ -73,9 +73,9 @@
                                     border
                                     style="max-width: 770px">
                                 <el-table-column
-                                        v-if="goods_info && goods_info.attrs"
-                                        v-for="label in goods_info.attrs"
-                                        :label="label.title"
+                                        v-if="table_attrs && table_attrs.attrs"
+                                        v-for="label in table_attrs.attrs"
+                                        :label="label"
                                         width="112">
                                 </el-table-column>
                                 <el-table-column
@@ -324,16 +324,24 @@
             return {
                 goods_info:null,
                 activeName: 'second',
-                active: 1,
+
+                //货号
                 goods: {
                     goods_name: ""
                 },
-                success:false,
+
+                //自定义属性值
                 custom_attr:[],
+
+                tableData: [],
+                table_attrs:{
+                    attrs:[]
+                },
+                success:false,
                 imageUrl:'',
                 checkList: [],
                 custom: '',
-                tableData: [],
+                active: 1,
                 urls: [
                     'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
                     'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
@@ -348,9 +356,13 @@
         mounted(){
             console.log(this.$route.query.sort_id)
             this.apiGet('/api/sort/info/' + this.$route.query.sort_id).then((res)=>{
-                console.log(res.attrs)
                 this.goods_info = res;
-                this.tableData = res.attrs
+                let length=res.attrs.length;
+                for(let i=0;i<length;i++){
+                    this.table_attrs.attrs.push(res.attrs[i].title);
+                }
+                console.log(this.table_attrs)
+
             })
         },
         methods: {
@@ -365,7 +377,7 @@
                 this.custom = ''
             },
             handleSelectAttr(res,data){
-                
+
                 console.log(res)
                 console.log(data)
 
