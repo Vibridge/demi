@@ -10,7 +10,7 @@
                 </el-tabs>
                 <div class="select_category">
                     <p>当前类目：{{this.$route.query.title}}</p>
-                    <el-button type="primary" >切换类目</el-button>
+                    <el-button type="primary">切换类目</el-button>
                 </div>
             </div>
             <div id="1" class="goods_basic">
@@ -48,12 +48,16 @@
                     销售信息
                 </div>
                 <div class="goods_sale_info" v-if="goods_info && goods_info.attrs">
-                    <div class="goods_sale_category" v-for="label in goods_info.attrs" :key="label.attribute_id">
+                    <div class="goods_sale_category" v-for="(label,index) in goods_info.attrs"
+                         :key="label.attribute_id">
                         <p class="goods_sale_label">{{label.title}}分类</p>
-                        <div class="select_category_value">
-                            <el-checkbox-group v-model="checkList">
-                                <el-checkbox v-for="checkbox in label.children" :key="checkbox.attribute_id" :label="checkbox.title" @change="handleSelectAttr(label.title,checkbox.title)"></el-checkbox>
-                                <el-checkbox v-for="(custom,index) in custom_attr" :key="index" :label="custom" @change="handleSelectAttr(label.title,checkbox.title)"></el-checkbox>
+                        <div class="select_category_value" v-if="checkList[index].list">
+                            <el-checkbox-group v-model="checkList[index].list">
+                                <el-checkbox v-for="checkbox in label.children" :key="checkbox.attribute_id"
+                                             :label="checkbox.title"
+                                             @change="handleSelectAttr(index,label.title,checkbox.title)"></el-checkbox>
+                                <el-checkbox v-for="(custom,index) in custom_attr" :key="index" :label="custom"
+                                             @change="handleSelectAttr(index,label.title,checkbox.title)"></el-checkbox>
                             </el-checkbox-group>
                             <div style="display: flex">
                                 <el-input v-model="custom" placeholder="请输入自定义值" size="medium"></el-input>
@@ -69,14 +73,21 @@
                         <div>
                             <el-table
                                     :data="tableData"
-                                    height="250"
                                     border
-                                    style="max-width: 770px">
+                                    style="max-width: 770px;max-height: 250px;overflow-y: auto"
+                                    :header-row-style="{'height':'44px'}"
+                                    :header-cell-style="{'padding':'0'}"
+                                    :cell-style="{'height':'32px','padding':'0'}"
+                            >
                                 <el-table-column
-                                        v-if="table_attrs && table_attrs.attrs"
-                                        v-for="label in table_attrs.attrs"
-                                        :label="label"
+                                        v-if="checkList"
+                                        v-for="(label,index) in checkList"
+                                        :label="label.title"
+
                                         width="112">
+                                    <template slot-scope="scope">
+                                        {{scope.row[index]}}
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
                                         width="160">
@@ -317,12 +328,13 @@
 <script>
     import bottom from '../../../components/B_person_bottom'
     import http from '../../../libs/http'
+
     export default {
         name: 'create_goods_info',
         components: {bottom},
         data() {
             return {
-                goods_info:null,
+                goods_info: null,
                 activeName: 'second',
 
                 //货号
@@ -331,14 +343,11 @@
                 },
 
                 //自定义属性值
-                custom_attr:[],
+                custom_attr: [],
 
                 tableData: [],
-                table_attrs:{
-                    attrs:[]
-                },
-                success:false,
-                imageUrl:'',
+                success: false,
+                imageUrl: '',
                 checkList: [],
                 custom: '',
                 active: 1,
@@ -353,16 +362,13 @@
                 ]
             };
         },
-        mounted(){
-            console.log(this.$route.query.sort_id)
-            this.apiGet('/api/sort/info/' + this.$route.query.sort_id).then((res)=>{
+        mounted() {
+            this.apiGet('/api/sort/info/' + this.$route.query.sort_id).then((res) => {
                 this.goods_info = res;
-                let length=res.attrs.length;
-                for(let i=0;i<length;i++){
-                    this.table_attrs.attrs.push(res.attrs[i].title);
+                let length = res.attrs.length;
+                for (let i = 0; i < length; i++) {
+                    this.checkList.push({list: [], title: res.attrs[i].title});
                 }
-                console.log(this.table_attrs)
-
             })
         },
         methods: {
@@ -372,15 +378,45 @@
             handleSelect(active) {
                 this.active = active
             },
-            handleAddAttr(){
-                this.custom_attr.push(this.custom)
+            objectSpanMethod({row, column, rowIndex, columnIndex}) {
+                if (columnIndex === 0) {
+                    if (rowIndex % 2 === 0) {
+                        return {
+                            rowspan: 2,
+                            colspan: 1
+                        };
+                    } else {
+                        return {
+                            rowspan: 0,
+                            colspan: 0
+                        };
+                    }
+                }
+            },
+            handleAddAttr() {
+                this.custom_attr.push(this.custom);
                 this.custom = ''
             },
-            handleSelectAttr(res,data){
-
-                console.log(res)
-                console.log(data)
-
+            handleSelectAttr(index, res, data) {
+                let all_length = this.checkList.length;
+                let item = [];
+                for (let i = 0; i < all_length; i++) {
+                    item[i] = ''
+                }
+                let length = this.checkList[index].list.length;
+                for (let i = 0; i < length; i++) {
+                    // item.attrs[index] = this.checkList[index].list[i];
+                    item[index] = this.checkList[index].list[i];
+                }
+                let table_length = this.tableData.length;
+                if(index !== 0 && table_length>0){
+                    for (let i = 0;i<table_length;i++){
+                        this.tableData[i][index] = item[index]
+                    }
+                }else{
+                    this.tableData.push(item);
+                }
+                console.log(this.tableData)
             },
             handleAvatarSuccess(res, file) {
                 this.imageUrl = URL.createObjectURL(file.raw);
@@ -397,18 +433,33 @@
                 }
                 return isJPG && isLt2M;
             },
-            handleLook(){
+            handleLook() {
                 this.$router.push({
-                    name:'goods_massage'
+                    name: 'goods_massage'
                 })
             },
-            handleAgain(){
+            handleAgain() {
                 this.$router.push({
-                    name:'create_goods'
+                    name: 'create_goods'
                 })
             }
         },
-        mixins:[http]
+        /* watch:{
+             checkList(){
+                 if(this.checkList){
+                     let array = [];
+                     let length = this.checkList[0].list.length;
+                     for(let i = 0;i<length;i++){
+                         let item = {
+                             title:this.checkList[0].list[i]
+                         }
+                         array.push(item)
+                     }
+                     console.log(array)
+                 }
+             }
+         },*/
+        mixins: [http]
     }
 </script>
 
@@ -512,25 +563,28 @@
 
                         .number
                             display flex
+
                             .number_label
                                 margin-right 8px
                                 align-self center
+
                         .el-input
                             width 197px
-                        /*.left, .right
-                            width 50%
-                            text-align center
 
-                            .brand, .number, .material
-                                display flex
-                                margin-bottom 25px
+        /*.left, .right
+            width 50%
+            text-align center
 
-                                .brand_label, .number_label, .material_label
-                                    margin-right 8px
-                                    align-self center
+            .brand, .number, .material
+                display flex
+                margin-bottom 25px
 
-                            .el-input
-                                width 197px*/
+                .brand_label, .number_label, .material_label
+                    margin-right 8px
+                    align-self center
+
+            .el-input
+                width 197px*/
 
         .goods_sale
             margin-bottom 25px
@@ -561,15 +615,19 @@
 
                         .el-checkbox
                             margin-bottom 16px
+
                             .el-checkbox__inner
-                                border-radius:4px;
+                                border-radius: 4px;
+
                             .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner
                                 background-color #E4F0FD
                                 border 1px solid #3BC7FF
+
                             .el-checkbox__inner::after
                                 border: 1px solid #3BC7FF;
                                 border-top: 0;
                                 border-left: 0;
+
                         .el-input
                             width 214px
                             align-self center
@@ -591,9 +649,11 @@
 
                         p
                             align-self center
+
                             span
                                 font-size 12px
-                                color:#999999
+                                color: #999999
+
                         .el-button
                             margin-right 193px
 
@@ -626,6 +686,7 @@
             margin-bottom 25px
             padding-bottom: 41px;
             background: rgba(255, 255, 255, 1);
+
             .goods_pic_title
                 width 100%
                 font-size: 18px;
@@ -633,30 +694,38 @@
                 padding 27px 0 17px 15px
                 box-sizing border-box
                 border-bottom: 1px solid rgba(228, 228, 228, 1);
+
             .goods_upload
                 padding-left 31px
-                .goods_pic_upload,.goods_video_upload,.goods_look
+
+                .goods_pic_upload, .goods_video_upload, .goods_look
                     margin-top 35px
                     display flex
+
                     .goods_look_label
                         margin-right 15px
+
                     .main_look
                         width 651px
                         height 503px
                         padding-left 11px
-                        border:1px solid rgba(204,204,204,1);
+                        border: 1px solid rgba(204, 204, 204, 1);
+
                         .demo-image__lazy
                             height 442px
                             overflow auto
 
-                    .goods_pic_label,.goods_video_label
+                    .goods_pic_label, .goods_video_label
                         margin-right 28px
-                    .main_pic,.main_video
+
+                    .main_pic, .main_video
                         margin-bottom 34px
+
                         p
-                            font-size:14px;
-                            color:rgba(204,204,204,1);
+                            font-size: 14px;
+                            color: rgba(204, 204, 204, 1);
                             margin-bottom 14px
+
                         .avatar-uploader .el-upload {
                             border: 1px dashed #d9d9d9;
                             cursor: pointer;
@@ -664,9 +733,11 @@
                             overflow: hidden;
                             margin-right 15px
                         }
+
                         .avatar-uploader .el-upload:hover {
                             border-color: #409EFF;
                         }
+
                         .avatar-uploader-icon {
                             font-size: 29px;
                             color: #24BFFF;
@@ -675,19 +746,24 @@
                             line-height: 70px;
                             text-align: center;
                         }
+
                         .avatar {
                             width: 100px;
                             height: 100px;
                             display: block;
                         }
+
                         .add-pic
-                            font-size:12px;
-                            color:rgba(102,102,102,1);
+                            font-size: 12px;
+                            color: rgba(102, 102, 102, 1);
+
                         .upload-container
                             display flex
+
                     .goods_video_note
-                        color:rgba(204,204,204,1);
+                        color: rgba(204, 204, 204, 1);
                         align-self flex-start
+
                         p
                             margin-bottom 18px
 
@@ -702,24 +778,31 @@
                 padding 27px 0 17px 15px
                 box-sizing border-box
                 border-bottom: 1px solid rgba(228, 228, 228, 1);
+
             .goods_other_time
                 padding 34px 31px
+
                 .goods_other_label
                     display inline
+
                 .goods_other_note
                     font-size 12px
-                    color:#999
+                    color: #999
+
                 .select_buy
                     margin-left 90px
                     margin-top 19px
                     display flex
-                    .select_online,.select_store
+
+                    .select_online, .select_store
                         display flex
                         margin-right 19px
                         align-self center
+
                         img
                             width 18px
                             margin-right 10px
+
                         p
                             color #000000
                             font-size 12px
@@ -735,51 +818,59 @@
             line-height 83px
             background-color: #fff;
             text-align center
-            z-index:2;
-            border-top:1px solid rgba(36,191,255,1)
+            z-index: 2;
+            border-top: 1px solid rgba(36, 191, 255, 1)
+
             .el-button
-                width:255px;
-                height:39px;
-                font-size:15px;
-                border-radius:4px;
-                color:rgba(36,191,255,1);
-                background:rgba(228,240,253,1);
-                border:1px solid rgba(36,191,255,1);
+                width: 255px;
+                height: 39px;
+                font-size: 15px;
+                border-radius: 4px;
+                color: rgba(36, 191, 255, 1);
+                background: rgba(228, 240, 253, 1);
+                border: 1px solid rgba(36, 191, 255, 1);
+
     .create_call_back
         width 1000px;
         text-align center
         position absolute
         left 50%
-        top:calc(50vh - 176px);
-        transform translate3d(-50%,-50%,0)
+        top: calc(50vh - 176px);
+        transform translate3d(-50%, -50%, 0)
+
         .call_back_title
             display flex
             margin-bottom 71px
             justify-content center
+
             img
                 width 56px
                 margin-right 21px
                 align-self flex-start
+
             .call_back_contain
                 color #24BFFF
                 text-align left
+
                 p:first-child
-                    font-size:38px
+                    font-size: 38px
+
                 p
-                    font-size:11px;
+                    font-size: 11px;
                     margin-bottom 7px
 
         .next_coc
             .el-button:first-child
                 margin-right 75px
-                color:rgba(36,191,255,1);
-                background:rgba(228,240,253,1);
-                border:1px solid rgba(36,191,255,1);
+                color: rgba(36, 191, 255, 1);
+                background: rgba(228, 240, 253, 1);
+                border: 1px solid rgba(36, 191, 255, 1);
+
             .el-button
-                width:194px;
-                font-size:16px;
+                width: 194px;
+                font-size: 16px;
                 border none
-                border-radius:4px;
-                color:rgba(252,252,252,1);
-                background:rgba(36,191,255,1);
+                border-radius: 4px;
+                color: rgba(252, 252, 252, 1);
+                background: rgba(36, 191, 255, 1);
 </style>
