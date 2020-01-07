@@ -55,9 +55,9 @@
                             <el-checkbox-group v-model="checkList[index].list">
                                 <el-checkbox v-for="checkbox in label.children" :key="checkbox.attribute_id"
                                              :label="checkbox.title"
-                                             @change="handleSelectAttr(index,label.title,checkbox.title)"></el-checkbox>
+                                             @change="handleSelectAttr(index)"></el-checkbox>
                                 <el-checkbox v-for="(custom,index) in custom_attr" :key="index" :label="custom"
-                                             @change="handleSelectAttr(index,label.title,checkbox.title)"></el-checkbox>
+                                             @change="handleSelectAttr(index)"></el-checkbox>
                             </el-checkbox-group>
                             <div style="display: flex">
                                 <el-input v-model="custom" placeholder="请输入自定义值" size="medium"></el-input>
@@ -397,8 +397,8 @@
                 this.custom_attr.push(this.custom);
                 this.custom = ''
             },
-            handleSelectAttr(index, res, data) {
-                let all_length = this.checkList.length;
+            handleSelectAttr(index) {
+                /*let all_length = this.checkList.length;
                 let item = [];
                 for (let i = 0; i < all_length; i++) {
                     item[i] = ''
@@ -416,7 +416,37 @@
                 }else{
                     this.tableData.push(item);
                 }
-                console.log(this.tableData)
+                console.log(this.tableData)*/
+                this.handleSku(index)
+            },
+            handleSku(index){
+                let all_length = this.checkList.length;
+                let array = []
+                let item = [];
+                for (let i = 0; i < all_length; i++) {
+                    item[i] = ''
+                }
+                let length = this.checkList[index].list.length;
+                for (let i = 0; i < length; i++) {
+                    // item.attrs[index] = this.checkList[index].list[i];
+                    item[index] = this.checkList[index].list[i];
+                }
+                array.push(item)
+
+                console.log(array)
+
+                /*let table_length = this.tableData.length;
+                if(table_length > 0){
+                    for (let i =0;i<table_length;i++){
+                        if(this.tableData[i][index] !== item[index] && (i === (table_length-1))){
+                            this.tableData.push(item)
+                        }
+                    }
+                }else{
+                    this.tableData.push(item)
+                }*/
+
+
             },
             handleAvatarSuccess(res, file) {
                 this.imageUrl = URL.createObjectURL(file.raw);
