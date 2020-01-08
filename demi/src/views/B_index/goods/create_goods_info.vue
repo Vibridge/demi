@@ -417,36 +417,25 @@
                     this.tableData.push(item);
                 }
                 console.log(this.tableData)*/
-                this.handleSku(index)
+                this.tableData = [];
+                this.handleSku(0,[])
             },
-            handleSku(index){
+
+            handleSku(index,data){
                 let all_length = this.checkList.length;
-                let array = []
-                let item = [];
-                for (let i = 0; i < all_length; i++) {
-                    item[i] = ''
-                }
                 let length = this.checkList[index].list.length;
-                for (let i = 0; i < length; i++) {
-                    // item.attrs[index] = this.checkList[index].list[i];
-                    item[index] = this.checkList[index].list[i];
-                }
-                array.push(item)
-
-                console.log(array)
-
-                /*let table_length = this.tableData.length;
-                if(table_length > 0){
-                    for (let i =0;i<table_length;i++){
-                        if(this.tableData[i][index] !== item[index] && (i === (table_length-1))){
-                            this.tableData.push(item)
+                if(length > 0){
+                    for (let i = 0; i < length; i++) {
+                        // item.attrs[index] = this.checkList[index].list[i];
+                        if(index < all_length-1 ){
+                            data[index] = this.checkList[index].list[i];
+                            this.handleSku(index+1,data)
+                        }else{
+                            let subItem = [...data,this.checkList[index].list[i]];
+                            this.tableData.push(subItem)
                         }
                     }
-                }else{
-                    this.tableData.push(item)
-                }*/
-
-
+                }
             },
             handleAvatarSuccess(res, file) {
                 this.imageUrl = URL.createObjectURL(file.raw);
