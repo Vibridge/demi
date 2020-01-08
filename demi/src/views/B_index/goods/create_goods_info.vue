@@ -74,7 +74,8 @@
                             <el-table
                                     :data="tableData"
                                     border
-                                    style="max-width: 770px;max-height: 250px;overflow-y: auto"
+                                    max-height="250px"
+                                    style="max-width: 770px;"
                                     :header-row-style="{'height':'44px'}"
                                     :header-cell-style="{'padding':'0'}"
                                     :cell-style="{'height':'32px','padding':'0'}"
