@@ -19,17 +19,17 @@
                 <p class="form-title">店铺名</p>
                 <el-input
                         placeholder="请输入店铺名称不可修改"
-                        v-model="form.name">
+                        v-model="form.shop_name">
                 </el-input>
             </div>
             <div class="form">
-                <p class="form-title">手机号</p>
+                <p class="form-title">客服联系号码</p>
                 <el-input
-                        placeholder="请输入手机号"
-                        v-model="form.phone">
+                        placeholder="请输入客服联系号码"
+                        v-model="form.shop_phone">
                 </el-input>
             </div>
-            <div class="form">
+            <!--<div class="form">
                 <p class="form-title">验证码</p>
                 <div>
                     <el-input
@@ -39,14 +39,16 @@
                     <el-button type="primary">验证码</el-button>
                 </div>
 
-            </div>
+            </div>-->
             <div class="form">
                 <p class="form-title" style="align-self: self-start;margin-top: 8px">店铺简介</p>
                 <el-input
                         type="textarea"
                         :rows="6"
                         placeholder="请用一句话来介绍你的店铺"
-                        v-model="form.desc">
+                        v-model="form.shop_poster"
+                        maxlength="100"
+                        show-word-limit>
                 </el-input>
             </div>
 
@@ -77,6 +79,7 @@
 </template>
 
 <script>
+    import http from '../libs/http'
     export default {
         name: 'store',
         data() {
@@ -84,10 +87,10 @@
                 store: true,
                 open: false,
                 form: {
-                    name: '',
-                    phone: '',
-                    yzm: '',
-                    desc: ''
+                    shop_name: '',
+                    shop_phone: '',
+                    shop_poster: '',
+
                 },
                 over: false
             }
@@ -97,8 +100,18 @@
                 this.open = true
             },
             handleCreate() {
-                this.open = false;
-                this.over = true
+                if(this.form.shop_name){
+                    this.apiPost('/api/shop/create',this.form).then((res)=>{
+                        if(res){
+                            console.log(res)
+                            this.open = false;
+                            this.over = true
+                        }
+                    })
+                }else{
+                    this.$message('请输入店铺名')
+                }
+
             },
             handleBack(path){
                 this.over = false
@@ -106,7 +119,8 @@
                     name: path,
                 });
             }
-        }
+        },
+        mixins:[http]
     }
 </script>
 

@@ -55,9 +55,13 @@
                             <el-checkbox-group v-model="checkList[index].list">
                                 <el-checkbox v-for="checkbox in label.children" :key="checkbox.attribute_id"
                                              :label="checkbox.title"
-                                             @change="handleSelectAttr(index)"></el-checkbox>
+                                             @change="handleSelectAttr()"></el-checkbox>
                                 <el-checkbox v-for="(custom,index) in custom_attr" :key="index" :label="custom"
-                                             @change="handleSelectAttr(index)"></el-checkbox>
+                                                 @change="handleSelectAttr()"></el-checkbox>
+
+                                <i class="el-icon-edit"></i>
+                                <i class="el-icon-delete"></i>
+
                             </el-checkbox-group>
                             <div style="display: flex">
                                 <el-input v-model="custom" placeholder="请输入自定义值" size="medium"></el-input>
@@ -65,10 +69,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="goods_table">
+                    <div class="goods_table" v-if="tableData.length > 0">
                         <div class="table_title">
                             <p>宝贝销售规格 <span>在标题栏中输入或选择内容可以进行筛选和批量填充</span></p>
-                            <el-button type="primary" size="small">批量填充</el-button>
+                            <el-button type="primary" size="small" @click="handleFill">批量填充</el-button>
                         </div>
                         <div>
                             <el-table
@@ -79,28 +83,30 @@
                                     :header-row-style="{'height':'44px'}"
                                     :header-cell-style="{'padding':'0'}"
                                     :cell-style="{'height':'32px','padding':'0'}"
+                                    row-key="index"
                             >
                                 <el-table-column
                                         v-if="checkList"
                                         v-for="(label,index) in checkList"
                                         :label="label.title"
-
                                         width="112">
                                     <template slot-scope="scope">
-                                        {{scope.row[index]}}
+                                        <p>{{scope.row[index]}}</p>
                                     </template>
                                 </el-table-column>
                                 <el-table-column
-                                        width="160">
+                                        width="160"
+                                >
                                     <template slot="header" slot-scope="scope">
                                         <el-input
-                                                v-model="custom"
+                                                v-model.trim="sale"
                                                 size="mini"
                                                 placeholder="价格（元）"/>
                                     </template>
+                                    <!--v-model="scope.row[handleTableInput(scope.row,scope.row.length)]"-->
                                     <template slot-scope="scope">
                                         <el-input
-                                                v-model="custom"
+                                                v-model.trim="sku_sale[scope.$index]"
                                                 size="mini"
                                                 placeholder="价格（元）"/>
                                     </template>
@@ -108,43 +114,46 @@
                                 <el-table-column width="160">
                                     <template slot="header" slot-scope="scope">
                                         <el-input
-                                                v-model="custom"
+                                                v-model.trim="sum"
                                                 size="mini"
                                                 placeholder="数量（件）"/>
                                     </template>
+                                    <!--scope.row[handleTableInput(scope.row,scope.row.length + 1)]-->
                                     <template slot-scope="scope">
                                         <el-input
-                                                v-model="custom"
+                                                v-model.trim="sku_sum[scope.$index]"
                                                 size="mini"
-                                                placeholder="价格（元）"/>
+                                                placeholder="数量（件）"/>
                                     </template>
                                 </el-table-column>
                                 <el-table-column width="160">
                                     <template slot="header" slot-scope="scope">
                                         <el-input
-                                                v-model="custom"
+                                                v-model.trim="commission"
                                                 size="mini"
                                                 placeholder="佣金（元）"/>
                                     </template>
+                                    <!--scope.row[handleTableInput(scope.row,scope.row.length + 2)]-->
                                     <template slot-scope="scope">
                                         <el-input
-                                                v-model="custom"
+                                                v-model.trim="sku_commission[scope.$index]"
                                                 size="mini"
-                                                placeholder="价格（元）"/>
+                                                placeholder="佣金（元）"/>
                                     </template>
                                 </el-table-column>
                                 <el-table-column width="186">
                                     <template slot="header" slot-scope="scope">
                                         <el-input
-                                                v-model="custom"
+                                                v-model.trim="code"
                                                 size="mini"
                                                 placeholder="商品条形码"/>
                                     </template>
+                                    <!--scope.row[handleTableInput(scope.row,scope.row.length + 3)]-->
                                     <template slot-scope="scope">
                                         <el-input
-                                                v-model="custom"
+                                                v-model.trim="sku_code[scope.$index]"
                                                 size="mini"
-                                                placeholder="价格（元）"/>
+                                                placeholder="商品条形码"/>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -342,14 +351,23 @@
                 goods: {
                     goods_name: ""
                 },
-
                 //自定义属性值
+                checkList: [],
                 custom_attr: [],
-
+                sku_array: [],
+                sku_attr_id: [],
+                sku_select_attr: [],
+                sku_sale: [],
+                sku_sum: [],
+                sku_commission: [],
+                sku_code: [],
+                sale:'',
+                sum:'',
+                commission:'',
+                code:'',
                 tableData: [],
                 success: false,
                 imageUrl: '',
-                checkList: [],
                 custom: '',
                 active: 1,
                 urls: [
@@ -368,8 +386,9 @@
                 this.goods_info = res;
                 let length = res.attrs.length;
                 for (let i = 0; i < length; i++) {
-                    this.checkList.push({list: [], title: res.attrs[i].title});
+                    this.checkList.push({list: [], attr: res.attrs[i].attribute_id, title: res.attrs[i].title});
                 }
+                console.log(this.checkList);
             })
         },
         methods: {
@@ -379,7 +398,8 @@
             handleSelect(active) {
                 this.active = active
             },
-            objectSpanMethod({row, column, rowIndex, columnIndex}) {
+
+            /*objectSpanMethod({row, column, rowIndex, columnIndex}) {
                 if (columnIndex === 0) {
                     if (rowIndex % 2 === 0) {
                         return {
@@ -393,51 +413,127 @@
                         };
                     }
                 }
-            },
+            },*/
+
             handleAddAttr() {
                 this.custom_attr.push(this.custom);
                 this.custom = ''
             },
-            handleSelectAttr(index) {
-                /*let all_length = this.checkList.length;
-                let item = [];
-                for (let i = 0; i < all_length; i++) {
-                    item[i] = ''
-                }
-                let length = this.checkList[index].list.length;
-                for (let i = 0; i < length; i++) {
-                    // item.attrs[index] = this.checkList[index].list[i];
-                    item[index] = this.checkList[index].list[i];
-                }
-                let table_length = this.tableData.length;
-                if(index !== 0 && table_length>0){
-                    for (let i = 0;i<table_length;i++){
-                        this.tableData[i][index] = item[index]
+
+            handleFill(){
+                if(this.tableData){
+                    if(this.sale){
+                        let length = this.sku_sale.length;
+                        for (let i = 0;i<length;i++) {
+                            this.$set(this.sku_sale,i,this.sale)
+                        }
+                        this.sale = ''
                     }
-                }else{
-                    this.tableData.push(item);
+                    if(this.sum){
+                        let length = this.sku_sum.length;
+                        for (let i = 0;i<length;i++){
+                            this.$set(this.sku_sum,i,this.sum)
+                        }
+                        this.sum = ''
+                    }
+                    if(this.commission){
+                        let length = this.sku_commission.length;
+                        for (let i = 0;i<length;i++){
+                            this.$set(this.sku_commission,i,this.commission)
+                        }
+                        this.commission = ''
+                    }
+                    if(this.code){
+                        let length = this.sku_code.length;
+                        for (let i = 0;i<length;i++){
+                            this.$set(this.sku_code,i,this.code)
+                        }
+                        this.code = ''
+                    }
+                    console.log(this.sku_sale)
                 }
-                console.log(this.tableData)*/
-                this.tableData = [];
-                this.handleSku(0,[])
             },
 
-            handleSku(index,data){
+            handleSelectAttr() {
+                this.tableData = [];
+                this.sku_array = [];
+                /*this.sku_sale = [];
+                this.sku_sum = [];
+                this.sku_commission = [];
+                this.sku_code = [];*/
+                this.sku_attr_id = [];
+                this.sku_select_attr = [];
+                this.handleSku(0, []);
+                this.handleSkuAttrId(0)
+            },
+
+            handleSku(index, data) {
                 let all_length = this.checkList.length;
                 let length = this.checkList[index].list.length;
-                if(length > 0){
+                if (length > 0) {
                     for (let i = 0; i < length; i++) {
-                        // item.attrs[index] = this.checkList[index].list[i];
-                        if(index < all_length-1 ){
+                        if (index < all_length - 1) {
                             data[index] = this.checkList[index].list[i];
-                            this.handleSku(index+1,data)
-                        }else{
-                            let subItem = [...data,this.checkList[index].list[i]];
-                            this.tableData.push(subItem)
+                            this.handleSku(index + 1, data)
+                        } else {
+                            let subItem = [...data, this.checkList[index].list[i]];
+                            this.tableData.push(subItem);
+                        }
+                    }
+                }
+                if(this.tableData.length > 0){
+                    this.sku_sale[this.tableData.length - 1] = '';
+                    this.sku_sum[this.tableData.length - 1] = '';
+                    this.sku_commission[this.tableData.length - 1] = '';
+                    this.sku_code[this.tableData.length - 1] = '';
+                    console.log(this.sku_sale)
+                }
+
+
+                /*if(this.sku_sale.length < 1){
+                    this.sku_sale[this.tableData.length - 1] = '';
+                }
+                if(this.sku_sum.length < 1){
+                    this.sku_sum[this.tableData.length - 1] = '';
+                }
+                if(this.sku_commission.length < 1 ){
+                    this.sku_commission[this.tableData.length - 1] = '';
+                }
+                if(this.sku_code.length < 1 ){
+                    this.sku_code[this.tableData.length - 1] = '';
+                }
+                console.log(this.sku_sale)*/
+                /*this.sku_sum[this.tableData.length - 1] = '';
+                this.sku_commission[this.tableData.length - 1] = '';
+                this.sku_code[this.tableData.length - 1] = '';*/
+
+            },
+            handleSkuAttrId(index) {
+                let all_length = this.checkList.length;
+                if (index < all_length) {
+                    let length = this.checkList[index].list.length;
+                    if (length > 0) {
+                        for (let i = 0; i < length; i++) {
+                            this.sku_attr_id.push(this.checkList[index].attr);
+                            this.sku_select_attr.push(this.checkList[index].list[i]);
+                            if(i === (length-1)){
+                                this.handleSkuAttrId(index + 1);
+                            }
                         }
                     }
                 }
             },
+
+            /*handleTableInput(data, index) {
+                let all_length = this.checkList.length;
+                let length = data.length;
+                if (length > all_length) {
+                    let option = length - all_length;
+                    return index - option
+                } else {
+                    return index
+                }
+            },*/
             handleAvatarSuccess(res, file) {
                 this.imageUrl = URL.createObjectURL(file.raw);
             },
@@ -464,21 +560,34 @@
                 })
             }
         },
-        /* watch:{
-             checkList(){
-                 if(this.checkList){
-                     let array = [];
-                     let length = this.checkList[0].list.length;
-                     for(let i = 0;i<length;i++){
-                         let item = {
-                             title:this.checkList[0].list[i]
-                         }
-                         array.push(item)
-                     }
-                     console.log(array)
-                 }
-             }
-         },*/
+        watch:{
+            tableData(){
+                if(this.tableData){
+                    let length = this.tableData.length;
+                    for(let i = 0;i<length;i++){
+                        let length2 = this.tableData[i].length;
+                        let item;
+                        for(let y=0;y<length2;y++){
+                            if(y === 0){
+                                item = this.tableData[i][y]
+                            }else{
+                                item = item + ',' + this.tableData[i][y];
+                            }
+                        }
+                        this.sku_array.push(item)
+                    }
+                }
+            }
+            /*sku_sale(){
+                if(this.sku_sale){
+                    let length = this
+                    console.log(this.sku_sale)
+                    console.log(this.sku_sum)
+                    console.log(this.sku_commission)
+                    console.log(this.sku_code)
+                }
+            }*/
+        },
         mixins: [http]
     }
 </script>

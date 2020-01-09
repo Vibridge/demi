@@ -1,9 +1,9 @@
 <template>
     <div class="goods_massage_wrap">
-        <div v-if="false">
+        <div v-if="!store">
             <store></store>
         </div>
-        <div class="goods_massage">
+        <div class="goods_massage" v-if="store">
             <div class="goods_massage_nav">
                 <el-tabs type="border-card">
                     <el-tab-pane label="全部商品">
@@ -26,9 +26,35 @@
 <script>
     import store from '../../../components/store'
     import goods from './goods_info'
+    import http from '../../../libs/http'
     export default {
         name: 'index',
         components:{store,goods},
+        data(){
+            return{
+                store:false
+            }
+        },
+        mounted() {
+            this.apiGet('/api/user/info').then((res) => {
+                console.log(res)
+                if(res.type === 2){
+                    if(res.shop){
+                        this.store = true
+                    }
+                }else{
+                    this.$message({
+                        showClose: true,
+                        message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                        duration: 1000
+                    });
+                    this.$router.push({
+                        name: "login"
+                    });
+                }
+            })
+        },
+        mixins:[http]
     }
 </script>
 
