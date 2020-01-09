@@ -53,7 +53,7 @@
                                     <img :src="user_info.avatar" alt="" :title="user_info.name">
                                 </div>
                             </template>
-                            <el-menu-item index="2-1" @click="handleStore">店铺资料</el-menu-item>
+                            <el-menu-item v-if="this.user_info.shop" index="2-1" @click="handleStore">店铺资料</el-menu-item>
                             <el-menu-item index="2-2" @click="handleLoginOut">退出登录</el-menu-item>
                         </el-submenu>
                     </el-menu>
@@ -180,7 +180,8 @@
                     user_id: null,
                     name: '',
                     company_position: '',
-                    phone: ''
+                    phone: '',
+                    shop:null
                 },
                 company_info: {},
                 active_left: '/B_index/B_person',
@@ -270,7 +271,7 @@
             //发送后消息到底部
             console.log(this.tim.context)
             this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
-            this.apiGet('/api/user/info').then((res) => {
+            /*this.apiGet('/api/user/info').then((res) => {
                 console.log(res);
                 if (res.type !== 2) {
                     this.$message({
@@ -303,7 +304,7 @@
                     }
 
                 }
-            });
+            });*/
             //回到顶部
             // this.scrollTop();
             this.initialize();
@@ -326,7 +327,40 @@
                     this.user_info.user_id = res.user_id;
                     this.user_info.name = res.nickname;
                     this.user_info.company_position = res.company_position;
-                    this.user_info.phone = res.phone
+                    this.user_info.phone = res.phone;
+                    this.user_info.shop = res.shop;
+                    console.log(res)
+                    if (res.type !== 2) {
+                        this.$message({
+                            showClose: true,
+                            message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                            duration: 1000
+                        });
+                        this.$router.push({
+                            name: "login"
+                        });
+                    } else {
+                        if (this.isSDKReady && (this.currentUserProfile.avatar != res.company.logo_path)) {
+                            let name = res.nickname;
+                            let avatar = res.company.logo_path;
+                            let options = {
+                                nick: name,
+                                avatar: avatar
+                            };
+                            this.tim
+                                .updateMyProfile(options)
+                                .then(() => {
+                                    console.log('修改成功')
+                                })
+                                .catch(imError => {
+                                    this.$store.commit('showMessage', {
+                                        message: imError.message,
+                                        type: 'error'
+                                    })
+                                })
+                        }
+
+                    }
                 });
             },
             /*scrollTop(){

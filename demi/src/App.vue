@@ -20,7 +20,7 @@
                 </el-backtop>
             </template>
 
-            <router-view/>
+            <router-view v-if="isRouterAlive" />
 
         </div>
 
@@ -34,7 +34,16 @@
 
     export default {
         name: 'app',
-
+        provide () {
+            return {
+                reload: this.reload
+            }
+        },
+        data () {
+            return {
+                isRouterAlive: true
+            }
+        },
         mounted() {
             // 初始化监听器
             let user_id = sessionStorage.getItem('userID') + 'b';
@@ -56,6 +65,12 @@
             this.initListener();
         },
         methods: {
+            reload () {
+                this.isRouterAlive = false
+                this.$nextTick(function () {
+                    this.isRouterAlive = true
+                })
+            },
             initListener() {
                 // 登录成功后会触发 SDK_READY 事件，该事件触发后，可正常使用 SDK 接口
                 this.tim.on(this.TIM.EVENT.SDK_READY, this.onReadyStateUpdate, this)

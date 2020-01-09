@@ -12,7 +12,7 @@
                 <div class="info_basic">
                     <div class="store_name">
                         <p class="store_label">店铺名称：</p>
-                        <p>vans</p>
+                        <p>{{shop_info && shop_info.shop_name}}</p>
                     </div>
                     <div class="store_logo">
                         <p class="store_label">店铺LOGO：</p>
@@ -34,7 +34,7 @@
                         <el-input
                                 type="textarea"
                                 placeholder="你的店铺已开启，为了方便消费者了解你的店铺，快来填写你的店铺简介吧~"
-                                v-model="introduction"
+                                v-model="form.shop_poster"
                                 maxlength="200"
                                 show-word-limit
                                 rows="7"
@@ -45,7 +45,7 @@
                         <el-input
                                 type="textarea"
                                 placeholder="请输入你想多消费着公告的信息~"
-                                v-model="note"
+                                v-model="form.description"
                                 maxlength="200"
                                 show-word-limit
                                 rows="7"
@@ -54,7 +54,7 @@
 
                 </div>
             </div>
-            <div class="store_info_connect">
+            <!--<div class="store_info_connect">
                 <div class="info_connect_title">
                     <span></span>
                     <p>联系方式</p>
@@ -77,10 +77,10 @@
                         <el-input v-model="email" placeholder="请输入电话" size="mini"></el-input>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
         <div class="store_info_sumbit">
-            <el-button type="primary">保存</el-button>
+            <el-button type="primary" @click="handleUpdataShop">保存</el-button>
         </div>
     </div>
 </template>
@@ -92,21 +92,33 @@
         name: 'index',
         data() {
             return {
+                form:{
+                    shop_name:'',
+                    shop_logo:'',
+                    shop_poster:'',
+                    description:''
+                },
                 files: '',
                 pic_loading: false,
                 imageUrl: '',
-                introduction:'',
-                note:'',
                 email:'',
-
+                shop_info:null
             }
         },
+        inject: ['reload'],
         mounted() {
             this.apiGet('/api/user/info').then((res) => {
                 console.log(res)
                 if(res.type === 2){
                     if(res.shop){
-
+                        this.shop_info = res.shop;
+                        this.form.shop_name = res.shop.shop_name;
+                        this.form.shop_poster = res.shop.shop_poster;
+                        this.form.description = res.shop.description;
+                        if(res.shop.shop_logo){
+                            this.imageUrl = res.shop.shop_logo;
+                        }
+                        console.log(this.form)
                     }
                 }else{
                     this.$message({
@@ -134,7 +146,7 @@
             },
             upLogoloadFile() {
                 // 创建表单对象
-                this.imageUrl = URL.createObjectURL(this.files.raw);
+                // this.imageUrl = URL.createObjectURL(this.files.raw);
                 this.pic_loading = true;
                 console.log(this.files)
                 let form = new FormData();
@@ -149,10 +161,19 @@
                 this.apiPost('/file/uploads', form).then((res) => {
                     if (res) {
                         console.log(res)
+                        this.imageUrl = this.$config.baseUrl + res[0];
                         this.pic_loading = false;
                     }
                 });
             },
+            handleUpdataShop(){
+                this.apiPost('/api/shop/update/' + this.shop_info.shop_id, this.form).then((res)=>{
+                    console.log(res);
+                    if(res){
+                        this.reload()
+                    }
+                })
+            }
         },
         mixins:[http]
 
@@ -213,6 +234,9 @@
                             width 167px
                             height 167px
                             border: 1px solid #d9d9d9;
+                            img
+                                width 167px
+                                height 167px
 
                             .avatar-uploader-icon
                                 font-size: 28px;
