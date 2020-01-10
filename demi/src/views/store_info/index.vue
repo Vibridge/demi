@@ -148,7 +148,7 @@
                 // 创建表单对象
                 // this.imageUrl = URL.createObjectURL(this.files.raw);
                 this.pic_loading = true;
-                console.log(this.files)
+                console.log(this.files);
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 let length = this.files.length;
@@ -160,8 +160,9 @@
             handleUpload(length, form) {
                 this.apiPost('/file/uploads', form).then((res) => {
                     if (res) {
-                        console.log(res)
+                        console.log(res);
                         this.imageUrl = this.$config.baseUrl + res[0];
+                        this.form.shop_logo = res[0];
                         this.pic_loading = false;
                     }
                 });

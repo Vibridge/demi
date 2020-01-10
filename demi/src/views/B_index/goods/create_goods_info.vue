@@ -57,11 +57,9 @@
                                              :label="checkbox.title"
                                              @change="handleSelectAttr()"></el-checkbox>
                                 <el-checkbox v-for="(custom,index) in custom_attr" :key="index" :label="custom"
-                                                 @change="handleSelectAttr()"></el-checkbox>
-
+                                             @change="handleSelectAttr()"></el-checkbox>
                                 <i class="el-icon-edit"></i>
                                 <i class="el-icon-delete"></i>
-
                             </el-checkbox-group>
                             <div style="display: flex">
                                 <el-input v-model="custom" placeholder="请输入自定义值" size="medium"></el-input>
@@ -84,7 +82,9 @@
                                     :header-cell-style="{'padding':'0'}"
                                     :cell-style="{'height':'32px','padding':'0'}"
                                     row-key="index"
+
                             >
+                                <!--:span-method="objectSpanMethod"-->
                                 <el-table-column
                                         v-if="checkList"
                                         v-for="(label,index) in checkList"
@@ -171,7 +171,6 @@
                             </div>
                             <p>商品价格不能低于0.10元</p>
                         </div>
-
                     </div>
                     <div class="goods_code">
                         <p class="goods_code_label">商品条形码</p>
@@ -196,54 +195,31 @@
                             <p>商品主图大小不能超过3MB；建议800x800以上图片。</p>
                             <div class="upload-container">
                                 <el-upload
-                                        class="avatar-uploader"
-                                        action=""
-                                        :on-success="handleAvatarSuccess"
-                                        :show-file-list="false"
-                                        :before-upload="beforeAvatarUpload">
-                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                           v-for="(item,index) in shop_img" :key="index"
+                                           class="avatar-uploader"
+                                           action=""
+                                           :show-file-list="false"
+                                           :data="{ 'index' : index}"
+                                           :on-change="handleChange"
+                                           :http-request="uploadShopImgFile"
+                                           :before-upload="beforeAvatarUpload">
+                                    <img @mouseover="show_icon = index" @mouseleave="show_icon = null" v-if="item.img" :src="$config.baseUrl + item.img" class="avatar">
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                    <p class="add-pic">添加图片</p>
-                                </el-upload>
-                                <el-upload
-                                        class="avatar-uploader"
-                                        action=""
-                                        :on-success="handleAvatarSuccess"
-                                        :show-file-list="false"
-                                        :before-upload="beforeAvatarUpload">
-                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                    <p class="add-pic">添加图片</p>
-                                </el-upload>
-                                <el-upload
-                                        class="avatar-uploader"
-                                        action=""
-                                        :on-success="handleAvatarSuccess"
-                                        :show-file-list="false"
-                                        :before-upload="beforeAvatarUpload">
-                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                    <p class="add-pic">添加图片</p>
-                                </el-upload>
-                                <el-upload
-                                        class="avatar-uploader"
-                                        action=""
-                                        :on-success="handleAvatarSuccess"
-                                        :show-file-list="false"
-                                        :before-upload="beforeAvatarUpload">
-                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                    <p class="add-pic">添加图片</p>
-                                </el-upload>
-                                <el-upload
-                                        class="avatar-uploader"
-                                        action=""
-                                        :on-success="handleAvatarSuccess"
-                                        :show-file-list="false"
-                                        :before-upload="beforeAvatarUpload">
-                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                                    <p class="add-pic">添加图片</p>
+                                    <p v-if="!item.img" class="add-pic">添加图片</p>
+                                    <div style="width: 100%;height: 100%;position: absolute;top:0;left: 0;">
+                                        <div v-if="item.img" class="icon">
+                                        <span @click="handleMoveFront(index)">
+                                            <i v-if="index > 0" class="el-icon-arrow-left"></i>
+                                        </span>
+                                            <span @click="handleRemove(index)">
+                                            <i class="el-icon-delete"></i>
+                                        </span>
+                                            <span @click="handleMoveAfter(index)">
+                                            <i v-if="index !== (shop_img.length-1)" class="el-icon-arrow-right"></i>
+                                        </span>
+                                        </div>
+                                    </div>
+
                                 </el-upload>
                             </div>
                         </div>
@@ -252,7 +228,7 @@
                         <p class="goods_video_label"><span style="color:#FF0000">* </span>主图视频</p>
                         <div class="main_video">
                             <div class="upload-container">
-                                <el-upload
+                                <!--<el-upload
                                         class="avatar-uploader"
                                         action=""
                                         :on-success="handleAvatarSuccess"
@@ -261,7 +237,7 @@
                                     <img v-if="imageUrl" :src="imageUrl" class="avatar">
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                     <p class="add-pic">添加视频</p>
-                                </el-upload>
+                                </el-upload>-->
                             </div>
                         </div>
                         <div class="goods_video_note">
@@ -354,6 +330,7 @@
                 //自定义属性值
                 checkList: [],
                 custom_attr: [],
+
                 sku_array: [],
                 sku_attr_id: [],
                 sku_select_attr: [],
@@ -361,11 +338,23 @@
                 sku_sum: [],
                 sku_commission: [],
                 sku_code: [],
-                sale:'',
-                sum:'',
-                commission:'',
-                code:'',
+                spanRow: '',
+                sale: '',
+                sum: '',
+                commission: '',
+                code: '',
                 tableData: [],
+
+                shop_img: [
+                    {img: ''},
+                    {img: ''},
+                    {img: ''},
+                    {img: ''},
+                    {img: ''},
+                ],
+                files: '',
+                show_icon:null,
+
                 success: false,
                 imageUrl: '',
                 custom: '',
@@ -400,6 +389,60 @@
             },
 
             /*objectSpanMethod({row, column, rowIndex, columnIndex}) {
+                let length = this.checkList.length;
+                if((rowIndex % this.checkList[length-1].list.length === 0)){
+                    if(columnIndex % this.checkList[length-1].list.length === 0){
+                        return [this.checkList[length-1].list.length,1]
+                    }
+                }else{
+                    return {
+                        rowspan: 1,
+                        colspan: 1
+                    };
+                }
+                /!*let length = this.checkList.length;
+
+                    if((rowIndex % this.checkList[length-1].list.length === 0)){
+                        return [this.checkList[length-1].list.length,1]
+                    }else{
+                        return {
+                            rowspan: 0,
+                            colspan: 0
+                        };
+                    }
+                   /!* if(rowIndex === 0){
+                        this.spanRow = row[0];
+                    }else{
+                        if(this.spanRow !== row[0]){
+
+                        }
+                    }*!/
+                    /!*if(this.spanRow === row[0]){
+
+                    }
+                    if(row[0] === this.tableData[rowIndex][0]){
+                        return [this.checkList[1].list.length,1]
+                    }*!/
+
+                   /!*!/!* if(rowIndex === 0){
+                        return {
+                            rowspan: 1,
+                            colspan: 1
+                        };
+                    }else *!/
+                   if(rowIndex > 0 && (rowIndex % this.checkList[0].list.length === 0) && (row[0] === this.checkList[0].list[rowIndex])){
+                        return {
+                            rowspan:  this.checkList[0].list.length,
+                            colspan: 1
+                        };
+                    }else {
+                        return {
+                            rowspan: 0,
+                            colspan: 0
+                        };
+                    }*!/
+
+                /!*console.log('a');
                 if (columnIndex === 0) {
                     if (rowIndex % 2 === 0) {
                         return {
@@ -408,11 +451,11 @@
                         };
                     } else {
                         return {
-                            rowspan: 0,
+                            rowspan: 1,
                             colspan: 0
                         };
                     }
-                }
+                }*!/!*!/
             },*/
 
             handleAddAttr() {
@@ -420,33 +463,33 @@
                 this.custom = ''
             },
 
-            handleFill(){
-                if(this.tableData){
-                    if(this.sale){
+            handleFill() {
+                if (this.tableData) {
+                    if (this.sale) {
                         let length = this.sku_sale.length;
-                        for (let i = 0;i<length;i++) {
-                            this.$set(this.sku_sale,i,this.sale)
+                        for (let i = 0; i < length; i++) {
+                            this.$set(this.sku_sale, i, this.sale)
                         }
                         this.sale = ''
                     }
-                    if(this.sum){
+                    if (this.sum) {
                         let length = this.sku_sum.length;
-                        for (let i = 0;i<length;i++){
-                            this.$set(this.sku_sum,i,this.sum)
+                        for (let i = 0; i < length; i++) {
+                            this.$set(this.sku_sum, i, this.sum)
                         }
                         this.sum = ''
                     }
-                    if(this.commission){
+                    if (this.commission) {
                         let length = this.sku_commission.length;
-                        for (let i = 0;i<length;i++){
-                            this.$set(this.sku_commission,i,this.commission)
+                        for (let i = 0; i < length; i++) {
+                            this.$set(this.sku_commission, i, this.commission)
                         }
                         this.commission = ''
                     }
-                    if(this.code){
+                    if (this.code) {
                         let length = this.sku_code.length;
-                        for (let i = 0;i<length;i++){
-                            this.$set(this.sku_code,i,this.code)
+                        for (let i = 0; i < length; i++) {
+                            this.$set(this.sku_code, i, this.code)
                         }
                         this.code = ''
                     }
@@ -457,10 +500,10 @@
             handleSelectAttr() {
                 this.tableData = [];
                 this.sku_array = [];
-                /*this.sku_sale = [];
+                this.sku_sale = [];
                 this.sku_sum = [];
                 this.sku_commission = [];
-                this.sku_code = [];*/
+                this.sku_code = [];
                 this.sku_attr_id = [];
                 this.sku_select_attr = [];
                 this.handleSku(0, []);
@@ -481,31 +524,12 @@
                         }
                     }
                 }
-                if(this.tableData.length > 0){
+                if (this.tableData.length > 0) {
                     this.sku_sale[this.tableData.length - 1] = '';
                     this.sku_sum[this.tableData.length - 1] = '';
                     this.sku_commission[this.tableData.length - 1] = '';
                     this.sku_code[this.tableData.length - 1] = '';
-                    console.log(this.sku_sale)
                 }
-
-
-                /*if(this.sku_sale.length < 1){
-                    this.sku_sale[this.tableData.length - 1] = '';
-                }
-                if(this.sku_sum.length < 1){
-                    this.sku_sum[this.tableData.length - 1] = '';
-                }
-                if(this.sku_commission.length < 1 ){
-                    this.sku_commission[this.tableData.length - 1] = '';
-                }
-                if(this.sku_code.length < 1 ){
-                    this.sku_code[this.tableData.length - 1] = '';
-                }
-                console.log(this.sku_sale)*/
-                /*this.sku_sum[this.tableData.length - 1] = '';
-                this.sku_commission[this.tableData.length - 1] = '';
-                this.sku_code[this.tableData.length - 1] = '';*/
 
             },
             handleSkuAttrId(index) {
@@ -516,7 +540,7 @@
                         for (let i = 0; i < length; i++) {
                             this.sku_attr_id.push(this.checkList[index].attr);
                             this.sku_select_attr.push(this.checkList[index].list[i]);
-                            if(i === (length-1)){
+                            if (i === (length - 1)) {
                                 this.handleSkuAttrId(index + 1);
                             }
                         }
@@ -534,21 +558,60 @@
                     return index
                 }
             },*/
-            handleAvatarSuccess(res, file) {
-                this.imageUrl = URL.createObjectURL(file.raw);
+            /* handleAvatarSuccess(res, file) {
+                 this.imageUrl = URL.createObjectURL(file.raw);
+             },*/
+            handleChange(file, fileList) {
+                this.files = fileList;
             },
             beforeAvatarUpload(file) {
                 const isJPG = file.type === 'image/jpeg';
-                const isLt2M = file.size / 1024 / 1024 < 2;
+                const isPNG = file.type === 'image/png';
+                const isLt2M = file.size / 1024 / 1024 < 3;
 
-                if (!isJPG) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                if (!isJPG && !isPNG) {
+                    this.$message.error('上传头像图片只能是 JPG PNG格式!');
                 }
                 if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                    this.$message.error('上传头像图片大小不能超过 3MB!');
                 }
-                return isJPG && isLt2M;
+                return isJPG || isPNG && isLt2M;
             },
+            uploadShopImgFile(param) {
+                console.log(param);
+                // 创建表单对象
+                // this.imageUrl = URL.createObjectURL(this.files.raw);
+                // this.pic_loading = true;
+                console.log(this.files);
+                let form = new FormData();
+                // 后端接受参数 ，可以接受多个参数
+                let length = this.files.length;
+                for (let i = 0; i < length; i++) {
+                    form.append('files', this.files[i].raw);
+                }
+                this.apiPost('/file/uploads', form).then((res) => {
+                    if (res) {
+                        console.log(res);
+                        this.shop_img[param.data.index].img = res[0]
+                        // this.imageUrl = this.$config.baseUrl + res[0];
+                        // this.form.shop_logo = res[0];
+                        /*this.pic_loading = false;*/
+                    }
+                });
+            },
+            handleMoveFront(index){
+                console.log(index)
+            },
+            handleRemove(index) {
+                console.log(index);
+                this.$set(this.shop_img,index,'');
+                // this.shop_img[index].img = ''
+            },
+            handleMoveAfter(){
+                console.log(index)
+            },
+
+
             handleLook() {
                 this.$router.push({
                     name: 'goods_massage'
@@ -560,17 +623,17 @@
                 })
             }
         },
-        watch:{
-            tableData(){
-                if(this.tableData){
+        watch: {
+            tableData() {
+                if (this.tableData) {
                     let length = this.tableData.length;
-                    for(let i = 0;i<length;i++){
+                    for (let i = 0; i < length; i++) {
                         let length2 = this.tableData[i].length;
                         let item;
-                        for(let y=0;y<length2;y++){
-                            if(y === 0){
+                        for (let y = 0; y < length2; y++) {
+                            if (y === 0) {
                                 item = this.tableData[i][y]
-                            }else{
+                            } else {
                                 item = item + ',' + this.tableData[i][y];
                             }
                         }
@@ -861,7 +924,26 @@
                             position: relative;
                             overflow: hidden;
                             margin-right 15px
+                            width: 100px;
+                            height: 100px;
                         }
+
+                        .icon
+                            position absolute
+                            width:100px;
+                            height:22px;
+                            line-height 22px
+                            padding 0 10px
+                            box-sizing border-box
+                            background:rgba(0,0,0,.5);
+                            bottom 0;
+                            left 0
+                            display flex
+                            justify-content space-between
+                            span
+                                width 14px
+                                color white
+
 
                         .avatar-uploader .el-upload:hover {
                             border-color: #409EFF;
@@ -874,6 +956,7 @@
                             height: 70px;
                             line-height: 70px;
                             text-align: center;
+
                         }
 
                         .avatar {
