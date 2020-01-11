@@ -203,20 +203,20 @@
                                            :on-change="handleChange"
                                            :http-request="uploadShopImgFile"
                                            :before-upload="beforeAvatarUpload">
-                                    <img @mouseover="show_icon = index" @mouseleave="show_icon = null" v-if="item.img" :src="$config.baseUrl + item.img" class="avatar">
+                                    <img v-if="item.img" :src="$config.baseUrl + item.img" class="avatar">
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                     <p v-if="!item.img" class="add-pic">添加图片</p>
-                                    <div style="width: 100%;height: 100%;position: absolute;top:0;left: 0;">
-                                        <div v-if="item.img" class="icon">
-                                        <span @click="handleMoveFront(index)">
-                                            <i v-if="index > 0" class="el-icon-arrow-left"></i>
-                                        </span>
-                                            <span @click="handleRemove(index)">
-                                            <i class="el-icon-delete"></i>
-                                        </span>
-                                            <span @click="handleMoveAfter(index)">
-                                            <i v-if="index !== (shop_img.length-1)" class="el-icon-arrow-right"></i>
-                                        </span>
+                                    <div @mouseover="show_icon = index" @mouseleave="show_icon = null" style="width: 100%;height: 100%;position: absolute;top:0;left: 0;">
+                                        <div v-if="(show_icon === index) && item.img" class="icon">
+                                            <span v-on:click.stop="handleMoveFront(index)">
+                                                <i v-if="index > 0" class="el-icon-arrow-left"></i>
+                                            </span>
+                                            <span v-on:click.stop="handleRemove(index)">
+                                                <i class="el-icon-delete"></i>
+                                            </span>
+                                            <span v-on:click.stop="handleMoveAfter(index)">
+                                                <i v-if="index !== (shop_img.length-1)" class="el-icon-arrow-right"></i>
+                                            </span>
                                         </div>
                                     </div>
 
@@ -226,18 +226,20 @@
                     </div>
                     <div class="goods_video_upload">
                         <p class="goods_video_label"><span style="color:#FF0000">* </span>主图视频</p>
-                        <div class="main_video">
+                        <div class="main_video" v-loading="vid_loading">
                             <div class="upload-container">
-                                <!--<el-upload
+                                <el-upload
                                         class="avatar-uploader"
                                         action=""
-                                        :on-success="handleAvatarSuccess"
                                         :show-file-list="false"
-                                        :before-upload="beforeAvatarUpload">
-                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                        :before-upload="beforeVidUpload"
+                                        :http-request="uploadVidFile"
+                                        :on-change="handleVidChange">
+                                    <video id="video" class="avatar" :src="video_path"
+                                           v-show="video_path" controls></video>
+                                    <i v-show="!video_path" class="el-icon-plus avatar-uploader-icon"></i>
                                     <p class="add-pic">添加视频</p>
-                                </el-upload>-->
+                                </el-upload>
                             </div>
                         </div>
                         <div class="goods_video_note">
@@ -250,6 +252,22 @@
                         <div class="main_look">
                             <div class="demo-image__lazy">
                                 <el-image v-for="url in urls" :key="url" :src="url"></el-image>
+                            </div>
+                            <div class="demo-image-bottom">
+                                <div class="bottom_contain">
+                                    <div class="bottom_label">
+                                        <img src="" alt="">
+                                        <p>预览</p>
+                                    </div>
+                                    <div class="bottom_label">
+                                        <img src="" alt="">
+                                        <p>图片</p>
+                                    </div>
+                                    <div class="bottom_label">
+                                        <img src="" alt="">
+                                        <p>文字</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -355,6 +373,10 @@
                 files: '',
                 show_icon:null,
 
+                vid_loading: false,
+                video: null,
+                real_video_path: null,
+                video_path:'',
                 success: false,
                 imageUrl: '',
                 custom: '',
@@ -599,18 +621,95 @@
                     }
                 });
             },
+            /*handleImgSort(event,before,after){
+                if(event === 'front'){
+                    return after - before
+                }else{
+                    return before - after
+                }
+            },*/
             handleMoveFront(index){
-                console.log(index)
+                let length = this.shop_img.length;
+                let fornt;
+                for(let i = 0;i<length;i++){
+                    fornt = this.shop_img[index - 1];
+                    this.$set(this.shop_img,index - 1,this.shop_img[index]);
+                    this.$set(this.shop_img,index,fornt);
+                }
             },
             handleRemove(index) {
-                console.log(index);
-                this.$set(this.shop_img,index,'');
-                // this.shop_img[index].img = ''
+                this.$set(this.shop_img,index,{'img':''});
             },
-            handleMoveAfter(){
-                console.log(index)
+            handleMoveAfter(index){
+                let length = this.shop_img.length;
+                let after;
+                for(let i = 0;i<length;i++){
+                    after = this.shop_img[index + 1];
+                    this.$set(this.shop_img,index + 1,this.shop_img[index]);
+                    this.$set(this.shop_img,index,after);
+                }
             },
 
+            beforeVidUpload(file) {
+                if (!(file.type.indexOf('video') === 0 && file.type && /\.(?:mp4|rmvb|avi|ts|ogg|flv|wmv|mkv)$/.test(file.name.toLowerCase()))) {
+                    this.$message.error('上传视频只限 mp4,rmvb，avi，ts，ogg，flv，wmv，mkv格式!');
+                    return false
+                } else {
+                    return true
+                }
+            },
+            handleVidChange(file) {
+                this.video = file.raw;
+            },
+            uploadVidFile() {
+                this.vid_loading = true
+                var windowURL = window.URL || window.webkitURL;
+                var videoURL = windowURL.createObjectURL(this.video);
+                var video = document.getElementById('video');
+                this.video_path = videoURL;
+                video.src = videoURL;
+                var scale = 0.8;
+                video.setAttribute('crossOrigin', 'anonymous');
+                video.setAttribute("preload", 'auto');
+                video.addEventListener("loadedmetadata", function () {
+                    var canvas = document.createElement("canvas");
+                    canvas.width = video.videoWidth * scale;
+                    canvas.height = video.videoHeight * scale;
+                    canvas
+                        .getContext("2d")
+                        .drawImage(video, 0, 0, canvas.width, canvas.width);
+                    let imgsrc = canvas.toDataURL("image/png");
+                    this.cover = imgsrc;
+                }.bind(this));
+                let form = new FormData();
+                // 后端接受参数 ，可以接受多个参数
+                form.append('files', this.video);
+                form.append('type', 'video');
+                this.apiPost('/file/uploads', form).then((res) => {
+                    this.real_video_path = res
+                    console.log(this.real_video_path)
+                    this.vid_loading = false
+                })
+                console.log(this.real_video_path)
+
+            },
+            //base64解码，解码视频第一帧
+            base64ToBlob(urlData) {
+                var arr = urlData.split(',');
+                var mime = arr[0].match(/:(.*?);/)[1] || 'image/png';
+                // 去掉url的头，并转化为byte
+                var bytes = window.atob(arr[1]);
+                // 处理异常,将ascii码小于0的转换为大于0
+                var ab = new ArrayBuffer(bytes.length);
+                // 生成视图（直接针对内存）：8位无符号整数，长度1个字节
+                var ia = new Uint8Array(ab);
+                for (var i = 0; i < bytes.length; i++) {
+                    ia[i] = bytes.charCodeAt(i);
+                }
+                return new Blob([ab], {
+                    type: mime
+                });
+            },
 
             handleLook() {
                 this.$router.push({
@@ -900,12 +999,29 @@
                     .main_look
                         width 651px
                         height 503px
-                        padding-left 11px
                         border: 1px solid rgba(204, 204, 204, 1);
 
                         .demo-image__lazy
+                            padding-left 11px
                             height 442px
                             overflow auto
+                        .demo-image-bottom
+                            width 100%
+                            height:59px;
+                            background:rgba(236,236,236,1);
+                            .bottom_contain
+                                width 457px
+                                height:59px;
+                                display flex
+                                margin 0 auto
+                                justify-content space-around
+                                .bottom_label
+                                    align-self center
+                                    img
+                                        width 22px
+                                    p
+                                        font-size:12px;
+                                        color:rgba(102,102,102,1);
 
                     .goods_pic_label, .goods_video_label
                         margin-right 28px

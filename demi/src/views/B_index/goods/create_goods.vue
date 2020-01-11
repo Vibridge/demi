@@ -185,22 +185,53 @@
             },
 
             handleNextSort(level,data){
+
+                /*let a = this.paginate[level - 2];
+                this.paginate.push(a)
                 let item = {
                     level:level,
                     row:data
-                };
+                };*/
+                let array = [];
+                let length1 = this.paginate.length;
+                for (let y = 0;y<length1;y++){
+                    if(y <= (level - 2)){
+                        console.log('a');
+                        array.push(this.paginate[y]);
+                    }
+                }
+                this.paginate = array;
+                console.log(array);
+
+                let item = {
+                    level:level,
+                    row:data
+                }
                 let length = this.paginate.length;
                 if(length>0){
                     for(let i=0;i<length;i++){
-                        if((this.paginate[i].level !== level) && (i === (length-1))){
+                        if((this.paginate[i].level != level) && (i === (length-1))){
                             this.paginate.push(item)
+                            break
+                        }else if(this.paginate[i].level == level){
+                            this.$set(this.paginate,i,item)
+                            break
                         }
                     }
-                }else{
-                    this.paginate.push(item)
                 }
+
             },
-            handleSelectSort(id,title){
+            handleSelectSort(level,id,title){
+                let array = [];
+                let length1 = this.paginate.length;
+                for (let y = 0;y<length1;y++){
+                    if(y <= (level - 2)){
+                        console.log('a');
+                        array.push(this.paginate[y]);
+                    }
+                }
+                this.paginate = array;
+                console.log(array);
                 this.select_sort_id = id;
                 // this.select_sort_title = this.select_sort_title +title;
                 let length = this.paginate.length;
@@ -217,16 +248,17 @@
                 if(this.select_sort_title.split(' > ')[this.select_sort_title.split(' > ').length - 1] != title){
                     this.select_sort_title = this.select_sort_title + ' > ' + sort_title;
                 }
-                console.log(this.select_sort_id)
 
             },
             handleCreateInfo() {
-                this.$router.push({
+                console.log(this.paginate)
+
+                /*this.$router.push({
                     path: "/B_index/B_person/create/goods_info",
                     query: {
                         title: this.select_sort_title, sort_id: this.select_sort_id
                     }
-                })
+                })*/
             }
         },
         mixins: [http]

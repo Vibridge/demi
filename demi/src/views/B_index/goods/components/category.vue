@@ -11,7 +11,7 @@
             <div class="category_list" v-for="(item,index) in row" :key="item.sort_id">
                 <div class="category_connect">
                     <ul>
-                        <li :class="select_category === item.sort_id ? 'active' : ''" @click="handleNextCategory(item)">
+                        <li :class="select_category === item.sort_id ? 'active' : ''" @click="handleNextCategory(item,index)">
                             <p>{{item.title}}</p>
                         </li>
                     </ul>
@@ -33,15 +33,16 @@
             }
         },
         mounted(){
-            console.log(this.row)
+            // console.log(this.row)
         },
         methods:{
-            handleNextCategory(data){
-                this.select_category = data.sort_id
+            handleNextCategory(data,index){
+                this.select_category = data.sort_id;
+                console.log(data)
                 if(data.children){
                     this.$emit('handle-next-sort',data.level,data.children)
                 }else{
-                    this.$emit('handle-select-sort',data.sort_id,data.title)
+                    this.$emit('handle-select-sort',data.level,data.sort_id,data.title)
 /*
                     this.second_category = false;
                     this.second_category = [];

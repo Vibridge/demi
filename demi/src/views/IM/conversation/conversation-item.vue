@@ -14,13 +14,20 @@
         <img class="avatar" v-if="conversation.conversationID.split('C2C')[1] === 'dominator'"
              src="../../../assets/img/notification.png" alt="">
 
-        <img class="avatar" v-if="newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].recipient && newList[Corresponding(conversation.conversationID)].recipient.user_id == user_id) && conversation.conversationID.split('C2C')[1] !== 'dominator'"
+        <img class="avatar" v-if="
+          newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].recipient
+          && newList[Corresponding(conversation.conversationID)].recipient.user_id == user_id)
+          && conversation.conversationID.split('C2C')[1] !== 'dominator'
+          && (newList[Corresponding(conversation.conversationID)].type != 4)"
              :src="newList[Corresponding(conversation.conversationID)].sender.avatar" alt="">
 
         <!--<img class="avatar" v-if="newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].recipient && newList[Corresponding(conversation.conversationID)].recipient.user_id == user_id) && conversation.conversationID.split('C2C')[1] !== 'dominator' && !newList[Corresponding(conversation.conversationID)].sender.avatar"
              src="../../../assets/img/toxiang@2x.png" alt="">-->
 
-        <img class="avatar" v-if="newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].sender && newList[Corresponding(conversation.conversationID)].sender.user_id == user_id)  && conversation.conversationID.split('C2C')[1] !== 'dominator'"
+        <img class="avatar" v-if="newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].sender
+        && newList[Corresponding(conversation.conversationID)].sender.user_id == user_id)
+        && conversation.conversationID.split('C2C')[1] !== 'dominator'
+        && (newList[Corresponding(conversation.conversationID)].type != 4)"
              :src="newList[Corresponding(conversation.conversationID)].recipient.avatar" alt="">
 
         <!--<img class="avatar" v-if="newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].sender && newList[Corresponding(conversation.conversationID)].sender.user_id == user_id)  && conversation.conversationID.split('C2C')[1] !== 'dominator' && !newList[Corresponding(conversation.conversationID)].recipient.avatar"
@@ -32,10 +39,10 @@
               <div class="text-ellipsis">
                 <span v-if="(conversation.type === TIM.TYPES.CONV_C2C) && (conversation.conversationID.split('C2C')[1] === 'dominator')" style="margin-bottom: 0">系统消息</span>
 
-                <span v-if="(conversation.type === TIM.TYPES.CONV_C2C) && newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].recipient && newList[Corresponding(conversation.conversationID)].recipient.user_id == user_id) && conversation.conversationID.split('C2C')[1] !== 'dominator'">
+                <span v-if="(conversation.type === TIM.TYPES.CONV_C2C) && newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].recipient && newList[Corresponding(conversation.conversationID)].recipient.user_id == user_id) && conversation.conversationID.split('C2C')[1] !== 'dominator' && (newList[Corresponding(conversation.conversationID)].type != 4)">
                   {{newList[Corresponding(conversation.conversationID)].sender.nickname}}</span>
 
-                <span v-if="(conversation.type === TIM.TYPES.CONV_C2C) && newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].sender && newList[Corresponding(conversation.conversationID)].sender.user_id == user_id) && conversation.conversationID.split('C2C')[1] !== 'dominator'">
+                <span v-if="(conversation.type === TIM.TYPES.CONV_C2C) && newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].sender && newList[Corresponding(conversation.conversationID)].sender.user_id == user_id) && conversation.conversationID.split('C2C')[1] !== 'dominator' && (newList[Corresponding(conversation.conversationID)].type != 4)">
                   {{newList[Corresponding(conversation.conversationID)].recipient.nickname}}&nbsp;</span>
 
                 <span style="color: #B3B3B3;font-size: 12px" v-if="(conversation.type === TIM.TYPES.CONV_C2C) && newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].type === 2) && conversation.conversationID.split('C2C')[1] !== 'dominator'">
@@ -115,7 +122,7 @@ export default {
         this.hasMessageAtMe = true
       }
     });
-
+    console.log(this.newList);
     this.user_id = sessionStorage.getItem('userID');
   },
   computed: {
