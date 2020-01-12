@@ -339,7 +339,7 @@
         data() {
             return {
                 goods_info: null,
-                activeName: 'second',
+                activeName: 'first',
 
                 //货号
                 goods: {
@@ -404,7 +404,9 @@
         },
         methods: {
             handleClick(tab, event) {
-                console.log(tab, event);
+                var el=document.getElementById(`${parseInt(tab.index) + 1}`);
+                console.log(el.offsetTop);
+                document.getElementById('app').scrollTo(0,el.offsetTop);
             },
             handleSelect(active) {
                 this.active = active

@@ -66,7 +66,7 @@
                 <category v-for="(item,index) in paginate" :key="item.level" class="category_contain" :row="item.row" @handle-next-sort="handleNextSort" @handle-select-sort="handleSelectSort"></category>
             </div>
             <div class="select_result">
-                <p>已选类目：{{select_sort_title}}</p>
+                <p>已选类目：{{show_sort_title}}</p>
             </div>
             <div class="next">
                 <el-button type="primary" @click="handleCreateInfo" :disabled="!select_sort_id">下一步</el-button>
@@ -95,9 +95,12 @@
                 options: [],
                 show_sort_id: null,
                 paginate:[],
+
                 select_sort_id:null,
                 first_category_title:'',
-                select_sort_title:'',
+                select_sort_title:[],
+                show_sort_title:'',
+
                 active_select:null
             }
         },
@@ -158,9 +161,10 @@
 
             handleSecondCategory(data){
                 this.paginate = [];
-                this.select_sort_title = '';
+                this.select_sort_title = [];
                 this.select_sort_id = null;
-                this.select_sort_title = this.first_category_title + '>' + data.title;
+                this.show_sort_title = '';
+                this.$set(this.select_sort_title, 0, this.first_category_title + '>' + data.title)
                 this.active_select = data.sort_id;
                 if(data.children){
                     let item = {
@@ -180,41 +184,32 @@
 
                 }else{
                     this.select_sort_id = data.sort_id;
+                    this.show_sort_title = this.first_category_title + '>' + data.title;
                 }
-                console.log(this.select_sort_id)
             },
 
-            handleNextSort(level,data){
-
-                /*let a = this.paginate[level - 2];
-                this.paginate.push(a)
-                let item = {
-                    level:level,
-                    row:data
-                };*/
+            handleNextSort(level,data,title){
                 let array = [];
-                let length1 = this.paginate.length;
-                for (let y = 0;y<length1;y++){
+                let select_sum = this.paginate.length;
+                this.$set(this.select_sort_title, (level-1),  (title));
+                for (let y = 0;y < select_sum;y++){
                     if(y <= (level - 2)){
-                        console.log('a');
                         array.push(this.paginate[y]);
                     }
                 }
                 this.paginate = array;
-                console.log(array);
-
                 let item = {
                     level:level,
                     row:data
-                }
+                };
                 let length = this.paginate.length;
                 if(length>0){
                     for(let i=0;i<length;i++){
                         if((this.paginate[i].level != level) && (i === (length-1))){
-                            this.paginate.push(item)
+                            this.paginate.push(item);
                             break
                         }else if(this.paginate[i].level == level){
-                            this.$set(this.paginate,i,item)
+                            this.$set(this.paginate,i,item);
                             break
                         }
                     }
@@ -226,39 +221,32 @@
                 let length1 = this.paginate.length;
                 for (let y = 0;y<length1;y++){
                     if(y <= (level - 2)){
-                        console.log('a');
                         array.push(this.paginate[y]);
                     }
                 }
                 this.paginate = array;
-                console.log(array);
                 this.select_sort_id = id;
-                // this.select_sort_title = this.select_sort_title +title;
-                let length = this.paginate.length;
-                let sort_title = '';
-                if(length>0){
-                    for(let i=0;i<length;i++){
-                        if(i === (length - 1)){
-                            sort_title = sort_title + this.paginate[i].row[0].title
-                        }else{
-                            sort_title = sort_title + this.paginate[i].row[0].title + ' > '
-                        }
+                this.$set(this.select_sort_title, (level-1),  title);
+
+                let select = '';
+                for(let i = 0;i<level;i++){
+                    if(i === (level-1)){
+                        select = select + this.select_sort_title[i]
+                    }else{
+                        select = select + this.select_sort_title[i] + '>'
                     }
                 }
-                if(this.select_sort_title.split(' > ')[this.select_sort_title.split(' > ').length - 1] != title){
-                    this.select_sort_title = this.select_sort_title + ' > ' + sort_title;
-                }
+                this.show_sort_title = select
 
             },
-            handleCreateInfo() {
-                console.log(this.paginate)
 
-                /*this.$router.push({
+            handleCreateInfo() {
+                this.$router.push({
                     path: "/B_index/B_person/create/goods_info",
                     query: {
-                        title: this.select_sort_title, sort_id: this.select_sort_id
+                        title: this.show_sort_title, sort_id: this.select_sort_id
                     }
-                })*/
+                })
             }
         },
         mixins: [http]

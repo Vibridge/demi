@@ -19,7 +19,6 @@
         },
         mounted() {
             this.apiGet('/api/user/info').then((res) => {
-                console.log(res)
                 if(res.type === 2){
                     if(res.shop){
                         this.$router.push({
