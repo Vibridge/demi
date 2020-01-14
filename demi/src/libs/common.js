@@ -3,7 +3,7 @@ export function translateGroupSystemNotice(message) {
   /*tim.tim.getUserProfile({ userIDList: [message.operatorID] }).then(imReponse => {
     this.operator = imReponse.data[0].nick
   })*/
-  const groupName = message.payload.groupProfile.groupName || message.payload.groupProfile.groupID
+  const groupName = message.payload.groupProfile.name || message.payload.groupProfile.groupID
   switch (message.payload.operationType) {
     case 1:
       return `${message.payload.operatorID} 申请加入群组：${groupName}`

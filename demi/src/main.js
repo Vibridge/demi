@@ -13,7 +13,6 @@ import './assets/icon/iconfont.css'
 import './assets/icon/tim.css'
 import config from './config';
 Vue.use(ElementUI);
-
 import tim from '../src/libs/im'
 import TIM from 'tim-js-sdk'
 window.tim = tim;

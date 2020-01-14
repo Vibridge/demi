@@ -12,22 +12,25 @@
     <div class="scroll-content">
       <div class="group-member-list">
         <template v-for="member in members">
-          <popover placement="right" :key="member.userID">
-            <group-member-info :member="member" />
+          <div slot="reference" class="group-member" @click="currentMemberID = member.userID">
+            <avatars :title=getGroupMemberAvatarText(member.role) :src="member.avatar" />
+            <div class="member-name text-ellipsis">
+              <span v-if="member.nameCard" :title=member.nameCard>{{ member.nameCard }}</span>
+              <span v-else-if="member.nick" :title=member.nick>{{ member.nick }}</span>
+              <span v-else :title=member.userID>{{ member.userID }}</span>
+            </div>
+          </div>
+          <!--<popover placement="right" :key="member.userID">
+            &lt;!&ndash;<group-member-info :member="member" />&ndash;&gt;
             <div slot="reference" class="group-member" @click="currentMemberID = member.userID">
               <avatars :title=getGroupMemberAvatarText(member.role) :src="member.avatar" />
-              <!-- <avatar
-                :src="member.avatar"
-                :text="getGroupMemberAvatarText(member.role)"
-                shape="square"
-              /> -->
               <div class="member-name text-ellipsis">
                 <span v-if="member.nameCard" :title=member.nameCard>{{ member.nameCard }}</span>
                 <span v-else-if="member.nick" :title=member.nick>{{ member.nick }}</span>
                 <span v-else :title=member.userID>{{ member.userID }}</span>
               </div>
             </div>
-          </popover>
+          </popover>-->
         </template>
       </div>
     </div>

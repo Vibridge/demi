@@ -191,10 +191,6 @@
                             this.$store.commit('toggleIsLogin', true);
                             this.$store.commit('startComputeCurrent');
                             console.log('im登陆成功');
-
-                            this.$router.push({
-                                name: 'B_index',
-                            });
                             this.apiGet('/api/service').then((res) => {
                                 if (res && (res.service_id != user_id)) {
                                     sessionStorage.setItem('service_id', res.service_id);
@@ -215,7 +211,10 @@
                                         }
                                     })
                                 }
-                            })
+                            });
+                            this.$router.push({
+                                name: 'B_index',
+                            });
                         }).catch(error => {
                             this.$store.commit('showMessage', {
                                 message: '登录失败：' + error.message,

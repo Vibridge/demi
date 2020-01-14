@@ -370,22 +370,6 @@
                         <p class="dec">{{detail_info.description}}</p>
                     </div>
                 </div>
-                <!--<div class="another_label">
-                    <p class="label_title">联系方式</p>
-                    <div class="label_content">
-                        <div class="info">
-                            <div>
-                                <img src="../../assets/img/phone@2x.png" alt="">
-                                <span>{{detail_info && detail_info.user.phone}}</span>
-                            </div>
-                            <div>
-                                <img src="../../assets/img/postbox@2x.png" alt="" style="width: 16px">
-                                <span>{{detail_info && detail_info.user.email}}</span>
-                            </div>
-                        </div>
-                        <div class="vip" v-if="!isVip">开通<img src="../../assets/img/vip_detail@2x.png">查看完整联系方式</div>
-                    </div>
-                </div>-->
                 <div class="another_label">
                     <p class="label_title">图片作品</p>
                     <div class="label_content" v-if="detail_info && detail_info.images.length > 0">

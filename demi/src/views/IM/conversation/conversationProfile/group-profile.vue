@@ -6,38 +6,24 @@
         <div class="label">群ID</div>
         <div class="content">{{ groupProfile.groupID }}</div>
       </div>-->
-      <div class="info-item">
+      <div class="info-item" v-on:click.capture="handleUpload">
         <div class="label">
           群头像
-          <i
-              class="el-icon-edit"
-              v-if="editable"
-              @click="
-            showEditFaceUrl = true
-            inputFocus('editFaceUrl')
-          "
-              style="cursor:pointer; font-size:16px;"
-          />
         </div>
-        <div class="content" v-if="!showEditFaceUrl">
-          <!-- <avatar :src="groupProfile.avatar" text="G" style="margin-right:6px;" /> -->
-          <avatars :src="groupProfile.avatar"/>
-        </div>
-        <el-input
-            ref="editFaceUrl"
-            v-else
-            autofocus
-            v-model="avatar"
-            size="mini"
-            @blur="showEditFaceUrl = false"
-            @keydown.enter.native="editFaceUrl"
-        />
+        <el-upload
+                class="avatar-uploader"
+                action=""
+                :show-file-list="false"
+                :on-change="handleChange"
+                :http-request="uploadShopImgFile"
+                :before-upload="beforeAvatarUpload"
+                :disabled="this.user_id && (this.user_id != this.groupProfile.ownerID)"
+        >
+          <img v-if="img_url" :src="$config.baseUrl + img_url" class="avatar">
+          <avatars v-else :src="groupProfile.avatar"/>
+        </el-upload>
       </div>
 
-      <!--<div class="info-item">
-        <div class="label">群类型</div>
-        <div class="content">{{ groupProfile.type }}</div>
-      </div>-->
       <div class="info-item">
         <div class="label">
           群名称
@@ -118,36 +104,7 @@
             @keydown.enter.native="editNotification"
         />
       </div>
-      <div class="info-item" v-if="groupProfile.type !== 'Private'">
-        <div class="label">
-          申请加群方式
-          <i
-              class="el-icon-edit"
-              v-if="editable"
-              @click="
-            showEditJoinOption = true
-            inputFocus('editJoinOption')
-          "
-              style="cursor:pointer; font-size:16px;"
-          />
-        </div>
-        <div class="content" v-show="!showEditJoinOption">
-          {{ joinOptionMap[groupProfile.joinOption] }}
-        </div>
-        <el-select
-            ref="editJoinOption"
-            v-model="joinOption"
-            v-show="showEditJoinOption"
-            size="mini"
-            automatic-dropdown
-            @blur="showEditJoinOption = false"
-            @change="editJoinOption"
-        >
-          <el-option label="自由加入" value="FreeAccess"></el-option>
-          <el-option label="需要验证" value="NeedPermission"></el-option>
-          <el-option label="禁止加群" value="DisableApply"></el-option>
-        </el-select>
-      </div>
+
       <div class="info-item">
         <div class="label">
           群消息提示类型
@@ -217,15 +174,15 @@
       <div>
         <el-button type="text" style="color:red;" @click="quitGroup">退出群组</el-button>
       </div>
-      <div v-if="showDissmissGroup">
-        <el-button type="text" style="color:red;" @click="dismissGroup">解散群组</el-button>
-      </div>
+
     </div>
   </div>
 </template>
 
 <script>
 import GroupMemberList from './group-member-list.vue'
+import http from '../../../../libs/http'
+
 export default {
   props: ['groupProfile'],
   components: {
@@ -233,11 +190,12 @@ export default {
   },
   data() {
     return {
+      user_id:'',
       showEditName: false,
-      showEditFaceUrl: false,
+      files:'',
+      img_url:'',
       showEditIntroduction: false,
       showEditNotification: false,
-      showEditJoinOption: false,
       showChangeGroupOwner: false,
       showEditMessageRemindType: false,
       showEditNameCard: false,
@@ -245,7 +203,6 @@ export default {
       avatar: this.groupProfile.avatar,
       introduction: this.groupProfile.introduction,
       notification: this.groupProfile.notification,
-      joinOption: this.groupProfile.joinOption,
       newOwnerUserID: '',
       messageRemindType: this.groupProfile.selfInfo.messageRemindType,
       nameCard: this.groupProfile.selfInfo.nameCard || '',
@@ -254,12 +211,16 @@ export default {
         AcceptNotNotify: '接收消息但不提示',
         Discard: '屏蔽消息'
       },
-      joinOptionMap: {
+      /*joinOptionMap: {
         FreeAccess: '自由加入',
         NeedPermission: '需要验证',
         DisableApply: '禁止加群'
-      }
+      }*/
     }
+  },
+  mounted(){
+    this.user_id = sessionStorage.getItem('userID');
+    console.log(this.groupProfile)
   },
   computed: {
     editable() {
@@ -271,32 +232,61 @@ export default {
     isOwner() {
       return this.groupProfile.selfInfo.role === 'Owner'
     },
-    showDissmissGroup() {
-      // 私有群不能解散
-      return this.isOwner && this.groupProfile.type !== 'Private'
-    }
   },
   watch: {
     groupProfile(groupProfile) {
       Object.assign(this, {
         showEditName: false,
-        showEditFaceUrl: false,
         showEditIntroduction: false,
         showEditNotification: false,
-        showEditJoinOption: false,
         showChangeGroupOwner: false,
         showEditNameCard: false,
         name: groupProfile.name,
         avatar: groupProfile.avatar,
         introduction: groupProfile.introduction,
         notification: groupProfile.notification,
-        joinOption: groupProfile.joinOption,
         messageRemindType: groupProfile.messageRemindType,
         nameCard: groupProfile.selfInfo.nameCard || ''
       })
     }
   },
   methods: {
+    handleUpload(){
+      if(this.user_id != this.groupProfile.ownerID){
+        this.$message.error('只有群主才能改群头像')
+      }
+    },
+    handleChange(file, fileList) {
+      this.files = fileList;
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isPNG = file.type === 'image/png';
+      const isLt2M = file.size / 1024 / 1024 < 3;
+
+      if (!isJPG && !isPNG) {
+        this.$message.error('上传头像图片只能是 JPG PNG格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 3MB!');
+      }
+      return isJPG || isPNG && isLt2M;
+    },
+    uploadShopImgFile() {
+      console.log(this.files);
+      let form = new FormData();
+      // 后端接受参数 ，可以接受多个参数
+      let length = this.files.length;
+      for (let i = 0; i < length; i++) {
+        form.append('files', this.files[i].raw);
+      }
+      this.apiPost('/file/uploads', form).then((res) => {
+        if (res) {
+          this.img_url = res[0]
+          this.editFaceUrl()
+        }
+      });
+    },
     inputFocus(ref) {
       this.$nextTick(() => {
         this.$refs[ref].focus()
@@ -316,10 +306,10 @@ export default {
       this.tim
         .updateGroupProfile({
           groupID: this.groupProfile.groupID,
-          avatar: this.avatar.trim()
+          avatar: this.$config.baseUrl + this.img_url
         })
         .then(() => {
-          this.showEditFaceUrl = false
+          console.log('修改头像成功')
         })
     },
     editIntroduction() {
@@ -340,16 +330,6 @@ export default {
         })
         .then(() => {
           this.showEditNotification = false
-        })
-    },
-    editJoinOption() {
-      this.tim
-        .updateGroupProfile({
-          groupID: this.groupProfile.groupID,
-          joinOption: this.joinOption
-        })
-        .then(() => {
-          this.showEditJoinOption = false
         })
     },
     changeOwner() {
@@ -376,7 +356,7 @@ export default {
         }
       })
     },
-    dismissGroup() {
+    /*dismissGroup() {
       this.tim.dismissGroup(this.groupProfile.groupID).then(({ data: { groupID } }) => {
         this.$store.commit('showMessage', {
           message: `群：${this.groupProfile.name || this.groupProfile.groupID}解散成功！`,
@@ -386,7 +366,7 @@ export default {
           this.$store.commit('resetCurrentConversation')
         }
       })
-    },
+    },*/
     editMessageRemindType() {
       this.tim
         .setMessageRemindType({
@@ -414,7 +394,8 @@ export default {
           this.showEditNameCard = false
         })
     }
-  }
+  },
+  mixins:[http]
 }
 </script>
 
