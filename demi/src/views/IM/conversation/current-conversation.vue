@@ -92,8 +92,6 @@
                 return false
             }
             this.user_id = sessionStorage.getItem('userID');
-            console.log(this.detail)
-            console.log(this.detail)
         },
         updated() {
             this.keepMessageListOnButtom()

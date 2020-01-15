@@ -22,13 +22,14 @@
                         <p class="goods_basic_label"><span style="color:#FF0000">* </span>宝贝标题</p>
                         <el-input
                                 size="small"
-                                placeholder="最多输入20个汉字和字符"
+                                placeholder="输入2 - 20个汉字或字符"
+                                minlength="2"
                                 maxlength="20"
                                 show-word-limit
-                                v-model="goods.goods_name">
+                                v-model.trim="goods_name">
                         </el-input>
                     </div>
-                    <div class="goods_basic_category">
+                    <!--<div class="goods_basic_category">
                         <p class="goods_basic_label"><span style="visibility: hidden">* </span>类目属性</p>
                         <div class="goods_basic_category_input">
                             <div class="number">
@@ -40,7 +41,7 @@
                                 </el-input>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
             <div id="2" class="goods_sale">
@@ -84,7 +85,6 @@
                                     row-key="index"
 
                             >
-                                <!--:span-method="objectSpanMethod"-->
                                 <el-table-column
                                         v-if="checkList"
                                         v-for="(label,index) in checkList"
@@ -103,7 +103,6 @@
                                                 size="mini"
                                                 placeholder="价格（元）"/>
                                     </template>
-                                    <!--v-model="scope.row[handleTableInput(scope.row,scope.row.length)]"-->
                                     <template slot-scope="scope">
                                         <el-input
                                                 v-model.trim="sku_sale[scope.$index]"
@@ -118,7 +117,6 @@
                                                 size="mini"
                                                 placeholder="数量（件）"/>
                                     </template>
-                                    <!--scope.row[handleTableInput(scope.row,scope.row.length + 1)]-->
                                     <template slot-scope="scope">
                                         <el-input
                                                 v-model.trim="sku_sum[scope.$index]"
@@ -133,7 +131,6 @@
                                                 size="mini"
                                                 placeholder="佣金（元）"/>
                                     </template>
-                                    <!--scope.row[handleTableInput(scope.row,scope.row.length + 2)]-->
                                     <template slot-scope="scope">
                                         <el-input
                                                 v-model.trim="sku_commission[scope.$index]"
@@ -146,40 +143,66 @@
                                         <el-input
                                                 v-model.trim="code"
                                                 size="mini"
-                                                placeholder="商品条形码"/>
+                                                placeholder="商品编码"/>
                                     </template>
-                                    <!--scope.row[handleTableInput(scope.row,scope.row.length + 3)]-->
                                     <template slot-scope="scope">
                                         <el-input
                                                 v-model.trim="sku_code[scope.$index]"
                                                 size="mini"
-                                                placeholder="商品条形码"/>
+                                                placeholder="商品编码"/>
                                     </template>
                                 </el-table-column>
                             </el-table>
                         </div>
                     </div>
-                    <div class="goods_price">
+                    <div class="goods_price" v-if="tableData.length < 1">
                         <p class="goods_price_label"><span style="color:#FF0000">* </span>一口价</p>
                         <div class="goods_price_input">
                             <div style="display: flex">
                                 <el-input
                                         size="small"
-                                        v-model="goods.goods_name">
+                                        :disabled="tableData.length > 0"
+                                        v-model.trim="goods_price">
                                 </el-input>
                                 <span style="align-self: center">元</span>
                             </div>
                             <p>商品价格不能低于0.10元</p>
                         </div>
                     </div>
-                    <div class="goods_code">
-                        <p class="goods_code_label">商品条形码</p>
+                    <div class="goods_price" v-if="tableData.length < 1">
+                        <p class="goods_price_label"><span style="color:#FF0000">* </span>佣&nbsp;&nbsp;&nbsp;金</p>
+                        <div class="goods_price_input">
+                            <div style="display: flex">
+                                <el-input
+                                        size="small"
+                                        :disabled="tableData.length > 0"
+                                        v-model.trim="goods_salary">
+                                </el-input>
+                                <span style="align-self: center">元</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goods_price" v-if="tableData.length < 1">
+                        <p class="goods_price_label"><span style="color:#FF0000">* </span>库&nbsp;&nbsp;&nbsp;存</p>
+                        <div class="goods_price_input">
+                            <div style="display: flex">
+                                <el-input
+                                        size="small"
+                                        :disabled="tableData.length > 0"
+                                        v-model.trim="goods_inventory">
+                                </el-input>
+                                <span style="align-self: center">元</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goods_code" v-if="tableData.length < 1">
+                        <p class="goods_code_label">商品编码</p>
                         <el-input
                                 size="small"
                                 placeholder="最多输入32个汉字和字符"
                                 maxlength="32"
                                 show-word-limit
-                                v-model="goods.goods_name">
+                                v-model.trim="goods_no">
                         </el-input>
                     </div>
                 </div>
@@ -225,7 +248,7 @@
                         </div>
                     </div>
                     <div class="goods_video_upload">
-                        <p class="goods_video_label"><span style="color:#FF0000">* </span>主图视频</p>
+                        <p class="goods_video_label"><span style="color:#FF0000;visibility: hidden">* </span>主图视频</p>
                         <div class="main_video" v-loading="vid_loading">
                             <div class="upload-container">
                                 <el-upload
@@ -248,27 +271,16 @@
                         </div>
                     </div>
                     <div class="goods_look">
-                        <p class="goods_look_label"><span style="color:#FF0000;visibility: hidden">* </span>商品详情图</p>
-                        <div class="main_look">
-                            <div class="demo-image__lazy">
-                                <el-image v-for="url in urls" :key="url" :src="url"></el-image>
-                            </div>
-                            <div class="demo-image-bottom">
-                                <div class="bottom_contain">
-                                    <div class="bottom_label">
-                                        <img src="" alt="">
-                                        <p>预览</p>
-                                    </div>
-                                    <div class="bottom_label">
-                                        <img src="" alt="">
-                                        <p>图片</p>
-                                    </div>
-                                    <div class="bottom_label">
-                                        <img src="" alt="">
-                                        <p>文字</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <p class="goods_look_label"><span style="color:#FF0000;visibility: hidden">* </span>商品详情</p>
+                        <div class="edit_container">
+                            <quill-editor
+                                    v-model="content"
+                                    ref="myQuillEditor"
+                                    :options="editorOption"
+                                    @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
+                                    @change="onEditorChange($event)">
+                            </quill-editor>
+                            <button v-on:click="saveHtml">保存</button>
                         </div>
                     </div>
                 </div>
@@ -283,28 +295,26 @@
                     未上架的商品在上架前请到“仓库中的宝贝”里编辑商品。
                 </span>
                     <div class="select_buy">
-                        <div class="select_online">
+                        <div class="select_online" @click="handleSelect(1)">
                             <div style="align-self: center">
-                                <img src="../../../assets/img/weixuanz@2x.png" alt="" @click="handleSelect(1)"
-                                     v-show="active === 2">
+                                <img src="../../../assets/img/weixuanz@2x.png" alt="" v-show="active === 0">
                                 <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 1">
                             </div>
-                            <p :style="active === 2 ? 'color: #999999': 'color: #4d4d4d'">立即上架</p>
+                            <p :style="active === 0 ? 'color: #999999': 'color: #4d4d4d'">立即上架</p>
                         </div>
-                        <div class="select_store">
+                        <div class="select_store" @click="handleSelect(0)">
                             <div style="align-self: center">
-                                <img src="../../../assets/img/weixuanz@2x.png" alt="" @click="handleSelect(2)"
-                                     v-show="active === 1">
-                                <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 2">
+                                <img src="../../../assets/img/weixuanz@2x.png" alt="" v-show="active === 1">
+                                <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 0">
                             </div>
-                            <p :style="active === 2 ? 'color: #4d4d4d': 'color: #999999'">放入仓库</p>
+                            <p :style="active === 0 ? 'color: #4d4d4d': 'color: #999999'">放入仓库</p>
                         </div>
                     </div>
 
                 </div>
             </div>
             <div class="create_goods_sumbit">
-                <el-button type="primary" size="medium" @click="success=true">提交商品信息</el-button>
+                <el-button type="primary" size="medium" @click="handleSubGoodInfo">提交商品信息</el-button>
             </div>
         </div>
         <div class="create_call_back" v-if="success">
@@ -338,17 +348,46 @@
         components: {bottom},
         data() {
             return {
+                content: `<p>hello world</p>`,
+                editorOption: {
+                    modules: {
+                        toolbar: [
+                            ["bold", "italic", "underline", "strike"], // 加粗 斜体 下划线 删除线
+                            ["blockquote", "code-block"], // 引用  代码块
+                            [{ header: 1 }, { header: 2 }], // 1、2 级标题
+                            [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
+                            [{ script: "sub" }, { script: "super" }], // 上标/下标
+                            [{ indent: "-1" }, { indent: "+1" }], // 缩进
+                            [{ size: ["small", false, "large", "huge"] }], // 字体大小
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
+                            [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
+                            [{ font: [] }], // 字体种类
+                            [{ align: [] }], // 对齐方式
+                            ["clean"], // 清除文本格式
+                            ["link", "image", "video"] // 链接、图片、视频
+                        ], //工具菜单栏配置
+                    },
+                },
+                //类目id
+                sort_id:null,
+
+                //类目详情
                 goods_info: null,
+
                 activeName: 'first',
 
                 //货号
-                goods: {
-                    goods_name: ""
-                },
+                goods_name: "",
+                goods_price:'',
+                goods_no:'',
+                goods_salary:'',
+                goods_inventory:'',
+
                 //自定义属性值
                 checkList: [],
                 custom_attr: [],
 
+                //sku
                 sku_array: [],
                 sku_attr_id: [],
                 sku_select_attr: [],
@@ -356,11 +395,12 @@
                 sku_sum: [],
                 sku_commission: [],
                 sku_code: [],
-                spanRow: '',
+
                 sale: '',
                 sum: '',
                 commission: '',
                 code: '',
+
                 tableData: [],
 
                 shop_img: [
@@ -370,6 +410,7 @@
                     {img: ''},
                     {img: ''},
                 ],
+
                 files: '',
                 show_icon:null,
 
@@ -377,9 +418,13 @@
                 video: null,
                 real_video_path: null,
                 video_path:'',
+                cover:'',
+
                 success: false,
-                imageUrl: '',
+
                 custom: '',
+
+                //商品上架选择（y/n）
                 active: 1,
                 urls: [
                     'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
@@ -392,6 +437,11 @@
                 ]
             };
         },
+        computed:{
+            editor() {
+                return this.$refs.myQuillEditor.quill;
+            },
+        },
         mounted() {
             this.apiGet('/api/sort/info/' + this.$route.query.sort_id).then((res) => {
                 this.goods_info = res;
@@ -399,94 +449,46 @@
                 for (let i = 0; i < length; i++) {
                     this.checkList.push({list: [], attr: res.attrs[i].attribute_id, title: res.attrs[i].title});
                 }
-                console.log(this.checkList);
             })
         },
+        created() {
+            this.getParams();
+        },
         methods: {
+
+            //类目id
+            getParams() {
+                // 取到路由带过来的参数
+                this.sort_id = this.$route.query.sort_id;
+            },
+
+            //导航指定div
             handleClick(tab, event) {
                 var el=document.getElementById(`${parseInt(tab.index) + 1}`);
                 console.log(el.offsetTop);
                 document.getElementById('app').scrollTo(0,el.offsetTop);
             },
-            handleSelect(active) {
-                this.active = active
-            },
 
-            /*objectSpanMethod({row, column, rowIndex, columnIndex}) {
-                let length = this.checkList.length;
-                if((rowIndex % this.checkList[length-1].list.length === 0)){
-                    if(columnIndex % this.checkList[length-1].list.length === 0){
-                        return [this.checkList[length-1].list.length,1]
-                    }
-                }else{
-                    return {
-                        rowspan: 1,
-                        colspan: 1
-                    };
-                }
-                /!*let length = this.checkList.length;
-
-                    if((rowIndex % this.checkList[length-1].list.length === 0)){
-                        return [this.checkList[length-1].list.length,1]
-                    }else{
-                        return {
-                            rowspan: 0,
-                            colspan: 0
-                        };
-                    }
-                   /!* if(rowIndex === 0){
-                        this.spanRow = row[0];
-                    }else{
-                        if(this.spanRow !== row[0]){
-
-                        }
-                    }*!/
-                    /!*if(this.spanRow === row[0]){
-
-                    }
-                    if(row[0] === this.tableData[rowIndex][0]){
-                        return [this.checkList[1].list.length,1]
-                    }*!/
-
-                   /!*!/!* if(rowIndex === 0){
-                        return {
-                            rowspan: 1,
-                            colspan: 1
-                        };
-                    }else *!/
-                   if(rowIndex > 0 && (rowIndex % this.checkList[0].list.length === 0) && (row[0] === this.checkList[0].list[rowIndex])){
-                        return {
-                            rowspan:  this.checkList[0].list.length,
-                            colspan: 1
-                        };
-                    }else {
-                        return {
-                            rowspan: 0,
-                            colspan: 0
-                        };
-                    }*!/
-
-                /!*console.log('a');
-                if (columnIndex === 0) {
-                    if (rowIndex % 2 === 0) {
-                        return {
-                            rowspan: 2,
-                            colspan: 1
-                        };
-                    } else {
-                        return {
-                            rowspan: 1,
-                            colspan: 0
-                        };
-                    }
-                }*!/!*!/
-            },*/
-
+            //自定义属性值
             handleAddAttr() {
                 this.custom_attr.push(this.custom);
                 this.custom = ''
             },
 
+            handleSort(a,b){
+                return a-b
+            },
+            handleSortSale(){
+                if(this.sku_sale.length>0){
+                    this.goods_price = this.sku_sale.sort(this.handleSort)[0]
+                }
+            },
+            handleSortCommission(){
+                if(this.sku_commission.length>0){
+                    this.goods_price = this.sku_commission.sort(this.handleSort)[0]
+                }
+            },
+            //批量填充
             handleFill() {
                 if (this.tableData) {
                     if (this.sale) {
@@ -494,7 +496,8 @@
                         for (let i = 0; i < length; i++) {
                             this.$set(this.sku_sale, i, this.sale)
                         }
-                        this.sale = ''
+                        this.sale = '';
+                        this.goods_price = this.sku_sale.sort(this.handleSort)[0]
                     }
                     if (this.sum) {
                         let length = this.sku_sum.length;
@@ -508,7 +511,8 @@
                         for (let i = 0; i < length; i++) {
                             this.$set(this.sku_commission, i, this.commission)
                         }
-                        this.commission = ''
+                        this.commission = '';
+                        this.goods_salary = this.sku_commission.sort(this.handleSort)[0]
                     }
                     if (this.code) {
                         let length = this.sku_code.length;
@@ -521,6 +525,7 @@
                 }
             },
 
+            //sku
             handleSelectAttr() {
                 this.tableData = [];
                 this.sku_array = [];
@@ -533,7 +538,6 @@
                 this.handleSku(0, []);
                 this.handleSkuAttrId(0)
             },
-
             handleSku(index, data) {
                 let all_length = this.checkList.length;
                 let length = this.checkList[index].list.length;
@@ -572,19 +576,7 @@
                 }
             },
 
-            /*handleTableInput(data, index) {
-                let all_length = this.checkList.length;
-                let length = data.length;
-                if (length > all_length) {
-                    let option = length - all_length;
-                    return index - option
-                } else {
-                    return index
-                }
-            },*/
-            /* handleAvatarSuccess(res, file) {
-                 this.imageUrl = URL.createObjectURL(file.raw);
-             },*/
+            //图片上传
             handleChange(file, fileList) {
                 this.files = fileList;
             },
@@ -623,13 +615,8 @@
                     }
                 });
             },
-            /*handleImgSort(event,before,after){
-                if(event === 'front'){
-                    return after - before
-                }else{
-                    return before - after
-                }
-            },*/
+
+            //改变图片顺序
             handleMoveFront(index){
                 let length = this.shop_img.length;
                 let fornt;
@@ -639,6 +626,7 @@
                     this.$set(this.shop_img,index,fornt);
                 }
             },
+            //删除图片
             handleRemove(index) {
                 this.$set(this.shop_img,index,{'img':''});
             },
@@ -652,6 +640,7 @@
                 }
             },
 
+            //视频上传
             beforeVidUpload(file) {
                 if (!(file.type.indexOf('video') === 0 && file.type && /\.(?:mp4|rmvb|avi|ts|ogg|flv|wmv|mkv)$/.test(file.name.toLowerCase()))) {
                     this.$message.error('上传视频只限 mp4,rmvb，avi，ts，ogg，flv，wmv，mkv格式!');
@@ -682,16 +671,25 @@
                         .drawImage(video, 0, 0, canvas.width, canvas.width);
                     let imgsrc = canvas.toDataURL("image/png");
                     this.cover = imgsrc;
+                    if (this.cover) {
+                        let fileImg = this.base64ToBlob(this.cover);
+                        var form = new FormData();
+                        form.append("files", fileImg, 'image.jpg');
+                        this.apiPost('/file/uploads', form).then((res) => {
+                            // cover_path = res[0];
+                            this.cover = res[0]
+                        });
+                    }
                 }.bind(this));
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 form.append('files', this.video);
                 form.append('type', 'video');
                 this.apiPost('/file/uploads', form).then((res) => {
-                    this.real_video_path = res
+                    this.real_video_path = res[0]
                     console.log(this.real_video_path)
                     this.vid_loading = false
-                })
+                });
                 console.log(this.real_video_path)
 
             },
@@ -713,44 +711,116 @@
                 });
             },
 
+            onEditorReady(editor) { // 准备编辑器
+            },
+            onEditorBlur(){}, // 失去焦点事件
+            onEditorFocus(){}, // 获得焦点事件
+            onEditorChange(){}, // 内容改变事件
+            saveHtml:function(event){
+                console.log(this.content);
+            },
+
+            //商品上架/放入仓库
+            handleSelect(active) {
+                this.active = active
+            },
+
+            //提交
+            handleSubGoodInfo(){
+
+                let array=[];
+                let length = this.shop_img.length;
+                for (let i = 0;i<length;i++){
+                    if(this.shop_img[i].img){
+                        array.push(this.shop_img[i].img)
+                    }
+                }
+                let data = {
+                    title:this.goods_name,
+                    sort_id:this.sort_id,
+                    is_sku:0,
+                    images:array,
+                    video_path:this.real_video_path,
+                    video_cover:this.cover,
+                    description:this.content,
+                    status:parseInt(this.active),
+                };
+                if(this.tableData){
+                    data.is_sku = 1;
+                }
+                if(data.is_sku == 0){
+                    data.price = this.goods_price;
+                    data.salary = this.goods_salary;
+                    data.goods_no = this.goods_no;
+                    data.inventory = this.goods_inventory;
+                }else{
+                    data.attr_ids = this.sku_attr_id;
+                    data.attr_values = this.sku_select_attr;
+                    data.sku_mark = this.sku_array;
+                    data.sku_price = this.sku_sale;
+                    data.sku_salary = this.sku_commission;
+                    data.sku_inventory = this.sku_sum;
+                    data.sku_no = this.sku_code;
+                }
+                if(!data.title){
+                    this.$message.error('请输入商品名称')
+                }else if(data.is_sku == 0 && (!data.price && !data.salary && !data.goods_no && !data.inventory)){
+                    this.$message.error('请输入商品价格、佣金、库存及商品编码')
+                }else if(data.is_sku == 1 && (!data.attr_ids && !data.attr_values && !data.sku_mark && !data.sku_price && !data.sku_salary && !data.sku_inventory && !data.sku_no)){
+                    this.$message.error('请输入商品价格、佣金、库存及商品编码')
+                }else if(data.images.length < 1){
+                    this.$message.error('请上传商品图片')
+                }else{
+                    this.apiPost('api/goods/create',data).then((res)=>{
+                        console.log(res)
+                        if(res){
+                            this.success = true
+                        }
+                    })
+                }
+            },
+
+            //查看仓库
             handleLook() {
                 this.$router.push({
                     name: 'goods_massage'
                 })
             },
+
+            //返回类目选择
             handleAgain() {
                 this.$router.push({
                     name: 'create_goods'
                 })
             }
         },
+
         watch: {
             tableData() {
                 if (this.tableData) {
                     let length = this.tableData.length;
                     for (let i = 0; i < length; i++) {
                         let length2 = this.tableData[i].length;
-                        let item;
+                        let item = [];
                         for (let y = 0; y < length2; y++) {
-                            if (y === 0) {
+                            item.push(this.tableData[i][y])
+                            /*if (y === 0) {
                                 item = this.tableData[i][y]
                             } else {
                                 item = item + ',' + this.tableData[i][y];
-                            }
+                            }*/
                         }
-                        this.sku_array.push(item)
+                        this.sku_array.push(item.sort().join(','));
                     }
                 }
-            }
-            /*sku_sale(){
-                if(this.sku_sale){
-                    let length = this
-                    console.log(this.sku_sale)
-                    console.log(this.sku_sum)
-                    console.log(this.sku_commission)
-                    console.log(this.sku_code)
+                /*if(this.sku_sale.length>0){
+                    this.goods_price = this.sku_sale.sort(this.handleSort)[0]
                 }
-            }*/
+                if(this.sku_commission.length>0){
+                    this.goods_price = this.sku_commission.sort(this.handleSort)[0]
+                }*/
+            },
+
         },
         mixins: [http]
     }
@@ -827,7 +897,7 @@
                 .goods_basic_name
                     display flex
                     margin-top 37px
-                    margin-bottom 29px
+                    padding-bottom 29px
 
                     .goods_basic_label
                         align-self center
@@ -970,7 +1040,7 @@
 
                     .goods_code_label
                         align-self center
-                        margin-right 19px
+                        margin-right 35px
 
                     .el-input
                         width 679px
@@ -998,32 +1068,12 @@
                     .goods_look_label
                         margin-right 15px
 
-                    .main_look
+                    .edit_container
                         width 651px
-                        height 503px
-                        border: 1px solid rgba(204, 204, 204, 1);
+                        height 501px
 
-                        .demo-image__lazy
-                            padding-left 11px
-                            height 442px
-                            overflow auto
-                        .demo-image-bottom
-                            width 100%
-                            height:59px;
-                            background:rgba(236,236,236,1);
-                            .bottom_contain
-                                width 457px
-                                height:59px;
-                                display flex
-                                margin 0 auto
-                                justify-content space-around
-                                .bottom_label
-                                    align-self center
-                                    img
-                                        width 22px
-                                    p
-                                        font-size:12px;
-                                        color:rgba(102,102,102,1);
+                        .ql-container
+                            height:400px;
 
                     .goods_pic_label, .goods_video_label
                         margin-right 28px

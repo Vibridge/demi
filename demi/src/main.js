@@ -12,6 +12,12 @@ import Avatars from './views/IM/avatars.vue'
 import './assets/icon/iconfont.css'
 import './assets/icon/tim.css'
 import config from './config';
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+Vue.use(VueQuillEditor)
 Vue.use(ElementUI);
 import tim from '../src/libs/im'
 import TIM from 'tim-js-sdk'

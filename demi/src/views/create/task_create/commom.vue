@@ -565,6 +565,15 @@
                         .drawImage(video, 0, 0, canvas.width, canvas.width);
                     let imgsrc = canvas.toDataURL("image/png");
                     this.cover = imgsrc;
+                    if (this.cover) {
+                        let fileImg = this.base64ToBlob(this.cover);
+                        var form = new FormData();
+                        form.append("files", fileImg, 'image.jpg');
+                        this.apiPost('/file/uploads', form).then((res) => {
+                            // cover_path = res[0];
+                            this.cover = res[0]
+                        });
+                    }
                 }.bind(this));
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
@@ -640,15 +649,15 @@
                         duration: 500
                     })
                 } else {
-                    if (this.cover) {
+                    /*if (this.cover) {
                         let fileImg = this.base64ToBlob(this.cover);
                         var form = new FormData();
                         var cover_path;
                         form.append("files", fileImg, 'image.jpg');
                         this.apiPost('/file/uploads', form).then((res) => {
-                            cover_path = res;
+                            cover_path = res[0];
                         });
-                    }
+                    }*/
                     if (this.form.city === '不限') {
                         this.form.city = [0, 0]
                     }
@@ -683,7 +692,7 @@
                         image_arr: this.form.image_arr,
                         status: 1,
                         video_path: this.real_video_path,
-                        video_cover: cover_path,
+                        video_cover: this.cover,
                     };
                     if (this.invoice) {
                         data.is_invoice = 1;

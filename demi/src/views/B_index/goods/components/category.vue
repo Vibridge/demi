@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div class="search">
+       <!-- <div class="search">
             <el-input
                     placeholder="名称/拼音"
                     suffix-icon="el-icon-search"
                     v-model="first_category">
             </el-input>
-        </div>
+        </div>-->
         <div class="main">
             <div class="category_list" v-for="(item,index) in row" :key="item.sort_id">
                 <div class="category_connect">

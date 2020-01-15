@@ -1,10 +1,7 @@
 <template>
     <div>
         <div class="create_wrap">
-            <div v-if="category_popper" class="category_popper">
-                <!--<searchCategory v-for="level1 in options" :row="level1">
-                    <searchCategory v-if="level1.children"></searchCategory>
-                </searchCategory>-->
+            <!--<div v-if="category_popper" class="category_popper">
                 <ul v-for="level1 in options" :key="level1.sort_id">
 
                     <li v-for="level2 in level1.children" :key="level2.sort_id" v-show="handleShow(level2.sort_id)">
@@ -32,18 +29,18 @@
                 <el-input v-model.trim="category" placeholder="请输入内容" clearable @input="category_popper = false"
                           @clear="category_popper = false"></el-input>
                 <el-button type="primary" @click="handleSearch">搜索</el-button>
-            </div>
+            </div>-->
 
-            <p class="create_history">发布历史：五金>仪表>电阻测试仪</p>
+            <!--<p class="create_history">发布历史：五金>仪表>电阻测试仪</p>-->
             <div class="category">
                 <div class="category_contain">
-                    <div class="search">
+                   <!-- <div class="search">
                         <el-input
                                 placeholder="名称/拼音"
                                 suffix-icon="el-icon-search"
                                 v-model="first_category">
                         </el-input>
-                    </div>
+                    </div>-->
                     <div class="main">
                         <div class="category_list" v-for="(level1,index) in options" :key="index">
                             <div class="category_title" @click="handleShowFirst(level1.title,index)">
@@ -293,12 +290,9 @@
             height 434px
             display flex
             margin 24px auto
-
             .category_contain
                 width 249px
                 box-sizing border-box
-
-
                 .search
                     background: #fff;
                     padding 14px 19px
@@ -326,17 +320,18 @@
                 }
 
                 .main
+                    padding-top 10px
                     height 382px
                     overflow-y scroll
                     background: #fff;
                     border 1px solid rgba(76, 176, 255, 1)
-                    border-top none
+                    /*border-top none*/
 
                     .category_list
                         border-bottom: 1px dashed rgba(204, 204, 204, 1);
 
                     .category_title
-                        padding 8px 4px
+                        padding 7px 4px
                         color: rgba(36, 191, 255, 1);
 
                         .active
