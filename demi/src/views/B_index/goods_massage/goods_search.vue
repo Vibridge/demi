@@ -3,12 +3,8 @@
         <div class="info_search_wrap">
             <div class="info_search_input">
                 <div class="info_search">
-                    <p class="search_label">商品标题</p>
-                    <el-input v-model="goods_name" size="mini"></el-input>
-                </div>
-                <div class="info_search">
-                    <p class="search_label">商品ID</p>
-                    <el-input v-model="goods_id" size="mini"></el-input>
+                    <p class="search_label">关键字</p>
+                    <el-input v-model="keyword" size="mini"></el-input>
                 </div>
             </div>
             <div>
@@ -28,20 +24,39 @@
 <script>
     export default {
         name: 'goods_search',
+        props:['index'],
         data(){
             return{
-                goods_name: '',
-                goods_id: '',
+                keyword: '',
             }
+        },
+        mounted(){
+            console.log(this.index);
+            console.log(this.index)
         },
         methods:{
             handleSearch(){
-                this.$emit('on-goods-search',this.goods_name,this.goods_id)
+                let status;
+                if(this.index == 0){
+                    status = '';
+                }else if(this.index == 1){
+                    status = 1;
+                }else{
+                    status = 0;
+                }
+                this.$emit('on-goods-search',this.keyword,status)
             },
             handleReset(){
-                this.goods_name = '';
-                this.goods_id = '';
-                this.$emit('on-goods-search',this.goods_name,this.goods_id)
+                let status;
+                if(this.index == 0){
+                    status = '';
+                }else if(this.index == 1){
+                    status = 1;
+                }else{
+                    status = 0;
+                }
+                this.keyword = '';
+                this.$emit('on-goods-search',this.keyword,status)
             }
         }
     }

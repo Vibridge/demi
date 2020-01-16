@@ -26,6 +26,7 @@
                             </div>
                             <div style="align-self: center;">
                                 <p style="color: #24BFFF;">{{scope.row.title}}</p>
+                                <p style="color: #CCCCCC;font-size: 12px">ID:{{scope.row.goods_id}}</p>
                             </div>
                         </div>
                     </template>

@@ -8,19 +8,19 @@
                 <el-tabs type="border-card" @tab-click="handleClick">
                     <el-tab-pane label="全部商品">
                         <div class="goods_info_contain">
-                            <search @on-goods-search="handleGoodsSearch"></search>
+                            <search :index="active_index" @on-goods-search="handleGoodsSearch"></search>
                             <goods :shopList="shopList"></goods>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="出售中的商品">
                         <div class="goods_info_contain">
-                            <search @on-goods-search="handleGoodsSearch"></search>
+                            <search :index="active_index" @on-goods-search="handleGoodsSearch"></search>
                             <goods :shopList="shopList"></goods>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="仓库中的商品">
                         <div class="goods_info_contain">
-                            <search @on-goods-search="handleGoodsSearch"></search>
+                            <search :index="active_index" @on-goods-search="handleGoodsSearch"></search>
                             <goods :shopList="shopList"></goods>
                         </div>
                     </el-tab-pane>
@@ -43,7 +43,8 @@
             return{
                 store:false,
                 shop_info:null,
-                shopList:[]
+                shopList:[],
+                active_index:0,
             }
         },
         mounted() {
@@ -68,9 +69,9 @@
             })
         },
         methods:{
-            initialize(id,status = null){
-                if(status != null){
-                    this.apiGet('/api/goods/paginate?shop_id=' + id + '&status=' + status).then((res)=>{
+            initialize(id,status = '',name = ''){
+                if(status !== '' || name){
+                    this.apiGet('/api/goods/paginate?shop_id=' + id + '&status=' + status + '&keyword=' + name ).then((res)=>{
                         console.log(res)
                         this.shopList = res.data
                     })
@@ -82,17 +83,20 @@
                 }
             },
             handleClick(tab, event) {
+                this.active_index = tab.index;
                 if(tab.index == 0){
-                    this.initialize(this.shop_info.shop_id)
+                    this.initialize(this.shop_info.shop_id,'')
                 }else if(tab.index == 1){
                     this.initialize(this.shop_info.shop_id,1)
                 }else if(tab.index == 2){
                     this.initialize(this.shop_info.shop_id,0)
                 }
             },
-            handleGoodsSearch(name,id){
+            handleGoodsSearch(name,status){
                 console.log(name);
-                console.log(id)
+                console.log(status);
+                this.initialize(this.shop_info.shop_id,status,name)
+                // this.initialize(this.shop_info.shop_id,0)
             }
         },
         mixins:[http]
