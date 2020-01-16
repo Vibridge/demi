@@ -16,7 +16,7 @@
             <el-button type="primary" size="mini">删除</el-button>
             <el-button type="primary" size="mini">上架</el-button>
             <el-button type="primary" size="mini">下架</el-button>
-            <p>已选商品（6）</p>
+            <p>已选商品（{{sum}}）</p>
         </div>
     </div>
 </template>
@@ -24,7 +24,7 @@
 <script>
     export default {
         name: 'goods_search',
-        props:['index'],
+        props:['index','sum'],
         data(){
             return{
                 keyword: '',

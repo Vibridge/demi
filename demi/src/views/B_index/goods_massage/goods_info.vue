@@ -64,7 +64,8 @@
                 >
                     <template slot-scope="scope">
                         <el-button type="text" size="mini">编辑</el-button>
-                        <el-button type="text" size="mini">下架</el-button>
+                        <el-button v-if="scope.row.status == 1" type="text" size="mini" @click="handleChangeStatus(0,scope.row.goods_id)">下架</el-button>
+                        <el-button v-if="scope.row.status == 0" type="text" size="mini" @click="handleChangeStatus(1,scope.row.goods_id)">上架</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -73,52 +74,36 @@
 </template>
 
 <script>
+    import http from '../../../libs/http'
+
     export default {
         name: 'goods_info',
         props: ['shopList'],
         data() {
             return {
-
-                tableData: [{
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-08',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-06',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-07',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }],
                 multipleSelection: []
             }
         },
+        inject: ['reload'],
         mounted() {
             console.log(this.shopList)
         },
         methods: {
             handleSelectionChange(val) {
                 this.multipleSelection = val;
+                console.log(this.multipleSelection)
+                this.$emit('on-select-list',this.multipleSelection)
+            },
+            handleChangeStatus(status,id){
+                this.apiPost('/api/goods/update/' + id,{status:status}).then((res)=>{
+                    console.log(res)
+                    if(res){
+                        this.reload()
+                    }
+                })
             }
-        }
+        },
+        mixins:[http]
     }
 </script>
 

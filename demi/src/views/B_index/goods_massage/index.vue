@@ -8,20 +8,20 @@
                 <el-tabs type="border-card" @tab-click="handleClick">
                     <el-tab-pane label="全部商品">
                         <div class="goods_info_contain">
-                            <search :index="active_index" @on-goods-search="handleGoodsSearch"></search>
-                            <goods :shopList="shopList"></goods>
+                            <search :sum="select_sum" :index="active_index" @on-goods-search="handleGoodsSearch"></search>
+                            <goods @on-select-list="handleSelectSum" :shopList="shopList"></goods>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="出售中的商品">
                         <div class="goods_info_contain">
-                            <search :index="active_index" @on-goods-search="handleGoodsSearch"></search>
-                            <goods :shopList="shopList"></goods>
+                            <search :sum="select_sum" :index="active_index" @on-goods-search="handleGoodsSearch"></search>
+                            <goods @on-select-list="handleSelectSum" :shopList="shopList"></goods>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="仓库中的商品">
                         <div class="goods_info_contain">
-                            <search :index="active_index" @on-goods-search="handleGoodsSearch"></search>
-                            <goods :shopList="shopList"></goods>
+                            <search :sum="select_sum" :index="active_index" @on-goods-search="handleGoodsSearch"></search>
+                            <goods @on-select-list="handleSelectSum" :shopList="shopList"></goods>
                         </div>
                     </el-tab-pane>
                 </el-tabs>
@@ -45,6 +45,7 @@
                 shop_info:null,
                 shopList:[],
                 active_index:0,
+                select_sum:0
             }
         },
         mounted() {
@@ -97,7 +98,10 @@
                 console.log(status);
                 this.initialize(this.shop_info.shop_id,status,name)
                 // this.initialize(this.shop_info.shop_id,0)
-            }
+            },
+            handleSelectSum(data){
+                this.select_sum = data.length
+            },
         },
         mixins:[http]
     }
