@@ -107,32 +107,35 @@
         },
         inject: ['reload'],
         mounted() {
-            this.apiGet('/api/user/info').then((res) => {
-                console.log(res)
-                if(res.type === 2){
-                    if(res.shop){
-                        this.shop_info = res.shop;
-                        this.form.shop_name = res.shop.shop_name;
-                        this.form.shop_poster = res.shop.shop_poster;
-                        this.form.description = res.shop.description;
-                        if(res.shop.shop_logo){
-                            this.imageUrl = res.shop.shop_logo;
-                        }
-                        console.log(this.form)
-                    }
-                }else{
-                    this.$message({
-                        showClose: true,
-                        message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
-                        duration: 1000
-                    });
-                    this.$router.push({
-                        name: "login"
-                    });
-                }
-            })
+            this.initialize()
         },
         methods: {
+            initialize(){
+                this.apiGet('/api/user/info').then((res) => {
+                    console.log(res)
+                    if(res.type === 2){
+                        if(res.shop){
+                            this.shop_info = res.shop;
+                            this.form.shop_name = res.shop.shop_name;
+                            this.form.shop_poster = res.shop.shop_poster;
+                            this.form.description = res.shop.description;
+                            if(res.shop.shop_logo){
+                                this.imageUrl = res.shop.shop_logo;
+                            }
+                            console.log(this.form)
+                        }
+                    }else{
+                        this.$message({
+                            showClose: true,
+                            message: '该网站目前只对企业用户开放，请在APP切换身份，请见谅！',
+                            duration: 1000
+                        });
+                        this.$router.push({
+                            name: "login"
+                        });
+                    }
+                })
+            },
             handleChange(file, fileList) {
                 this.files = fileList;
             },
@@ -169,9 +172,8 @@
             },
             handleUpdataShop(){
                 this.apiPost('/api/shop/update/' + this.shop_info.shop_id, this.form).then((res)=>{
-                    console.log(res);
                     if(res){
-                        this.reload()
+                        this.initialize()
                     }
                 })
             }

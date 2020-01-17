@@ -110,7 +110,7 @@
         methods: {
             handleSearch() {
                 if(this.category){
-                    this.category_popper = true
+                    this.category_popper = true;
                     this.show_sort_id = null
                 }
             },
@@ -241,7 +241,7 @@
                 this.$router.push({
                     path: "/B_index/B_person/create/goods_info",
                     query: {
-                        title: this.show_sort_title, sort_id: this.select_sort_id
+                        title: this.show_sort_title, sort_id: this.select_sort_id, update:0
                     }
                 })
             }

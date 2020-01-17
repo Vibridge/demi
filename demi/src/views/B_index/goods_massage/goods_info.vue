@@ -63,7 +63,7 @@
                         label="操作"
                 >
                     <template slot-scope="scope">
-                        <el-button type="text" size="mini">编辑</el-button>
+                        <el-button type="text" size="mini" @click="handleEditShop(scope.row.goods_id)">编辑</el-button>
                         <el-button v-if="scope.row.status == 1" type="text" size="mini" @click="handleChangeStatus(0,scope.row.goods_id)">下架</el-button>
                         <el-button v-if="scope.row.status == 0" type="text" size="mini" @click="handleChangeStatus(1,scope.row.goods_id)">上架</el-button>
                     </template>
@@ -78,29 +78,66 @@
 
     export default {
         name: 'goods_info',
-        props: ['shopList'],
+        props: ['shopList','index'],
         data() {
             return {
-                multipleSelection: []
+                multipleSelection: [],
+                title:[],
+                sort_id:null,
+                goods_id:null
             }
         },
-        inject: ['reload'],
-        mounted() {
-            console.log(this.shopList)
-        },
+        // inject: ['reload'],
+        mounted() {},
         methods: {
             handleSelectionChange(val) {
                 this.multipleSelection = val;
-                console.log(this.multipleSelection)
                 this.$emit('on-select-list',this.multipleSelection)
             },
+
             handleChangeStatus(status,id){
                 this.apiPost('/api/goods/update/' + id,{status:status}).then((res)=>{
+                    let status;
+                    if(this.index == 0){
+                        status = '';
+                    }else if(this.index == 1){
+                        status = 1;
+                    }else{
+                        status = 0;
+                    }
+                    this.$emit('on-goods-search','',status)
+                })
+            },
+
+            handleEditShop(id){
+                this.title = [];
+                this.apiGet('/api/goods/info/' + id).then((res)=>{
                     console.log(res)
                     if(res){
-                        this.reload()
+                        this.title.push(res.title);
+                        this.sort_id = res.sort_id;
+                        this.goods_id = res.goods_id;
+                        this.handleAttrTitle(res.sort_id)
                     }
-                })
+                });
+
+            },
+            handleAttrTitle(id){
+                this.apiGet('/api/sort/info/' + id).then((res) => {
+                    this.title.push(res.title);
+                    if(res.pid > 0){
+                        this.handleAttrTitle(res.pid)
+                    }else{
+                        let sort_title;
+                        sort_title = this.title.reverse().join(' > ');
+                        this.$router.push({
+                            path: "/B_index/B_person/create/goods_info",
+                            query: {
+                                title: sort_title, sort_id: this.sort_id, update:1,goods_id:this.goods_id
+                            }
+                        })
+                    }
+                });
             }
         },
         mixins:[http]

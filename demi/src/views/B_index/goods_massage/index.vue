@@ -8,25 +8,24 @@
                 <el-tabs type="border-card" @tab-click="handleClick">
                     <el-tab-pane label="全部商品">
                         <div class="goods_info_contain">
-                            <search :sum="select_sum" :index="active_index" @on-goods-search="handleGoodsSearch"></search>
-                            <goods @on-select-list="handleSelectSum" :shopList="shopList"></goods>
+                            <search :select_id="select_id" :sum="select_sum" :index="active_index" @on-goods-search="handleGoodsSearch"></search>
+                            <goods :index="active_index" @on-select-list="handleSelectSum" :shopList="shopList" @on-goods-search="handleGoodsSearch"></goods>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="出售中的商品">
                         <div class="goods_info_contain">
-                            <search :sum="select_sum" :index="active_index" @on-goods-search="handleGoodsSearch"></search>
-                            <goods @on-select-list="handleSelectSum" :shopList="shopList"></goods>
+                            <search :select_id="select_id" :sum="select_sum" :index="active_index" @on-goods-search="handleGoodsSearch"></search>
+                            <goods :index="active_index" @on-select-list="handleSelectSum" :shopList="shopList" @on-goods-search="handleGoodsSearch"></goods>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="仓库中的商品">
                         <div class="goods_info_contain">
-                            <search :sum="select_sum" :index="active_index" @on-goods-search="handleGoodsSearch"></search>
-                            <goods @on-select-list="handleSelectSum" :shopList="shopList"></goods>
+                            <search :select_id="select_id" :sum="select_sum" :index="active_index" @on-goods-search="handleGoodsSearch"></search>
+                            <goods :index="active_index" @on-select-list="handleSelectSum" :shopList="shopList" @on-goods-search="handleGoodsSearch"></goods>
                         </div>
                     </el-tab-pane>
                 </el-tabs>
             </div>
-
         </div>
     </div>
 </template>
@@ -45,16 +44,16 @@
                 shop_info:null,
                 shopList:[],
                 active_index:0,
-                select_sum:0
+                select_sum:0,
+                select_id:[]
             }
         },
         mounted() {
             this.apiGet('/api/user/info').then((res) => {
-                console.log(res)
                 if(res.type === 2){
                     if(res.shop){
                         this.store = true;
-                        this.shop_info = res.shop
+                        this.shop_info = res.shop;
                         this.initialize(res.shop.shop_id)
                     }
                 }else{
@@ -73,12 +72,10 @@
             initialize(id,status = '',name = ''){
                 if(status !== '' || name){
                     this.apiGet('/api/goods/paginate?shop_id=' + id + '&status=' + status + '&keyword=' + name ).then((res)=>{
-                        console.log(res)
                         this.shopList = res.data
                     })
                 }else{
                     this.apiGet('/api/goods/paginate?shop_id=' + id).then((res)=>{
-                        console.log(res)
                         this.shopList = res.data
                     })
                 }
@@ -94,13 +91,16 @@
                 }
             },
             handleGoodsSearch(name,status){
-                console.log(name);
-                console.log(status);
                 this.initialize(this.shop_info.shop_id,status,name)
-                // this.initialize(this.shop_info.shop_id,0)
             },
             handleSelectSum(data){
-                this.select_sum = data.length
+                this.select_sum = data.length;
+                this.select_id = []
+                if(this.select_sum > 0){
+                    for (let i = 0;i<this.select_sum;i++){
+                        this.select_id.push(data[i].goods_id)
+                    }
+                }
             },
         },
         mixins:[http]

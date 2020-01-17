@@ -10,7 +10,7 @@
                 </el-tabs>
                 <div class="select_category">
                     <p>当前类目：{{this.$route.query.title}}</p>
-                    <el-button type="primary">切换类目</el-button>
+                    <el-button type="primary" v-if="!isUpdate">切换类目</el-button>
                 </div>
             </div>
             <div id="1" class="goods_basic">
@@ -52,8 +52,8 @@
                     <div class="goods_sale_category" v-for="(label,index) in goods_info.attrs"
                          :key="label.attribute_id">
                         <p class="goods_sale_label">{{label.title}}分类</p>
-                        <div class="select_category_value" v-if="checkList[index].list">
-                            <el-checkbox-group v-model="checkList[index].list">
+                        <div class="select_category_value" v-if="checkList[index].values">
+                            <el-checkbox-group v-model="checkList[index].values">
                                 <el-checkbox v-for="checkbox in label.children" :key="checkbox.attribute_id"
                                              :label="checkbox.title"
                                              @change="handleSelectAttr()"></el-checkbox>
@@ -83,7 +83,6 @@
                                     :header-cell-style="{'padding':'0'}"
                                     :cell-style="{'height':'32px','padding':'0'}"
                                     row-key="index"
-
                             >
                                 <el-table-column
                                         v-if="checkList"
@@ -348,26 +347,7 @@
         components: {bottom},
         data() {
             return {
-                content: `<p>hello world</p>`,
-                editorOption: {
-                    modules: {
-                        toolbar: [
-                            ["bold", "italic", "underline", "strike"], // 加粗 斜体 下划线 删除线
-                            ["blockquote", "code-block"], // 引用  代码块
-                            [{ header: 1 }, { header: 2 }], // 1、2 级标题
-                            [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
-                            [{ script: "sub" }, { script: "super" }], // 上标/下标
-                            [{ indent: "-1" }, { indent: "+1" }], // 缩进
-                            [{ size: ["small", false, "large", "huge"] }], // 字体大小
-                            [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
-                            [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
-                            [{ font: [] }], // 字体种类
-                            [{ align: [] }], // 对齐方式
-                            ["clean"], // 清除文本格式
-                            ["link", "image", "video"] // 链接、图片、视频
-                        ], //工具菜单栏配置
-                    },
-                },
+                isUpdate:null,
                 //类目id
                 sort_id:null,
 
@@ -386,6 +366,7 @@
                 //自定义属性值
                 checkList: [],
                 custom_attr: [],
+                custom: '',
 
                 //sku
                 sku_array: [],
@@ -420,21 +401,32 @@
                 video_path:'',
                 cover:'',
 
-                success: false,
-
-                custom: '',
+                content: `<p>hello world</p>`,
+                editorOption: {
+                    modules: {
+                        toolbar: [
+                            ["bold", "italic", "underline", "strike"], // 加粗 斜体 下划线 删除线
+                            ["blockquote", "code-block"], // 引用  代码块
+                            [{ header: 1 }, { header: 2 }], // 1、2 级标题
+                            [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
+                            [{ script: "sub" }, { script: "super" }], // 上标/下标
+                            [{ indent: "-1" }, { indent: "+1" }], // 缩进
+                            [{ size: ["small", false, "large", "huge"] }], // 字体大小
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
+                            [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
+                            [{ font: [] }], // 字体种类
+                            [{ align: [] }], // 对齐方式
+                            ["clean"], // 清除文本格式
+                            ["link", "image", "video"] // 链接、图片、视频
+                        ], //工具菜单栏配置
+                    },
+                },
 
                 //商品上架选择（y/n）
                 active: 1,
-                urls: [
-                    'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
-                    'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
-                    'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg'
-                ]
+
+                success: false,
+
             };
         },
         computed:{
@@ -445,9 +437,10 @@
         mounted() {
             this.apiGet('/api/sort/info/' + this.$route.query.sort_id).then((res) => {
                 this.goods_info = res;
+                console.log(this.goods_info)
                 let length = res.attrs.length;
                 for (let i = 0; i < length; i++) {
-                    this.checkList.push({list: [], attr: res.attrs[i].attribute_id, title: res.attrs[i].title});
+                    this.checkList.push({values: [], attribute_id: res.attrs[i].attribute_id, title: res.attrs[i].title});
                 }
             })
         },
@@ -460,6 +453,8 @@
             getParams() {
                 // 取到路由带过来的参数
                 this.sort_id = this.$route.query.sort_id;
+                this.isUpdate = this.$route.query.update;
+
             },
 
             //导航指定div
@@ -475,7 +470,7 @@
                 this.custom = ''
             },
 
-            handleSort(a,b){
+            /*handleSort(a,b){
                 return a-b
             },
             handleSortSale(){
@@ -487,7 +482,7 @@
                 if(this.sku_commission.length>0){
                     this.goods_price = this.sku_commission.sort(this.handleSort)[0]
                 }
-            },
+            },*/
             //批量填充
             handleFill() {
                 if (this.tableData) {
@@ -540,14 +535,14 @@
             },
             handleSku(index, data) {
                 let all_length = this.checkList.length;
-                let length = this.checkList[index].list.length;
+                let length = this.checkList[index].values.length;
                 if (length > 0) {
                     for (let i = 0; i < length; i++) {
                         if (index < all_length - 1) {
-                            data[index] = this.checkList[index].list[i];
+                            data[index] = this.checkList[index].values[i];
                             this.handleSku(index + 1, data)
                         } else {
-                            let subItem = [...data, this.checkList[index].list[i]];
+                            let subItem = [...data, this.checkList[index].values[i]];
                             this.tableData.push(subItem);
                         }
                     }
@@ -563,11 +558,11 @@
             handleSkuAttrId(index) {
                 let all_length = this.checkList.length;
                 if (index < all_length) {
-                    let length = this.checkList[index].list.length;
+                    let length = this.checkList[index].values.length;
                     if (length > 0) {
                         for (let i = 0; i < length; i++) {
-                            this.sku_attr_id.push(this.checkList[index].attr);
-                            this.sku_select_attr.push(this.checkList[index].list[i]);
+                            this.sku_attr_id.push(this.checkList[index].attribute_id);
+                            this.sku_select_attr.push(this.checkList[index].values[i]);
                             if (i === (length - 1)) {
                                 this.handleSkuAttrId(index + 1);
                             }
@@ -771,12 +766,21 @@
                 }else if(data.images.length < 1){
                     this.$message.error('请上传商品图片')
                 }else{
-                    this.apiPost('api/goods/create',data).then((res)=>{
-                        console.log(res)
-                        if(res){
-                            this.success = true
-                        }
-                    })
+                    if(this.isUpdate){
+                        this.apiPost('api/goods/update/' + this.$route.query.goods_id,data).then((res)=>{
+                            console.log(res)
+                            if(res){
+                                this.success = true
+                            }
+                        })
+                    }else{
+                        this.apiPost('api/goods/create',data).then((res)=>{
+                            console.log(res)
+                            if(res){
+                                this.success = true
+                            }
+                        })
+                    }
                 }
             },
 
@@ -804,23 +808,61 @@
                         let item = [];
                         for (let y = 0; y < length2; y++) {
                             item.push(this.tableData[i][y])
-                            /*if (y === 0) {
-                                item = this.tableData[i][y]
-                            } else {
-                                item = item + ',' + this.tableData[i][y];
-                            }*/
                         }
                         this.sku_array.push(item.sort().join(','));
                     }
                 }
-                /*if(this.sku_sale.length>0){
-                    this.goods_price = this.sku_sale.sort(this.handleSort)[0]
-                }
-                if(this.sku_commission.length>0){
-                    this.goods_price = this.sku_commission.sort(this.handleSort)[0]
-                }*/
             },
+            isUpdate(){
+                if(this.isUpdate){
+                    this.apiGet('/api/goods/info/' + this.$route.query.goods_id).then((res)=>{
+                        const data = res;
+                        console.log(data);
+                        this.goods_name = data.title;
+                        this.content = data.description;
+                        this.active = data.status;
+                        if(data.is_sku){
+                            /*data.attr_ids = this.sku_attr_id;
+                            data.attr_values = this.sku_select_attr;*/
+                            let length = data.sku.length;
+                            for(let i = 0;i<length;i++){
+                                this.sku_array.push(data.sku[i].mark);
+                                this.sku_sale.push(data.sku[i].price);
+                                this.sku_commission.push(data.sku[i].salary);
+                                this.sku_sum.push(data.sku[i].inventory);
+                                this.sku_code.push(data.sku[i].goods_no);
+                                this.$set(this.tableData,i,data.sku[i].mark.split(',').reverse())
+                            }
+                            let attrs = data.attribute.length;
+                            for (let attr = 0;attr<attrs;attr++){
+                                let v =  data.attribute[attr].values.length;
+                                for(let y = 0;y<v;y++){
+                                    this.checkList[attr].values.push(data.attribute[attr].values[y].attr_value)
+                                }
+                            }
+                            console.log(this.checkList[0].values)
 
+                        }else{
+                            this.goods_price = data.price;
+                            this.goods_salary = data.salary;
+                            this.goods_no = data.goods_no;
+                            this.goods_inventory = data.inventory;
+                        }
+                        if(data.video){
+                            this.real_video_path = data.video.file_path;
+                            this.cover = data.video.cover_path;
+                            this.video_path = this.$config.baseUrl + data.video.file_path
+                        }
+                        if(data.images){
+                            let length = data.images.length;
+                            for(let i = 0;i<length;i++){
+                                this.$set(this.shop_img,i,{'img':data.images[i].file_path});
+                            }
+                        }
+                    });
+
+                }
+            }
         },
         mixins: [http]
     }
