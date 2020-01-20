@@ -173,7 +173,8 @@
             handleUpdataShop(){
                 this.apiPost('/api/shop/update/' + this.shop_info.shop_id, this.form).then((res)=>{
                     if(res){
-                        this.initialize()
+                        this.initialize();
+                        this.$message('保存成功')
                     }
                 })
             }

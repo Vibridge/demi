@@ -800,7 +800,6 @@
 
                 .left {
                     width: 260px;
-                    height: 933px;
                     margin-right: 17px;
                     background: #fff;
                     border: 1px solid rgba(235, 235, 235, 1);

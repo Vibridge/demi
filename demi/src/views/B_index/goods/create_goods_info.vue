@@ -271,7 +271,18 @@
                     </div>
                     <div class="goods_look">
                         <p class="goods_look_label"><span style="color:#FF0000;visibility: hidden">* </span>商品详情</p>
+
                         <div class="edit_container">
+                            <el-upload
+                                    class="Editor-uploader"
+                                    action=""
+                                    :show-file-list="false"
+                                    :on-change="handleChange"
+                                    :http-request="uploadEditorImgFile"
+                                    :before-upload="beforeAvatarUpload">
+                               <!-- <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+                            </el-upload>
                             <quill-editor
                                     v-model="content"
                                     ref="myQuillEditor"
@@ -341,7 +352,25 @@
 <script>
     import bottom from '../../../components/B_person_bottom'
     import http from '../../../libs/http'
+    const toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['blockquote', 'code-block'],
 
+        [{'header': 1}, {'header': 2}],               // custom button values
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
+        [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+        [{'direction': 'rtl'}],                         // text direction
+
+        [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+
+        [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+        [{'font': []}],
+        [{'align': []}],
+        ['link', 'image', 'video'],
+        ['clean']                                         // remove formatting button
+    ];
     export default {
         name: 'create_goods_info',
         components: {bottom},
@@ -404,22 +433,20 @@
                 content: `<p>hello world</p>`,
                 editorOption: {
                     modules: {
-                        toolbar: [
-                            ["bold", "italic", "underline", "strike"], // 加粗 斜体 下划线 删除线
-                            ["blockquote", "code-block"], // 引用  代码块
-                            [{ header: 1 }, { header: 2 }], // 1、2 级标题
-                            [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
-                            [{ script: "sub" }, { script: "super" }], // 上标/下标
-                            [{ indent: "-1" }, { indent: "+1" }], // 缩进
-                            [{ size: ["small", false, "large", "huge"] }], // 字体大小
-                            [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
-                            [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
-                            [{ font: [] }], // 字体种类
-                            [{ align: [] }], // 对齐方式
-                            ["clean"], // 清除文本格式
-                            ["link", "image", "video"] // 链接、图片、视频
-                        ], //工具菜单栏配置
+                        toolbar:{
+                            container: toolbarOptions,
+                            handlers: {
+                                'image': function (value) {
+                                    if (value) {
+                                        document.getElementsByClassName('Editor-uploader')[0].getElementsByTagName('input')[0].click()
+                                    } else {
+                                        this.quill.format('image', false);
+                                    }
+                                }
+                            }
+                        }
                     },
+
                 },
 
                 //商品上架选择（y/n）
@@ -431,13 +458,12 @@
         },
         computed:{
             editor() {
-                return this.$refs.myQuillEditor.quill;
+                return this.$refs.myQuillEditor.quillEditor;
             },
         },
         mounted() {
             this.apiGet('/api/sort/info/' + this.$route.query.sort_id).then((res) => {
                 this.goods_info = res;
-                console.log(this.goods_info)
                 let length = res.attrs.length;
                 for (let i = 0; i < length; i++) {
                     this.checkList.push({values: [], attribute_id: res.attrs[i].attribute_id, title: res.attrs[i].title});
@@ -445,7 +471,7 @@
             })
         },
         created() {
-            this.getParams();
+            this.getParams()
         },
         methods: {
 
@@ -516,7 +542,6 @@
                         }
                         this.code = ''
                     }
-                    console.log(this.sku_sale)
                 }
             },
 
@@ -589,11 +614,9 @@
                 return isJPG || isPNG && isLt2M;
             },
             uploadShopImgFile(param) {
-                console.log(param);
                 // 创建表单对象
                 // this.imageUrl = URL.createObjectURL(this.files.raw);
                 // this.pic_loading = true;
-                console.log(this.files);
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 let length = this.files.length;
@@ -602,7 +625,6 @@
                 }
                 this.apiPost('/file/uploads', form).then((res) => {
                     if (res) {
-                        console.log(res);
                         this.shop_img[param.data.index].img = res[0]
                         // this.imageUrl = this.$config.baseUrl + res[0];
                         // this.form.shop_logo = res[0];
@@ -682,10 +704,8 @@
                 form.append('type', 'video');
                 this.apiPost('/file/uploads', form).then((res) => {
                     this.real_video_path = res[0]
-                    console.log(this.real_video_path)
                     this.vid_loading = false
                 });
-                console.log(this.real_video_path)
 
             },
             //base64解码，解码视频第一帧
@@ -710,7 +730,34 @@
             },
             onEditorBlur(){}, // 失去焦点事件
             onEditorFocus(){}, // 获得焦点事件
-            onEditorChange(){}, // 内容改变事件
+            onEditorChange({ editor, html, text }){
+            }, // 内容改变事件
+            uploadEditorImgFile(){
+                // 获取富文本组件实例
+                console.log('aaa')
+                let quill = this.$refs.myQuillEditor.quill
+
+                let form = new FormData();
+                // 后端接受参数 ，可以接受多个参数
+                let length = this.files.length;
+                for (let i = 0; i < length; i++) {
+                    form.append('files', this.files[i].raw);
+                }
+                this.apiPost('/file/uploads', form).then((res) => {
+                    // 如果上传成功
+                    if (res) {
+                        // 获取光标所在位置
+                        let length = quill.getSelection().index;
+                        // 插入图片，res为服务器返回的图片链接地址
+                        quill.insertEmbed(length, 'image', this.$config.baseUrl + res[0]);
+                        // 调整光标到最后
+                        quill.setSelection(length + 1)
+                    } else {
+                        // 提示信息，需引入Message
+                        this.$message.error('图片插入失败');
+                    }
+                });
+            },
             saveHtml:function(event){
                 console.log(this.content);
             },
@@ -817,7 +864,6 @@
                 if(this.isUpdate){
                     this.apiGet('/api/goods/info/' + this.$route.query.goods_id).then((res)=>{
                         const data = res;
-                        console.log(data);
                         this.goods_name = data.title;
                         this.content = data.description;
                         this.active = data.status;
@@ -834,14 +880,17 @@
                                 this.$set(this.tableData,i,data.sku[i].mark.split(',').reverse())
                             }
                             let attrs = data.attribute.length;
-                            for (let attr = 0;attr<attrs;attr++){
-                                let v =  data.attribute[attr].values.length;
-                                for(let y = 0;y<v;y++){
-                                    this.checkList[attr].values.push(data.attribute[attr].values[y].attr_value)
+                            if(attrs > 0){
+                                for (let attr = 0;attr<attrs;attr++){
+                                    let v =  data.attribute[attr].values.length;
+                                    if(v > 0){
+                                        for(let y = 0;y<v;y++){
+                                            this.checkList[attr].values.push(data.attribute[attr].values[y].attr_value)
+                                        }
+                                    }
+
                                 }
                             }
-                            console.log(this.checkList[0].values)
-
                         }else{
                             this.goods_price = data.price;
                             this.goods_salary = data.salary;

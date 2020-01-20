@@ -114,7 +114,7 @@
 
             },
             handleBack(path){
-                this.over = false
+                this.over = false;
                 this.$router.push({
                     name: path,
                 });
