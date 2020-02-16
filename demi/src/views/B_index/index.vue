@@ -269,7 +269,7 @@
         },
         mounted() {
             //发送后消息到底部
-            console.log(this.tim.context)
+            // console.log(this.tim.context)
             this.$bus.$on('scroll-bottom', this.scrollMessageListToButtom);
             /*this.apiGet('/api/user/info').then((res) => {
                 console.log(res);
@@ -329,7 +329,7 @@
                     this.user_info.company_position = res.company_position;
                     this.user_info.phone = res.phone;
                     this.user_info.shop = res.shop;
-                    console.log(res)
+                    // console.log(res)
                     if (res.type !== 2) {
                         this.$message({
                             showClose: true,
@@ -604,7 +604,7 @@
                                         this.timeTamp = item.time;
                                         item.time = ""
                                     }
-                                    console.log(item.time)
+                                    // console.log(item.time)
                                 }
                             }
                         })

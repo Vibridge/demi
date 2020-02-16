@@ -204,7 +204,7 @@ export default {
     },
 
     selectConversation(im,item,type) {
-
+      console.log(this.newList[this.Corresponding(item)])
       if(type === TIM.TYPES.CONV_C2C && this.newList[this.Corresponding(item)].type != 4){
         let data;
         if (item === 'C2Cdominator') {

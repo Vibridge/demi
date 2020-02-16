@@ -95,9 +95,10 @@
                                     <div class="work_title">
                                         <p>{{task.task_title}}</p>
                                         <p>
-                                            <span v-text="task.city ? task.city.city_name + '-' : '不限-'"></span>
-                                            <span>{{task.payment_money}}{{task.unit}}</span>
-                                            <span v-if="task.payment_method === 1">/单</span>
+                                            <span v-text="task.city ? task.city.city_name : '不限'"></span>
+                                            <span v-if="task.payment_money > 0">-</span>
+                                            <span v-if="task.payment_money > 0">{{task.payment_money}}{{task.unit}}</span>
+<!--                                            <span v-if="task.payment_method === 1">/单</span>-->
                                         </p>
                                     </div>
                                     <div class="work_time">

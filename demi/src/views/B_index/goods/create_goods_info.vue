@@ -134,6 +134,7 @@
                                         <el-input
                                                 v-model.trim="sku_commission[scope.$index]"
                                                 size="mini"
+                                                :change="handleCommission(scope.$index)"
                                                 placeholder="佣金（元）"/>
                                     </template>
                                 </el-table-column>
@@ -190,7 +191,7 @@
                                         :disabled="tableData.length > 0"
                                         v-model.trim="goods_inventory">
                                 </el-input>
-                                <span style="align-self: center">元</span>
+<!--                                <span style="align-self: center">元</span>-->
                             </div>
                         </div>
                     </div>
@@ -527,13 +528,15 @@
                         }
                         this.sum = ''
                     }
-                    if (this.commission) {
+                    if (this.commission && this.commission < this.sale) {
                         let length = this.sku_commission.length;
                         for (let i = 0; i < length; i++) {
                             this.$set(this.sku_commission, i, this.commission)
                         }
                         this.commission = '';
                         this.goods_salary = this.sku_commission.sort(this.handleSort)[0]
+                    }else{
+                        this.$message.error('佣金不能大于商品价格')
                     }
                     if (this.code) {
                         let length = this.sku_code.length;
@@ -544,7 +547,9 @@
                     }
                 }
             },
+            handleCommission(index){
 
+            },
             //sku
             handleSelectAttr() {
                 this.tableData = [];

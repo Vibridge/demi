@@ -19,10 +19,14 @@
                             <el-input v-model="form.task_title" placeholder="请输入任务名称" maxlength="30"
                                       :show-word-limit="true"></el-input>
                         </el-form-item>
-                        <el-form-item label="佣金/每单：">
-                            <el-input v-model="form.payment_money" placeholder="请输入佣金"></el-input>
+                        <el-form-item label="店铺名称：">
+                            <el-input v-model="form.shop_name" disabled></el-input>
                             <p>元</p>
                         </el-form-item>
+                        <!--<el-form-item label="佣金/每单：">
+                            <el-input v-model="form.payment_money" placeholder="请输入佣金"></el-input>
+                            <p>元</p>
+                        </el-form-item>-->
                         <el-form-item label="结算方式：">
                             <el-input v-model="form.payment_method" disabled></el-input>
                         </el-form-item>
@@ -57,19 +61,21 @@
                 </div>
                 <div class="basic_title">
                     <span class="icon"></span>
-                    <p>请填写产品描述</p>
+<!--                    <p>请填写产品描述</p>-->
+                    <p>请填写任务描述</p>
                 </div>
                 <div class="ask">
                     <el-form ref="form" :model="form" label-width="92px">
-                        <el-form-item label="产品名称：">
+                       <!-- <el-form-item label="产品名称：">
                             <el-input v-model="form.goods_title" placeholder="请输入产品名称" maxlength="30"
                                       :show-word-limit="true"></el-input>
                         </el-form-item>
                         <el-form-item label="产品价格：">
                             <el-input v-model="form.goods_price" placeholder="请输入产品价格"></el-input>
                             <p>元</p>
-                        </el-form-item>
-                        <el-form-item label="产品描述：">
+                        </el-form-item>-->
+                        <el-form-item label="任务描述：">
+<!--                        <el-form-item label="产品描述：">-->
                             <el-input
                                     type="textarea"
                                     :rows="10"
@@ -84,18 +90,18 @@
                                     v-model="form.goods_desc">
                             </el-input>
                         </el-form-item>
-                        <el-form-item label="产品图片：">
+                       <!-- <el-form-item label="产品图片：">
                             <div class="picture">
                                 <p>必填</p>
                                 <div class="show_pic" v-loading="pic_loading">
-                                    <!--<div class="edit_img" v-for="(item,index) in show_pic" :key="item.file_id" v-if="(isUpdata && show_pic) || (isHistory && show_pic)"
+                                    &lt;!&ndash;<div class="edit_img" v-for="(item,index) in show_pic" :key="item.file_id" v-if="(isUpdata && show_pic) || (isHistory && show_pic)"
                                          @mouseover="show_icon = item.file_id" @mouseleave="show_icon = null">
                                         <img :src="item.file_path" alt="">
                                         <span v-if="show_icon === item.file_id">
                                             <i class="icon el-icon-zoom-in" @click="handlePictureCardPreview(item)"></i>
                                             <i class="icon el-icon-delete" @click="handleRemove(index,show_pic)"></i>
                                         </span>
-                                    </div>-->
+                                    </div>&ndash;&gt;
                                     <div class="edit_img" v-for="(item,index) in show_pic" :key="index"
                                          @mouseover="show_icon = index" @mouseleave="show_icon = null">
                                         <img :src="item.file_path" alt="">
@@ -119,7 +125,7 @@
                                                 <i class="el-icon-plus"></i>
                                             </el-upload>
                                         </div>
-                                        <!--<el-upload
+                                        &lt;!&ndash;<el-upload
                                                 action=""
                                                 list-type="picture-card"
                                                 :multiple="true"
@@ -132,7 +138,7 @@
                                                 :on-remove="handleRemove"
                                         >
                                             <i class="el-icon-plus"></i>
-                                        </el-upload>-->
+                                        </el-upload>&ndash;&gt;
                                     </div>
                                 </div>
 
@@ -145,7 +151,7 @@
                             <div class="video" v-loading="loading">
                                 <p>选填</p>
                                 <div class="operation" v-if="form.video_path">
-                                    <!--<div class="delect" style="display: none" @click="form.video_path = '';cover = '';real_video_path = ''">删除</div>-->
+                                    &lt;!&ndash;<div class="delect" style="display: none" @click="form.video_path = '';cover = '';real_video_path = ''">删除</div>&ndash;&gt;
                                     <el-upload action=""
                                                :show-file-list="false"
                                                :before-upload="beforeVidUpload"
@@ -169,7 +175,7 @@
                                     <p v-show="form.video_path === ''">点击上传视频</p>
                                 </el-upload>
                             </div>
-                        </el-form-item>
+                        </el-form-item>-->
                     </el-form>
                     <div class="line"></div>
                     <p>确认发布代表同意<span> 《得米平台服务协议》</span></p>
@@ -203,7 +209,8 @@
                 areaLoading:true,*/
                 form: {
                     task_title: '',
-                    payment_money: null,
+                    shop_name: null,
+                    // payment_money: null,
                     payment_method: '即结 [销售代理任务只支持即结]',
                     quantity_max: null,
                     industry: null,
@@ -244,6 +251,10 @@
                     this.$router.push({
                         name: "login"
                     });
+                }else{
+                    if(res.shop){
+                        this.form.shop_name = res.shop.shop_name
+                    }
                 }
             });
         },
@@ -521,14 +532,14 @@
                         type: 'error',
                         duration: 500
                     })
-                } else if (!this.form.payment_money) {
+                }/* else if (!this.form.payment_money) {
                     this.$message({
                         showClose: true,
                         message: '请填写佣金',
                         type: 'error',
                         duration: 500
                     })
-                } else if (!this.form.quantity_max) {
+                }*/ else if (!this.form.quantity_max) {
                     this.$message({
                         showClose: true,
                         message: '请填写招募人数',
@@ -549,7 +560,7 @@
                         type: 'error',
                         duration: 500
                     })
-                } else if (!this.form.goods_title) {
+                } /*else if (!this.form.goods_title) {
                     this.$message({
                         showClose: true,
                         message: '请输入产品名称',
@@ -563,21 +574,22 @@
                         type: 'error',
                         duration: 500
                     })
-                } else if (!this.form.goods_desc) {
+                } */else if (!this.form.goods_desc) {
                     this.$message({
                         showClose: true,
-                        message: '请完善产品描述',
+                        message: '请完善任务描述',
+                        // message: '请完善产品描述',
                         type: 'error',
                         duration: 500
                     })
-                } else if (!this.form.image_arr && !this.show_pic) {
+                } /*else if (!this.form.image_arr && !this.show_pic) {
                     this.$message({
                         showClose: true,
                         message: '请上传产品图片',
                         type: 'error',
                         duration: 500
                     })
-                } else {
+                } */else {
                     // var cover_path = '';
                     if (this.form.city === '不限') {
                         this.form.city = [0, 0]
@@ -606,16 +618,17 @@
                             task_title: this.form.task_title,
                             payment_method: 1,
                             unit: '元',
-                            payment_money: this.form.payment_money,
+                            // payment_money: this.form.payment_money,
                             industry_arr: this.industry_arr,
                             city_id: this.form.city[1],
-                            goods_title: this.form.goods_title,
-                            goods_price: this.form.goods_price,
-                            goods_desc: this.form.goods_desc,
-                            image_arr: this.form.image_arr,
+                            // goods_title: this.form.goods_title,
+                            // goods_price: this.form.goods_price,
+                            // goods_desc: this.form.goods_desc,
+                            description: this.form.goods_desc,
+                            // image_arr: this.form.image_arr,
                             status: 1,
-                            video_path: this.real_video_path,
-                            video_cover: this.cover,
+                            // video_path: this.real_video_path,
+                            // video_cover: this.cover,
                         };
                     console.log(data);
                     if (this.isUpdata) {
@@ -652,7 +665,7 @@
                 this.apiGet('/api/task/info/' + id).then((res) => {
                     console.log(res)
                     this.form.task_title = res.task_title;
-                    this.form.payment_money = res.payment_money;
+                    // this.form.payment_money = res.payment_money;
                     this.form.quantity_max = res.quantity_max;
                     if (res.city) {
                         this.form.city = [0]
@@ -666,7 +679,8 @@
                     forEach(res.industry, item => {
                         this.industry_arr.push(item.label_id)
                     });
-                    this.form.goods_desc = res.goods.description;
+                    // this.form.goods_desc = res.goods.description;
+                    this.form.goods_desc = res.description;
                     this.form.goods_title = res.goods.goods_title;
                     this.form.goods_price = res.goods.goods_price;
                     if (res.images.length > 0) {
@@ -840,9 +854,9 @@
                             margin-bottom: 28px;
                         }
 
-                        .el-form-item:nth-last-child(1) {
+                        /*.el-form-item:nth-last-child(1) {
                             margin-bottom: 0;
-                        }
+                        }*/
 
                         .el-form-item:nth-child(2) {
                             .el-form-item__content {

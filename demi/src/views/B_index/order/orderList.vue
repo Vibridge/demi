@@ -9,7 +9,7 @@
                 <div class="line"></div>
                 <div class="order_list_wrap">
                     <div class="order_title">
-                        <p>销售：{{order.referrer.nickname}}</p>
+                        <p>销售：{{order.contact_name}}</p>
                         <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
                     </div>
                     <div class="order_info">

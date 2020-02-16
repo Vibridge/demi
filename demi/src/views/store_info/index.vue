@@ -51,7 +51,16 @@
                                 rows="7"
                         ></el-input>
                     </div>
-
+                    <div class="store-status">
+                        <p class="store_label">店铺状态：</p>
+                        <div>
+                            <el-radio-group v-model="form.status">
+                                <el-radio :label="-1">停业整顿</el-radio>
+                                <el-radio :label="0">暂停营业</el-radio>
+                                <el-radio :label="1">正常营业</el-radio>
+                            </el-radio-group>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!--<div class="store_info_connect">
@@ -96,7 +105,8 @@
                     shop_name:'',
                     shop_logo:'',
                     shop_poster:'',
-                    description:''
+                    description:'',
+                    status:1
                 },
                 files: '',
                 pic_loading: false,
@@ -119,6 +129,7 @@
                             this.form.shop_name = res.shop.shop_name;
                             this.form.shop_poster = res.shop.shop_poster;
                             this.form.description = res.shop.description;
+                            this.form.status = res.shop.status;
                             if(res.shop.shop_logo){
                                 this.imageUrl = res.shop.shop_logo;
                             }
@@ -174,7 +185,7 @@
                 this.apiPost('/api/shop/update/' + this.shop_info.shop_id, this.form).then((res)=>{
                     if(res){
                         this.initialize();
-                        this.$message('保存成功')
+                        this.$message.success('保存成功')
                     }
                 })
             }
@@ -224,7 +235,7 @@
                 .info_basic
                     padding-left 53px
 
-                    .store_name, .store_logo
+                    .store_name,.store-status,.store_logo
                         display flex
                         margin-top 28px
                         color #999999

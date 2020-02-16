@@ -82,7 +82,7 @@
     mounted(){
       var user_id = sessionStorage.getItem('userID');
       this.apiGet('/api/greet/paginate?user_id=' + user_id).then((res)=>{
-        console.log(res);
+        // console.log(res);
         this.common = res.data;
       })
     },
