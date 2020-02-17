@@ -61,85 +61,95 @@
             },
             handleDeleteShop(index){
                 let length = this.select_id.length;
-                const loading = this.$loading({
-                    lock: true,
-                    text: 'Loading',
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
-                });
-                if(index < (length-1)){
-                    this.apiDelete('/api/goods/delete/' + this.select_id[index]).then((res)=>{
-                        console.log(res);
-                        if(res){
-                            this.handleDeleteShop(index+1)
-                        }
-                    })
-                }else{
-                    loading.close();
-                    let status;
-                    if(this.index == 0){
-                        status = '';
-                    }else if(this.index == 1){
-                        status = 1;
+                console.log(length)
+                if(length > 0){
+                    const loading = this.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                    if(index < length){
+                        this.apiDelete('/api/goods/delete/' + this.select_id[index]).then((res)=>{
+                            console.log(res);
+                            if(res){
+                                this.handleDeleteShop(index+1)
+                            }
+                        })
                     }else{
-                        status = 0;
+                        loading.close();
+                        let status;
+                        if(this.index == 0){
+                            status = '';
+                        }else if(this.index == 1){
+                            status = 1;
+                        }else{
+                            status = 0;
+                        }
+                        this.$emit('on-goods-search','',status)
                     }
-                    this.$emit('on-goods-search','',status)
                 }
+
             },
             handleLowerShop(index){
                 let length = this.select_id.length;
-                const loading = this.$loading({
-                    lock: true,
-                    text: 'Loading',
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
-                });
-                if(index <= (length-1)){
-                    this.apiPost('/api/goods/update/' + this.select_id[index],{status:1}).then((res)=>{
-                        if(res){
-                            this.handleLowerShop(index+1)
-                        }
-                    })
-                }else{
-                    loading.close();
-                    let status;
-                    if(this.index == 0){
-                        status = '';
-                    }else if(this.index == 1){
-                        status = 1;
+                if(length){
+                    const loading = this.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                    if(index <= (length-1)){
+                        this.apiPost('/api/goods/update/' + this.select_id[index],{status:1}).then((res)=>{
+                            if(res){
+                                this.handleLowerShop(index+1)
+                            }
+                        })
                     }else{
-                        status = 0;
+                        loading.close();
+                        let status;
+                        if(this.index == 0){
+                            status = '';
+                        }else if(this.index == 1){
+                            status = 1;
+                        }else{
+                            status = 0;
+                        }
+                        this.$emit('on-goods-search','',status)
                     }
-                    this.$emit('on-goods-search','',status)
                 }
+
             },
             handleUpperShop(index){
                 let length = this.select_id.length;
-                const loading = this.$loading({
-                    lock: true,
-                    text: 'Loading',
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
-                });
-                if(index <= (length-1)){
-                    this.apiPost('/api/goods/update/' + this.select_id[index],{status:0}).then((res)=>{
-                        if(res){
-                            this.handleUpperShop(index+1);
-                        }
-                    })
-                }else{
-                    loading.close();
-                    let status;
-                    if(this.index == 0){
-                        status = '';
-                    }else if(this.index == 1){
-                        status = 1;
+                if(length){
+                    const loading = this.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                    if(index <= (length-1)){
+                        this.apiPost('/api/goods/update/' + this.select_id[index],{status:0}).then((res)=>{
+                            if(res){
+                                this.handleUpperShop(index+1);
+                            }
+                        })
                     }else{
-                        status = 0;
+                        loading.close();
+                        let status;
+                        if(this.index == 0){
+                            status = '';
+                        }else if(this.index == 1){
+                            status = 1;
+                        }else{
+                            status = 0;
+                        }
+                        this.$emit('on-goods-search','',status)
                     }
-                    this.$emit('on-goods-search','',status)
                 }
+
             }
         },
         mixins:[http]

@@ -190,7 +190,7 @@
                                           placeholder="输入行政区、街道、写字楼" :disabled="this.cityName === ''"></el-input>
                             </div>
                         </div>
-                        <div id="show" v-show="over"></div>
+                        <!--<div id="show" v-show="over"></div>-->
                     </div>
                     <div class="room">
                         <p>门牌号：</p>
@@ -215,7 +215,7 @@
     import config from '../../config'
     import {forEach} from "../../libs/tools";
     const baseUrl = config.baseUrl;
-    import {handleMap} from '../../libs/Amap'
+    // import {handleMap} from '../../libs/Amap'
     // import config from '../libs/http';
     // const suffixUrl = config.suffixUrl;
     /* eslint-disable */
@@ -309,7 +309,7 @@
                 latitude:null,
                 longitude:null,
                 area_dialog: false,
-                over: false,
+                // over: false,
                 city: '',
                 cityName: '',
                 city_tree: [],
@@ -325,7 +325,7 @@
             };
         },
         mounted() {
-            handleMap();
+            // handleMap();
             this.apiGet('/api/user/info').then((res) => {
                 // console.log(res);
                 this.company_id = res.company_real.company_id;
@@ -545,7 +545,33 @@
                 })
             },
             init() {
-                AMap.plugin('AMap.Autocomplete', function () {
+                axios.get('https://restapi.amap.com/v3/place/text?key=8ba784791c8a6d7ba250eb9e71124b68&keywords='
+                    + this.address + '&types=keywords&city=' + this.cityName + '&citylimit=true')
+                    .then(function (response) {
+                        console.log(response);
+                        if(response.status !== 200){
+                            this.$message.error(response.statusText);
+                        }else{
+                            if(response.data.status){
+                                if(response.data.sug_address){
+                                    console.log(response.data.sug_address.location)
+                                    this.latitude = response.data.sug_address.location.split('，')[0];
+                                    this.longitude = response.data.sug_address.location.split('，')[1];
+                                    this.real_address = response.data.sug_address.name;
+                                    this.apiGet('/city/location?city_name=' + response.data.sug_address.adname).then((res) => {
+                                        this.city_id = res.city_id
+                                    })
+                                }else{
+                                    this.real_address = this.cityName + this.address
+                                }
+                            }
+                        }
+
+                    }.bind(this))
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                /*AMap.plugin('AMap.Autocomplete', function () {
                     // 实例化Autocomplete
                     var autoOptions = {
                         citylimit: true,
@@ -573,7 +599,7 @@
                             }
                         }.bind(this))
                     }.bind(this))
-                }.bind(this))
+                }.bind(this))*/
             },
             handleProvince(value) {
                 let dataRecieve = this.$refs.city.getCheckedNodes();

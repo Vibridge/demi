@@ -57,14 +57,14 @@
                                 <el-checkbox v-for="checkbox in label.children" :key="checkbox.attribute_id"
                                              :label="checkbox.title"
                                              @change="handleSelectAttr()"></el-checkbox>
-                                <el-checkbox v-for="(custom,index) in custom_attr" :key="index" :label="custom"
+                                <el-checkbox v-for="item in custom_attr[index].values" :label="item"
                                              @change="handleSelectAttr()"></el-checkbox>
                                 <i class="el-icon-edit"></i>
                                 <i class="el-icon-delete"></i>
                             </el-checkbox-group>
                             <div style="display: flex">
-                                <el-input v-model="custom" placeholder="请输入自定义值" size="medium"></el-input>
-                                <el-button type="primary" size="small" @click="handleAddAttr">添加</el-button>
+                                <el-input v-model="custom[index]" placeholder="请输入自定义值" size="medium"></el-input>
+                                <el-button type="primary" size="small" @click="handleAddAttr(index)">添加</el-button>
                             </div>
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                                         :disabled="tableData.length > 0"
                                         v-model.trim="goods_inventory">
                                 </el-input>
-<!--                                <span style="align-self: center">元</span>-->
+                                <!--                                <span style="align-self: center">元</span>-->
                             </div>
                         </div>
                     </div>
@@ -218,23 +218,24 @@
                             <p>商品主图大小不能超过3MB；建议800x800以上图片。</p>
                             <div class="upload-container">
                                 <el-upload
-                                           v-for="(item,index) in shop_img" :key="index"
-                                           class="avatar-uploader"
-                                           action=""
-                                           :show-file-list="false"
-                                           :data="{ 'index' : index}"
-                                           :on-change="handleChange"
-                                           :http-request="uploadShopImgFile"
-                                           :before-upload="beforeAvatarUpload">
+                                        v-for="(item,index) in shop_img" :key="index"
+                                        class="avatar-uploader"
+                                        action=""
+                                        :show-file-list="false"
+                                        :data="{ 'index' : index}"
+                                        :on-change="handleChange"
+                                        :http-request="uploadShopImgFile"
+                                        :before-upload="beforeAvatarUpload">
                                     <img v-if="item.img" :src="$config.baseUrl + item.img" class="avatar">
                                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                                     <p v-if="!item.img" class="add-pic">添加图片</p>
-                                    <div @mouseover="show_icon = index" @mouseleave="show_icon = null" style="width: 100%;height: 100%;position: absolute;top:0;left: 0;">
+                                    <div @mouseover="show_icon = index" @mouseleave="show_icon = null"
+                                         style="width: 100%;height: 100%;position: absolute;top:0;left: 0;">
                                         <div v-if="(show_icon === index) && item.img" class="icon">
                                             <span v-on:click.stop="handleMoveFront(index)">
                                                 <i v-if="index > 0" class="el-icon-arrow-left"></i>
                                             </span>
-                                            <span v-on:click.stop="handleRemove(index)">
+                                            <span v-on:click.stop="handleRemove(index,item.file_id)">
                                                 <i class="el-icon-delete"></i>
                                             </span>
                                             <span v-on:click.stop="handleMoveAfter(index)">
@@ -281,8 +282,6 @@
                                     :on-change="handleChange"
                                     :http-request="uploadEditorImgFile"
                                     :before-upload="beforeAvatarUpload">
-                               <!-- <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
                             </el-upload>
                             <quill-editor
                                     v-model="content"
@@ -291,7 +290,6 @@
                                     @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
                                     @change="onEditorChange($event)">
                             </quill-editor>
-                            <button v-on:click="saveHtml">保存</button>
                         </div>
                     </div>
                 </div>
@@ -303,22 +301,22 @@
                 <div class="goods_other_time">
                     <p class="goods_other_label"><span style="color:#FF0000">* </span>上架时间 </p>
                     <span class="goods_other_note">
-                    未上架的商品在上架前请到“仓库中的宝贝”里编辑商品。
-                </span>
+                        未上架的商品在上架前请到“仓库中的宝贝”里编辑商品。
+                    </span>
                     <div class="select_buy">
                         <div class="select_online" @click="handleSelect(1)">
                             <div style="align-self: center">
-                                <img src="../../../assets/img/weixuanz@2x.png" alt="" v-show="active === 0">
-                                <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 1">
+                                <img v-if="!active" src="../../../assets/img/weixuanz@2x.png" alt="">
+                                <img v-else src="../../../assets/img/weixuanz_on@2x.png" alt="">
                             </div>
-                            <p :style="active === 0 ? 'color: #999999': 'color: #4d4d4d'">立即上架</p>
+                            <p :style="!active ? 'color: #999999': 'color: #4d4d4d'">立即上架</p>
                         </div>
                         <div class="select_store" @click="handleSelect(0)">
                             <div style="align-self: center">
-                                <img src="../../../assets/img/weixuanz@2x.png" alt="" v-show="active === 1">
-                                <img src="../../../assets/img/weixuanz_on@2x.png" alt="" v-show="active === 0">
+                                <img v-if="active" src="../../../assets/img/weixuanz@2x.png" alt="">
+                                <img v-else src="../../../assets/img/weixuanz_on@2x.png" alt="">
                             </div>
-                            <p :style="active === 0 ? 'color: #4d4d4d': 'color: #999999'">放入仓库</p>
+                            <p :style="!active ? 'color: #4d4d4d': 'color: #999999'">放入仓库</p>
                         </div>
                     </div>
 
@@ -353,6 +351,8 @@
 <script>
     import bottom from '../../../components/B_person_bottom'
     import http from '../../../libs/http'
+    import {addQuillTitle} from '../../../libs/quill-title.js'
+
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
         ['blockquote', 'code-block'],
@@ -377,9 +377,9 @@
         components: {bottom},
         data() {
             return {
-                isUpdate:null,
+                isUpdate: null,
                 //类目id
-                sort_id:null,
+                sort_id: null,
 
                 //类目详情
                 goods_info: null,
@@ -388,15 +388,15 @@
 
                 //货号
                 goods_name: "",
-                goods_price:'',
-                goods_no:'',
-                goods_salary:'',
-                goods_inventory:'',
+                goods_price: '',
+                goods_no: '',
+                goods_salary: '',
+                goods_inventory: '',
 
                 //自定义属性值
                 checkList: [],
                 custom_attr: [],
-                custom: '',
+                custom: [],
 
                 //sku
                 sku_array: [],
@@ -415,26 +415,26 @@
                 tableData: [],
 
                 shop_img: [
-                    {img: ''},
-                    {img: ''},
-                    {img: ''},
-                    {img: ''},
-                    {img: ''},
+                    {img: '', file_id: ''},
+                    {img: '', file_id: ''},
+                    {img: '', file_id: ''},
+                    {img: '', file_id: ''},
+                    {img: '', file_id: ''},
                 ],
 
                 files: '',
-                show_icon:null,
+                show_icon: null,
 
                 vid_loading: false,
                 video: null,
                 real_video_path: null,
-                video_path:'',
-                cover:'',
+                video_path: '',
+                cover: '',
 
                 content: `<p>hello world</p>`,
                 editorOption: {
                     modules: {
-                        toolbar:{
+                        toolbar: {
                             container: toolbarOptions,
                             handlers: {
                                 'image': function (value) {
@@ -450,66 +450,63 @@
 
                 },
 
-                //商品上架选择（y/n）
                 active: 1,
 
                 success: false,
 
             };
         },
-        computed:{
+        computed: {
             editor() {
                 return this.$refs.myQuillEditor.quillEditor;
             },
         },
         mounted() {
-            this.apiGet('/api/sort/info/' + this.$route.query.sort_id).then((res) => {
-                this.goods_info = res;
-                let length = res.attrs.length;
-                for (let i = 0; i < length; i++) {
-                    this.checkList.push({values: [], attribute_id: res.attrs[i].attribute_id, title: res.attrs[i].title});
-                }
-            })
+            addQuillTitle();
+            this.initalize()
         },
         created() {
             this.getParams()
         },
         methods: {
-
+            initalize() {
+                this.apiGet('/api/sort/info/' + this.sort_id).then((res) => {
+                    this.goods_info = res;
+                    let length = res.attrs.length;
+                    if (length > 0) {
+                        for (let i = 0; i < length; i++) {
+                            this.checkList.push({
+                                values: [],
+                                attribute_id: res.attrs[i].attribute_id,
+                                title: res.attrs[i].title
+                            });
+                            this.custom_attr.push({values: []});
+                            this.custom.splice(2)
+                        }
+                    }
+                })
+            },
             //类目id
             getParams() {
                 // 取到路由带过来的参数
                 this.sort_id = this.$route.query.sort_id;
                 this.isUpdate = this.$route.query.update;
 
+
             },
 
             //导航指定div
             handleClick(tab, event) {
-                var el=document.getElementById(`${parseInt(tab.index) + 1}`);
-                console.log(el.offsetTop);
-                document.getElementById('app').scrollTo(0,el.offsetTop);
+                var el = document.getElementById(`${parseInt(tab.index) + 1}`);
+                document.getElementById('app').scrollTo(0, el.offsetTop);
             },
 
             //自定义属性值
-            handleAddAttr() {
-                this.custom_attr.push(this.custom);
-                this.custom = ''
+            handleAddAttr(index) {
+                this.custom_attr[index].values.push(this.custom[index]);
+                this.custom[index] = ''
             },
 
-            /*handleSort(a,b){
-                return a-b
-            },
-            handleSortSale(){
-                if(this.sku_sale.length>0){
-                    this.goods_price = this.sku_sale.sort(this.handleSort)[0]
-                }
-            },
-            handleSortCommission(){
-                if(this.sku_commission.length>0){
-                    this.goods_price = this.sku_commission.sort(this.handleSort)[0]
-                }
-            },*/
             //批量填充
             handleFill() {
                 if (this.tableData) {
@@ -535,7 +532,7 @@
                         }
                         this.commission = '';
                         this.goods_salary = this.sku_commission.sort(this.handleSort)[0]
-                    }else{
+                    } else if (this.commission && this.sale && this.commission > this.sale) {
                         this.$message.error('佣金不能大于商品价格')
                     }
                     if (this.code) {
@@ -547,7 +544,7 @@
                     }
                 }
             },
-            handleCommission(index){
+            handleCommission(index) {
 
             },
             //sku
@@ -639,26 +636,31 @@
             },
 
             //改变图片顺序
-            handleMoveFront(index){
+            handleMoveFront(index) {
                 let length = this.shop_img.length;
                 let fornt;
-                for(let i = 0;i<length;i++){
+                for (let i = 0; i < length; i++) {
                     fornt = this.shop_img[index - 1];
-                    this.$set(this.shop_img,index - 1,this.shop_img[index]);
-                    this.$set(this.shop_img,index,fornt);
+                    this.$set(this.shop_img, index - 1, this.shop_img[index]);
+                    this.$set(this.shop_img, index, fornt);
                 }
             },
             //删除图片
-            handleRemove(index) {
-                this.$set(this.shop_img,index,{'img':''});
+            handleRemove(index, id) {
+                this.$set(this.shop_img, index, {'img': ''});
+                if (id) {
+                    this.apiDelete('api/goods/delete/file/' + id).then((res) => {
+                        console.log(res)
+                    })
+                }
             },
-            handleMoveAfter(index){
+            handleMoveAfter(index) {
                 let length = this.shop_img.length;
                 let after;
-                for(let i = 0;i<length;i++){
+                for (let i = 0; i < length; i++) {
                     after = this.shop_img[index + 1];
-                    this.$set(this.shop_img,index + 1,this.shop_img[index]);
-                    this.$set(this.shop_img,index,after);
+                    this.$set(this.shop_img, index + 1, this.shop_img[index]);
+                    this.$set(this.shop_img, index, after);
                 }
             },
 
@@ -733,13 +735,14 @@
 
             onEditorReady(editor) { // 准备编辑器
             },
-            onEditorBlur(){}, // 失去焦点事件
-            onEditorFocus(){}, // 获得焦点事件
-            onEditorChange({ editor, html, text }){
+            onEditorBlur() {
+            }, // 失去焦点事件
+            onEditorFocus() {
+            }, // 获得焦点事件
+            onEditorChange({editor, html, text}) {
             }, // 内容改变事件
-            uploadEditorImgFile(){
+            uploadEditorImgFile() {
                 // 获取富文本组件实例
-                console.log('aaa')
                 let quill = this.$refs.myQuillEditor.quill
 
                 let form = new FormData();
@@ -763,9 +766,6 @@
                     }
                 });
             },
-            saveHtml:function(event){
-                console.log(this.content);
-            },
 
             //商品上架/放入仓库
             handleSelect(active) {
@@ -773,34 +773,39 @@
             },
 
             //提交
-            handleSubGoodInfo(){
-
-                let array=[];
+            handleSubGoodInfo() {
+                let array = [];
+                let editImg = true
                 let length = this.shop_img.length;
-                for (let i = 0;i<length;i++){
-                    if(this.shop_img[i].img){
+                for (let i = 0; i < length; i++) {
+                    console.log(this.shop_img)
+                    if (this.shop_img[i].img && !this.shop_img[i].file_id) {
                         array.push(this.shop_img[i].img)
+                        editImg = false
+                    }
+                    if (this.shop_img[i].img && this.shop_img[i].file_id) {
+                        editImg = false
                     }
                 }
                 let data = {
-                    title:this.goods_name,
-                    sort_id:this.sort_id,
-                    is_sku:0,
-                    images:array,
-                    video_path:this.real_video_path,
-                    video_cover:this.cover,
-                    description:this.content,
-                    status:parseInt(this.active),
+                    title: this.goods_name,
+                    sort_id: this.sort_id,
+                    is_sku: 0,
+                    images: array,
+                    video_path: this.real_video_path,
+                    video_cover: this.cover,
+                    description: this.content,
+                    status: parseInt(this.active),
                 };
-                if(this.tableData){
+                if (this.tableData) {
                     data.is_sku = 1;
                 }
-                if(data.is_sku == 0){
+                if (data.is_sku == 0) {
                     data.price = this.goods_price;
                     data.salary = this.goods_salary;
                     data.goods_no = this.goods_no;
                     data.inventory = this.goods_inventory;
-                }else{
+                } else {
                     data.attr_ids = this.sku_attr_id;
                     data.attr_values = this.sku_select_attr;
                     data.sku_mark = this.sku_array;
@@ -809,26 +814,26 @@
                     data.sku_inventory = this.sku_sum;
                     data.sku_no = this.sku_code;
                 }
-                if(!data.title){
+                if (!data.title) {
                     this.$message.error('请输入商品名称')
-                }else if(data.is_sku == 0 && (!data.price && !data.salary && !data.goods_no && !data.inventory)){
+                } else if (data.is_sku == 0 && (!data.price && !data.salary && !data.goods_no && !data.inventory)) {
                     this.$message.error('请输入商品价格、佣金、库存及商品编码')
-                }else if(data.is_sku == 1 && (!data.attr_ids && !data.attr_values && !data.sku_mark && !data.sku_price && !data.sku_salary && !data.sku_inventory && !data.sku_no)){
+                } else if (data.is_sku == 1 && (!data.attr_ids && !data.attr_values && !data.sku_mark && !data.sku_price && !data.sku_salary && !data.sku_inventory && !data.sku_no)) {
                     this.$message.error('请输入商品价格、佣金、库存及商品编码')
-                }else if(data.images.length < 1){
+                } else if ((data.images.length < 1 && !this.isUpdate) || (editImg && this.isUpdate)) {
                     this.$message.error('请上传商品图片')
-                }else{
-                    if(this.isUpdate){
-                        this.apiPost('api/goods/update/' + this.$route.query.goods_id,data).then((res)=>{
+                } else {
+                    if (this.isUpdate) {
+                        this.apiPost('api/goods/update/' + this.$route.query.goods_id, data).then((res) => {
                             console.log(res)
-                            if(res){
+                            if (res) {
                                 this.success = true
                             }
                         })
-                    }else{
-                        this.apiPost('api/goods/create',data).then((res)=>{
+                    } else {
+                        this.apiPost('api/goods/create', data).then((res) => {
                             console.log(res)
-                            if(res){
+                            if (res) {
                                 this.success = true
                             }
                         })
@@ -865,56 +870,68 @@
                     }
                 }
             },
-            isUpdate(){
-                if(this.isUpdate){
-                    this.apiGet('/api/goods/info/' + this.$route.query.goods_id).then((res)=>{
-                        const data = res;
-                        this.goods_name = data.title;
-                        this.content = data.description;
-                        this.active = data.status;
-                        if(data.is_sku){
-                            /*data.attr_ids = this.sku_attr_id;
-                            data.attr_values = this.sku_select_attr;*/
-                            let length = data.sku.length;
-                            for(let i = 0;i<length;i++){
-                                this.sku_array.push(data.sku[i].mark);
-                                this.sku_sale.push(data.sku[i].price);
-                                this.sku_commission.push(data.sku[i].salary);
-                                this.sku_sum.push(data.sku[i].inventory);
-                                this.sku_code.push(data.sku[i].goods_no);
-                                this.$set(this.tableData,i,data.sku[i].mark.split(',').reverse())
+            goods_info() {
+                if (this.isUpdate) {
+                    if (this.goods_info) {
+                        this.apiGet('/api/goods/info/' + this.$route.query.goods_id).then((res) => {
+                            console.log(res)
+                            const data = res;
+                            this.goods_name = data.title;
+                            this.content = data.description;
+                            this.active = data.status;
+                            if (data.video) {
+                                this.real_video_path = data.video.file_path;
+                                this.cover = data.video.cover_path;
+                                this.video_path = this.$config.baseUrl + data.video.file_path
                             }
-                            let attrs = data.attribute.length;
-                            if(attrs > 0){
-                                for (let attr = 0;attr<attrs;attr++){
-                                    let v =  data.attribute[attr].values.length;
-                                    if(v > 0){
-                                        for(let y = 0;y<v;y++){
-                                            this.checkList[attr].values.push(data.attribute[attr].values[y].attr_value)
-                                        }
-                                    }
-
+                            if (data.images) {
+                                let length = data.images.length;
+                                for (let i = 0; i < length; i++) {
+                                    this.$set(this.shop_img, i, {
+                                        'img': data.images[i].file_path,
+                                        'file_id': data.images[i].file_id
+                                    });
                                 }
                             }
-                        }else{
-                            this.goods_price = data.price;
-                            this.goods_salary = data.salary;
-                            this.goods_no = data.goods_no;
-                            this.goods_inventory = data.inventory;
-                        }
-                        if(data.video){
-                            this.real_video_path = data.video.file_path;
-                            this.cover = data.video.cover_path;
-                            this.video_path = this.$config.baseUrl + data.video.file_path
-                        }
-                        if(data.images){
-                            let length = data.images.length;
-                            for(let i = 0;i<length;i++){
-                                this.$set(this.shop_img,i,{'img':data.images[i].file_path});
+                            if (data.is_sku) {
+                                let length = data.sku.length;
+                                for (let i = 0; i < length; i++) {
+                                    this.sku_array.push(data.sku[i].mark);
+                                    this.sku_sale.push(data.sku[i].price);
+                                    this.sku_commission.push(data.sku[i].salary);
+                                    this.sku_sum.push(data.sku[i].inventory);
+                                    this.sku_code.push(data.sku[i].goods_no);
+                                    this.$set(this.tableData, i, data.sku[i].mark.split(',').reverse())
+                                }
+                                let attrs = data.attribute.length;
+                                if (attrs > 0) {
+                                    for (let attr = 0; attr < attrs; attr++) {
+                                        let v = data.attribute[attr].values.length;
+                                        if (v > 0) {
+                                            for (let y = 0; y < v; y++) {
+                                                this.checkList[attr].values.push(data.attribute[attr].values[y].attr_value);
+                                                let labelLength = this.goods_info.attrs[attr].children.length;
+                                                this.custom_attr[attr].values.push(data.attribute[attr].values[y].attr_value);
+                                                for (let l = 0; l < labelLength; l++) {
+                                                    if (this.goods_info) {
+                                                        if (this.custom_attr[attr].values[y] === this.goods_info.attrs[attr].children[l].title) {
+                                                            this.custom_attr[attr].values.splice(y, 1)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                this.goods_price = data.price;
+                                this.goods_salary = data.salary;
+                                this.goods_no = data.goods_no;
+                                this.goods_inventory = data.inventory;
                             }
-                        }
-                    });
 
+                        });
+                    }
                 }
             }
         },
@@ -1169,7 +1186,7 @@
                         height 501px
 
                         .ql-container
-                            height:400px;
+                            height: 400px;
 
                     .goods_pic_label, .goods_video_label
                         margin-right 28px
@@ -1194,16 +1211,17 @@
 
                         .icon
                             position absolute
-                            width:100px;
-                            height:22px;
+                            width: 100px;
+                            height: 22px;
                             line-height 22px
                             padding 0 10px
                             box-sizing border-box
-                            background:rgba(0,0,0,.5);
+                            background: rgba(0, 0, 0, .5);
                             bottom 0;
                             left 0
                             display flex
                             justify-content space-between
+
                             span
                                 width 14px
                                 color white

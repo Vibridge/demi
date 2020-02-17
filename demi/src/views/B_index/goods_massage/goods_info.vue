@@ -21,7 +21,7 @@
                     <template slot-scope="scope">
                         <div style="display: flex;">
                             <div style="align-self: center">
-                                <img style="width: 75px;height: 75px;margin-right: 10px"
+                                <img v-if="scope.row.images.length > 0" style="width: 75px;height: 75px;margin-right: 10px"
                                      :src="$config.baseUrl + scope.row.images[0].file_path" alt="">
                             </div>
                             <div style="align-self: center;">
@@ -88,7 +88,9 @@
             }
         },
         // inject: ['reload'],
-        mounted() {},
+        mounted() {
+            console.log(this.shopList)
+        },
         methods: {
             handleSelectionChange(val) {
                 this.multipleSelection = val;
@@ -112,7 +114,6 @@
             handleEditShop(id){
                 this.title = [];
                 this.apiGet('/api/goods/info/' + id).then((res)=>{
-                    console.log(res)
                     if(res){
                         this.title.push(res.title);
                         this.sort_id = res.sort_id;
