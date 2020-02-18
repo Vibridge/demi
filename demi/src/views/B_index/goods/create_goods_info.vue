@@ -57,7 +57,7 @@
                                 <el-checkbox v-for="checkbox in label.children" :key="checkbox.attribute_id"
                                              :label="checkbox.title"
                                              @change="handleSelectAttr()"></el-checkbox>
-                                <el-checkbox v-for="item in custom_attr[index].values" :label="item"
+                                <el-checkbox v-for="item in custom_attr[index].values" v-if="item" :label="item"
                                              @change="handleSelectAttr()"></el-checkbox>
                                 <i class="el-icon-edit"></i>
                                 <i class="el-icon-delete"></i>
@@ -100,6 +100,7 @@
                                         <el-input
                                                 v-model.trim="sale"
                                                 size="mini"
+                                                type='number'
                                                 placeholder="价格（元）"/>
                                     </template>
                                     <template slot-scope="scope">
@@ -114,6 +115,7 @@
                                         <el-input
                                                 v-model.trim="sum"
                                                 size="mini"
+                                                type='number'
                                                 placeholder="数量（件）"/>
                                     </template>
                                     <template slot-scope="scope">
@@ -128,13 +130,14 @@
                                         <el-input
                                                 v-model.trim="commission"
                                                 size="mini"
+                                                type='number'
                                                 placeholder="佣金（元）"/>
                                     </template>
                                     <template slot-scope="scope">
                                         <el-input
                                                 v-model.trim="sku_commission[scope.$index]"
                                                 size="mini"
-                                                :change="handleCommission(scope.$index)"
+                                                :blur="handleCommission(scope.$index)"
                                                 placeholder="佣金（元）"/>
                                     </template>
                                 </el-table-column>
@@ -356,16 +359,13 @@
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
         ['blockquote', 'code-block'],
-
         [{'header': 1}, {'header': 2}],               // custom button values
         [{'list': 'ordered'}, {'list': 'bullet'}],
         [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
         [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
         [{'direction': 'rtl'}],                         // text direction
-
         [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
         [{'header': [1, 2, 3, 4, 5, 6, false]}],
-
         [{'color': []}, {'background': []}],          // dropdown with defaults from theme
         [{'font': []}],
         [{'align': []}],
@@ -460,6 +460,7 @@
             editor() {
                 return this.$refs.myQuillEditor.quillEditor;
             },
+
         },
         mounted() {
             addQuillTitle();
@@ -481,9 +482,9 @@
                                 title: res.attrs[i].title
                             });
                             this.custom_attr.push({values: []});
-                            this.custom.splice(2)
                         }
                     }
+                    this.custom.splice(length)
                 })
             },
             //类目id
@@ -491,8 +492,6 @@
                 // 取到路由带过来的参数
                 this.sort_id = this.$route.query.sort_id;
                 this.isUpdate = this.$route.query.update;
-
-
             },
 
             //导航指定div
@@ -510,14 +509,37 @@
             //批量填充
             handleFill() {
                 if (this.tableData) {
+
                     if (this.sale) {
-                        let length = this.sku_sale.length;
+                        let none = true;
+                        let lessThan = [];
+                        let length = this.sku_commission.length;
                         for (let i = 0; i < length; i++) {
-                            this.$set(this.sku_sale, i, this.sale)
+                            if (this.sku_commission[i] && (this.sku_commission[i] > 0)) {
+                                none = false
+                            }
+                            if (this.sale - this.sku_commission[i] > 0) {
+                                lessThan.push(i)
+                            }
                         }
-                        this.sale = '';
-                        this.goods_price = this.sku_sale.sort(this.handleSort)[0]
+                        let has = lessThan.length;
+                        if ((this.commission && this.commission < this.sale) || (!this.commission && none)) {
+                            let length = this.sku_sale.length;
+                            for (let i = 0; i < length; i++) {
+                                this.$set(this.sku_sale, i, this.sale)
+                            }
+                            this.sale = '';
+                        } else if (this.commission && this.commission > this.sale) {
+                            this.$message.error('佣金不能大于商品价格')
+                        } else if (!this.commission && has > 0) {
+                            for (let i = 0; i < has; i++) {
+                                this.$set(this.sku_sale, lessThan[i], this.sale)
+                            }
+                            this.sale = '';
+                        }
+                        // this.goods_price = this.sku_sale.sort(this.handleSort)[0]
                     }
+
                     if (this.sum) {
                         let length = this.sku_sum.length;
                         for (let i = 0; i < length; i++) {
@@ -525,16 +547,38 @@
                         }
                         this.sum = ''
                     }
-                    if (this.commission && this.commission < this.sale) {
-                        let length = this.sku_commission.length;
+
+                    if (this.commission) {
+                        let none = true;
+                        let lessThan = [];
+                        let length = this.sku_sale.length;
                         for (let i = 0; i < length; i++) {
-                            this.$set(this.sku_commission, i, this.commission)
+                            if (this.sku_sale[i] && (this.sku_sale[i] > 0)) {
+                                none = false
+                            }
+                            if (this.sku_sale[i] - this.commission > 0) {
+                                lessThan.push(i)
+                            }
                         }
-                        this.commission = '';
-                        this.goods_salary = this.sku_commission.sort(this.handleSort)[0]
-                    } else if (this.commission && this.sale && this.commission > this.sale) {
-                        this.$message.error('佣金不能大于商品价格')
+                        let has = lessThan.length;
+                        if ((this.sale && this.commission < this.sale) || (!this.sale && none)) {
+                            let length = this.sku_commission.length;
+                            for (let i = 0; i < length; i++) {
+                                this.$set(this.sku_commission, i, this.commission)
+                            }
+                            this.commission = null
+                        } else if (this.sale && this.commission > this.sale) {
+                            this.$message.error('佣金不能大于商品价格')
+                        } else if (!this.sale && has > 0) {
+                            for (let i = 0; i < has; i++) {
+                                this.$set(this.sku_commission, lessThan[i], this.commission)
+                            }
+                            this.commission = null
+                        }
+                        // this.goods_salary = this.sku_commission.sort(this.handleSort)[0]
                     }
+
+
                     if (this.code) {
                         let length = this.sku_code.length;
                         for (let i = 0; i < length; i++) {
@@ -544,8 +588,15 @@
                     }
                 }
             },
-            handleCommission(index) {
 
+
+            handleCommission(index) {
+                let length = this.sku_commission.length;
+                for (let i = 0; i < length; i++) {
+                    if (this.sku_sale[i] && (this.sku_commission[i] - this.sku_sale[i] > 0)) {
+                        this.$set(this.sku_commission, i, null)
+                    }
+                }
             },
             //sku
             handleSelectAttr() {
@@ -648,11 +699,11 @@
             //删除图片
             handleRemove(index, id) {
                 this.$set(this.shop_img, index, {'img': ''});
-                if (id) {
-                    this.apiDelete('api/goods/delete/file/' + id).then((res) => {
-                        console.log(res)
-                    })
-                }
+                /* if (id) {
+                     this.apiDelete('api/goods/delete/file/' + id).then((res) => {
+                         console.log(res)
+                     })
+                 }*/
             },
             handleMoveAfter(index) {
                 let length = this.shop_img.length;
@@ -775,17 +826,19 @@
             //提交
             handleSubGoodInfo() {
                 let array = [];
-                let editImg = true
+                // let editImg = true
                 let length = this.shop_img.length;
                 for (let i = 0; i < length; i++) {
-                    console.log(this.shop_img)
-                    if (this.shop_img[i].img && !this.shop_img[i].file_id) {
+                    if (this.shop_img[i].img) {
+                        array.push(this.shop_img[i].img)
+                    }
+                    /*if (this.shop_img[i].img && !this.shop_img[i].file_id) {
                         array.push(this.shop_img[i].img)
                         editImg = false
                     }
                     if (this.shop_img[i].img && this.shop_img[i].file_id) {
                         editImg = false
-                    }
+                    }*/
                 }
                 let data = {
                     title: this.goods_name,
@@ -820,7 +873,7 @@
                     this.$message.error('请输入商品价格、佣金、库存及商品编码')
                 } else if (data.is_sku == 1 && (!data.attr_ids && !data.attr_values && !data.sku_mark && !data.sku_price && !data.sku_salary && !data.sku_inventory && !data.sku_no)) {
                     this.$message.error('请输入商品价格、佣金、库存及商品编码')
-                } else if ((data.images.length < 1 && !this.isUpdate) || (editImg && this.isUpdate)) {
+                } else if (data.images.length < 1) {
                     this.$message.error('请上传商品图片')
                 } else {
                     if (this.isUpdate) {
@@ -866,7 +919,9 @@
                         for (let y = 0; y < length2; y++) {
                             item.push(this.tableData[i][y])
                         }
-                        this.sku_array.push(item.sort().join(','));
+                        if (this.sku_array.length < 1) {
+                            this.sku_array.push(item.sort().join(','));
+                        }
                     }
                 }
             },
@@ -896,7 +951,7 @@
                             if (data.is_sku) {
                                 let length = data.sku.length;
                                 for (let i = 0; i < length; i++) {
-                                    this.sku_array.push(data.sku[i].mark);
+                                    this.sku_array.push(data.sku[i].mark)
                                     this.sku_sale.push(data.sku[i].price);
                                     this.sku_commission.push(data.sku[i].salary);
                                     this.sku_sum.push(data.sku[i].inventory);
@@ -907,20 +962,34 @@
                                 if (attrs > 0) {
                                     for (let attr = 0; attr < attrs; attr++) {
                                         let v = data.attribute[attr].values.length;
+                                        let labelLength = this.goods_info.attrs[attr].children.length;
+
                                         if (v > 0) {
                                             for (let y = 0; y < v; y++) {
                                                 this.checkList[attr].values.push(data.attribute[attr].values[y].attr_value);
-                                                let labelLength = this.goods_info.attrs[attr].children.length;
+                                                this.sku_attr_id.push(data.attribute[attr].attribute_id);
+                                                this.sku_select_attr.push(data.attribute[attr].values[y].attr_value);
                                                 this.custom_attr[attr].values.push(data.attribute[attr].values[y].attr_value);
+
+                                                console.log(this.custom_attr[attr].values[y])
+
                                                 for (let l = 0; l < labelLength; l++) {
-                                                    if (this.goods_info) {
-                                                        if (this.custom_attr[attr].values[y] === this.goods_info.attrs[attr].children[l].title) {
-                                                            this.custom_attr[attr].values.splice(y, 1)
+                                                        // console.log(this.goods_info.attrs[attr].children[l].title)
+                                                        if (data.attribute[attr].values[y].attr_value === this.goods_info.attrs[attr].children[l].title) {
+                                                            /* this.custom_attr[attr].values.splice(l, 1);
+                                                             continue*/
+                                                            this.$set(this.custom_attr[attr].values,y,'')
+                                                            break
                                                         }
-                                                    }
                                                 }
+
                                             }
+                                            // console.log(this.custom_attr)
+
+
+
                                         }
+
                                     }
                                 }
                             } else {
@@ -929,7 +998,6 @@
                                 this.goods_no = data.goods_no;
                                 this.goods_inventory = data.inventory;
                             }
-
                         });
                     }
                 }
@@ -940,6 +1008,15 @@
 </script>
 
 <style lang="stylus">
+    /*去掉type为number的箭头*/
+    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+
     .create_goods_info
         width 1000px
         margin 0 auto
