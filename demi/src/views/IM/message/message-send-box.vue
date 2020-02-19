@@ -76,7 +76,6 @@
         emojiUrl: emojiUrl,
         file: '',
         common:[]
-        // timeout:null,
       }
     },
     mounted(){
@@ -108,11 +107,6 @@
         this.atUserID = this.memberList[index + 1].userID
       },
       handleEnter() {
-        /*if (this.showAtGroupMember) {
-            this.handleSelectAtUser()
-        } else {
-            this.sendTextMessage()
-        }*/
         this.sendTextMessage()
       },
       handleLine() {
@@ -137,9 +131,6 @@
         this.tim.sendMessage(message);
         this.messageContent = '';
         this.$emit("on-show-time",message.time);
-        /*if(message){
-            this.refreshConversation()
-        }*/
       },
       chooseEmoji(item) {
         this.messageContent += item

@@ -21,12 +21,6 @@
                         :class="{ active: showFriendList }"
                         title="好友列表"
                 ></div>
-                <!--<div
-                        id="black-list"
-                        class="iconfont icon-blacklist"
-                        :class="{ active: showBlackList }"
-                        title="黑名单列表"
-                ></div>-->
             </div>
 
         </div>
@@ -34,7 +28,6 @@
             <conversation-list v-show="showConversationList"/>
             <group-list v-show="showGroupList"/>
             <friend-list v-show="showFriendList"/>
-            <!--<black-list v-show="showBlackList"/>-->
         </div>
     </div>
 </template>
@@ -45,13 +38,11 @@
     import ConversationList from '../conversation/conversation-list'
     import GroupList from '../group/group-list'
     import FriendList from '../friend/friend-list'
-    import BlackList from '../blacklist/blacklist'
 
     const activeName = {
         CONVERSATION_LIST: 'conversation-list',
         GROUP_LIST: 'group-list',
         FRIEND_LIST: 'friend-list',
-        BLACK_LIST: 'black-list'
     }
     export default {
         name: 'SideBar',
@@ -60,7 +51,6 @@
             ConversationList,
             GroupList,
             FriendList,
-            BlackList
         },
         data() {
             return {
@@ -79,12 +69,6 @@
             showFriendList() {
                 return this.active === activeName.FRIEND_LIST
             },
-            showBlackList() {
-                return this.active === activeName.BLACK_LIST
-            },
-            showAddButton() {
-                return [activeName.CONVERSATION_LIST, activeName.GROUP_LIST].includes(this.active)
-            }
         },
         methods: {
             checkoutActive(name) {
@@ -101,27 +85,9 @@
                     case activeName.FRIEND_LIST:
                         this.checkoutActive(activeName.FRIEND_LIST)
                         break
-                    case activeName.BLACK_LIST:
-                        this.checkoutActive(activeName.BLACK_LIST)
-                        break
                 }
             },
-            handleRefresh() {
-                switch (this.active) {
-                    case activeName.CONVERSATION_LIST:
-                        this.tim.getConversationList()
-                        break
-                    case activeName.GROUP_LIST:
-                        this.getGroupList()
-                        break
-                    case activeName.FRIEND_LIST:
-                        this.getFriendList()
-                        break
-                    case activeName.BLACK_LIST:
-                        this.$store.dispatch('getBlacklist')
-                        break
-                }
-            },
+
             getGroupList() {
                 this.tim.getGroupList().then(({data: groupList}) => {
                     this.$store.dispatch('updateGroupList', groupList)

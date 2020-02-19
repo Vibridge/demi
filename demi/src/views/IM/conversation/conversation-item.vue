@@ -9,7 +9,7 @@
       </div>
       <div class="warp">
 
-        <avatars :src="avatar" :type="conversation.type" v-if="(conversation.type === TIM.TYPES.CONV_SYSTEM) || (conversation.type ===  TIM.TYPES.CONV_GROUP) || (newList[Corresponding(conversation.conversationID)] && newList[Corresponding(conversation.conversationID)].type == 4) || (!newList[Corresponding(conversation.conversationID)])"/>
+        <avatars :src="avatar" :type="conversation.type" v-if="(conversation.type === TIM.TYPES.CONV_SYSTEM) || (conversation.type ===  TIM.TYPES.CONV_GROUP) || (newList[Corresponding(conversation.conversationID)] && newList[Corresponding(conversation.conversationID)].type == 4) || (!newList[Corresponding(conversation.conversationID)] && conversation.conversationID.split('C2C')[1] !== 'dominator')"/>
 
         <img class="avatar" v-if="conversation.conversationID.split('C2C')[1] === 'dominator'"
              src="../../../assets/img/notification.png" alt="">
@@ -21,17 +21,11 @@
           && (newList[Corresponding(conversation.conversationID)].type != 4)"
              :src="newList[Corresponding(conversation.conversationID)].sender.avatar" alt="">
 
-        <!--<img class="avatar" v-if="newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].recipient && newList[Corresponding(conversation.conversationID)].recipient.user_id == user_id) && conversation.conversationID.split('C2C')[1] !== 'dominator' && !newList[Corresponding(conversation.conversationID)].sender.avatar"
-             src="../../../assets/img/toxiang@2x.png" alt="">-->
-
         <img class="avatar" v-if="newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].sender
         && newList[Corresponding(conversation.conversationID)].sender.user_id == user_id)
         && conversation.conversationID.split('C2C')[1] !== 'dominator'
         && (newList[Corresponding(conversation.conversationID)].type != 4)"
              :src="newList[Corresponding(conversation.conversationID)].recipient.avatar" alt="">
-
-        <!--<img class="avatar" v-if="newList[Corresponding(conversation.conversationID)] && (newList[Corresponding(conversation.conversationID)].sender && newList[Corresponding(conversation.conversationID)].sender.user_id == user_id)  && conversation.conversationID.split('C2C')[1] !== 'dominator' && !newList[Corresponding(conversation.conversationID)].recipient.avatar"
-             src="../../../assets/img/toxiang@2x.png" alt="">-->
 
         <div class="content">
           <div class="row-1">
@@ -55,7 +49,7 @@
                 </span>
 
                 <span :title="conversation.userProfile.nick || conversation.userProfile.userID"
-                  v-if="(conversation.type ===  TIM.TYPES.CONV_C2C && !newList[Corresponding(conversation.conversationID)]) || (conversation.type ===  TIM.TYPES.CONV_C2C && (newList[Corresponding(conversation.conversationID)] && newList[Corresponding(conversation.conversationID)].type == 4))"
+                  v-if="(conversation.conversationID.split('C2C')[1] !== 'dominator' && conversation.type ===  TIM.TYPES.CONV_C2C && !newList[Corresponding(conversation.conversationID)]) || (conversation.type ===  TIM.TYPES.CONV_C2C && (newList[Corresponding(conversation.conversationID)] && newList[Corresponding(conversation.conversationID)].type == 4))"
                   >{{conversation.userProfile.nick || conversation.userProfile.userID}}
                 </span>
 
@@ -78,14 +72,6 @@
             </div>
           </div>
           <div class="row-2">
-            <div class="summary">
-              <div v-if="conversation.lastMessage" class="text-ellipsis">
-                <span class="remind" style="color:red;" v-if="hasMessageAtMe">[有人提到我]</span>
-                <span class="text" :title="conversation.lastMessage.messageForShow">
-                  {{conversation.lastMessage.messageForShow}}
-                </span>
-              </div>
-            </div>
             <div class="date">
               {{date}}
             </div>
@@ -107,33 +93,16 @@ export default {
   data() {
     return {
       popoverVisible: false,
-      hasMessageAtMe: false,
-      // newList: [],
       user_id:null
     }
   },
   mounted() {
-    this.$bus.$on('new-messsage-at-me', event => {
-      if (
-              event.data.conversationID === this.conversation.conversationID &&
-              this.conversation.conversationID !==
-              this.currentConversation.conversationID
-      ) {
-        this.hasMessageAtMe = true
-      }
-    });
-    console.log(this.newList);
     this.user_id = sessionStorage.getItem('userID');
   },
+
   computed: {
-    /*showUnreadCount() {
-      // 是否显示未读计数。当前会话和未读计数为0的会话，不显示。
-      return (
-              this.currentConversation.conversationID !==
-              this.conversation.conversationID && this.conversation.unreadCount > 0
-      )
-    },*/
     date() {
+      console.log(this.newList)
       if (
               !this.conversation.lastMessage ||
               !this.conversation.lastMessage.lastTime
@@ -153,8 +122,8 @@ export default {
       } else {
         return getFullDate(date)
       }
-      // return getDate(date)
     },
+
     avatar: function() {
       switch (this.conversation.type) {
         case 'GROUP':
@@ -165,15 +134,7 @@ export default {
           return ''
       }
     },
-    /*showGrayBadge() {
-      if (this.conversation.type !== this.TIM.TYPES.CONV_GROUP) {
-        return false
-      }
-      return (
-        this.conversation.groupProfile.selfInfo.messageRemindType ===
-        'AcceptNotNotify'
-      )
-    },*/
+
     ...mapState({
       currentConversation: state => state.conversation.currentConversation
     }),
@@ -204,8 +165,7 @@ export default {
     },
 
     selectConversation(im,item,type) {
-      console.log(this.newList[this.Corresponding(item)])
-      if(type === TIM.TYPES.CONV_C2C && this.newList[this.Corresponding(item)].type != 4){
+      if(type === TIM.TYPES.CONV_C2C && this.newList[this.Corresponding(item)] && this.newList[this.Corresponding(item)].type != 4){
         let data;
         if (item === 'C2Cdominator') {
           data = {
@@ -228,13 +188,6 @@ export default {
         this.$store.commit('handleLastTime', im.lastMessage.lastTime)
       }
       this.setMessageRead()
-
-      /*if (this.conversation.conversationID !== this.$store.state.conversation.currentConversation.conversationID) {
-        this.$store.dispatch(
-          'checkoutConversation',
-          this.conversation.conversationID
-        )
-      }*/
     },
 
     deleteConversation() {
@@ -256,9 +209,7 @@ export default {
           this.popoverVisible = false
         })
     },
-    /*showContextMenu() {
-      this.popoverVisible = true
-    },*/
+
     setMessageRead() {
       if (this.conversation.unreadCount === 0) {
         return
@@ -277,13 +228,6 @@ export default {
     }
   },
   mixins:[http],
-  watch: {
-    currentConversation(next) {
-      if (next.conversationID === this.conversation.conversationID) {
-        this.hasMessageAtMe = false
-      }
-    }
-  }
 }
 </script>
 
@@ -351,12 +295,6 @@ export default {
       justify-content space-between
       font-size 12px
       padding-top 3px
-      .summary
-        overflow hidden
-        min-width 0px
-        color: #B3B3B3
-        .remind
-          color $danger
       .date
         padding-left 10px
         flex-shrink 0

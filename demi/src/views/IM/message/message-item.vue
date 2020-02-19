@@ -10,7 +10,7 @@
 
       <div class="col-1" v-if="showAvatar">
         <!-- 头像 -->
-        <avatars :src="avatar" :type="currentConversation.type" v-if="(currentConversation.type === TIM.TYPES.CONV_SYSTEM) || (currentConversation.type ===  TIM.TYPES.CONV_GROUP) || (messageDetail && messageDetail.type == 4) || (!messageDetail)"/>
+        <avatars :src="avatar" :type="currentConversation.type" v-if="(currentConversation.type === TIM.TYPES.CONV_SYSTEM) || (currentConversation.type ===  TIM.TYPES.CONV_GROUP) || (messageDetail && messageDetail.type == 4) || (!messageDetail && currentConversation.conversationID.split('C2C')[1] !== 'dominator')"/>
 
         <img class="avatar" v-if="currentConversation.conversationID.split('C2C')[1] === 'dominator'"
              src="../../../assets/img/notification.png" alt="">
@@ -26,12 +26,7 @@
 
         <img class="avatar" v-if="isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id)"
              :src="messageDetail.recipient.avatar" alt="">
-       <!-- <img class="avatar" v-if="messageDetail && (messageDetail.recipient && messageDetail.recipient.user_id == user_id) && currentConversation.conversationID.split('C2C')[1] !== 'dominator'"
-             :src="messageDetail.sender.avatar" alt="">
 
-        <img class="avatar" v-if="messageDetail && (messageDetail.sender && messageDetail.sender.user_id == user_id)  && currentConversation.conversationID.split('C2C')[1] !== 'dominator'"
-             :src="messageDetail.recipient.avatar" alt="">-->
-        <!--<avatars :src="avatar" />-->
       </div>
       <div class="col-2">
         <!-- 消息主体 -->
@@ -82,7 +77,6 @@
           />
           <span v-else>暂未支持的消息类型：{{message.type}}</span>
         </div>
-        <!--<message-footer v-if="showMessageHeader" :message="message" />-->
       </div>
 
       <div class="col-3" v-if="message.status != 'success'">
@@ -160,28 +154,6 @@
         <group-system-notice-element :payload="message.payload" :message="message" />
       </div>
     </div>
-    <!-- 旧排版 -->
-    <!-- <message-header v-if="showMessageHeader" :message="message" />
-    <div class="content">
-      <message-status-icon :message="message" />
-      <text-element
-        v-if="message.type === TIM.TYPES.MSG_TEXT"
-        :isMine="isMine"
-        :payload="message.payload"
-      />
-      <image-element v-else-if="message.type === TIM.TYPES.MSG_IMAGE" :payload="message.payload" />
-      <file-element v-else-if="message.type === TIM.TYPES.MSG_FILE" :payload="message.payload" />
-      <sound-element v-else-if="message.type === TIM.TYPES.MSG_SOUND" :payload="message.payload" />
-      <group-tip-element v-else-if="message.type===TIM.TYPES.MSG_GRP_TIP" :payload="message.payload" />
-      <group-system-notice-element
-        v-else-if="message.type === TIM.TYPES.MSG_GRP_SYS_NOTICE"
-        :payload="message.payload"
-        :message="message"
-      />
-      <custom-element v-else-if="message.type === TIM.TYPES.MSG_CUSTOM" :payload="message.payload" />
-      <face-element v-else-if="message.type === TIM.TYPES.MSG_FACE" :payload="message.payload"/>
-      <span v-else>暂未支持的消息类型：{{message.type}}</span>
-    </div>-->
   </div>
 </template>
 
@@ -189,7 +161,6 @@
 import { mapState } from 'vuex'
 import MessageStatusIcon from './message-status-icon.vue'
 import MessageHeader from './message-header'
-// import MessageFooter from './message-footer'
 import FileElement from './message-elements/file-element.vue'
 import FaceElement from './message-elements/face-element.vue'
 import ImageElement from './message-elements/image-element.vue'
@@ -212,7 +183,6 @@ export default {
   },
   components: {
     MessageHeader,
-    // MessageFooter,
     MessageStatusIcon,
     FileElement,
     FaceElement,
@@ -232,7 +202,6 @@ export default {
   },
   mounted(){
     this.user_id = sessionStorage.getItem('userID');
-    console.log(this.message)
   },
   computed: {
     ...mapState({
@@ -268,7 +237,6 @@ export default {
       return this.currentConversation.type
     },
     isMine() {
-      // console.log(this.currentUserProfile, this.currentConversation);
       return this.message.flow === 'out'
     },
     messagePosition() {

@@ -1,8 +1,5 @@
 <template>
     <div class="im_wrap">
-        <!--<div id="wrapper" v-if="!isLogin">
-          <login/>
-        </div>-->
         <div
                 class="loading"
                 v-loading="showLoading"
@@ -21,21 +18,16 @@
             </div>
             <image-previewer/>
         </div>
-        <!--<div class="bg">
-        </div>-->
+
     </div>
 
 </template>
 
 <script>
-    // import { Notification } from 'element-ui'
     import {mapState} from 'vuex'
     import CurrentConversation from './conversation/current-conversation'
     import SideBar from './layout/side-bar'
-    // import Login from './user/login'
     import ImagePreviewer from './message/image-previewer.vue'
-    // import { translateGroupSystemNotice } from '../../libs/common'
-    // import '../../assets/css/base.styl'
     import http from '../../libs/http';
 
     export default {
@@ -66,9 +58,6 @@
         },
 
         mounted() {
-            // 初始化监听器
-            // this.initListener()
-            console.log(sessionStorage.getItem('userSig'))
             this.apiGet('/labels?id=967').then((res) => {
                 this.work_label = res
             });

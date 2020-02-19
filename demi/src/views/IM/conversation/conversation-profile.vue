@@ -2,7 +2,6 @@
   <div class="conversation-profile-wrapper">
     <user-profile
       v-if="currentConversation.type === TIM.TYPES.CONV_C2C"
-      :userProfile="currentConversation.userProfile"
     />
     <group-profile
       v-else-if="currentConversation.type === TIM.TYPES.CONV_GROUP"
@@ -28,7 +27,7 @@ export default {
     ...mapState({
       currentConversation: state => state.conversation.currentConversation
     })
-  }
+  },
 }
 </script>
 

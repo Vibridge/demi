@@ -107,6 +107,7 @@
                                         <el-input
                                                 v-model.trim="sku_sale[scope.$index]"
                                                 size="mini"
+                                                :change="handleInputChange(scope.$index)"
                                                 placeholder="价格（元）"/>
                                     </template>
                                 </el-table-column>
@@ -122,6 +123,7 @@
                                         <el-input
                                                 v-model.trim="sku_sum[scope.$index]"
                                                 size="mini"
+                                                :change="handleInputChange(scope.$index)"
                                                 placeholder="数量（件）"/>
                                     </template>
                                 </el-table-column>
@@ -137,7 +139,7 @@
                                         <el-input
                                                 v-model.trim="sku_commission[scope.$index]"
                                                 size="mini"
-                                                :blur="handleCommission(scope.$index)"
+                                                :change="handleInputChange(scope.$index)"
                                                 placeholder="佣金（元）"/>
                                     </template>
                                 </el-table-column>
@@ -152,6 +154,7 @@
                                         <el-input
                                                 v-model.trim="sku_code[scope.$index]"
                                                 size="mini"
+                                                :change="handleInputChange(scope.$index)"
                                                 placeholder="商品编码"/>
                                     </template>
                                 </el-table-column>
@@ -377,13 +380,16 @@
         components: {bottom},
         data() {
             return {
+                //编辑判断
                 isUpdate: null,
+
                 //类目id
                 sort_id: null,
 
                 //类目详情
                 goods_info: null,
 
+                //导航
                 activeName: 'first',
 
                 //货号
@@ -407,13 +413,19 @@
                 sku_commission: [],
                 sku_code: [],
 
+                //创建时先添加的sku
+                isCreateSku: [],
+
+                //批量填充
                 sale: '',
                 sum: '',
                 commission: '',
                 code: '',
 
+                //表格数据
                 tableData: [],
 
+                //图片
                 shop_img: [
                     {img: '', file_id: ''},
                     {img: '', file_id: ''},
@@ -422,15 +434,20 @@
                     {img: '', file_id: ''},
                 ],
 
+                //上传文件
                 files: '',
+
+                //删除等icon显示判断
                 show_icon: null,
 
+                //视频
                 vid_loading: false,
                 video: null,
                 real_video_path: null,
                 video_path: '',
                 cover: '',
 
+                //富文本编辑器
                 content: `<p>hello world</p>`,
                 editorOption: {
                     modules: {
@@ -450,23 +467,31 @@
 
                 },
 
+                //商品状态
                 active: 1,
 
+                //创建成功
                 success: false,
 
+                //更新时商品的sku
+                isUpdateSku: [],
             };
         },
         computed: {
+            //富文本编辑器
             editor() {
                 return this.$refs.myQuillEditor.quillEditor;
             },
-
         },
         mounted() {
+            //富文本编辑器
             addQuillTitle();
+
+            //属性信息
             this.initalize()
         },
         created() {
+            //属性信息的id
             this.getParams()
         },
         methods: {
@@ -482,11 +507,12 @@
                                 title: res.attrs[i].title
                             });
                             this.custom_attr.push({values: []});
+                            // this.custom.splice(length)
                         }
                     }
-                    this.custom.splice(length)
                 })
             },
+
             //类目id
             getParams() {
                 // 取到路由带过来的参数
@@ -510,7 +536,9 @@
             handleFill() {
                 if (this.tableData) {
 
+                    //价格
                     if (this.sale) {
+                        console.log(this.sku_sale)
                         let none = true;
                         let lessThan = [];
                         let length = this.sku_commission.length;
@@ -536,10 +564,12 @@
                                 this.$set(this.sku_sale, lessThan[i], this.sale)
                             }
                             this.sale = '';
+                        } else if (!this.commission && has < 1) {
+                            this.$message.error('佣金不能大于商品价格')
                         }
-                        // this.goods_price = this.sku_sale.sort(this.handleSort)[0]
                     }
 
+                    //数量
                     if (this.sum) {
                         let length = this.sku_sum.length;
                         for (let i = 0; i < length; i++) {
@@ -548,6 +578,7 @@
                         this.sum = ''
                     }
 
+                    //佣金
                     if (this.commission) {
                         let none = true;
                         let lessThan = [];
@@ -574,11 +605,12 @@
                                 this.$set(this.sku_commission, lessThan[i], this.commission)
                             }
                             this.commission = null
+                        } else if (!this.sale && has < 1) {
+                            this.$message.error('佣金不能大于商品价格')
                         }
-                        // this.goods_salary = this.sku_commission.sort(this.handleSort)[0]
                     }
 
-
+                    //编号
                     if (this.code) {
                         let length = this.sku_code.length;
                         for (let i = 0; i < length; i++) {
@@ -589,23 +621,25 @@
                 }
             },
 
-
-            handleCommission(index) {
+            //佣金输入判断
+            handleInputChange(index) {
                 let length = this.sku_commission.length;
                 for (let i = 0; i < length; i++) {
                     if (this.sku_sale[i] && (this.sku_commission[i] - this.sku_sale[i] > 0)) {
                         this.$set(this.sku_commission, i, null)
                     }
                 }
+
             },
+
             //sku
             handleSelectAttr() {
                 this.tableData = [];
-                this.sku_array = [];
-                this.sku_sale = [];
-                this.sku_sum = [];
-                this.sku_commission = [];
-                this.sku_code = [];
+                // this.sku_array = [];
+                // this.sku_sale = [];
+                // this.sku_sum = [];
+                // this.sku_commission = [];
+                // this.sku_code = [];
                 this.sku_attr_id = [];
                 this.sku_select_attr = [];
                 this.handleSku(0, []);
@@ -626,10 +660,13 @@
                     }
                 }
                 if (this.tableData.length > 0) {
-                    this.sku_sale[this.tableData.length - 1] = '';
-                    this.sku_sum[this.tableData.length - 1] = '';
-                    this.sku_commission[this.tableData.length - 1] = '';
-                    this.sku_code[this.tableData.length - 1] = '';
+                    let table = this.tableData.length;
+                    for (let i = 0; i < table; i++) {
+                        this.$set(this.sku_sale, i, '');
+                        this.$set(this.sku_sum, i, '');
+                        this.$set(this.sku_commission, i, '');
+                        this.$set(this.sku_code, i, '')
+                    }
                 }
 
             },
@@ -696,6 +733,7 @@
                     this.$set(this.shop_img, index, fornt);
                 }
             },
+
             //删除图片
             handleRemove(index, id) {
                 this.$set(this.shop_img, index, {'img': ''});
@@ -766,6 +804,7 @@
                 });
 
             },
+
             //base64解码，解码视频第一帧
             base64ToBlob(urlData) {
                 var arr = urlData.split(',');
@@ -795,7 +834,6 @@
             uploadEditorImgFile() {
                 // 获取富文本组件实例
                 let quill = this.$refs.myQuillEditor.quill
-
                 let form = new FormData();
                 // 后端接受参数 ，可以接受多个参数
                 let length = this.files.length;
@@ -853,6 +891,9 @@
                 if (this.tableData) {
                     data.is_sku = 1;
                 }
+                if (this.goods_price) {
+                    data.is_sku = 0
+                }
                 if (data.is_sku == 0) {
                     data.price = this.goods_price;
                     data.salary = this.goods_salary;
@@ -876,16 +917,14 @@
                 } else if (data.images.length < 1) {
                     this.$message.error('请上传商品图片')
                 } else {
-                    if (this.isUpdate) {
+                    if (this.isUpdate != 0) {
                         this.apiPost('api/goods/update/' + this.$route.query.goods_id, data).then((res) => {
-                            console.log(res)
                             if (res) {
                                 this.success = true
                             }
                         })
                     } else {
                         this.apiPost('api/goods/create', data).then((res) => {
-                            console.log(res)
                             if (res) {
                                 this.success = true
                             }
@@ -910,8 +949,45 @@
         },
 
         watch: {
+            /*sku_sale() {
+                let sku_edit = this.sku_array.length
+                if (sku_edit > 0) {
+                    console.log(this.sku_array)
+                    let isEditSku = {};
+                    for (let i = 0; i < sku_edit; i++) {
+                        isEditSku = {}
+                        isEditSku[this.sku_array[i]] = {
+                            'price': this.sku_sale[i],
+                            'inventory': this.sku_sum[i],
+                            'salary': this.sku_commission[i],
+                            'goods_no': this.sku_code[i],
+                        };
+                        console.log(isEditSku)
+                        this.isCreateSku.push(isEditSku);
+                    }
+
+                }
+                let createSku = this.isCreateSku.length;
+                console.log(this.sku_array)
+                if (createSku > 0) {
+                    for (let y = 0; y < sku_edit; y++) {
+                        for (let k = 0; k < createSku; k++) {
+                            for (let i in this.isCreateSku[k]) {
+                                if (i == this.sku_array[y]) {
+                                    this.$set(this.sku_sale, y, this.isCreateSku[k][i].price);
+                                    /!* this.$set(this.sku_commission, y, this.isCreateSku[k][i].salary);
+                                     this.$set(this.sku_sum, y, this.isCreateSku[k][i].inventory);
+                                     this.$set(this.sku_code, y, this.isCreateSku[k][i].goods_no);*!/
+                                }
+                            }
+                        }
+                    }
+                }
+            },*/
             tableData() {
                 if (this.tableData) {
+                    this.sku_array = [];
+                    this.isCreateSku = []
                     let length = this.tableData.length;
                     for (let i = 0; i < length; i++) {
                         let length2 = this.tableData[i].length;
@@ -919,14 +995,34 @@
                         for (let y = 0; y < length2; y++) {
                             item.push(this.tableData[i][y])
                         }
-                        if (this.sku_array.length < 1) {
+                        /*if (this.sku_array.length < 1) {
                             this.sku_array.push(item.sort().join(','));
+                        }*/
+                        this.sku_array.push(item.sort().join(','));
+                    }
+                    let sku_edit = this.sku_array.length
+                    if (this.isUpdate != 0) {
+                        let updateSku = this.isUpdateSku.length
+                        if (updateSku > 0) {
+                            for (let y = 0; y < sku_edit; y++) {
+                                for (let k = 0; k < updateSku; k++) {
+                                    for (let i in this.isUpdateSku[k]) {
+                                        if (i == this.sku_array[y]) {
+                                            console.log(y)
+                                            this.$set(this.sku_sale, y, this.isUpdateSku[k][i].price);
+                                            this.$set(this.sku_commission, y, this.isUpdateSku[k][i].salary);
+                                            this.$set(this.sku_sum, y, this.isUpdateSku[k][i].inventory);
+                                            this.$set(this.sku_code, y, this.isUpdateSku[k][i].goods_no);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             },
             goods_info() {
-                if (this.isUpdate) {
+                if (this.isUpdate != 0) {
                     if (this.goods_info) {
                         this.apiGet('/api/goods/info/' + this.$route.query.goods_id).then((res) => {
                             console.log(res)
@@ -948,7 +1044,9 @@
                                     });
                                 }
                             }
+
                             if (data.is_sku) {
+
                                 let length = data.sku.length;
                                 for (let i = 0; i < length; i++) {
                                     this.sku_array.push(data.sku[i].mark)
@@ -956,40 +1054,42 @@
                                     this.sku_commission.push(data.sku[i].salary);
                                     this.sku_sum.push(data.sku[i].inventory);
                                     this.sku_code.push(data.sku[i].goods_no);
-                                    this.$set(this.tableData, i, data.sku[i].mark.split(',').reverse())
+                                    this.$set(this.tableData, i, data.sku[i].mark.split(',').reverse());
+                                    // this.$set(this.isUpdateSku, i, data.sku[i].mark:{})
+                                    let isEditSku = {};
+                                    isEditSku[data.sku[i].mark] = {
+                                        'price': data.sku[i].price,
+                                        'inventory': data.sku[i].inventory,
+                                        'salary': data.sku[i].salary,
+                                        'goods_no': data.sku[i].goods_no,
+                                    };
+                                    this.isUpdateSku.push(isEditSku);
+                                    // this.isUpdateSku[i]
                                 }
+                                console.log(this.isUpdateSku)
                                 let attrs = data.attribute.length;
                                 if (attrs > 0) {
                                     for (let attr = 0; attr < attrs; attr++) {
+
                                         let v = data.attribute[attr].values.length;
                                         let labelLength = this.goods_info.attrs[attr].children.length;
 
                                         if (v > 0) {
                                             for (let y = 0; y < v; y++) {
+
                                                 this.checkList[attr].values.push(data.attribute[attr].values[y].attr_value);
                                                 this.sku_attr_id.push(data.attribute[attr].attribute_id);
                                                 this.sku_select_attr.push(data.attribute[attr].values[y].attr_value);
                                                 this.custom_attr[attr].values.push(data.attribute[attr].values[y].attr_value);
 
-                                                console.log(this.custom_attr[attr].values[y])
-
                                                 for (let l = 0; l < labelLength; l++) {
-                                                        // console.log(this.goods_info.attrs[attr].children[l].title)
-                                                        if (data.attribute[attr].values[y].attr_value === this.goods_info.attrs[attr].children[l].title) {
-                                                            /* this.custom_attr[attr].values.splice(l, 1);
-                                                             continue*/
-                                                            this.$set(this.custom_attr[attr].values,y,'')
-                                                            break
-                                                        }
+                                                    if (data.attribute[attr].values[y].attr_value === this.goods_info.attrs[attr].children[l].title) {
+                                                        this.$set(this.custom_attr[attr].values, y, '')
+                                                        break
+                                                    }
                                                 }
-
                                             }
-                                            // console.log(this.custom_attr)
-
-
-
                                         }
-
                                     }
                                 }
                             } else {

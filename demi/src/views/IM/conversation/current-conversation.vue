@@ -12,7 +12,6 @@
                                 {{detail.sender.nickname}}</p>
                             <p v-if="detail && detail.sender && detail.sender.user_id == user_id">
                                 {{detail.recipient.nickname}}</p>
-                            <!--<p>{{detail && detail.work && detail.work.task_title}}</p>-->
                             <p v-if="detail && detail.type === 2">
                                 {{detail.job.type_label.name}}</p>
                             <p v-if="detail && detail.type === 1">
@@ -27,7 +26,7 @@
                 <div class="btn-more-info"
                      :class="showConversationProfile ? '' : 'left-arrow'"
                      @click="showMore"
-                     v-show="!currentConversation.conversationID.includes('SYSTEM')"
+                     v-show="(!currentConversation.conversationID.includes('SYSTEM')) && (currentConversation.conversationID.split('C2C')[1] !== 'dominator')"
                      title="查看详细信息">
                 </div>
             </div>
@@ -65,7 +64,6 @@
     import {getTime, isToday, getFullDate, getDay} from '../../../libs/time'
     import http from '../../../libs/http';
 
-
     export default {
         name: 'CurrentConversation',
         components: {
@@ -95,7 +93,7 @@
         },
         updated() {
             this.keepMessageListOnButtom()
-            if (this.currentConversation.conversationID === '@TIM#SYSTEM') {
+            if (this.currentConversation.conversationID === '@TIM#SYSTEM' || this.currentConversation.conversationID.split('C2C')[1] === 'dominator') {
                 this.showConversationProfile = false
             }
         },
@@ -132,17 +130,14 @@
                                     this.timeTamp = item.time;
                                     item.time = ""
                                 }
-                                console.log(item.time)
                             }
                         }
                     });
-                    // }
                     return state.conversation.currentMessageList
                 },
                 isCompleted: state => state.conversation.isCompleted,
                 detail: state => state.conversation.detail,
                 handleMessageTime(state) {
-                    console.log(state.conversation.lastTime)
                     if (state.conversation.lastTime > 0) {
                         this.timeTamp = state.conversation.lastTime
                     }
@@ -164,7 +159,11 @@
                 return this.toAccount
             },
             showMessageSendBox() {
-                return (this.currentConversation.type !== this.TIM.TYPES.CONV_SYSTEM) || (this.detail && !this.detail.dominator) || (!this.detail)
+                if(this.currentConversation.conversationID.split('C2C')[1] !== 'dominator'){
+                    return (this.currentConversation.type !== this.TIM.TYPES.CONV_SYSTEM) || (this.detail && !this.detail.dominator) || (!this.detail)
+                }else{
+                    return false
+                }
             }
         },
         methods: {
@@ -184,7 +183,6 @@
 
             handleUpdataTime(data) {
                 this.lastTime = data;
-                console.log(this.lastTime)
             },
 
             onScroll({target: {scrollTop}}) {
