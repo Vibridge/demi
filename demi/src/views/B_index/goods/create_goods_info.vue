@@ -883,21 +883,25 @@
                     sort_id: this.sort_id,
                     is_sku: 0,
                     images: array,
-                    video_path: this.real_video_path,
-                    video_cover: this.cover,
                     description: this.content,
                     status: parseInt(this.active),
                 };
                 if (this.tableData) {
                     data.is_sku = 1;
                 }
-                if (this.goods_price) {
+                if (this.goods_price || this.goods_salary || this.goods_no || this.goods_inventory) {
                     data.is_sku = 0
+                }
+                if(this.goods_no){
+                    data.goods_no = this.goods_no;
+                }
+                if(this.real_video_path){
+                    data.video_path = this.real_video_path
+                    data.video_cover = this.cover
                 }
                 if (data.is_sku == 0) {
                     data.price = this.goods_price;
                     data.salary = this.goods_salary;
-                    data.goods_no = this.goods_no;
                     data.inventory = this.goods_inventory;
                 } else {
                     data.attr_ids = this.sku_attr_id;
