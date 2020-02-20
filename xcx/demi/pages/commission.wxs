@@ -1,18 +1,22 @@
+
 var handleCommisson = function handleCommisson(array){
-  console.log(typeof array)
-  if (JSON.parse(array)) {
-    var length = JSON.parse(array).length
+  if (array) {
+    var length = array.length
     var commission = []
     if (length > 0) {
       var price = 0
       if (length > 1) {
         for (var i = 0; i < length; i++) {
-          array.push(JSON.parse(array)[i].price)
+          commission.push(parseInt(array[i].price))
         }
-        array.sort;
-        price = JSON.parse(array)[0] + '-' + JSON.parse(array)[length - 1]
+        commission.sort(function(a,b){
+          return a - b
+        })
+        console.log(commission)
+
+        price = commission[0] + '-' + commission[length - 1]
       } else {
-        price = JSON.parse(array)[0]
+        price = commission[0]
       }
       return price
     }

@@ -2,7 +2,7 @@
 <view class="contain">
   <view class="line"></view>
   <view class="main">
-    <view class="list" data-id="{{item.task_id}}" bindtap="handleDetail" wx:for="{{task_list}}" wx:for-item="item" wx:key="{{item.task_id}}">
+    <view class="list" data-id="{{item.task_id}}" bindtap="handleDetail" wx:for="{{task_list}}" wx:for-item="item" wx:key="{{index}}">
       <view class="title">{{item.task_title}}</view>
       <view class="info">
         <view class="logo"><image mode="aspectFit" src="{{item.company.logo_path}}"></image></view>
@@ -23,9 +23,13 @@
         </view>
 
         <wxs src="../commission.wxs" module="commission" />
-        <view class="price" wx:if="{{item.goods && item.payment_method == 1 && item.goods.length > 0 }}">{{commission.bar(JSON.stringify(item.goods))}}</view>
+        
+        <view class="price" wx:if="{{item.goods && item.payment_method == 1 && item.goods.length > 0 }}"><text class="num">{{commission.bar(item.goods)}}</text><text class="unit">{{item.unit}}</text><text class="unit">/单</text></view>
+
         <view class="price" wx:if="{{item.goods && item.payment_method == 1 && item.goods.length < 1 }}"></view>
+
         <view wx:if="{{item.payment_method != 1}}" class="price"><text class="num">{{item.payment_money}}</text><text class="unit">{{item.unit}}</text><text class="unit">/单</text></view>
+
       </view>
     </view>
   </view>

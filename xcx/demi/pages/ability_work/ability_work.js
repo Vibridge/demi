@@ -36,9 +36,11 @@ Page({
           let commission = 0
           if(length > 1){
             for (let i = 0; i < length; i++) {
-              array.push(parseFloat(res.goods[i].price))
+              array.push(parseInt(res.goods[i].price))
             }
-            array.sort;
+            array.sort(function (a, b) {
+              return a - b
+            })
             commission = array[0] + '-' + array[length - 1]
           }else{
             commission = array[0]

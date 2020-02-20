@@ -19,6 +19,7 @@ Page({
     img_level2: '../asset/img/z.png',
     img_level3: '../asset/img/mission3@2x.png',
     img_level4: '../asset/img/star_level@2x.png',
+  
   },
 
   /**
@@ -61,11 +62,6 @@ Page({
     
     var task_list = this.data.task_list
     common.http(util.baseUrl + '/api/task/paginate?page=' + page, 'get', function (res) {
-      console.log(res)
-      if(res.goods){
-        res.goods = map(JSON.stringify(res.goods))
-      }
-      console.log(res)
       if(res){
         current_page = res.current_page;
         last_page = res.last_page
