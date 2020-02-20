@@ -93,7 +93,7 @@
         },
         updated() {
             this.keepMessageListOnButtom()
-            if (this.currentConversation.conversationID === '@TIM#SYSTEM' || this.currentConversation.conversationID.split('C2C')[1] === 'dominator') {
+            if (this.currentConversation.conversationID === '@TIM#SYSTEM') {
                 this.showConversationProfile = false
             }
         },

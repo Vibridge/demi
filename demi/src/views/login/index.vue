@@ -192,6 +192,7 @@
                             this.$store.commit('startComputeCurrent');
                             console.log('im登陆成功');
                             this.apiGet('/api/service').then((res) => {
+                                console.log(res)
                                 if (res && (res.service_id != user_id)) {
                                     sessionStorage.setItem('service_id', res.service_id);
                                     let data = {

@@ -62,6 +62,7 @@ export default {
     this.handleMsgList();
     this.getRouterData();
     let data = null;
+
     data = sessionStorage.getItem('id');
     if (data) {
       let userID = JSON.parse(data).recipient + 'a';

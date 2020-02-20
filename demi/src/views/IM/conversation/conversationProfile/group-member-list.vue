@@ -4,7 +4,7 @@
       <span class="member-count text-ellipsis">群成员：{{currentConversation.groupProfile.memberNum}}</span>
       <popover v-model="addGroupMemberVisible">
         <add-group-member></add-group-member>
-        <div slot="reference" class="btn-add-member" title="添加群成员">
+        <div slot="reference" class="btn-add-member">
           <span class="tim-icon-friend-add"></span>
         </div>
       </popover>
@@ -13,7 +13,7 @@
       <div class="group-member-list">
         <template v-for="member in members">
           <div slot="reference" class="group-member" @click="currentMemberID = member.userID">
-            <avatars :title=getGroupMemberAvatarText(member.role) :src="member.avatar" />
+            <avatars :src="member.avatar" />
             <div class="member-name text-ellipsis">
               <span v-if="member.nameCard" :title=member.nameCard>{{ member.nameCard }}</span>
               <span v-else-if="member.nick" :title=member.nick>{{ member.nick }}</span>
@@ -111,7 +111,6 @@ export default {
       font-size 28px
       text-align center
       line-height 32px
-      cursor pointer
       float right
       &:hover
         color $light-primary
@@ -134,7 +133,6 @@ export default {
       flex-direction: column;
       text-align: center;
       color: $black;
-      cursor: pointer;
       .avatar
         width 40px
         height 40px

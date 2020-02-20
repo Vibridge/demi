@@ -12,75 +12,6 @@
                     <div class="all-wrap">
                         <div class="task_list" v-show="task_list.length>0">
                             <taskList :index="active_index" :task-list="task_list" @on-show-discuss="handleDiscuss_dia" @on-reset="initialize"></taskList>
-                            <!--<div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
-                                <div class="task_list_info">
-                                    <div class="task_title">
-                                        <p>{{task.task_title}}</p>
-                                        <p>{{task.snapshot.payment_money}}{{task.unit}}/单</p>
-                                    </div>
-                                    <div class="task_buyer">
-                                        <div class="task_buyer_info">
-                                            <div>
-                                                <img :src="task.user.avatar" alt="">
-                                            </div>
-                                            <div>
-                                                <p>{{task.user.nickname}}</p>
-                                                <p>
-                                                    <span v-if="task.snapshot.city">{{task.snapshot.city.city_name}}-</span>
-                                                    <span v-if="!task.snapshot.city">不限-</span>
-                                                    <span v-for="ind in task.snapshot.industry" :key="ind.label_id">
-                                                        {{ind.name}}
-                                                    </span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <p class="order_sum" v-if="task.order_sum && task.payment_method !== 3">
-                                            已销售：{{task.order_sum}}</p>
-                                        <p class="order_sum" v-if="!task.order_sum && task.payment_method !== 3">
-                                            已销售：0</p>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 0">
-                                        <button @click="handleRefuse(0,task.task_order_id,task.user.user_id)" class="first active_over">拒绝
-                                        </button>
-                                        <button v-if="parseInt(task.snapshot.front_money) <= 0" @click="handlePass(0,task.task_order_id,task.user.user_id)">通过</button>
-                                        <button v-if="parseInt(task.snapshot.front_money)>0"
-                                                @click="pay()">通过&支付定金
-                                        </button>
-                                    </div>
-
-                                    <div class="task_operate" v-if="task.status === 1 & task.payment_method !== 1">
-                                        <button style="width: 82px;margin-right: 10px;background: #EBEBEB;color: #999999">进行中</button>
-                                        <button style="background: #fff;border: 1px solid rgba(36, 191, 255, 1);color: rgba(36, 191, 255, 1)"
-                                                @click="handleMsg(task.user.user_id,task.task_order_id)">
-                                            和他聊聊
-                                        </button>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 1 & task.payment_method === 1">
-                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
-                                        <button @click="handleOver(0,task.task_order_id,task.user.user_id)">结束任务</button>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 3">
-                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
-                                        <button @click="pay">任务完成&支付尾款</button>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 2">
-                                        &lt;!&ndash;<button style="visibility: hidden;width: 82px;margin-right: 10px;"></button>&ndash;&gt;
-                                        &lt;!&ndash;<button style="background: #EBEBEB;color: #999999;">已拒绝</button>&ndash;&gt;
-                                        <button style="visibility: hidden;width:136px;margin-right: 10px;"></button>
-                                        <button style="width: 82px;background: #EBEBEB;color: #999999;">已拒绝</button>
-                                    </div>
-
-                                    <div class="task_operate" v-if="task.status === 4 && task.is_comment_boss === 0">
-                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
-                                        <button @click="handleDiscuss_dia(3,task)">去评价</button>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 4 && task.is_comment_boss === 1">
-                                        <button style="visibility: hidden;width:136px;margin-right: 10px;"></button>
-                                        <button style="width: 82px;background: #EBEBEB;color: #999999;">已评价</button>
-                                    </div>
-                                </div>
-                                <div class="line"></div>
-                            </div>-->
                         </div>
                         <div class="none_list" v-show="task_list.length === 0">
                             <div>
@@ -95,38 +26,6 @@
                 <el-tab-pane label="待处理" name="todo">
                     <div class="all-wrap">
                         <div class="task_list" v-show="task_list.length>0">
-                            <!--<div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
-                                <div class="task_list_info">
-                                    <div class="task_title">
-                                        <p>{{task.task_title}}</p>
-                                        <p>{{task.snapshot.payment_money}}{{task.unit}}/单</p>
-                                    </div>
-                                    <div class="task_buyer">
-                                        <div class="task_buyer_info">
-                                            <div>
-                                                <img :src="task.user.avatar" alt="">
-                                            </div>
-                                            <div>
-                                                <p>{{task.user.nickname}}</p>
-                                                <p>
-                                                    <span v-if="task.snapshot.city">{{task.snapshot.city.city_name}}-</span>
-                                                    <span v-if="!task.snapshot.city">不限-</span>
-                                                    <span v-for="ind in task.snapshot.industry" :key="ind.label_id">
-                                                        {{ind.name}}
-                                                    </span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 0">
-                                        <button @click="handleRefuse(1,task.task_order_id,task.user.user_id)" class="first active_over">拒绝
-                                        </button>
-                                        <button v-if="!task.front_money" @click="handlePass(1,task.task_order_id,task.user.user_id)">通过</button>
-                                        <button v-if="task.front_money" @click="pay">通过&支付定金</button>
-                                    </div>
-                                </div>
-                                <div class="line"></div>
-                            </div>-->
                             <taskList :index="active_index" :task-list="task_list" @on-show-discuss="handleDiscuss_dia" @on-reset="initialize"></taskList>
                         </div>
                         <div class="none_list" v-show="task_list.length===0">
@@ -142,53 +41,7 @@
                 <el-tab-pane label="进行中" name="doing">
                     <div class="all-wrap">
                         <div class="task_list" v-show="task_list.length>0">
-                            <!--<div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
-                                <div class="task_list_info">
-                                    <div class="task_title">
-                                        <p>{{task.task_title}}</p>
-                                        <p>{{task.snapshot.payment_money}}{{task.unit}}/单</p>
-                                    </div>
-                                    <div class="task_buyer">
-                                        <div class="task_buyer_info">
-                                            <div>
-                                                <img :src="task.user.avatar" alt="">
-                                            </div>
-                                            <div>
-                                                <p>{{task.user.nickname}}</p>
-                                                <p>
-                                                    <span v-if="task.snapshot.city">{{task.snapshot.city.city_name}}-</span>
-                                                    <span v-if="!task.snapshot.city">不限-</span>
-                                                    <span v-for="ind in task.snapshot.industry" :key="ind.label_id">
-                                                        {{ind.name}}
-                                                    </span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <p class="order_sum" v-if="task.order_sum && task.payment_method !== 3">
-                                            已销售：{{task.order_sum}}</p>
-                                        <p class="order_sum" v-if="!task.order_sum && task.payment_method !== 3">
-                                            已销售：0</p>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 1 & task.payment_method !== 1">
-                                        <button style="width: 82px;margin-right: 10px;background: #EBEBEB;color: #999999">进行中</button>
-                                        <button style="background: #fff;border: 1px solid rgba(36, 191, 255, 1);color: rgba(36, 191, 255, 1)"
-                                                @click="handleMsg(task.user.user_id,task.task_order_id)">
-                                            和他聊聊
-                                        </button>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 1 & task.payment_method === 1">
-                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
-                                        <button @click="handleOver(2,task.task_order_id,task.user.user_id)">结束任务</button>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 3">
-                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
-                                        <button @click="pay">任务完成&支付尾款</button>
-                                    </div>
-                                </div>
-                                <div class="line"></div>
-                            </div>-->
                             <taskList :index="active_index" :task-list="task_list" @on-show-discuss="handleDiscuss_dia" @on-reset="initialize"></taskList>
-
                         </div>
                         <div class="none_list" v-show="task_list.length===0">
                             <div>
@@ -203,48 +56,6 @@
                 <el-tab-pane label="已结束" name="end">
                     <div class="all-wrap">
                         <div class="task_list" v-show="task_list.length>0">
-                            <!--<div class="task_list_wrap" v-for="(task,index) in task_list" :key="index">
-                                <div class="task_list_info">
-                                    <div class="task_title">
-                                        <p>{{task.task_title}}</p>
-                                        <p>{{task.snapshot.payment_money}}{{task.unit}}/单</p>
-                                    </div>
-                                    <div class="task_buyer">
-                                        <div class="task_buyer_info">
-                                            <div>
-                                                <img :src="task.user.avatar" alt="">
-                                            </div>
-                                            <div>
-                                                <p>{{task.user.nickname}}</p>
-                                                <p>
-                                                    <span v-if="task.snapshot.city">{{task.snapshot.city.city_name}}-</span>
-                                                    <span v-if="!task.snapshot.city">不限-</span>
-                                                    <span v-for="ind in task.snapshot.industry" :key="ind.label_id">
-                                                        {{ind.name}}
-                                                    </span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <p class="order_sum" v-if="task.order_sum && task.payment_method !== 3">
-                                            已销售：{{task.order_sum}}</p>
-                                        <p class="order_sum" v-if="!task.order_sum && task.payment_method !== 3">
-                                            已销售：0</p>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 2">
-                                        <button style="visibility: hidden;width:136px;margin-right: 10px;"></button>
-                                        <button style="width: 82px;background: #EBEBEB;color: #999999;">已拒绝</button>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 4 && task.is_comment_boss === 0">
-                                        <button class="first" @click="handleMsg(task.user.user_id,task.task_order_id)">和他聊聊</button>
-                                        <button @click="handleDiscuss_dia(3,task)">去评价</button>
-                                    </div>
-                                    <div class="task_operate" v-if="task.status === 4 && task.is_comment_boss === 1">
-                                        <button style="visibility: hidden;width:136px;margin-right: 10px;"></button>
-                                        <button style="width: 82px;background: #24BFFF;color: #fff;">已评价</button>
-                                    </div>
-                                </div>
-                                <div class="line"></div>
-                            </div>-->
                             <taskList :index="active_index" :task-list="task_list" @on-show-discuss="handleDiscuss_dia" @on-reset="initialize"></taskList>
                         </div>
                         <div class="none_list" v-show="task_list.length===0">
@@ -360,7 +171,7 @@
                     description: null
                 },
                 index:0,
-                active_index:'0'
+                active_index:'0',
             };
         },
         mounted() {
@@ -413,31 +224,15 @@
                     this.searchParams.status = array;
                     this.apiGet('/api/task/order/paginate', this.searchParams).then((res) => {
                         this.task_list = res.data;
-                        console.log(res)
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
                     });
-                    /*if (status2) {
-                        this.apiGet('/api/task/order/paginate' + '?status[0]=' + status1 + '&status[1]=' + status2, this.searchParams).then((res) => {
-                            this.task_list = res.data;
-                            this.searchParams.page = parseInt(res.current_page);
-                            this.searchParams.total = parseInt(res.total);
-                            this.searchParams.per_page = parseInt(res.per_page);
-                        });
-                    } else {
-                        this.apiGet('/api/task/order/paginate' + '?status=' + status1, this.searchParams).then((res) => {
-                            this.task_list = res.data;
-                            this.searchParams.page = parseInt(res.current_page);
-                            this.searchParams.total = parseInt(res.total);
-                            this.searchParams.per_page = parseInt(res.per_page);
-                        });
-                    }*/
                 } else {
                     this.searchParams.status = [];
                     this.apiGet('/api/task/order/paginate', this.searchParams).then((res) => {
                         this.task_list = res.data;
-                        console.log(res)
+                        console.log(res);
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);

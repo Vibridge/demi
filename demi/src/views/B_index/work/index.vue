@@ -96,8 +96,8 @@
                                         <p>{{task.task_title}}</p>
                                         <p>
                                             <span v-text="task.city ? task.city.city_name : '不限'"></span>
-                                            <span v-if="task.payment_money > 0">-</span>
-                                            <span v-if="task.payment_money > 0">{{task.payment_money}}{{task.unit}}</span>
+                                            <span v-if="task.payment_money > 0"> - {{task.payment_money}}{{task.unit}}</span>
+                                            <span v-if="(task.payment_method !== 3) && handleCommission(task.goods)">-{{handleCommission(task.goods)}}{{task.unit}}</span>
 <!--                                            <span v-if="task.payment_method === 1">/单</span>-->
                                         </p>
                                     </div>
@@ -328,6 +328,28 @@
                     });
                 }
 
+            },
+
+            handleCommission(array) {
+                if(array){
+                    let length = array.length;
+                    if (length > 0) {
+                        if(length > 1){
+                            let commission = [];
+                            for (let i = 0; i < length; i++) {
+                                commission.push(parseFloat(array[i].price))
+                            }
+                            commission.sort();
+                            return "(" + commission[0] + "～" + commission[length - 1] + ")"
+                        }else{
+                            return array[0].price
+                        }
+                    }else{
+                        return false
+                    }
+                }else{
+                    return false
+                }
             },
 
             //岗位下线

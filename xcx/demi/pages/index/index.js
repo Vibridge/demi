@@ -62,6 +62,10 @@ Page({
     var task_list = this.data.task_list
     common.http(util.baseUrl + '/api/task/paginate?page=' + page, 'get', function (res) {
       console.log(res)
+      if(res.goods){
+        res.goods = map(JSON.stringify(res.goods))
+      }
+      console.log(res)
       if(res){
         current_page = res.current_page;
         last_page = res.last_page
@@ -70,7 +74,6 @@ Page({
           res.data.forEach(item => {
             item.level = this.handleStar(item.company.reputation)
             task_list.push(item)
-            console.log(item.level)
           })
           this.setData({
             task_list: task_list,

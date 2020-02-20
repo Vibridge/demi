@@ -106,9 +106,7 @@
                     if (isKickedout && isCurrentConversation) {
                         this.$store.commit('resetCurrentConversation')
                     }
-                    console.log(event.data.message)
                     const h = this.$createElement;
-
                     this.$notify({
                         title: '新系统通知',
                         message: h('i', { style: 'color: teal'}, translateGroupSystemNotice(event.data.message)),

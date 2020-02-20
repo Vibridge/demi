@@ -101,7 +101,7 @@
                 <p style="line-height:19px;">{{resume[0].vita.description}}</p>
             </div>
         </div>
-        <div class="company" v-if="card === 'b'">
+        <!--<div class="company" v-if="card === 'b'">
             <div class="company_nav">
                 <div @click="select2='work'" class="company_nav_work"
                      :style="select2 == 'work' ? 'color:#333333;font-size:16px' : ''">
@@ -128,7 +128,7 @@
                     暂未发布任务
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 </template>
 

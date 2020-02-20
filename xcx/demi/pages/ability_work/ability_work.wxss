@@ -72,7 +72,7 @@
   font-weight:500;
   color:rgba(153,153,153,1);
 }
-.task_des,.video,.work_des,.pic,.address,.goods_des{
+.task_des,.video,.work_des,.pic,.address,.company_info{
   padding: 70rpx 40rpx;
 }
 .task_des view{
@@ -82,7 +82,7 @@
   font-weight:500;
   color:rgba(153,153,153,1);
 }
-.task_des view:nth-child(1),.video view:nth-child(1),.work_des view:nth-child(1),.pic view:nth-child(1),.address view:nth-child(1),.goods_des view:nth-child(1){
+.task_des view:nth-child(1),.video view:nth-child(1),.work_des view:nth-child(1),.pic view:nth-child(1),.address view:nth-child(1),.company_info view:nth-child(1){
   margin-bottom: 58rpx;
   font-size:36rpx;
   font-family:PingFang SC;
@@ -107,7 +107,62 @@
   margin-bottom: 44rpx;
   z-index:0;
 }
-.work_des view:nth-child(2),.goods_des view:nth-child(4){
+.company_info view:nth-child(2),.store_info{
+  display: flex
+}
+.company_info image,.store_info image{
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  margin-right: 45rpx
+}
+
+.company_info_name{
+  display: flex;
+  flex-direction: column;
+  justify-content: center
+}
+.company_info_name view:nth-child(1){
+  color: #000000;
+  margin-bottom: 0;
+  font-size: 36rpx
+}
+
+.company_info_name view:nth-child(2){
+  color: #CCCCCC;
+  font-size: 20rpx
+}
+.goods_list{
+  padding: 40rpx 0 40rpx 40rpx;
+  background: rgba(247,247,247,1)
+}
+.goods_info{
+  display: inline-block;
+  margin-right: 40rpx;
+  background-color: #fff;
+  border-radius:10rpx 10rpx 0px 0px;
+  margin-bottom: 40rpx;
+}
+.goods_info image{
+  width: 315rpx;
+  max-height: 302rpx;
+  border-radius:10rpx 10rpx 0px 0px;
+}
+.goods_info_title{
+  width: 315rpx;
+  padding: 15rpx 30rpx 12rpx 10rpx;
+  color:#000000;
+  font-size: 20rpx;
+  box-sizing: border-box
+}
+.goods_info_price{
+  width: 315rpx;
+  color: #FF5B05;
+  font-size: 30rpx;
+  padding: 0 0 19rpx 10rpx;
+  box-sizing: border-box
+}
+.work_des view:nth-child(2){
   white-space:pre-line;
   font-size:28rpx;
   font-family:Microsoft YaHei;
@@ -119,13 +174,7 @@
   width:100%;
   height: auto;
 }
-.goods_des view:nth-child(2),.goods_des view:nth-child(3){
-  font-size:28rpx;
-  font-family:Microsoft YaHei;
-  font-weight:400;
-  color:rgba(36,191,255,1);
-  margin-bottom: 38rpx;
-}
+
 .address text{
   margin-left: 21rpx;
   font-size:28rpx;
@@ -197,12 +246,15 @@
   border-radius:20rpx;
   z-index:100;
 }
-.main{
+.main,.store_info_wrap{
   padding:50rpx;
   font-size:26rpx;
   font-family:Microsoft YaHei;
   font-weight:400;
   color:rgba(153,153,153,1);
+}
+.store_info_wrap{
+  text-align: center
 }
 .main view:nth-child(1){
   text-align: center;

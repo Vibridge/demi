@@ -19,6 +19,7 @@ function http(url, method, callback, data = null, token = null){
         if (res.data.code === 200) {
           if (res.data.data) {
             if (res.data.current_page) {
+             
               callback(res.data)
             } else {
               callback(res.data.data)

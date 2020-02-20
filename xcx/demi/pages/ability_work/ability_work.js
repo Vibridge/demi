@@ -10,7 +10,11 @@ Page({
     select: null,
     title: null,
     loading:true,
-    open:false
+    open:false,
+    store_info:{},
+    goods_list:[],
+    commission:0,
+    openStoreInfo:false
   },
   onLoad: function(options) {
     for (var i in options) {
@@ -25,13 +29,47 @@ Page({
   onShow(){
     common.http(util.baseUrl + '/api/task/info/' + this.data.id, "get", function (res) {
       console.log(res)
+      if(res.goods){
+        let length = res.goods.length;
+        let array = []
+        if (length > 0) {
+          let commission = 0
+          if(length > 1){
+            for (let i = 0; i < length; i++) {
+              array.push(parseFloat(res.goods[i].price))
+            }
+            array.sort;
+            commission = array[0] + '-' + array[length - 1]
+          }else{
+            commission = array[0]
+          }
+          this.setData({
+            commission: commission
+          })
+        }
+      }
+      
       this.setData({
         task_info: res,
         title: res.task_title,
         loading:false
       })
+      
+      common.http(util.baseUrl + '/api/shop/info/' + res.shop_id, "get", function(result){
+        console.log(result)
+        this.setData({
+          store_info: result
+        })
+      }.bind(this))
+      common.http(util.baseUrl + '/api/goods/paginate?shop_id=' + res.shop_id, "get", function (result) {
+        console.log(result)
+        this.setData({
+          goods_list: result.data
+        })
+      }.bind(this))
     }.bind(this))
   },
+
   //没有绑定手机号的情况
   onMyEvent: function(e) {
     // 自定义组件触发事件时提供的detail对象
@@ -162,7 +200,6 @@ Page({
         }
       }
     }
-
     let task_id = this.data.task_info.task_id
     if (!token || app.globalData.data.type == 2) {
       if (app.globalData.data.type == 2) {
@@ -190,7 +227,18 @@ Page({
       })
     }
   },
-  
+
+  handleOpenStore: function () {
+    this.setData({
+      openStoreInfo: true
+    })
+  },
+  handleCloseStore:function(){
+    this.setData({
+      openStoreInfo: false
+    })
+  },
+
   //转发
   onShareAppMessage: function(res) {
     let title = this.data.task_info.task_title

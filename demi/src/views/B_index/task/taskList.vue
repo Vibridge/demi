@@ -4,7 +4,8 @@
             <div class="task_list_info">
                 <div class="task_title">
                     <p>{{task.task_title}}</p>
-                    <p>{{task.snapshot.payment_money}}{{task.unit}}/单</p>
+                    <span v-if="task.payment_money > 0">{{task.payment_money}}{{task.unit}}/单</span>
+                    <p v-if="(task.payment_method !== 3) && handleCommission(task.goods)">{{handleCommission(task.goods)}}{{task.unit}}/单</p>
                 </div>
                 <div class="task_buyer">
                     <div class="task_buyer_info">
@@ -16,9 +17,10 @@
                             <p>
                                 <span v-if="task.snapshot.city">{{task.snapshot.city.city_name}}-</span>
                                 <span v-if="!task.snapshot.city">不限-</span>
-                                <span v-for="ind in task.snapshot.industry" :key="ind.label_id">
+                                <span v-if="task.payment_method === 3" v-for="ind in task.snapshot.industry" :key="ind.label_id">
                                                         {{ind.name}}
                                                     </span>
+                                <span v-if="task.payment_method !== 3">销售</span>
                             </p>
                         </div>
                     </div>
@@ -28,7 +30,8 @@
                         已销售：0</p>
                 </div>
                 <div class="task_operate" v-if="task.status === 0">
-                    <button @click="handleRefuse(this.index,task.task_order_id,task.user.user_id)" class="first active_over">拒绝
+                    <button @click="handleRefuse(this.index,task.task_order_id,task.user.user_id)"
+                            class="first active_over">拒绝
                     </button>
                     <button v-if="parseInt(task.snapshot.front_money) <= 0"
                             @click="handlePass(this.index,task.task_order_id,task.user.user_id)">通过
@@ -92,18 +95,24 @@
 
 <script>
     import http from '../../../libs/http'
+
     export default {
         name: 'taskList',
         props: {
             taskList: {
                 type: Array
             },
-            index:{
-                type:String
+            index: {
+                type: String
             }
         },
         data() {
-            return {}
+            return {
+                commission: ""
+            }
+        },
+        mounted() {
+
         },
         methods: {
             //拒绝任务
@@ -113,9 +122,9 @@
                     if (res) {
                         // this.$emit('on-reset',index)
                         if (index === '0') {
-                            this.$emit('on-reset',[])
+                            this.$emit('on-reset', [])
                         } else if (index === '1') {
-                            this.$emit('on-reset',[0,5])
+                            this.$emit('on-reset', [0, 5])
                         }
                         let userID = user_id + 'a';
                         const message = this.tim.createCustomMessage({
@@ -144,9 +153,9 @@
                 this.apiPost('/api/task/order/status/' + id, {status: 1}).then((res) => {
                     if (res) {
                         if (index === '0') {
-                            this.$emit('on-reset',[])
+                            this.$emit('on-reset', [])
                         } else if (index === '1') {
-                            this.$emit('on-reset',[0,5])
+                            this.$emit('on-reset', [0, 5])
                         }
                         let userID = user_id + 'a';
                         const message = this.tim.createCustomMessage({
@@ -191,9 +200,9 @@
                 this.apiPost('/api/task/order/status/' + id, {status: 4}).then((res) => {
                     if (res) {
                         if (index === '0') {
-                            this.$emit('on-reset',[])
+                            this.$emit('on-reset', [])
                         } else if (index === '2') {
-                            this.$emit('on-reset',[1, 3])
+                            this.$emit('on-reset', [1, 3])
                         }
                         let userID = user_id + 'a';
                         const message = this.tim.createCustomMessage({
@@ -206,10 +215,10 @@
                             }
                         });
                         let promise = this.tim.sendMessage(message);
-                        promise.then(function(imResponse) {
+                        promise.then(function (imResponse) {
                             // 发送成功
                             console.log(imResponse);
-                        }).catch(function(imError) {
+                        }).catch(function (imError) {
                             // 发送失败
                             console.warn('sendMessage error:', imError);
                         });
@@ -219,13 +228,34 @@
 
             //评价
             handleDiscuss_dia(index, item) {
-                this.$emit('on-show-discuss',true, item ,index)
+                this.$emit('on-show-discuss', true, item, index)
                 /*this.discuss = true;
                 this.discusser_info = item;*/
                 // this.index = index
             },
+            handleCommission(array) {
+                if(array){
+                    let length = array.length;
+                    if (length > 0) {
+                        if(length > 1){
+                            let commission = [];
+                            for (let i = 0; i < length; i++) {
+                                commission.push(parseFloat(array[i].price))
+                            }
+                            commission.sort();
+                            return commission[0] + " - " + commission[length - 1]
+                        }else{
+                            return array[0].price
+                        }
+                    }else{
+                        return false
+                    }
+                }else{
+                    return false
+                }
+            }
         },
-        mixins:[http]
+        mixins: [http]
     }
 </script>
 

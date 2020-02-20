@@ -13,7 +13,8 @@
     </view>
     <view class="task_info">
       <view>
-        <text class="num">{{task_info.payment_money}}</text>
+        <text wx:if="{{task_info.goods}}" class="num">{{commission}}</text>
+        <text wx:if="{{!task_info.goods}}" class="num">{{task_info.payment_money}}</text>
         <text class="unit">RMB</text>
       </view>
       <view class="task_title">{{task_info.task_title}}</view>
@@ -34,7 +35,8 @@
         <text wx:if="{{task_info.city === null}}">不限</text>
       </view>
       <view>适合行业：
-        <text class="decorate" wx:for="{{task_info.industry}}" wx:for-item="item" wx:key="{{item.label_id}}">{{item.name}}<text>/</text></text>
+        <text wx:if="{{task_info.payment_method === 3}}" class="decorate" wx:for="{{task_info.industry}}" wx:for-item="item" wx:key="{{item.label_id}}">{{item.name}}<text>/</text></text>
+        <text wx:if="{{task_info.payment_method !== 3}}" class="decorate">销售</text>
       </view>
     </view>
     <view class="line"></view>
@@ -45,21 +47,36 @@
       </view>
       <view class="line" style="height:2rpx"></view>
     </view>
-    <view wx:if="{{task_info.goods === null}}">
+    <view>
       <view class="work_des">
         <view>工作描述</view>
         <view>{{task_info.description}}</view>
       </view>
     </view>
+    <view class="line" style="height:2rpx"></view>
     <view wx:if="{{task_info.goods !== null}}">
-      <view class="goods_des">
-        <view>产品描述</view>
-        <view>产品名称：{{task_info.goods.goods_title}}</view>
-        <view>产品价格：{{task_info.goods.goods_price}}元</view>
-        <view>{{task_info.goods.description}}</view>
+      <view class="company_info">
+        <view>公司店铺</view>
+        <view>
+          <image bindtap="handleOpenStore" wx:if="{{store_info.shop_logo}}" src="{{store_info.shop_logo}}"></image>
+          <view class="company_info_name">
+            <view>{{store_info.shop_name}}</view>
+            <view>在售商品 {{task_info.goods.length}}</view>
+          </view>
+        </view>
       </view>
     </view>
-    <view class="line" style="height:2rpx"></view>
+    <view wx:if="{{task_info.goods !== null}}">
+      <view class="goods_list">
+        <view class="goods_info" wx:for="{{goods_list}}" wx:for-item="item" wx:key="{{item.goods_id}}">
+          <image wx-if="{{item.images}}" src="{{'http://app.jmzhipin.com'  + item.images[0].file_path}}"></image>
+          <view class="goods_info_note">
+              <view class="goods_info_title">{{item.title}}</view>
+              <view class="goods_info_price">￥{{item.price}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
     <view wx:if="{{task_info.images.length > 0}}">
       <view class="pic">
         <view wx:if="{{task_info.goods === null}}"> 图片介绍</view>
@@ -115,6 +132,26 @@
       <!-- <view class="button" bindtap="handleSumbit">
       <view>登录</view>
     </view> -->
+    </view>
+  </view>
+  <view class="res" wx:if="{{openStoreInfo}}">
+    <view class="bg" bindtap="handleCloseStore"></view>
+    <view class="res_detail">
+      <view class="store_info_wrap">
+        <view class="store_info">
+          <image wx:if="{{store_info.shop_logo}}" src="{{store_info.shop_logo}}"></image>
+          <view class="company_info_name">
+            <view style="font-size: 40rpx;text-align:left">{{store_info.shop_name}}</view>
+            <view style="font-size: 26rpx;text-align:left">在售商品 {{task_info.goods.length}}</view>
+          </view>
+        </view>
+        <view>
+          <view style="color:#999999;font-size:26rpx;margin:18rpx 0 ">店铺简介</view>
+        </view>
+        <view style="color:#999999;font-size:24rpx;margin:18rpx 0 ">
+          {{store_info.shop_poster}}
+        </view>
+      </view>
     </view>
   </view>
 </view>
