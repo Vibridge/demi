@@ -14,37 +14,78 @@
       <text class="{{choose === 'unpay' ? 'active' : 'title'}}">未付款</text>
       <view wx:if="{{choose === 'unpay'}}" class="desc"></view>
     </view>
+    <view class="service" data-active="service" bindtap="handleSelect">
+      <text class="{{choose === 'service' ? 'active' : 'title'}}">售后中</text>
+      <view wx:if="{{choose === 'service'}}" class="desc"></view>
+    </view>
   </view>
 
   <view class="main" style="{{orderList.length < 1 ? 'padding-bottom:0' : ''}}">
     <view class="no_list" wx:if="{{orderList.length < 1}}">
       暂无数据
     </view>
-    <view class="list" wx:for="{{orderList}}" wx:for-item="item" wx:key="{{item.order_id}}">
+    <view wx:if="{{type === 1}}" class="note">
+      消费者自成交日起十五天内退货，佣金将原路退回消费者
+    </view>
+    <view class="list" wx:for="{{orderList}}" wx:for-item="item" wx:key="{{item.order_id}}" data-id="{{item.order_id}}" bindtap="handleOrderDetail">
       <view class="company_info">
-        <view class="company_icon">
-          <image mode="aspectFit" src="../asset/img/store@2x.png"></image>
+        <view style="display:flex">
+          <view class="company_icon">
+            <image mode="aspectFit" src="../asset/img/store@2x.png"></image>
+          </view>
+          <text wx:if="{{type === 1}}" class="company_name">{{item.company.company_name}}</text>
         </view>
-        <text class="company_name">{{item.company.company_name}}</text>
+
+        <view wx:if="{{type !== 1}}" class="status">
+          <text wx:if="{{item.status == 0}}">未付款</text>
+          <view style="display:flex" wx:if="{{item.status == 2}}" data-id="{{item.order_id}}" catchtap="handleDelivery">
+            <text>去发货</text>  
+            <image style="width:24rpx;height:24rpx;align-self:center" mode="aspectFit" src="../asset/img/icon_return.png"></image>
+          </view>
+
+          <!-- <text wx:if="{{item.status == 7}}">对方发起退款</text> -->
+          <view style="display:flex" wx:if="{{item.status == 7}}" catchtap="handleRefund">
+            <text>对方发起退款</text>  
+            <image style="width:24rpx;height:24rpx;align-self:center" mode="aspectFit" src="../asset/img/icon_return.png"></image>
+          </view>
+          
+          <text wx:if="{{item.status == 11}}">已退款</text>
+          <text wx:if="{{item.status == 12}}">已收货</text>
+          <text wx:if="{{item.status == 6}}">已发货</text>
+          <text wx:if="{{item.status == 1}}">已取消</text>
+          <text wx:if="{{item.status == 8}}">等待退货</text>
+          <text wx:if="{{item.status == 9}}">拒绝退款</text>
+        </view>
+
+        <view wx:if="{{type === 1}}" class="status" style="color:#F4333C">
+          <text wx:if="{{item.status == 0}}">未付款</text>
+          <text wx:if="{{item.status == 2}}">待发货</text>
+          <text wx:if="{{item.status == 10}}">已发货</text>
+          <text wx:if="{{item.status == 11}}">已退款</text>
+          <text wx:if="{{item.status == 12}}">已收货</text>
+          <text wx:if="{{item.status == 1}}">已取消</text>
+        </view>
         <!-- <view class="go_icon">
            <image mode="aspectFit" src="../asset/img/icon_return.png"></image>
         </view> -->
       </view>
       <view class="produce">
-        <view class="produce_info">
-          <view class="goods_img">
-            <image mode="aspectFit" src="{{item.snapshot.images[0].file_path}}"></image>
+        <view style="display:flex;justify-content: space-between;margin:20rpx 0" wx:if="{{item.goods}}" wx:for="{{item.goods}}" wx:for-item="good" wx:key="{{good.goods_id}}">
+          <view class="produce_info">
+            <view class="goods_img">
+              <image mode="aspectFit" src="{{'http://app.jmzhipin.com' + good.cover_path}}"></image>
+            </view>
+            <view class="detail">
+              <text>{{good.title}}</text>
+            </view>
           </view>
-          <view class="detail">
-            <text>{{item.snapshot.goods.goods_title}}</text>
-            <text>{{item.snapshot.goods.description}}</text>
+          <view class="money">
+            <text>¥{{good.price}}</text>
+            <text>x{{good.quantity}}</text>
           </view>
         </view>
-        
-        <view class="money">
-          <text>¥{{item.snapshot.goods.goods_price}}</text>
-          <text>x{{item.buy_quantity}}</text>
-        </view>
+        <view style="font-size:26rpx"><text>订单编号：{{item.order_no}}</text></view>
+        <view style="font-size:26rpx;color:#24BFFF">{{item.logistics.name}}{{item.logistics_no}}</view>
       </view>
       <view class="user_info">
         <view class="user_icon">
@@ -59,7 +100,7 @@
           <!-- <text class="area" wx:if="{{!item.contact_address}}"></text> -->
         </view>
       </view>
-      <view class="bottom">
+      <view wx:if="{{type === 1}}" class="bottom">
         <form data-id="{{item.boss.user_id}}" data-price="{{item.snapshot.goods.goods_price}}" data-goods="{{item.snapshot.goods.goods_title}}" data-name="{{item.company.company_name}}" bindsubmit="chat" bindreset="formReset" report-submit="true">
           <button class="connect" form-type="submit">咨询雇主</button>
         </form>

@@ -59,9 +59,9 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "pages/ability_work/ability_work",
-					"pathName": "pages/ability_work/ability_work",
-					"query": "id=89",
+					"name": "pages/orderDetail/orderDetail",
+					"pathName": "pages/orderDetail/orderDetail",
+					"query": "id=10",
 					"scene": null
 				},
 				{
@@ -69,6 +69,13 @@
 					"name": "pages/order/order",
 					"pathName": "pages/order/order",
 					"query": "id=160",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/login/login",
+					"pathName": "pages/login/login",
+					"query": "",
 					"scene": null
 				}
 			]

@@ -56,7 +56,9 @@ Page({
     loading: true,
     type:2,
     good_price:'',
-    goods_name:''
+    goods_name:'',
+    commisson:0,
+    name:'',
   },
   onLoad: function(option) {
     if(option.type == 2){
@@ -68,19 +70,26 @@ Page({
         moeny: option.payment_money,
         task_avatar: option.avatar,
         task_name: option.task_name,
-        type:option.type
+        type:option.type,
+        commisson: option.commisson
       })
     }else{
-      this.setData({
-        userID: option.user_id,
-        company_name: option.company_name,
-        type: option.type,
-        goods_name: option.goods_name,
-        good_price: option.good_price,
-
-      })
+      if (option.name){
+        this.setData({
+          userID: option.user_id,
+          name: option.name,
+          type: option.type
+        })
+      }else{
+        this.setData({
+          userID: option.user_id,
+          company_name: option.company_name,
+          type: option.type,
+          goods_name: option.goods_name,
+          good_price: option.good_price,
+        })
+      }
     }
-    
   },
 
   onShow: function() {

@@ -10,7 +10,8 @@ Page({
     login: false,
     select: null,
     choose: 'all',
-    orderList:[]
+    orderList:[],
+    type:2,
   },
 
   /**
@@ -58,6 +59,12 @@ Page({
       login: login,
     })
   },
+  handleOrderDetail: function (event){
+    console.log(event.currentTarget.dataset.id)
+    wx.navigateTo({
+      url: '../orderDetail/orderDetail?id=' + event.currentTarget.dataset.id,
+    })
+  },
 
   //“咨询”
   onlogin: function (event) {
@@ -100,19 +107,24 @@ Page({
     }
   },
   orderList(status){
-    let token = wx.getStorageSync('token');
-    console.log(token)
+    // let token = wx.getStorageSync('token');
+    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMjg4MTM5LCJleHAiOjE1ODIyODgxOTksIm5iZiI6MTU4MjI4ODEzOSwianRpIjoiNmh3dGthVVRlcFRNd2ZjOSIsInN1YiI6MjMsInBydiI6IjFkMjA0MjhkZTRlOTU5YWQ5MTI3MGY5MjY2YzEzYTJmMGQwMjA1MTIifQ.eP-hLpRodJwo2mo2iuoqh25LtxhWgGdTjzyDUALlfbc";
+
+    console.log(app.globalData.data.user_id)
     let phone = app.globalData.data.phone;
+    // this.setData({
+    //   type: app.globalData.data.type
+    // })
     if(status){
       console.log(status)
-      common.http(util.baseUrl + '/api/order/paginate?contact_phone=' + phone + '&per_page=11111111' + '&status=' +status, "get", function (res) {
+      common.http(util.baseUrl + '/api/order/paginate?user_id=' + '23' + '&per_page=11111111' + '&status=' +status, "get", function (res) {
         console.log(res)
         this.setData({
           orderList: res.data
         })
       }.bind(this), null, token)
     }else{
-      common.http(util.baseUrl + '/api/order/paginate?contact_phone=' + phone + '&per_page=11111111', "get", function (res) {
+      common.http(util.baseUrl + '/api/order/paginate?user_id=' + '23' + '&per_page=11111111', "get", function (res) {
         console.log(res)
         this.setData({
           orderList: res.data

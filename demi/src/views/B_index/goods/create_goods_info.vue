@@ -56,9 +56,9 @@
                             <el-checkbox-group v-model="checkList[index].values">
                                 <el-checkbox v-for="checkbox in label.children" :key="checkbox.attribute_id"
                                              :label="checkbox.title"
-                                             @change="handleSelectAttr()"></el-checkbox>
+                                             @change="handleSelectAttr(checkbox.title)"></el-checkbox>
                                 <el-checkbox v-for="item in custom_attr[index].values" v-if="item" :label="item"
-                                             @change="handleSelectAttr()"></el-checkbox>
+                                             @change="handleSelectAttr(item)"></el-checkbox>
                                 <i class="el-icon-edit"></i>
                                 <i class="el-icon-delete"></i>
                             </el-checkbox-group>
@@ -161,7 +161,7 @@
                             </el-table>
                         </div>
                     </div>
-                    <div class="goods_price" v-if="tableData.length < 1">
+                    <div class="goods_price" v-if="tableData.length < 1 && isSelectSku.length < 1">
                         <p class="goods_price_label"><span style="color:#FF0000">* </span>一口价</p>
                         <div class="goods_price_input">
                             <div style="display: flex">
@@ -175,7 +175,7 @@
                             <p>商品价格不能低于0.10元</p>
                         </div>
                     </div>
-                    <div class="goods_price" v-if="tableData.length < 1">
+                    <div class="goods_price" v-if="tableData.length < 1 && isSelectSku.length < 1">
                         <p class="goods_price_label"><span style="color:#FF0000">* </span>佣&nbsp;&nbsp;&nbsp;金</p>
                         <div class="goods_price_input">
                             <div style="display: flex">
@@ -188,7 +188,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="goods_price" v-if="tableData.length < 1">
+                    <div class="goods_price" v-if="tableData.length < 1 && isSelectSku.length < 1">
                         <p class="goods_price_label"><span style="color:#FF0000">* </span>库&nbsp;&nbsp;&nbsp;存</p>
                         <div class="goods_price_input">
                             <div style="display: flex">
@@ -201,7 +201,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="goods_code" v-if="tableData.length < 1">
+                    <div class="goods_code" v-if="tableData.length < 1 && isSelectSku.length < 1">
                         <p class="goods_code_label">商品编码</p>
                         <el-input
                                 size="small"
@@ -475,6 +475,8 @@
 
                 //更新时商品的sku
                 isUpdateSku: [],
+
+                isSelectSku:[]
             };
         },
         computed: {
@@ -535,10 +537,9 @@
             //批量填充
             handleFill() {
                 if (this.tableData) {
-
                     //价格
                     if (this.sale) {
-                        console.log(this.sku_sale)
+                        console.log(this.sku_sale);
                         let none = true;
                         let lessThan = [];
                         let length = this.sku_commission.length;
@@ -551,13 +552,13 @@
                             }
                         }
                         let has = lessThan.length;
-                        if ((this.commission && this.commission < this.sale) || (!this.commission && none)) {
+                        if ((parseInt(this.commission) && (parseInt(this.commission) < parseInt(this.sale))) || (!this.commission && none)) {
                             let length = this.sku_sale.length;
                             for (let i = 0; i < length; i++) {
                                 this.$set(this.sku_sale, i, this.sale)
                             }
                             this.sale = '';
-                        } else if (this.commission && this.commission > this.sale) {
+                        } else if (parseInt(this.commission) && (parseInt(this.commission) > parseInt(this.sale))) {
                             this.$message.error('佣金不能大于商品价格')
                         } else if (!this.commission && has > 0) {
                             for (let i = 0; i < has; i++) {
@@ -592,13 +593,13 @@
                             }
                         }
                         let has = lessThan.length;
-                        if ((this.sale && this.commission < this.sale) || (!this.sale && none)) {
+                        if ((parseInt(this.sale) && (parseInt(this.commission) < parseInt(this.sale))) || (!this.sale && none)) {
                             let length = this.sku_commission.length;
                             for (let i = 0; i < length; i++) {
                                 this.$set(this.sku_commission, i, this.commission)
                             }
                             this.commission = null
-                        } else if (this.sale && this.commission > this.sale) {
+                        } else if ((parseInt(this.sale) && (parseInt(this.commission)) >  parseInt(this.sale))) {
                             this.$message.error('佣金不能大于商品价格')
                         } else if (!this.sale && has > 0) {
                             for (let i = 0; i < has; i++) {
@@ -633,13 +634,35 @@
             },
 
             //sku
-            handleSelectAttr() {
+            handleSelectAttr(item) {
+                console.log(item)
                 this.tableData = [];
-                // this.sku_array = [];
-                // this.sku_sale = [];
-                // this.sku_sum = [];
-                // this.sku_commission = [];
-                // this.sku_code = [];
+
+                let length = this.isSelectSku.length;
+                if(length > 0){
+                    let add = false;
+                    let index = 0
+                    for(let i = 0;i<length;i++){
+                        if(this.isSelectSku[i] === item){
+                            add = true
+                            index = i
+                        }
+                    }
+                    if(!add){
+                        this.isSelectSku.push(item)
+                    }else{
+                        this.isSelectSku.splice(index,1)
+                    }
+                }else{
+                    this.isSelectSku.push(item)
+                }
+
+                console.log(this.isSelectSku)
+                this.sku_array = [];
+                this.sku_sale = [];
+                this.sku_sum = [];
+                this.sku_commission = [];
+                this.sku_code = [];
                 this.sku_attr_id = [];
                 this.sku_select_attr = [];
                 this.handleSku(0, []);
@@ -840,13 +863,14 @@
                 for (let i = 0; i < length; i++) {
                     form.append('files', this.files[i].raw);
                 }
+                form.append('is_cloud', 1);
                 this.apiPost('/file/uploads', form).then((res) => {
                     // 如果上传成功
                     if (res) {
                         // 获取光标所在位置
                         let length = quill.getSelection().index;
                         // 插入图片，res为服务器返回的图片链接地址
-                        quill.insertEmbed(length, 'image', this.$config.baseUrl + res[0]);
+                        quill.insertEmbed(length, 'image', "https://jmsp-images-1257721067.cos.ap-guangzhou.myqcloud.com" + res[0]);
                         // 调整光标到最后
                         quill.setSelection(length + 1)
                     } else {

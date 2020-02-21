@@ -1,0 +1,135 @@
+.contain {
+  margin: 129rpx auto 0 auto;
+  overflow-x: hidden;
+  background: #F2F2F2
+}
+.contain_title{
+  position: relative;
+  color: #fff;
+  font-size:34rpx;
+  height: 154rpx
+}
+.contain_title text{
+  position: absolute;
+  top:60rpx;
+  left:40rpx;
+  z-index: 111
+}
+.bg{
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 154rpx
+}
+.contant_info{
+  padding: 30rpx 40rpx;
+  background: white
+}
+.basic{
+  display: flex;
+}
+.basic image{
+  align-self: center;
+  width: 28rpx;
+  height: 26rpx;
+  margin-right: 27rpx;
+}
+.name{
+  align-self: center;
+  color: #4D4D4D;
+  font-size: 26rpx;
+  margin-right: 91rpx
+}
+.phone{
+  align-self: center;
+  color: #4D4D4D;
+  font-size: 26rpx;
+}
+.address{
+  color: #999999;
+  font-size: 26rpx;
+  margin-left: 54rpx
+}
+.contant_goods{
+  margin-top: 20rpx;
+  background: #fff;
+  display: flex;
+  padding: 30rpx 40rpx;
+}
+.contant_goods image{
+  width:187rpx;
+  height:187rpx;
+  border-radius:10rpx;
+  margin-right: 38rpx;
+}
+.refund{
+  background: #fff;
+}
+.refund_title{
+  padding: 30rpx 40rpx 0 40rpx;
+  color: #333333;
+  font-size: 28rpx;
+}
+.contant_goods .refund{
+  align-self: flex-start
+}
+.time{
+  padding-left: 40rpx;
+  color: #999999;
+  font-size: 24rpx;
+  margin-top: 30rpx;
+}
+.goods_info{
+  align-self: center
+}
+.goods_info view:nth-child(1){
+  color: #333333;
+  font-size: 26rpx;
+  margin-bottom: 20rpx;
+}
+.goods_info view:nth-child(2),.goods_info view:nth-child(3){
+  font-size:24rpx;
+  color: #999999;
+  margin-bottom: 20rpx;
+}
+.order_price{
+  margin-top: 20rpx;
+  color: #999999;
+  font-size: 24rpx;
+  padding: 30rpx 40rpx;
+  background: #fff;
+}
+.order_info{
+  padding: 30rpx 40rpx;
+  margin-top: 20rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #F2F2F2
+}
+.order_info view:nth-child(1){
+  font-size: 26rpx;
+  color:#333333
+}
+.order_info view{
+  font-size: 24rpx;
+  color:#999999;
+  margin-bottom: 20rpx
+}
+.coc{
+  display: flex;
+  padding: 40rpx;
+  justify-content: flex-end;
+  background: #fff
+}
+.coc view{
+  color: #4D4D4D;
+  font-size: 26rpx;
+  text-align: center;
+  line-height: 40rpx;
+  margin-right: 30rpx;
+  width:139rpx;
+  height:40rpx;
+  background:rgba(255,255,255,1);
+  border:1rpx solid rgba(204,204,204,1);
+  border-radius:20rpx;
+}

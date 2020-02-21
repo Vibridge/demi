@@ -13,7 +13,10 @@
     "pages/accept/work/work",
     "pages/accept/industry/industry",
     "pages/accept/pic/pic",
-    "pages/accept/video/video"
+    "pages/accept/video/video",
+    "pages/refund/refund",
+    "pages/orderDetail/orderDetail",
+    "pages/delivery/delivery"
   ],
   "tabBar": {
     "custom": true,

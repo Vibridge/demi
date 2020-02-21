@@ -1,0 +1,52 @@
+
+.bg{
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background:rgba(0,0,0,.5);
+  z-index:10;
+}
+.res_detail{
+  position: fixed;
+  bottom:0;
+  left:0;
+  width: 100%;
+  background: white;
+  border-radius:20rpx 20rpx 0 0;
+  z-index:100;
+}
+
+.main{
+  padding: 40rpx;
+}
+.title{
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+.textarea{
+  width: 100%;
+  background: #E4E4E4;
+  padding: 10rpx;
+  box-sizing: border-box
+}
+.coc{
+  height:95rpx;
+  line-height: 95rpx;
+  background:rgba(59,199,255,1);
+  text-align: center;
+  font-size:34rpx;
+  color: #fff
+}
+.radio {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    justify-content: space-between;
+    padding: 20rpx 0
+}
+.value{
+  color:#000000;
+  font-size: 30rpx;
+ 
+}

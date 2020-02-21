@@ -86,13 +86,14 @@ Page({
     let task_name = this.data.task_info.task_title
     let company_name = this.data.task_info.company.company_name
     let payment_money = this.data.task_info.payment_money
+    let commission = this.data.commission
     let user_name = this.data.task_info.user.nickname
     let avatar = this.data.task_info.user.avatar
 
     if (select) {
       if (select === 1) {//点击的是“咨询”
         wx.navigateTo({
-          url: "../IM/IM?user_id=" + user_id + "&task_id=" + task_id + "&company_name=" + company_name + "&payment_money=" + payment_money + '&user_name=' + user_name + '&avatar=' + avatar + '&task_name=' + task_name,
+          url: "../IM/IM?user_id=" + user_id + "&task_id=" + task_id + "&company_name=" + company_name + "&payment_money=" + payment_money + '&user_name=' + user_name + '&avatar=' + avatar + '&task_name=' + task_name + '&type=2' + "&commission=" + commission ,
           success: function(res) {}
         })
       } else {//点击的是“申请”
@@ -143,7 +144,7 @@ Page({
         login: false
       })
       wx.navigateTo({
-        url: "../IM/IM?user_id=" + user_id + "&task_id=" + task_id + "&company_name=" + company_name + "&payment_money=" + payment_money + '&user_name=' + user_name + '&avatar=' + avatar + '&task_name=' + task_name + '&type=2',
+        url: "../IM/IM?user_id=" + user_id + "&task_id=" + task_id + "&company_name=" + company_name + "&payment_money=" + payment_money + '&user_name=' + user_name + '&avatar=' + avatar + '&task_name=' + task_name + '&type=2' + "&commission=" + commission ,
         success: function(res) {
           console.log(res)
         }

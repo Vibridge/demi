@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "toolTag": "../components/toolTag/toolTag",
+    "refund": "../refund/refund",
+    "logistics": "../components/logistics/logistics"
+  },
+  "navigationStyle": "custom"
+}

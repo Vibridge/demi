@@ -1,12 +1,13 @@
 <!--index.wxml-->
-<toolTag prop-b="true" title="{{company_name}}"/>
+<toolTag prop-b="true" title="{{name ? name : company_name}}"/>
 <view class="container">
-  <view class="task_info_wrap">
+  <view class="task_info_wrap" wx:if="{{!name}}">
     <view class="task_info">
       <text class="task_title" wx:if="{{type == 2}}">{{task_name}}</text>
       <text class="task_title" wx:if="{{type == 4}}">{{goods_name}}</text>
       <view class="task_price">
-        <text wx:if="{{type == 2}}">{{moeny}}</text>
+        <text wx:if="{{type == 2 && commisson}}">{{commisson}}</text>
+        <text wx:if="{{type == 2 && !commisson}}">{{money}}</text>
         <text wx:if="{{type == 4}}">{{good_price}}</text>
         <text wx:if="{{type == 2}}">元/单</text>
         <text wx:if="{{type == 4}}">元</text>
@@ -15,7 +16,7 @@
     </view>
   </view>
   <loading class="loading" wx:if="{{loading}}"/>
-  <scroll-view scroll-y class="message" bindscrolltoupper="lower" scroll-top="{{scrollTop}}">
+  <scroll-view scroll-y class="message" style="{{name ? 'height:1100rpx' : ''}}" bindscrolltoupper="lower" scroll-top="{{scrollTop}}">
     <view class="msgflow" wx:for="{{message}}" wx:for-item="item" wx:key="item.ID">
       <view class="time">{{item.time}}</view>
       <view class="onemsg" wx:if="{{item.flow === 'in'}}">

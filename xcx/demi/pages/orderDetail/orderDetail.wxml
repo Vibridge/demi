@@ -1,0 +1,85 @@
+<toolTag prop-b="true" title="订单详情" />
+<refund wx:if="{{refund}}" prop-a="{{refund}}" bindmyevent="onMyEvent" />
+<logistics wx:if="{{order_info.status === 2 && logistics}}" prop-a="{{logistics}}" bindmyevent="onMyLogistics" />
+<view class="contain">
+  <view class="contain_title">
+    <image class="bg" src="../asset/img/bg.png"></image>
+    <text wx:if="{{order_info.status === 0}}">买家未付款</text>
+    <text wx:if="{{order_info.status === 2}}">买家已付款</text>
+    <text wx:if="{{order_info.status === 7}}">买家发起售后服务</text>
+    <text wx:if="{{order_info.status === 11}}">已退款</text>
+    <text wx:if="{{order_info.status === 12}}">交易成功</text>
+    <text wx:if="{{order_info.status === 6}}">已发货</text>
+    <text wx:if="{{order_info.status === 1}}">订单已取消</text>
+    <text wx:if="{{order_info.status === 9}}">商家拒绝退款</text>
+    <text wx:if="{{order_info.status == 8}}">等待退货</text>
+  </view>
+  <view class="contant_info">
+    <view class="basic">
+      <image mode="aspectFit" src="../asset/img/site_Home@2x.png"></image>
+      <text class="name">{{order_info.contact_name}}</text>
+      <text class="phone">{{order_info.contact_phone}}</text>
+    </view>
+    <text class="address">{{order_info.contact_address}}</text>
+  </view>
+  <view wx:if="{{order_info.status !== 7}}" class="contant_goods" wx:for="{{order_info.goods}}"  wx:for-item="good" wx:key="{{index}}">
+    <image src="{{'http://app.jmzhipin.com' + good.cover_path}}"></image>
+    <view class="goods_info">
+      <view>{{good.title}}</view>
+      <view>数量：X{{good.quantity}}</view>
+      <view>商品金额：￥{{good.price}}</view>
+    </view>
+  </view>
+  <view wx:if="{{order_info.status === 7}}" style="margin:20rpx 0;background:white;padding-botton:30rpx;">
+    <view class="refund" wx:for="{{order_info.goods}}"  wx:for-item="good" wx:key="{{index}}">
+      <view class="refund_title">退款信息</view>
+      <view class="contant_goods">
+        <image src="{{'http://app.jmzhipin.com' + good.cover_path}}"></image>
+        <view class="goods_info">
+          <view>{{good.title}}</view>
+          <view>数量：X{{good.quantity}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="time">申请时间：2019-12-31 17:14</view>
+    <view class="time">退款金额：￥{{order_info.order_amount}}</view>
+    <view class="time" style="margin-bottom:10rpx;">退款原因：{{order_info.after_salemessage}}</view>
+  </view>
+
+  
+  <view class="order_price">
+    <view>
+      <text>订单金额：</text>
+      <text style="color:#F4333C">￥{{order_info.order_amount}}</text>
+    </view>
+  </view>
+  <view class="order_info">
+    <view>
+      订单信息
+    </view>
+    <view wx:if="{{order_info.status == 9}}">
+      商家拒绝退款：{{order_info.after_sale.message}}
+    </view>
+    <view wx:if="{{order_info.logistics}}">
+      商家已发货：{{order_info.logistics.name}}{{order_info.logistics_no}}
+    </view>
+    <view>
+      创建时间：{{order_info.created_at}}
+    </view>
+    <view wx:if="{{order_info.pay_time}}">
+      付款时间：{{order_info.pay_time}}
+    </view>
+    <view wx:if="{{order_info.logistics}}">
+      发货时间：{{order_info.logistics_at}}
+    </view>
+    <view wx:if="{{order_info.status === 12}}">
+      成交时间：2020-11-11 00:03:29
+    </view>
+  </view>
+  <view class="coc">
+    <view data-id="{{order_info.user_id}}" data-name="{{order_info.contact_name}}" bindtap="handleGoIm">联系买家</view>
+    <view wx:if="{{order_info.status === 7}}" bindtap="handleRefuse">拒绝申请</view>
+    <view wx:if="{{order_info.status === 7}}" bindtap="handlePass">确认申请</view>
+    <view wx:if="{{order_info.status === 2}}" bindtap="handleDelivery">去发货</view>
+  </view>
+</view>
