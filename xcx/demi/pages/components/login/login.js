@@ -124,21 +124,31 @@ Component({
               type: 1
             }, token)
           }
-          if (res.type === 1) {
+          if(select == 3){
             var myEventDetail = {
               login: false,
               select: select
             } // detail对象，提供给事件监听函数
             var myEventOption = {} // 触发事件的选项
             this.triggerEvent('myevent', myEventDetail, myEventOption)
+          }else{
+            if (res.type === 1) {
+              var myEventDetail = {
+                login: false,
+                select: select
+              } // detail对象，提供给事件监听函数
+              var myEventOption = {} // 触发事件的选项
+              this.triggerEvent('myevent', myEventDetail, myEventOption)
+            }
+            if (res.type === 2) {
+              wx.showToast({
+                title: '当前身份不正确，请在app切换成个人身份',
+                icon: 'none',
+                duration: 3000
+              })
+            }
           }
-          if (res.type === 2) {
-            wx.showToast({
-              title: '当前身份不正确，请在app切换成个人身份',
-              icon: 'none',
-              duration: 3000
-            })
-          }
+          
 
         }.bind(this), data)
       }

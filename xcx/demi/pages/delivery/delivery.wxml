@@ -1,6 +1,27 @@
 <toolTag prop-b="true" title="物流信息" />
 <view class="contain">
-  <view>
-    <view></view>
+  <view class="main">
+    <view class="company">
+      <view style="font-size:30rpx;margin-bottom:25rpx;">快递公司</view>
+      <picker bindchange="bindPickerChange" value="{{index}}" range="{{deliveryList}}" range-key="name">
+        <view class="picker">
+          <view class="choose">
+            <view wx:if="{{!name}}">选择快递公司</view>
+            <view style="color:#333" wx:if="{{name}}">{{name}}</view>
+            <image style="width:30rpx;height:30rpx;align-self:center" mode="aspectFit" src="../asset/img/icon_return.png"></image>
+          </view>
+        </view>
+      </picker>
+    </view>
+
+    <view class="company">
+      <view style="font-size:30rpx;margin-bottom:25rpx;">输入快递单号</view>
+      <view class="choose">
+        <input style="width:100%" class="weui-input" bindblur="bindReplaceInput" placeholder="输入快递单号" />
+      </view>
+    </view>
+    <view class="coc" bindtap="handleSumbit">确认发货</view>
   </view>
+
+
 </view>

@@ -242,6 +242,12 @@
                         img_active: require('../../assets/img/vip_on@2x.png')
                     },
                     {
+                        path: '/B_index/B_person/store',
+                        title: '店铺推销',
+                        img: require('../../assets/img/openStore.png'),
+                        img_active: require('../../assets/img/openStore_on.png')
+                    },
+                    {
                         path: '/B_index/B_person/goods',
                         title: '发布商品',
                         img: require('../../assets/img/goods.png'),

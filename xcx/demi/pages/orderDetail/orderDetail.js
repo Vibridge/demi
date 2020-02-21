@@ -38,7 +38,7 @@ Page({
   },
   initialize:function(){
     // let token = wx.getStorageSync('token');
-    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMjg3ODI2LCJleHAiOjE1ODIyODc4ODYsIm5iZiI6MTU4MjI4NzgyNiwianRpIjoiVGZVRndWcWhYWXZlR255RyIsInN1YiI6MjMsInBydiI6IjFkMjA0MjhkZTRlOTU5YWQ5MTI3MGY5MjY2YzEzYTJmMGQwMjA1MTIifQ.P-PXAs10GdpPM_WtHCPMylXmD9HwBbV3gZ56Kp3WZIs";
+    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMjk4OTcxLCJleHAiOjE1ODIyOTkwMzEsIm5iZiI6MTU4MjI5ODk3MSwianRpIjoiQ3RqOWF2aFFPU0FZS2JPbiIsInN1YiI6MjMsInBydiI6IjFkMjA0MjhkZTRlOTU5YWQ5MTI3MGY5MjY2YzEzYTJmMGQwMjA1MTIifQ.kCd_hg6g4AG0yvzNmz_yqWlaZ8bYnJnH71ZVSzaSl-0";
     common.http(util.baseUrl + '/api/order/info/' + this.data.id , "get", function (res) {
       console.log(res)
       this.setData({
@@ -89,7 +89,7 @@ Page({
     let name = event.currentTarget.dataset.name;
 
     wx.navigateTo({
-      url: '../IM/IM?type=4' + '&user_id=' + id + '&name=' + name
+      url: '../IM/IM?type=4' + '&user_id=' + id + '&name=' + name + '&code=c'
     })
   },
 

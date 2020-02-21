@@ -1,4 +1,37 @@
 .contain {
   margin: 129rpx auto 0 auto;
-  overflow-x: hidden
+  overflow-x: hidden;
+  height:100%;
+  background: #fff
+}
+.main{
+  padding: 0 40rpx;
+}
+.company{
+  padding: 40rpx 0;
+  border-bottom: 1rpx solid #E6E6E6
+}
+.choose{
+  display: flex;
+  justify-content: space-between
+}
+.choose view:nth-child(1){
+  font-size:36rpx;
+  color:#999999;
+}
+.input{
+  font-size:36rpx;
+}
+.coc{
+  position: fixed;
+  bottom: 0;
+  left:0;
+  margin: 40rpx 25rpx;
+  height:74rpx;
+  width:670rpx;
+  background:rgba(59,199,255,1);
+  border-radius:36px 36px 38px 36px;
+  text-align: center;
+  color: #fff;
+  line-height:74rpx;
 }

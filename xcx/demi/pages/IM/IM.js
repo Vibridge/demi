@@ -55,10 +55,9 @@ Page({
     height: 0,
     loading: true,
     type:2,
-    good_price:'',
-    goods_name:'',
     commisson:0,
     name:'',
+    code:'b'
   },
   onLoad: function(option) {
     if(option.type == 2){
@@ -78,15 +77,8 @@ Page({
         this.setData({
           userID: option.user_id,
           name: option.name,
-          type: option.type
-        })
-      }else{
-        this.setData({
-          userID: option.user_id,
-          company_name: option.company_name,
           type: option.type,
-          goods_name: option.goods_name,
-          good_price: option.good_price,
+          code: option.code
         })
       }
     }
@@ -99,7 +91,12 @@ Page({
 
   login() {
     var that = this
-    var id = app.globalData.data.user_id + 'a'
+    var id;
+    if(this.data.code === 'b'){
+      id = app.globalData.data.user_id + 'a'
+    }else{
+      id = app.globalData.data.user_id + 'b'
+    }
     var userSig = app.globalData.userSig
     var token = wx.getStorageSync('token');
     //im登录
@@ -121,12 +118,12 @@ Page({
             }
           } else {
             var item = {
-              account: that.data.userID + 'b', //聊天对象id
+              account: that.data.userID + that.data.code, //聊天对象id
               type: that.data.type
             }
           }
           common.http(util.baseUrl + '/converse/create', "post", function(res) { //创建对话详情
-            var chat = "C2C" + that.data.userID + 'b' //聊天对象账号
+            var chat = "C2C" + that.data.userID + that.data.code //聊天对象账号
             //获取某会话的消息列表
             tim.tim.getMessageList({
               conversationID: chat, //会话 ID
@@ -216,7 +213,7 @@ Page({
     }
 
     var value = event.currentTarget.dataset.value
-    var recipient = this.data.userID + 'b'
+    var recipient = this.data.userID + this.data.code
     //发送消息
     let message = tim.tim.createTextMessage({
       to: recipient, //对象
@@ -254,7 +251,7 @@ Page({
     var that = this
     if (over === 0) {
       var recipient = that.data.userID
-      var chat = "C2C" + recipient + 'b'
+      var chat = "C2C" + recipient + that.data.code
       tim.tim.getMessageList({
         conversationID: chat,
         nextReqMessageID,

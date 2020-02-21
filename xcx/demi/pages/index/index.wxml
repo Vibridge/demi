@@ -2,7 +2,7 @@
 <view class="contain">
   <view class="line"></view>
   <view class="main">
-    <view class="list" data-id="{{item.task_id}}" bindtap="handleDetail" wx:for="{{task_list}}" wx:for-item="item" wx:key="{{index}}">
+    <view class="list" data-id="{{item.task_id}}" bindtap="handleDetail" wx:for="{{task_list}}" wx:for-item="item" wx:key="index">
       <view class="title">{{item.task_title}}</view>
       <view class="info">
         <view class="logo"><image mode="aspectFit" src="{{item.company.logo_path}}"></image></view>

@@ -11,7 +11,7 @@ Page({
     select: null,
     choose: 'all',
     orderList:[],
-    type:2,
+    type:1,
   },
 
   /**
@@ -38,13 +38,16 @@ Page({
         selected: 1
       });
     }
-    let status = this.data.choose;
-    if(status == 'pay'){
+    let choose = this.data.choose;
+    if (choose === 'pay') {
       this.orderList(2)
-    } else if (status == 'unpay'){
+    } else if (choose === 'unpay') {
       this.orderList(0)
-    }else{
-      this.orderList()
+    } else if (choose === 'service') {
+      let array = [8, 11, 12]
+      this.orderList(array)
+    } else {
+      this.orderList(null)
     }
     
   },
@@ -66,36 +69,10 @@ Page({
     })
   },
 
-  //“咨询”
+  
   onlogin: function (event) {
-    console.log('aaa')
     let token = wx.getStorageSync('token')
-    console.log(token)
-    // if (token) {
-    //   if (event.detail.formId && event.detail.formId != "the formId is a mock one") {
-    //     common.http(util.baseUrl + '/api/user/formid/create', 'post', function (res) {
-    //       console.log(res)
-    //     }, {
-    //         formid: event.detail.formId
-    //       }, token)
-    //   }
-    // }
-    // let user_id = this.data.task_info.user.user_id
-    // let task_id = this.data.task_info.task_id
-    // let task_name = this.data.task_info.task_title
-    // let company_name = this.data.task_info.company.company_name
-    // let payment_money = this.data.task_info.payment_money
-    // let user_name = this.data.task_info.user.nickname
-    // let avatar = this.data.task_info.user.avatar
-    console.log(app.globalData.data)
-    if (app.globalData.data === null || !token || app.globalData.data.type == 2) {
-      if (app.globalData.data.type == 2) {
-        wx.showToast({
-          title: '当前身份不正确，请在app上切换为个人身份',
-          icon: 'none',
-          duration: 2000,
-        })
-      }
+    if (app.globalData.data === null || !token) {
       this.setData({
         login: true,
         select: 3
@@ -108,23 +85,23 @@ Page({
   },
   orderList(status){
     // let token = wx.getStorageSync('token');
-    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMjg4MTM5LCJleHAiOjE1ODIyODgxOTksIm5iZiI6MTU4MjI4ODEzOSwianRpIjoiNmh3dGthVVRlcFRNd2ZjOSIsInN1YiI6MjMsInBydiI6IjFkMjA0MjhkZTRlOTU5YWQ5MTI3MGY5MjY2YzEzYTJmMGQwMjA1MTIifQ.eP-hLpRodJwo2mo2iuoqh25LtxhWgGdTjzyDUALlfbc";
+    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMzAwODcxLCJleHAiOjE1ODIzMDA5MzEsIm5iZiI6MTU4MjMwMDg3MSwianRpIjoiZ0NjU2lYeXg3V1dBS2tGYyIsInN1YiI6MywicHJ2IjoiMWQyMDQyOGRlNGU5NTlhZDkxMjcwZjkyNjZjMTNhMmYwZDAyMDUxMiJ9.Kocm4a6JdqJWvhYyfw2HF-7qFqgjruoddL3KBIZG4LA";
 
     console.log(app.globalData.data.user_id)
     let phone = app.globalData.data.phone;
     // this.setData({
     //   type: app.globalData.data.type
     // })
-    if(status){
-      console.log(status)
-      common.http(util.baseUrl + '/api/order/paginate?user_id=' + '23' + '&per_page=11111111' + '&status=' +status, "get", function (res) {
+    if(status != null){
+      console.log(typeof status)
+      common.http(util.baseUrl + '/api/order/paginate?user_id=3' + '&per_page=11111111' + '&status=' +status, "get", function (res) {
         console.log(res)
         this.setData({
           orderList: res.data
         })
       }.bind(this), null, token)
     }else{
-      common.http(util.baseUrl + '/api/order/paginate?user_id=' + '23' + '&per_page=11111111', "get", function (res) {
+      common.http(util.baseUrl + '/api/order/paginate?user_id=3' + '&per_page=11111111', "get", function (res) {
         console.log(res)
         this.setData({
           orderList: res.data
@@ -142,8 +119,10 @@ Page({
       this.orderList(2)
     } else if (choose === 'unpay'){
       this.orderList(0)
+    } else if (choose === 'service'){
+      this.orderList(8,11,12)
     }else{
-      this.orderList()
+      this.orderList(null)
     }
   },
 
@@ -159,20 +138,9 @@ Page({
           }, token)
       }
     }
-    let user_id = event.currentTarget.dataset.id;
-    let goods = event.currentTarget.dataset.goods;
-    let price = event.currentTarget.dataset.price
-    console.log(user_id)
-    let company_name = event.currentTarget.dataset.name
-    console.log(app.globalData.data)
-    if (app.globalData.data === null || !token || app.globalData.data.type == 2) {
-      if (app.globalData.data.type == 2) {
-        wx.showToast({
-          title: '当前身份不正确，请在app上切换为个人身份',
-          icon: 'none',
-          duration: 2000,
-        })
-      }
+    let id = event.currentTarget.dataset.id;
+    let name = event.currentTarget.dataset.name;
+    if (app.globalData.data === null || !token) {
       this.setData({
         login: true,
         select: 1
@@ -182,12 +150,41 @@ Page({
         login: false
       })
       wx.navigateTo({
-        url: "../IM/IM?user_id=" + "&company_name=" + company_name + "&type=4" + "&goods_name=" + goods + '&good_price=' + price,
-        success: function (res) {
-          console.log(res)
-        }
+        url: '../IM/IM?type=4' + '&user_id=' + id + '&name=' + name + '&code=b'
       })
     }
+  },
+
+  handleCancle(event){
+    let id = event.currentTarget.dataset.id;
+    let status = event.currentTarget.dataset.status;
+    // let token = wx.getStorageSync('token');
+    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMzAwODcxLCJleHAiOjE1ODIzMDA5MzEsIm5iZiI6MTU4MjMwMDg3MSwianRpIjoiZ0NjU2lYeXg3V1dBS2tGYyIsInN1YiI6MywicHJ2IjoiMWQyMDQyOGRlNGU5NTlhZDkxMjcwZjkyNjZjMTNhMmYwZDAyMDUxMiJ9.Kocm4a6JdqJWvhYyfw2HF-7qFqgjruoddL3KBIZG4LA";
+    let data;
+    if(status == 0){
+      data = {
+        status: 1
+      }
+    }else{
+      data = {
+        status: 4
+      }
+    }
+    common.http(util.baseUrl + '/api/order/update/' + id, "post", function (res) {
+      console.log(res)
+      if(res){
+        let choose = this.data.choose;
+        if (choose === 'pay') {
+          this.orderList(2)
+        } else if (choose === 'unpay') {
+          this.orderList(0)
+        } else if (choose === 'service') {
+          this.orderList(8, 11, 12)
+        } else {
+          this.orderList(null)
+        }
+      }
+    }.bind(this), data, token)
   },
 
   /**

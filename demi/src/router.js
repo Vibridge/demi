@@ -101,6 +101,14 @@ const router = new Router({
                 },
 
                 {
+                    path: '/B_index/B_person/store',
+                    name: 'store',
+                    meta: {title: 'store',parent:'B_person'},
+                    component: () => import('./views/B_index/store/index.vue')
+
+                },
+
+                {
                     path: '/B_index/B_person/goods',
                     name: 'goods',
                     meta: {title: 'goods',parent:'B_person'},
