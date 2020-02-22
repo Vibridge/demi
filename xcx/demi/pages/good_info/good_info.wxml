@@ -8,7 +8,7 @@
         <block wx:for="{{goods_info.images}}" wx:for-item="item" wx:key="{{item.file_id}}">
           <swiper-item>
             <view class="swiper-item">
-              <image mode="aspectFill" src="{{'http://app.jmzhipin.com' + item.file_path}}"></image>
+              <image mode="aspectFill" src="{{'http://produce.jmzhipin.com' + item.file_path}}"></image>
             </view>
           </swiper-item>
         </block>
@@ -28,6 +28,6 @@
 
    <view class="video" wx:if="{{goods_info.video}}">
     <view>商品视频</view>
-    <video id="myVideo" src="{{'http://app.jmzhipin.com' + goods_info.video.file_path}}" danmu-list="{{danmuList}}" enable-danmu danmu-btn controls></video>
+    <video id="myVideo" src="{{'http://produce.jmzhipin.com' + goods_info.video.file_path}}" danmu-list="{{danmuList}}" enable-danmu danmu-btn controls></video>
   </view>
 </view>

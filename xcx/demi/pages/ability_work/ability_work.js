@@ -144,7 +144,7 @@ Page({
         login: false
       })
       wx.navigateTo({
-        url: "../IM/IM?user_id=" + user_id + "&task_id=" + task_id + "&company_name=" + company_name + "&payment_money=" + payment_money + '&user_name=' + user_name + '&avatar=' + avatar + '&task_name=' + task_name + '&type=2' + "&commission=" + commission ,
+        url: "../IM/IM?user_id=" + user_id + "&task_id=" + task_id + "&company_name=" + company_name + "&payment_money=" + payment_money + '&user_name=' + user_name + '&avatar=' + avatar + '&task_name=' + task_name + '&type=2' + "&commission=" + this.data.commission,
         success: function(res) {
           console.log(res)
         }

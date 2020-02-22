@@ -37,7 +37,7 @@
     <text class="address">{{order_info.contact_address}}</text>
   </view>
   <view wx:if="{{order_info.status !== 7}}" class="contant_goods" wx:for="{{order_info.goods}}" wx:for-item="good" wx:key="{{index}}">
-    <image src="{{'http://app.jmzhipin.com' + good.cover_path}}"></image>
+    <image src="{{'http://produce.jmzhipin.com' + good.cover_path}}"></image>
     <view class="goods_info">
       <view>{{good.title}}</view>
       <view>数量：X{{good.quantity}}</view>
@@ -48,7 +48,7 @@
     <view class="refund" wx:for="{{order_info.goods}}" wx:for-item="good" wx:key="{{index}}">
       <view class="refund_title">退款信息</view>
       <view class="contant_goods">
-        <image src="{{'http://app.jmzhipin.com' + good.cover_path}}"></image>
+        <image src="{{'http://produce.jmzhipin.com' + good.cover_path}}"></image>
         <view class="goods_info">
           <view>{{good.title}}</view>
           <view>数量：X{{good.quantity}}</view>

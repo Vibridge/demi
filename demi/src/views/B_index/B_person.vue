@@ -91,7 +91,6 @@
                             <div class="content">
                                 <p>{{task.task_title}}</p>
                                 <div>
-                                    <span>{{task.payment_money}}{{task.unit}}</span>
                                     <span><img src="../../assets/img/icon_return_2@2x.png" alt=""></span>
                                 </div>
                             </div>

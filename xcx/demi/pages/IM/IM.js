@@ -55,7 +55,7 @@ Page({
     height: 0,
     loading: true,
     type:2,
-    commisson:0,
+    commisson:null,
     name:'',
     code:'b'
   },
@@ -70,7 +70,7 @@ Page({
         task_avatar: option.avatar,
         task_name: option.task_name,
         type:option.type,
-        commisson: option.commisson
+        commisson: option.commission
       })
     }else{
       if (option.name){

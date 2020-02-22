@@ -25,6 +25,9 @@
                         if(this.store){
                             this.$router.push({
                                 name: "create_task",
+                                params: {
+                                    type: 'sale'
+                                }
                             });
                         }
                     }

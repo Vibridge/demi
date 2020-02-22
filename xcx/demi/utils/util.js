@@ -41,7 +41,7 @@ function formatTimeTwo(number, format) {
   return format;
 }
 
-const baseUrl = 'https://app.jmzhipin.com'
+const baseUrl = 'https://produce.jmzhipin.com'
 module.exports = {
   formatTime: formatTime,
   formatTimeTwo: formatTimeTwo,

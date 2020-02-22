@@ -636,6 +636,7 @@
             //sku
             handleSelectAttr(item) {
                 console.log(this.tableData);
+                console.log(this.checkList);
                 this.tableData = [];
                 let length = this.isSelectSku.length;
                 if(length > 0){

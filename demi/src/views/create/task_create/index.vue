@@ -72,26 +72,7 @@
 
             this.$nextTick(() =>{
                 this.getRouterData();
-                this.task_edit = JSON.parse(sessionStorage.getItem('task'));
-                // console.log(this.task_edit)
-                if(this.task_edit){
-                    if(this.task_edit.isHistory){
-                        this.history = true;
-                        this.history_id = this.task_edit.id;
-                        if(this.task_edit.payment_method !== 1){
-                            this.common = true;
-                        }else{
-                            this.sale = true;
-                        }
-                    }else{
-                        this.is_Edit = true;
-                        if(this.task_edit.payment_method !== 1){
-                            this.common = true;
-                        }else{
-                            this.sale = true;
-                        }
-                    }
-                }
+
             });
             this.apiGet('/api/user/info').then((res) => {
                 if (res.type === 2) {
@@ -153,6 +134,30 @@
             getRouterData() {
                 if(this.$route.params.task){
                     sessionStorage.setItem('task',this.$route.params.task);
+                    this.task_edit = JSON.parse(sessionStorage.getItem('task'));
+                    // console.log(this.task_edit)
+                    if(this.task_edit){
+                        if(this.task_edit.isHistory){
+                            this.history = true;
+                            this.history_id = this.task_edit.id;
+                            if(this.task_edit.payment_method !== 1){
+                                this.common = true;
+                            }else{
+                                this.sale = true;
+                            }
+                        }else{
+                            this.is_Edit = true;
+                            if(this.task_edit.payment_method !== 1){
+                                this.common = true;
+                            }else{
+                                this.sale = true;
+                            }
+                        }
+                    }
+                }
+                console.log(this.$route.params)
+                if(this.$route.params.type){
+                    this.sale = true
                 }
             },
 

@@ -6,8 +6,8 @@
       <text class="task_title" wx:if="{{type == 2}}">{{task_name}}</text>
       <!-- <text class="task_title" wx:if="{{type == 4}}">{{goods_name}}</text> -->
       <view class="task_price">
-        <text wx:if="{{type == 2 && commisson}}">{{commisson}}</text>
-        <text wx:if="{{type == 2 && !commisson}}">{{money}}</text>
+        <text wx:if="{{commisson}}">{{commisson}}</text>
+        <text wx:if="{{!commisson}}">{{money}}</text>
         <!-- <text wx:if="{{type == 4}}">{{good_price}}</text> -->
         <text wx:if="{{type == 2}}">元/单</text>
         <text wx:if="{{type == 4}}">元</text>

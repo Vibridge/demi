@@ -79,7 +79,7 @@
         <view style="display:flex;justify-content: space-between;margin:20rpx 0" wx:if="{{item.goods}}" wx:for="{{item.goods}}" wx:for-item="good" wx:key="index">
           <view class="produce_info">
             <view class="goods_img">
-              <image mode="aspectFit" src="{{'http://app.jmzhipin.com' + good.cover_path}}"></image>
+              <image mode="aspectFit" src="{{'http://produce.jmzhipin.com' + good.cover_path}}"></image>
             </view>
             <view class="detail">
               <text>{{good.title}}</text>
