@@ -12,13 +12,18 @@ Page({
     choose: 'all',
     orderList:[],
     type:1,
+    refund:false,
+    id:null,
+    loading:true,
+    logistics:false,
+    status:null
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.onlogin()
+    
   },
 
   /**
@@ -38,18 +43,17 @@ Page({
         selected: 1
       });
     }
+    this.onlogin()
     let choose = this.data.choose;
     if (choose === 'pay') {
       this.orderList(2)
     } else if (choose === 'unpay') {
       this.orderList(0)
     } else if (choose === 'service') {
-      let array = [8, 11, 12]
-      this.orderList(array)
+      this.orderList(-1)
     } else {
       this.orderList(null)
     }
-    
   },
 
   //没有绑定手机号的情况
@@ -61,15 +65,27 @@ Page({
     this.setData({
       login: login,
     })
+    
+      let choose = this.data.choose;
+      if (choose === 'pay') {
+        this.orderList(2)
+      } else if (choose === 'unpay') {
+        this.orderList(0)
+      } else if (choose === 'service') {
+        this.orderList(-1)
+      } else {
+        this.orderList(null)
+      }
+    
+    
   },
   handleOrderDetail: function (event){
     console.log(event.currentTarget.dataset.id)
     wx.navigateTo({
-      url: '../orderDetail/orderDetail?id=' + event.currentTarget.dataset.id,
+      url: '../orderDetail/orderDetail?id=' + event.currentTarget.dataset.id + '&type=' + this.data.type,
     })
   },
 
-  
   onlogin: function (event) {
     let token = wx.getStorageSync('token')
     if (app.globalData.data === null || !token) {
@@ -84,28 +100,31 @@ Page({
     }
   },
   orderList(status){
-    // let token = wx.getStorageSync('token');
-    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMzAwODcxLCJleHAiOjE1ODIzMDA5MzEsIm5iZiI6MTU4MjMwMDg3MSwianRpIjoiZ0NjU2lYeXg3V1dBS2tGYyIsInN1YiI6MywicHJ2IjoiMWQyMDQyOGRlNGU5NTlhZDkxMjcwZjkyNjZjMTNhMmYwZDAyMDUxMiJ9.Kocm4a6JdqJWvhYyfw2HF-7qFqgjruoddL3KBIZG4LA";
-
-    console.log(app.globalData.data.user_id)
-    let phone = app.globalData.data.phone;
-    // this.setData({
-    //   type: app.globalData.data.type
-    // })
+    let token = wx.getStorageSync('token');
+    let user_id = app.globalData.data.user_id
+    this.setData({
+      type: app.globalData.data.type
+    })
     if(status != null){
       console.log(typeof status)
-      common.http(util.baseUrl + '/api/order/paginate?user_id=3' + '&per_page=11111111' + '&status=' +status, "get", function (res) {
+      common.http(util.baseUrl + '/api/order/paginate?user_id=' + user_id + '&per_page=11111111' + '&status=' +status, "get", function (res) {
         console.log(res)
-        this.setData({
-          orderList: res.data
-        })
+        if(res){
+          this.setData({
+            orderList: res.data,
+            loading: false
+          })
+        }
       }.bind(this), null, token)
     }else{
-      common.http(util.baseUrl + '/api/order/paginate?user_id=3' + '&per_page=11111111', "get", function (res) {
+      common.http(util.baseUrl + '/api/order/paginate?user_id=' + user_id + '&per_page=11111111', "get", function (res) {
         console.log(res)
-        this.setData({
-          orderList: res.data
-        })
+        if (res) {
+          this.setData({
+            orderList: res.data,
+            loading: false
+          })
+        }
       }.bind(this), null, token)
     }
   },
@@ -120,7 +139,7 @@ Page({
     } else if (choose === 'unpay'){
       this.orderList(0)
     } else if (choose === 'service'){
-      this.orderList(8,11,12)
+      this.orderList(-1)
     }else{
       this.orderList(null)
     }
@@ -157,29 +176,92 @@ Page({
 
   handleCancle(event){
     let id = event.currentTarget.dataset.id;
+    this.setData({
+      id:id
+    })
     let status = event.currentTarget.dataset.status;
-    // let token = wx.getStorageSync('token');
-    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMzAwODcxLCJleHAiOjE1ODIzMDA5MzEsIm5iZiI6MTU4MjMwMDg3MSwianRpIjoiZ0NjU2lYeXg3V1dBS2tGYyIsInN1YiI6MywicHJ2IjoiMWQyMDQyOGRlNGU5NTlhZDkxMjcwZjkyNjZjMTNhMmYwZDAyMDUxMiJ9.Kocm4a6JdqJWvhYyfw2HF-7qFqgjruoddL3KBIZG4LA";
+    let token = wx.getStorageSync('token');
     let data;
     if(status == 0){
       data = {
         status: 1
       }
+      this.handleUpdateOrder(data)
     }else{
-      data = {
-        status: 4
-      }
+      this.setData({
+        refund:true,
+      })
     }
-    common.http(util.baseUrl + '/api/order/update/' + id, "post", function (res) {
+  },
+
+  onMyRefund(e){
+    let refund = e.detail.refund;//登录refund组件传递的参数
+    let msg = e.detail.msg
+    this.setData({
+      refund: refund,
+      msg: msg
+    })
+    let data;
+    if(msg){
+      data = {
+        status: 1,
+        msg: msg
+      }
+      this.handleUpdateOrder(data)
+    }
+  },
+
+  handleSure(event){
+    let id = event.currentTarget.dataset.id;
+    this.setData({
+      id: id
+    })
+    let data = {
+      status: 12
+    }
+    this.handleUpdateOrder(data)
+  },
+
+  handleRefure(event){
+    let id = event.currentTarget.dataset.id;
+    let status = event.currentTarget.dataset.status
+    this.setData({
+      id: id,
+      logistics:true
+    })
+  },
+
+  onMyLogistics(e) {
+    let logistics = e.detail.logistics;//登录refund组件传递的参数
+    let isNess = e.detail.isNess
+    this.setData({
+      logistics: logistics,
+    })
+    let data
+    if (isNess == 'true') {
+      wx.navigateTo({
+        url: '../delivery/delivery?id=' + this.data.id + '&status=' + this.data.status,
+      })
+    } else if (isNess == 'false') {
+      data = {
+        status: 10
+      }
+      this.handleUpdateOrder(data)
+    }
+  },
+
+  handleUpdateOrder(data){
+    let token = wx.getStorageSync('token');
+    common.http(util.baseUrl + '/api/order/update/' + this.data.id, "post", function (res) {
       console.log(res)
-      if(res){
+      if (res) {
         let choose = this.data.choose;
         if (choose === 'pay') {
           this.orderList(2)
         } else if (choose === 'unpay') {
           this.orderList(0)
         } else if (choose === 'service') {
-          this.orderList(8, 11, 12)
+          this.orderList(-1)
         } else {
           this.orderList(null)
         }

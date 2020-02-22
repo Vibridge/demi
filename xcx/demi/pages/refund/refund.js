@@ -4,11 +4,20 @@ const app = getApp()
 Component({
   data: {
     cancle:false,
+    order:false,
+    after:false,
     items: [
       { value: '不想买了' },
-      { value: '信息填写错误，重新拍', checked: 'true' },
+      { value: '信息填写错误，重新拍'},
       { value: '卖家缺货' },
       { value: '点错了' },
+      { value: '其他原因' },
+    ],
+    afterSale:[
+      { value: '不喜欢/不想要' },
+      { value: '货物破损' },
+      { value: '卖家发错货' },
+      { value: '生产日期/保质与商品描述不符' },
       { value: '其他原因' },
     ],
     other:false,
@@ -18,6 +27,8 @@ Component({
   properties: {
     propA: null,
     propB:null,
+    propC: null,
+    propD: null,
   },
   methods: {
     initData() {
@@ -25,6 +36,16 @@ Component({
       if (this.data.propB){
         this.setData({
           cancle: cancle
+        })
+      }
+      if (this.data.propC){
+        this.setData({
+          order: this.data.propC
+        })
+      }
+      if (this.data.propD) {
+        this.setData({
+          after: this.data.propD
         })
       }
     },
@@ -62,7 +83,9 @@ Component({
       if(this.data.msg){
         var myEventDetail = {
           msg: this.data.msg,
-          refund:false
+          refund:false,
+          cancle:this.data.cancle,
+          after: this.data.after
         } // detail对象，提供给事件监听函数
         var myEventOption = {} // 触发事件的选项
         this.triggerEvent('myevent', myEventDetail, myEventOption)

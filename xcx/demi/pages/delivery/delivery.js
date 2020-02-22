@@ -11,7 +11,8 @@ Page({
     deliveryList:[],
     name:'',
     delivery_id:null,
-    no:''
+    no:'',
+    status:null
   },
 
   /**
@@ -20,7 +21,8 @@ Page({
   onLoad: function (options) {
     if(options){
       this.setData({
-        id: options.id
+        id: options.id,
+        status: options.status
       })
     }
   },
@@ -64,21 +66,38 @@ Page({
     })
   },
   handleSumbit(){
-    // let token = wx.getStorageSync('token');
-    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMjk4NzA1LCJleHAiOjE1ODIyOTg3NjUsIm5iZiI6MTU4MjI5ODcwNSwianRpIjoiWTBtejFrUTBGS0Z5cVBBVyIsInN1YiI6MjMsInBydiI6IjFkMjA0MjhkZTRlOTU5YWQ5MTI3MGY5MjY2YzEzYTJmMGQwMjA1MTIifQ.J5YQrwQUJA5rHzERpDGIbPM6hw8tC4WvTnq0oS2zrt8"
+    let token = wx.getStorageSync('token');
     if(this.data.no && this.data.name){
-      let data = {
-        logistics_label_id: this.data.delivery_id,
-        logistics_no:this.data.no
-      }
-      common.http(util.baseUrl + '/api/order/logistics/' + this.data.id, "post", function (res) {
-        console.log(res)
-        if(res){
-          wx.navigateBack({
-            delta: 1,
-          })
+      if (this.data.status == 2){
+        let data = {
+          status: 6,
+          logistics_label_id: this.data.delivery_id,
+          logistics_no: this.data.no
         }
-      }.bind(this), data, token)
+        common.http(util.baseUrl + '/api/order/update/' + this.data.id, "post", function (res) {
+          console.log(res)
+          if (res) {
+            wx.navigateBack({
+              delta: 1,
+            })
+          }
+        }.bind(this), data, token)
+      }else{
+        let data = {
+          status: 10,
+          logistics_label_id: this.data.delivery_id,
+          logistics_no: this.data.no
+        }
+        common.http(util.baseUrl + '/api/order/update/' + this.data.id, "post", function (res) {
+          console.log(res)
+          if (res) {
+            wx.navigateBack({
+              delta: 1,
+            })
+          }
+        }.bind(this), data, token)
+      }
+      
     }else{
       wx.showToast({
         title: '请完善快递信息',

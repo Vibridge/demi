@@ -1,21 +1,35 @@
 <view class="res">
   <view class="bg" bindtap="backIndex"></view>
-  <view class="res_detail">
+  <view class="res_detail" style="{{order ? 'bottom:97rpx' : ''}}">
     <view class="main">
-      <view class="title">拒绝退款原因</view>
+      <view wx:if="{{!cancle && !after}}" class="title">拒绝退款原因</view>
       <view wx:if="{{cancle}}" class="title">取消原因</view>
+      <view wx:if="{{after}}" class="title">退款原因</view>
+
       <view wx:if="{{cancle}}" class="page__bd">
         <view class="section section_gap">
-            <radio-group class="radio-group">
-              <view class="radio" wx:for-items="{{items}}" wx:key="{{index}}" data-value="{{item.value}}" bindtap="radioChange">
-                <text class="value">{{item.value}}</text>
-                <radio color="#3BC7FF" checked="{{item.checked}}"></radio>
-              </view>
-            </radio-group>
+          <radio-group class="radio-group">
+            <view class="radio" wx:for-items="{{items}}" wx:key="{{index}}" data-value="{{item.value}}" bindtap="radioChange">
+              <text class="value">{{item.value}}</text>
+              <radio color="#3BC7FF" checked="{{item.checked}}"></radio>
+            </view>
+          </radio-group>
         </view>
       </view>
+
+      <view wx:if="{{after}}" class="page__bd">
+        <view class="section section_gap">
+          <radio-group class="radio-group">
+            <view class="radio" wx:for-items="{{afterSale}}" wx:key="{{index}}" data-value="{{item.value}}" bindtap="radioChange">
+              <text class="value">{{item.value}}</text>
+              <radio color="#3BC7FF" checked="{{item.checked}}"></radio>
+            </view>
+          </radio-group>
+        </view>
+      </view>
+      <textarea wx:if="{{after && other}}" class="textarea" bindblur="bindTextAreaBlur" placeholder="请输入原因详情" />
       <textarea wx:if="{{cancle && other}}" class="textarea" bindblur="bindTextAreaBlur" placeholder="请输入原因详情" />
-      <textarea wx:if="{{!cancle}}" class="textarea" bindblur="bindTextAreaBlur" placeholder="请输入原因详情" />
+      <textarea wx:if="{{!cancle && !after}}" class="textarea" bindblur="bindTextAreaBlur" placeholder="请输入原因详情" />
     </view>
     <view class="coc" bindtap="handleSumbit">确定</view>
   </view>

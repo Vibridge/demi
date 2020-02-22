@@ -12,10 +12,10 @@ var handleCommisson = function handleCommisson(array){
         commission.sort(function(a,b){
           return a - b
         })
-        console.log(commission)
-
         price = commission[0] + '-' + commission[length - 1]
       } else {
+        commission.push(parseInt(array[0].price))
+        console.log(length)
         price = commission[0]
       }
       return price

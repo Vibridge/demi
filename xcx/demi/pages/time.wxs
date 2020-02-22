@@ -1,0 +1,30 @@
+var time = function(time,status){
+  if(time){
+    var stime = getDate(time).valueOf();
+    var etime;
+    if (status == 6){
+      etime = stime + 10 * 24 * 60 * 60 * 1000;
+    }else{
+      etime = stime + 15 * 24 * 60 * 60 * 1000;
+    } 
+    var nowtime = getDate().valueOf()
+    console.log(nowtime)
+    // 两个时间戳相差的毫秒数
+    var usedTime = etime - nowtime;
+    // 计算相差的天数  
+    var days = Math.floor(usedTime / (24 * 3600 * 1000));
+    // 计算天数后剩余的毫秒数
+    var leave1 = usedTime % (24 * 3600 * 1000);
+    // 计算出小时数  
+    var hours = Math.floor(leave1 / (3600 * 1000));
+    // 计算小时数后剩余的毫秒数
+    var leave2 = leave1 % (3600 * 1000);
+    // 计算相差分钟数
+    var minutes = Math.floor(leave2 / (60 * 1000));
+    var time = days + "天" + hours + "时" + minutes + "分";
+    return time;
+  }
+}
+module.exports = {
+  time: time,
+};

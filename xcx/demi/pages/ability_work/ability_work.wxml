@@ -68,7 +68,8 @@
     </view>
     <view wx:if="{{task_info.goods !== null}}">
       <view class="goods_list">
-        <view class="goods_info" wx:for="{{goods_list}}" wx:for-item="item" wx:key="{{item.goods_id}}">
+        <view class="goods_info" wx:for="{{goods_list}}" wx:for-item="item" wx:key="{{item.goods_id}}" data-id="{{item.goods_id}}" bindtap="handleGoods">
+        <view class="commission">佣金: {{item.salary}}</view>
           <image wx-if="{{item.images}}" src="{{'http://app.jmzhipin.com'  + item.images[0].file_path}}"></image>
           <view class="goods_info_note">
               <view class="goods_info_title">{{item.title}}</view>

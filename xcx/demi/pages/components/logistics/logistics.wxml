@@ -1,6 +1,6 @@
 <view class="res">
   <view class="bg" bindtap="backIndex"></view>
-  <view class="res_detail">
+  <view class="res_detail" style="{{cancle ? 'bottom:97rpx' : ''}}">
     <view class="main">
       <view class="title">配送方式</view>
       <view class="page__bd">

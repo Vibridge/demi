@@ -3,17 +3,20 @@
   overflow-x: hidden;
   background: #F2F2F2
 }
+
 .contain_title{
   position: relative;
   color: #fff;
   font-size:34rpx;
   height: 154rpx
 }
-.contain_title text{
+.contain_title view{
   position: absolute;
-  top:60rpx;
-  left:40rpx;
-  z-index: 111
+  display: flex;
+  flex-direction: column;
+  left: 41rpx;
+  top:46rpx;
+  z-index: 1
 }
 .bg{
   position: absolute;

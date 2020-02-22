@@ -6,7 +6,7 @@ Component({
     cancle: false,
     items: [
       { value: 'false', name:'无需物流配送'},
-      { value: 'true', name:'使用物流配送', checked: 'true' },
+      { value: 'true', name:'使用物流配送'},
     ],
     isNess: true,
   },

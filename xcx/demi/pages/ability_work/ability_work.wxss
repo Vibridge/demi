@@ -142,6 +142,17 @@
   background-color: #fff;
   border-radius:10rpx 10rpx 0px 0px;
   margin-bottom: 40rpx;
+  position: relative
+}
+.commission{
+  position: absolute;
+  top:0;
+  left: 0;
+  padding: 9rpx 6rpx;
+  background:linear-gradient(20deg,rgba(51,167,255,1) 0%,rgba(0,204,255,1) 100%);
+  border-radius:10rpx 0rpx 10rpx 0rpx;
+  color:#FFFFFF;
+  font-size: 20rpx;
 }
 .goods_info image{
   width: 315rpx;

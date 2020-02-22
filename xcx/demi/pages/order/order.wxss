@@ -40,6 +40,12 @@
   font-size: 26rpx;
   padding: 20rpx 0;
 }
+.loading{
+  float: left;
+  width: 100rpx;
+  height: 100rpx;
+  margin-top: 100rpx
+}
 .note{
   padding: 9rpx 75rpx;
   color: #F2822E;
@@ -160,6 +166,7 @@
 .bottom{
   display: flex;
   justify-content: flex-end;
+  padding-bottom: 10rpx;
 }
 .connect{
   font-size:26rpx;

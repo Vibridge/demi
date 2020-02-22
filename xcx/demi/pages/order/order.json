@@ -1,7 +1,10 @@
 {
   "usingComponents": {
     "toolTag": "../components/toolTag/toolTag",
-    "login": "../components/login/login"
+    "login": "../components/login/login",
+    "refund": "../refund/refund",
+    "loading": "../components/loading/loading",
+    "logistics": "../components/logistics/logistics"
   },
   "navigationStyle": "custom",
   "onReachBottomDistance": 1

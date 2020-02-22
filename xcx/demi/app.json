@@ -16,7 +16,8 @@
     "pages/accept/video/video",
     "pages/refund/refund",
     "pages/orderDetail/orderDetail",
-    "pages/delivery/delivery"
+    "pages/delivery/delivery",
+    "pages/good_info/good_info"
   ],
   "tabBar": {
     "custom": true,
@@ -46,4 +47,5 @@
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json"
+  
 }

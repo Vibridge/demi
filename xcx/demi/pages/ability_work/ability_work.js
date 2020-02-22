@@ -241,6 +241,11 @@ Page({
       openStoreInfo: false
     })
   },
+  handleGoods(event){
+    wx.navigateTo({
+      url: '../good_info/good_info?id=' + event.currentTarget.dataset.id,
+    })
+  },
 
   //转发
   onShareAppMessage: function(res) {

@@ -84,6 +84,13 @@
 					"pathName": "pages/delivery/delivery",
 					"query": "id=7",
 					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/good_info/good_info",
+					"pathName": "pages/good_info/good_info",
+					"query": "id=30",
+					"scene": null
 				}
 			]
 		}

@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "toolTag": "../components/toolTag/toolTag",
+    "login": "../components/login/login"
+  },
+  "navigationStyle": "custom"
+}

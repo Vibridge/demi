@@ -635,9 +635,8 @@
 
             //sku
             handleSelectAttr(item) {
-                console.log(item)
+                console.log(this.tableData);
                 this.tableData = [];
-
                 let length = this.isSelectSku.length;
                 if(length > 0){
                     let add = false;

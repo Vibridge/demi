@@ -1,0 +1,33 @@
+<toolTag prop-b="true" prop-c="true" title="商品详情" />
+<login wx:if="{{login}}" prop-a="{{select}}" bindmyevent="onMyEvent" />
+<view class="contain">
+  <view class="img" wx:if="{{goods_info.images}}">
+    <swiper style="height:550rpx;background:#fff"
+        indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" circular="{{circular}}" vertical="{{vertical}}"
+        interval="{{interval}}" duration="{{duration}}" previous-margin="{{previousMargin}}px" next-margin="{{nextMargin}}px">
+        <block wx:for="{{goods_info.images}}" wx:for-item="item" wx:key="{{item.file_id}}">
+          <swiper-item>
+            <view class="swiper-item">
+              <image mode="aspectFill" src="{{'http://app.jmzhipin.com' + item.file_path}}"></image>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+  </view>
+
+  <view class="basic">
+    <view>￥ {{goods_info.price}}</view>
+    <view>佣金：￥{{goods_info.salary}}</view>
+    <view>{{goods_info.title}}</view>
+  </view>
+
+  <view class="desc" wx:if="{{goods_info.description}}">
+    <view>商品介绍</view>
+    <rich-text style="width:100%" nodes="{{connect}}"></rich-text>
+  </view>
+
+   <view class="video" wx:if="{{goods_info.video}}">
+    <view>商品视频</view>
+    <video id="myVideo" src="{{'http://app.jmzhipin.com' + goods_info.video.file_path}}" danmu-list="{{danmuList}}" enable-danmu danmu-btn controls></video>
+  </view>
+</view>

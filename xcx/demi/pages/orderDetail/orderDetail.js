@@ -11,7 +11,10 @@ Page({
     order_info:null,
     refund:false,
     msg:"",
-    logistics:false
+    logistics:false,
+    type:0,
+    cancle:false,
+    after:false,
   },
   /**
    * 生命周期函数--监听页面加载
@@ -19,7 +22,8 @@ Page({
   onLoad: function (options) {
     console.log(options)
     this.setData({
-      id: options.id
+      id: options.id,
+      type: options.type
     })
   },
 
@@ -37,8 +41,7 @@ Page({
     this.initialize()
   },
   initialize:function(){
-    // let token = wx.getStorageSync('token');
-    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMjk4OTcxLCJleHAiOjE1ODIyOTkwMzEsIm5iZiI6MTU4MjI5ODk3MSwianRpIjoiQ3RqOWF2aFFPU0FZS2JPbiIsInN1YiI6MjMsInBydiI6IjFkMjA0MjhkZTRlOTU5YWQ5MTI3MGY5MjY2YzEzYTJmMGQwMjA1MTIifQ.kCd_hg6g4AG0yvzNmz_yqWlaZ8bYnJnH71ZVSzaSl-0";
+    let token = wx.getStorageSync('token');
     common.http(util.baseUrl + '/api/order/info/' + this.data.id , "get", function (res) {
       console.log(res)
       this.setData({
@@ -50,18 +53,41 @@ Page({
   onMyEvent: function (e) {
     // 自定义组件触发事件时提供的detail对象
     let refund = e.detail.refund;//登录refund组件传递的参数
-    let msg = e.detail.msg
+    let msg = e.detail.msg;
+    let cancle = e.detail.cancle
+    let after = e.detail.after
     this.setData({
-      refund:refund,
-      msg: msg
+      refund: refund,
     })
-    let data
-    if (msg){
-      data = {
-        status: 9,
-        msg: msg
+    if(msg){
+      let data
+      console.log(cancle)
+      console.log(after)
+      if (after) {
+        data = {
+          status: 7,
+          msg: msg
+        }
+        this.handleChangeStatus(data)
+      } else {
+        if (!cancle) {
+          if (msg) {
+            data = {
+              status: 9,
+              msg: msg
+            }
+            this.handleChangeStatus(data)
+          }
+        } else {
+          if (msg) {
+            data = {
+              status: 1,
+              msg: msg
+            }
+            this.handleChangeStatus(data)
+          }
+        }
       }
-      this.handleChangeStatus(data)
     }
   },
 
@@ -74,13 +100,20 @@ Page({
     let data
     if (isNess == 'true') {
       wx.navigateTo({
-        url: '../delivery/delivery?id=' + this.data.id,
+        url: '../delivery/delivery?id=' + this.data.id + "&status=" + this.data.order_info.status,
       })
     } else if (isNess == 'false'){
-      data = {
-        status:6
+      if(this.data.type != 1){
+        data = {
+          status: 6
+        }
+        this.handleChangeStatus(data)
+      }else{
+        data = {
+          status: 10
+        }
+        this.handleChangeStatus(data)
       }
-      this.handleChangeStatus(data)
     }
   },
 
@@ -101,28 +134,66 @@ Page({
   },
 
   handlePass(event){
-    let data = {
-      status:11
+    let status = event.currentTarget.dataset.status;
+    let data;
+    if(status == 7){
+      data = {
+        status: 8
+      }
+      this.handleChangeStatus(data)
+    }else{
+      data = {
+        status: 11
+      }
+      this.handleChangeStatus(data)
     }
-    this.handleChangeStatus(data)
+  
   },
 
   handleDelivery(event){
-    let id = event.currentTarget.dataset.id;
     this.setData({
       logistics:true
     })
   },
 
   handleChangeStatus(data){
-    // let token = wx.getStorageSync('token');
-    let token = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcHAuam16aGlwaW4uY29tXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgyMjg3ODI2LCJleHAiOjE1ODIyODc4ODYsIm5iZiI6MTU4MjI4NzgyNiwianRpIjoiVGZVRndWcWhYWXZlR255RyIsInN1YiI6MjMsInBydiI6IjFkMjA0MjhkZTRlOTU5YWQ5MTI3MGY5MjY2YzEzYTJmMGQwMjA1MTIifQ.P-PXAs10GdpPM_WtHCPMylXmD9HwBbV3gZ56Kp3WZIs";
+    let token = wx.getStorageSync('token');
     common.http(util.baseUrl + '/api/order/update/' + this.data.id, "post", function (res) {
       console.log(res)
       if (res) {
         this.initialize()
       }
     }.bind(this), data, token)
+  },
+
+  handleCancle(event){
+    let status = event.currentTarget.dataset.status;
+    let data;
+    if(status == 0){
+      data = {
+        status:1
+      }
+      this.handleChangeStatus(data)
+    }else{
+      this.setData({
+        refund:true,
+        cancle:true
+      })
+    }
+  },
+
+  handleOver(){
+    let data = {
+      status:12
+    }
+    this.handleChangeStatus(data)
+  },
+
+  handleAfterSale(){
+    this.setData({
+      after:true,
+      refund:true
+    })
   },
   /**
    * 生命周期函数--监听页面隐藏

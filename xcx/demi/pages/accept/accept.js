@@ -323,7 +323,14 @@ Page({
     var id = this.data.task_id
     var token = wx.getStorageSync('token')
     common.http(util.baseUrl + '/api/task/order/create', 'post', function(res) {
-      console.log(res)
+      
+      if(res){
+        console.log(res)
+      }else{
+        wx.navigateBack({
+          delta: 1,
+        })
+      }
     }, {
       task_id: id
     }, token)

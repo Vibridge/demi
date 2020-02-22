@@ -1,6 +1,8 @@
 <toolTag prop-a="true" title="我的订单"/>
 <login wx:if="{{login}}" prop-a="{{select}}" bindmyevent="onMyEvent" />
-<view class="contain">
+<refund wx:if="{{refund}}" prop-a="{{refund}}" prop-b="{{refund}}" prop-c="{{refund}}" bindmyevent="onMyRefund" />
+<logistics wx:if="{{logistics}}" prop-a="{{logistics}}" prop-b="{{logistics}}" bindmyevent="onMyLogistics" />
+<view class="contain" style="{{orderList.length < 1 ? 'background:#fff' : ''}}">
   <view class="header">
     <view class="all" data-active="all" bindtap="handleSelect">
       <text class="{{choose === 'all' ? 'active' : 'title'}}">全部</text>
@@ -27,6 +29,7 @@
     <view class="no_list" wx:if="{{orderList.length < 1}}">
       暂无数据
     </view>
+    <loading class="loading" wx:if="{{loading}}"/>
     <view class="list" wx:for="{{orderList}}" wx:for-item="item" wx:key="{{item.order_id}}" data-id="{{item.order_id}}" bindtap="handleOrderDetail">
       <view class="company_info">
         <view style="display:flex">
@@ -66,6 +69,7 @@
           <text wx:if="{{item.status == 11}}">已退款</text>
           <text wx:if="{{item.status == 12}}">已收货</text>
           <text wx:if="{{item.status == 1}}">已取消</text>
+          <text wx:if="{{item.status == 7}}">等待商家处理</text>
         </view>
         <!-- <view class="go_icon">
            <image mode="aspectFit" src="../asset/img/icon_return.png"></image>
@@ -95,20 +99,22 @@
         </view>
         <view class="user_name">
           <view class="name">
+            <text>{{item.contact_address}}</text>
             <text>{{item.contact_name}}</text>
             <text>{{item.contact_phone}}</text>
           </view>
-          <text class="area" wx:if="{{item.contact_address}}">{{item.contact_address}}</text>
+          <text class="area" wx:if="{{item.remark}}">{{item.remark}}</text>
           <!-- <text class="area" wx:if="{{!item.contact_address}}"></text> -->
         </view>
       </view>
       <view wx:if="{{type === 1}}" class="bottom">
-        <view wx:if="item.status == 0 || item.status == 2" class="cancle" data-id="{{item.order_id}}" data-status="{{item.status}}" bindtap="handleCancle">取消订单</view>
+        <view wx:if="{{item.status == 0 || item.status == 2}}" class="cancle" data-id="{{item.order_id}}" data-status="{{item.status}}" catchtap="handleCancle">取消订单</view>
         <form data-name="{{item.shop.shop_name}}" data-id="{{item.shop.user_id}}" bindsubmit="chat" bindreset="formReset" report-submit="true">
           <button class="connect" form-type="submit">联系卖家</button>
         </form>
         <!-- <button  bindtap="chat">联系卖家</button> -->
-        <view wx:if="{{item.status == 6}}" class="sure" bindtap="handleSure">确认收货</view>
+        <view wx:if="{{item.status == 6}}" data-id="{{item.order_id}}" class="sure" catchtap="handleSure">确认收货</view>
+        <view wx:if="{{item.status == 8}}" data-id="{{item.order_id}}" data-status="{{item.status}}" class="sure" catchtap="handleRefure">去退货</view>
       </view>
     </view>
   </view>

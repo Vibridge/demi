@@ -46,7 +46,7 @@
   height: 125rpx
 }
 .level{
-  width: 240rpx;
+  width: 150rpx;
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -82,7 +82,7 @@
   color:rgba(153,153,153,1);
 }
 .price{
-  min-width: 300rpx;
+  min-width: 368rpx;
   text-align: right;
   vertical-align: text-bottom;
 }
