@@ -85,8 +85,8 @@
                                     row-key="index"
                             >
                                 <el-table-column
-                                        v-if="checkList"
-                                        v-for="(label,index) in checkList"
+                                        v-if="only"
+                                        v-for="(label,index) in only"
                                         :label="label.title"
                                         width="112">
                                     <template slot-scope="scope">
@@ -161,7 +161,7 @@
                             </el-table>
                         </div>
                     </div>
-                    <div class="goods_price" v-if="tableData.length < 1 && isSelectSku.length < 1">
+                    <div class="goods_price" v-if="only.length < 1">
                         <p class="goods_price_label"><span style="color:#FF0000">* </span>一口价</p>
                         <div class="goods_price_input">
                             <div style="display: flex">
@@ -175,7 +175,7 @@
                             <p>商品价格不能低于0.10元</p>
                         </div>
                     </div>
-                    <div class="goods_price" v-if="tableData.length < 1 && isSelectSku.length < 1">
+                    <div class="goods_price" v-if="only.length < 1">
                         <p class="goods_price_label"><span style="color:#FF0000">* </span>佣&nbsp;&nbsp;&nbsp;金</p>
                         <div class="goods_price_input">
                             <div style="display: flex">
@@ -188,7 +188,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="goods_price" v-if="tableData.length < 1 && isSelectSku.length < 1">
+                    <div class="goods_price" v-if="only.length < 1">
                         <p class="goods_price_label"><span style="color:#FF0000">* </span>库&nbsp;&nbsp;&nbsp;存</p>
                         <div class="goods_price_input">
                             <div style="display: flex">
@@ -201,7 +201,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="goods_code" v-if="tableData.length < 1 && isSelectSku.length < 1">
+                    <div class="goods_code" v-if="only.length < 1">
                         <p class="goods_code_label">商品编码</p>
                         <el-input
                                 size="small"
@@ -476,7 +476,9 @@
                 //更新时商品的sku
                 isUpdateSku: [],
 
-                isSelectSku:[]
+                isSelectSku:[],
+
+                only:[]
             };
         },
         computed: {
@@ -637,7 +639,7 @@
             handleSelectAttr(item) {
                 console.log(this.tableData);
                 console.log(this.checkList);
-                this.tableData = [];
+
                 let length = this.isSelectSku.length;
                 if(length > 0){
                     let add = false;
@@ -656,8 +658,7 @@
                 }else{
                     this.isSelectSku.push(item)
                 }
-
-                console.log(this.isSelectSku)
+                this.tableData = [];
                 this.sku_array = [];
                 this.sku_sale = [];
                 this.sku_sum = [];
@@ -665,6 +666,7 @@
                 this.sku_code = [];
                 this.sku_attr_id = [];
                 this.sku_select_attr = [];
+                this.only = []
                 this.handleSku(0, []);
                 this.handleSkuAttrId(0)
             },
@@ -672,6 +674,11 @@
                 let all_length = this.checkList.length;
                 let length = this.checkList[index].values.length;
                 if (length > 0) {
+                    if(index != 0){
+                        this.only = this.checkList
+                    }else{
+                        this.only.push(this.checkList[index])
+                    }
                     for (let i = 0; i < length; i++) {
                         if (index < all_length - 1) {
                             data[index] = this.checkList[index].values[i];
@@ -681,7 +688,12 @@
                             this.tableData.push(subItem);
                         }
                     }
+                }else{
+                    if(index != 0){
+                        this.tableData.push([...data]);
+                    }
                 }
+                console.log(this.tableData)
                 if (this.tableData.length > 0) {
                     let table = this.tableData.length;
                     for (let i = 0; i < table; i++) {
@@ -1118,6 +1130,15 @@
                                                 }
                                             }
                                         }
+                                    }
+                                }
+
+                                let onlySku = this.checkList.length;
+
+                                for(let o = 0;o<onlySku;o++){
+                                    let has = this.checkList[o].values.length;
+                                    if(has > 0){
+                                        this.only.push(this.checkList[o])
                                     }
                                 }
                             } else {
