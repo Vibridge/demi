@@ -327,39 +327,43 @@
         mounted() {
             // handleMap();
             this.apiGet('/api/user/info').then((res) => {
-                // console.log(res);
-                this.company_id = res.company_real.company_id;
+                console.log(res);
+                if(res.company_real){
+                    this.company_id = res.company_real.company_id;
+                    this.work = res.company_real.company_position;
+                    this.company_name = res.company_real.company_name;
+                    this.apiGet('/api/company/info/' + this.company_id).then((result)=>{
+                        // console.log(result);
+                        if(result){
+                            this.company_address = result.address;
+                            this.company_industry = result.industry_label.name;
+                            this.abbreviation = result.abbreviation;
+                            this.label_id = result.label_id;
+                            this.company_staff = result.employee;
+                            this.company_stage = result.financing;
+                            this.latitude = result.latitude;
+                            this.longitude = result.longitude;
+                            this.city_id = result.city_id;
+                            this.logo = result.logo_path.split('com')[1]
+                        }
+                    });
+                    if(res.company_real.status === 2 && res.enterprise_step === 1){
+                        this.$confirm(res.company_real.denial_reason, '审核不通过', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(() => {
+
+                        }).catch(() => {
+
+                        });
+                    }
+                }
+
                 this.enterprise_step = res.enterprise_step;
                 this.user_avatar =res.avatar.split('com')[1];
                 this.name = res.nickname;
-                this.work = res.company_real.company_position;
-                this.company_name = res.company_real.company_name;
-                this.apiGet('/api/company/info/' + this.company_id).then((result)=>{
-                    // console.log(result);
-                    if(result){
-                        this.company_address = result.address;
-                        this.company_industry = result.industry_label.name;
-                        this.abbreviation = result.abbreviation;
-                        this.label_id = result.label_id;
-                        this.company_staff = result.employee;
-                        this.company_stage = result.financing;
-                        this.latitude = result.latitude;
-                        this.longitude = result.longitude;
-                        this.city_id = result.city_id;
-                        this.logo = result.logo_path.split('com')[1]
-                    }
-                });
-                if(res.company_real.status === 2 && res.enterprise_step === 1){
-                    this.$confirm(res.company_real.denial_reason, '审核不通过', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
 
-                    }).catch(() => {
-
-                    });
-                }
                 if (res.enterprise_step === 2) {
                     this.second = true;
                     this.first = false;
@@ -375,6 +379,10 @@
                     this.second = false;
                     this.first = false;
                     this.fourth = true;
+                }else if (res.enterprise_step === 5) {
+                    this.$router.push({
+                        name: 'B_index',
+                    });
                 }
 
             })

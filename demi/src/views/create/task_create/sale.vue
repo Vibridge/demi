@@ -80,10 +80,9 @@
                                     type="textarea"
                                     :rows="10"
                                     placeholder="例如
-品牌名称:
-品牌型号:
-产品颜色:
-生产企业等等
+任务目标、
+行业要求、
+任务特点等
                         "
                                     :maxlength="500"
                                     show-word-limit

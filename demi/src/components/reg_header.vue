@@ -54,12 +54,10 @@
           console.warn('logout error:', imError);
         });
         // this.$store.dispatch('logout');
-        if (this.removeToken()) {
-          sessionStorage.clear();
-          setTimeout(() => {
-            window.location = '/';
-          }, 800);
-        }
+        sessionStorage.clear();
+        setTimeout(() => {
+          window.location = '/';
+        }, 800);
         /*this.$router.push({
           name: "login"
         });*/

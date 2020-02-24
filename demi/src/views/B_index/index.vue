@@ -53,7 +53,7 @@
                                     <img :src="user_info.avatar" alt="" :title="user_info.name">
                                 </div>
                             </template>
-                            <el-menu-item v-if="this.user_info.shop" index="2-1" @click="handleStore">店铺资料</el-menu-item>
+                            <el-menu-item v-if="user_info.shop" index="2-1" @click="handleStore">店铺资料</el-menu-item>
                             <el-menu-item index="2-2" @click="handleLoginOut">退出登录</el-menu-item>
                         </el-submenu>
                     </el-menu>
@@ -325,6 +325,11 @@
             this.keepMessageListOnButtom();
         },
 
+        created() {
+            //属性信息的id
+            this.getParams()
+        },
+
         methods: {
             initialize() {
                 this.apiGet('/api/user/info').then((res) => {
@@ -372,6 +377,12 @@
             /*scrollTop(){
                 document.getElementsByClassName('B_index_wrapper')[0].scrollIntoView();
             },*/
+            getParams() {
+                // 取到路由带过来的参数
+                if(this.$route.query.store){
+                    this.initialize()
+                }
+            },
 
             handleTopMenu(key, keyPath) {
                 this.active_top = key
@@ -806,6 +817,7 @@
 
                 .left {
                     width: 260px;
+                    height: 1044px;
                     margin-right: 17px;
                     background: #fff;
                     border: 1px solid rgba(235, 235, 235, 1);

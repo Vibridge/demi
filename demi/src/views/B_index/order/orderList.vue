@@ -4,50 +4,130 @@
             <div class="second_nav">
                 <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
             </div>
-            <div class="no_line" v-show="order_list.length < 1"></div>
-            <div class="order_list" v-show="order_list.length > 0" v-for="order in order_list" :key="order.order_id">
+            <div class="no_line" v-show="!order_list"></div>
+            <div class="order_list" v-show="order_list" v-for="order in order_list" :key="order.order_id">
                 <div class="line"></div>
                 <div class="order_list_wrap">
-                    <div class="order_title">
+                    <!--<div class="order_title">
                         <p>销售：{{order.contact_name}}</p>
                         <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
-                    </div>
+                    </div>-->
                     <div class="order_info">
-                        <div class="order_info_main">
-                            <div><img :src="order.snapshot.images[0].file_path" alt=""></div>
-                            <p>{{order.snapshot.goods.goods_title}}</p>
-                            <span style="margin-right: 81px;">¥{{order.goods_price}}</span>
-                            <span style="margin-right: 82px;">×{{order.buy_quantity}}</span>
-                            <span>¥{{order.pay_amount}}</span>
+                        <div class="order_info_main" v-for="good in order.goods">
+                            <div><img :src="$config.baseUrl + good.cover_path" alt=""></div>
+                            <p>{{good.title}}</p>
+                            <span style="width: 95px;">¥{{good.price}}</span>
+                            <span style="width: 100px;text-align: center">×{{good.quantity}}</span>
+                            <span style="width: 100px;text-align: center">¥{{order.pay_amount}}</span>
                         </div>
+
                         <div class="status" v-if="order.status === 0">
-                            <!--<button>待支付</button>-->
                             <img src="../../../assets/img/arrearage@2x.png" alt="">
                         </div>
+
                         <div class="status" v-if="order.status === 1">
-                            <!--<button>已取消</button>-->
                             <img src="../../../assets/img/arrearage@2x.png" alt="">
                         </div>
-                        <div class="status" v-if="(order.status === 2) && (order.contact_phone != my_info.phone)">
-                            <button @click="handleDelivery(order.order_id)">确认发货</button>
+
+                        <div class="status" v-if="(order.status === 2)">
+                            <p>已付款</p>
                         </div>
-                        <div class="status" v-if="order.status === 3">
-                            <!--<button>去发货</button>-->
+
+                        <div class="status" v-if="order.status === 6">
                             <img src="../../../assets/img/delivered@2x.png" alt="">
+                        </div>
+
+                        <div class="status" v-if="order.status === 7">
+                            <p>对方发起售后</p>
+                        </div>
+
+                        <div class="status" v-if="order.status === 8">
+                            <p>等待货物退回</p>
+                        </div>
+
+                        <div class="status" v-if="order.status === 9">
+                            <p>拒绝申请</p>
+                        </div>
+
+                        <div class="status" v-if="order.status === 10">
+                            <p>对方已退货</p>
+                        </div>
+
+                        <div class="status" v-if="order.status === 11">
+                            <p>已退款</p>
+                        </div>
+
+                        <div class="status" v-if="order.status === 12">
+                            <p>对方已收货</p>
+                        </div>
+
+                        <div class="status" v-if="order.status === 13">
+                            <p>交易成功</p>
                         </div>
                     </div>
                     <div class="order_buyer">
-                        <div class="order_buyer_info">
-                            <img src="../../../assets/img/address_site.png" alt="">
-                            <span>{{order.contact_name}}</span>
-                            <span>{{order.contact_phone}}</span>
-                            <span style="color: #999">{{order.city.name_relation.join('') + order.city.city_name + order.contact_address}}</span>
+                        <div class="order_buyer_basic">
+                            <div class="order_buyer_info">
+                                <img src="../../../assets/img/address_site.png" alt="">
+                                <span>{{order.contact_name}}</span>
+                                <span>{{order.contact_phone}}</span>
+                                <span style="color: #999">{{order.contact_address}}</span>
+                            </div>
+                            <p style="margin-left: 27px">备注：{{order.remark}}</p>
                         </div>
-                        <p style="margin-left: 27px">备注：{{order.remark}}</p>
+                        <div class="order_buyer_coc">
+                            <div class="status" v-if="order.status === 0">
+                                <div class="connect">联系买家</div>
+                            </div>
+
+                            <div class="status" v-if="order.status === 1">
+                                <div class="connect">联系买家</div>
+                            </div>
+
+                            <div class="status" v-if="(order.status === 2)">
+                                <div class="connect">联系买家</div>
+                                <div class="delivery" @click="handleDelivery(order.order_id)">去发货</div>
+                            </div>
+
+                            <div class="status" v-if="order.status === 6">
+                                <div class="connect">联系买家</div>
+                            </div>
+
+                            <div class="status" v-if="order.status === 7">
+                                <div class="connect">确认申请</div>
+                                <div class="connect">联系买家</div>
+                            </div>
+
+                            <div class="status" v-if="order.status === 8">
+                                <div class="connect">确认退款</div>
+                                <div class="connect">联系买家</div>
+                            </div>
+
+                            <div class="status" v-if="order.status === 9">
+                                <div class="connect">联系买家</div>
+                            </div>
+
+                            <div class="status" v-if="order.status === 10">
+                                <div class="connect">确认退款</div>
+                                <div class="connect">联系买家</div>
+                            </div>
+
+                            <div class="status" v-if="order.status === 11">
+                                <div class="connect">联系买家</div>
+                            </div>
+
+                            <div class="status" v-if="order.status === 12">
+                                <div class="connect">联系买家</div>
+                            </div>
+
+                            <div class="status" v-if="order.status === 13">
+                                <div class="connect">联系买家</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="none_list" v-show="order_list.length < 1">
+            <div class="none_list" v-show="!order_list">
                 <div>
                     <img src="../../../assets/img/snail@2x.png" alt="">
                     <p>暂无数据</p>
@@ -79,15 +159,10 @@
         name: 'orderList',
         props:{
             order_list:{type:Array},
-            my_info:{
-                type: Object,
-                default:null
-            }
         },
         data(){
             return{
                 second_nav:[
-                    {id:'1',name:'销售'},
                     {id:'2',name:'商品'},
                     {id:'3',name:'单价'},
                     {id:'4',name:'数量'},
@@ -106,8 +181,8 @@
 
         },
         methods:{
-            handleDelivery(){
-
+            handleDelivery(id){
+                this.$emit('on-handle-delivery',id)
             }
             /*handleSizeChange(per_page) {
                 this.searchParams.per_page = per_page;

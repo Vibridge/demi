@@ -57,7 +57,10 @@ export default {
       if (payload.data === 'group_create') {
         return `${payload.extension}`
       }
-      return '[自定义消息]'
+      if(payload.data === 'message'){
+        return `${payload.description}`
+      }
+      return `${payload.description}`
     }
   }
 }

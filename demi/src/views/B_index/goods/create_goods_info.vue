@@ -10,7 +10,7 @@
                 </el-tabs>
                 <div class="select_category">
                     <p>当前类目：{{this.$route.query.title}}</p>
-                    <el-button type="primary" v-if="!isUpdate">切换类目</el-button>
+                    <el-button type="primary" v-if="!isUpdate" @click="handleBackSelect">切换类目</el-button>
                 </div>
             </div>
             <div id="1" class="goods_basic">
@@ -530,6 +530,13 @@
                 document.getElementById('app').scrollTo(0, el.offsetTop);
             },
 
+            //返回选择类目
+            handleBackSelect(){
+                this.$router.push({
+                    name: 'create_goods',
+                });
+            },
+
             //自定义属性值
             handleAddAttr(index) {
                 this.custom_attr[index].values.push(this.custom[index]);
@@ -541,7 +548,6 @@
                 if (this.tableData) {
                     //价格
                     if (this.sale) {
-                        console.log(this.sku_sale);
                         let none = true;
                         let lessThan = [];
                         let length = this.sku_commission.length;
@@ -637,9 +643,6 @@
 
             //sku
             handleSelectAttr(item) {
-                console.log(this.tableData);
-                console.log(this.checkList);
-
                 let length = this.isSelectSku.length;
                 if(length > 0){
                     let add = false;
@@ -674,11 +677,21 @@
                 let all_length = this.checkList.length;
                 let length = this.checkList[index].values.length;
                 if (length > 0) {
-                    if(index != 0){
+                    let has = this.only.length;
+                    let hasIndex = false;
+                    for(let h = 0;h<has;h++){
+                        if(this.only[h].title == this.checkList[index].title){
+                            hasIndex = true
+                        }
+                    }
+                    if(!hasIndex){
+                        this.only.push(this.checkList[index])
+                    }
+                   /* if(index != 0){
                         this.only = this.checkList
                     }else{
                         this.only.push(this.checkList[index])
-                    }
+                    }*/
                     for (let i = 0; i < length; i++) {
                         if (index < all_length - 1) {
                             data[index] = this.checkList[index].values[i];
@@ -693,7 +706,6 @@
                         this.tableData.push([...data]);
                     }
                 }
-                console.log(this.tableData)
                 if (this.tableData.length > 0) {
                     let table = this.tableData.length;
                     for (let i = 0; i < table; i++) {
@@ -1048,7 +1060,6 @@
                                 for (let k = 0; k < updateSku; k++) {
                                     for (let i in this.isUpdateSku[k]) {
                                         if (i == this.sku_array[y]) {
-                                            console.log(y)
                                             this.$set(this.sku_sale, y, this.isUpdateSku[k][i].price);
                                             this.$set(this.sku_commission, y, this.isUpdateSku[k][i].salary);
                                             this.$set(this.sku_sum, y, this.isUpdateSku[k][i].inventory);
@@ -1065,7 +1076,6 @@
                 if (this.isUpdate != 0) {
                     if (this.goods_info) {
                         this.apiGet('/api/goods/info/' + this.$route.query.goods_id).then((res) => {
-                            console.log(res)
                             const data = res;
                             this.goods_name = data.title;
                             this.content = data.description;
@@ -1106,7 +1116,6 @@
                                     this.isUpdateSku.push(isEditSku);
                                     // this.isUpdateSku[i]
                                 }
-                                console.log(this.isUpdateSku)
                                 let attrs = data.attribute.length;
                                 if (attrs > 0) {
                                     for (let attr = 0; attr < attrs; attr++) {

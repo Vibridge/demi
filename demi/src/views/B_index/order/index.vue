@@ -2,272 +2,38 @@
     <div class="right">
         <div class="order_header">
             <span></span>
-            <span>订单列表</span>
+            <p v-if="!isDelivery">订单列表</p>
+            <p v-if="isDelivery" @click="isDelivery = false">订单列表>物流管理>发货</p>
         </div>
-        <div class="order_main">
+        <div class="order_main" v-if="!isDelivery">
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
 
                 <!--全部-->
                 <el-tab-pane label="全部" name="all">
-                    <orderList :order_list="order_list" :my_info="my_info"></orderList>
+                    <orderList :order_list="order_list" @on-handle-delivery="handleGoDelivery"></orderList>
                 </el-tab-pane>
 
                 <!--已付款-->
                 <el-tab-pane label="已付款" name="paid">
-                    <orderList :order_list="order_list" :my_info="my_info"></orderList>
-                    <!--<div class="all-wrap">
-                        <div class="second_nav">
-                            <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
-                        </div>
-                        <div class="no_line" v-show="order_list.length < 1"></div>
-                        <div class="order_list" v-show="order_list.length > 0" v-for="order in order_list" :key="order.order_id">
-                            <div class="line"></div>
-                            <div class="order_list_wrap">
-                                <div class="order_title">
-                                    <p>销售：{{order.referrer.nickname}}</p>
-                                    <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
-                                </div>
-                                <div class="order_info">
-                                    <div class="order_info_main">
-                                        <div><img :src="order.snapshot.images[0].file_path" alt=""></div>
-                                        <p>{{order.snapshot.goods.goods_title}}</p>
-                                        <span style="margin-right: 81px;">¥{{order.goods_price}}</span>
-                                        <span style="margin-right: 82px;">×{{order.buy_quantity}}</span>
-                                        <span>¥{{order.pay_amount}}</span>
-                                    </div>
-                                    <div class="status" v-if="order.status === 2">
-                                        <button>确认发货</button>
-                                    </div>
-                                </div>
-                                <div class="order_buyer">
-                                    <div class="order_buyer_info">
-                                        <img src="../../../assets/img/address_site.png" alt="">
-                                        <span>{{order.contact_name}}</span>
-                                        <span>{{order.contact_phone}}</span>
-                                        <span style="color: #999">{{order.city.name_relation.join('') + order.city.city_name + order.contact_address}}</span>
-                                    </div>
-                                    <p style="margin-left: 27px">备注：{{order.remark}}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="none_list" v-show="order_list.length < 1">
-                            <div>
-                                <img src="../../../assets/img/snail@2x.png" alt="">
-                                <p>暂无数据</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="paging" v-show="order_list.length > 0">
-                        <el-pagination
-                                background
-                                :hide-on-single-page="true"
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange(2)"
-                                @current-change="handleCurrentPageChange(2)">
-                        </el-pagination>
-                    </div>-->
+                    <orderList :order_list="order_list" @on-handle-delivery="handleGoDelivery"></orderList>
                 </el-tab-pane>
 
                 <!--未付款-->
                 <el-tab-pane label="未付款" name="unpaid">
-                    <orderList :order_list="order_list" :my_info="my_info"></orderList>
-<!--
-                    <div class="all-wrap">
-                        <div class="second_nav">
-                            <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
-                        </div>
-                        <div class="no_line" v-show="order_list.length < 1"></div>
-                        <div class="order_list" v-show="order_list.length > 0" v-for="order in order_list" :key="order.order_id">
-                            <div class="line"></div>
-                            <div class="order_list_wrap">
-                                <div class="order_title">
-                                    <p>销售：{{order.referrer.nickname}}</p>
-                                    <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
-                                </div>
-                                <div class="order_info">
-                                    <div class="order_info_main">
-                                        <div><img :src="order.snapshot.images[0].file_path" alt=""></div>
-                                        <p>{{order.snapshot.goods.goods_title}}</p>
-                                        <span style="margin-right: 81px;">¥{{order.goods_price}}</span>
-                                        <span style="margin-right: 82px;">×{{order.buy_quantity}}</span>
-                                        <span>¥{{order.pay_amount}}</span>
-                                    </div>
-                                    <div class="status" v-if="order.status === 0 && !order.pay_amount">
-                                        &lt;!&ndash;<button>待支付</button>&ndash;&gt;
-                                        <img src="../../../assets/img/arrearage@2x.png" alt="">
-                                    </div>
-                                    <div class="status" v-if="order.status === 1">
-                                        &lt;!&ndash;<button>已取消</button>&ndash;&gt;
-                                        <img src="../../../assets/img/arrearage@2x.png" alt="">
-                                    </div>
-                                </div>
-                                <div class="order_buyer">
-                                    <div class="order_buyer_info">
-                                        <img src="../../../assets/img/address_site.png" alt="">
-                                        <span>{{order.contact_name}}</span>
-                                        <span>{{order.contact_phone}}</span>
-                                        <span style="color: #999">{{order.city.name_relation.join('') + order.city.city_name + order.contact_address}}</span>
-                                    </div>
-                                    <p style="margin-left: 27px">备注：{{order.remark}}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="none_list" v-show="order_list.length < 1">
-                            <div>
-                                <img src="../../../assets/img/snail@2x.png" alt="">
-                                <p>暂无数据</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="paging" v-show="order_list.length > 0">
-                        <el-pagination
-                                background
-                                :hide-on-single-page="true"
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange(0,1)"
-                                @current-change="handleCurrentPageChange(0,1)">
-                        </el-pagination>
-                    </div>-->
+                    <orderList :order_list="order_list"></orderList>
                 </el-tab-pane>
 
                 <!--已发货-->
                 <el-tab-pane label="已发货" name="shipped">
-                    <orderList :order_list="order_list" :my_info="my_info"></orderList>
-                    <!--<div class="all-wrap">
-                        <div class="second_nav">
-                            <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
-                        </div>
-                        <div class="no_line" v-show="order_list.length < 1"></div>
-                        <div class="order_list" v-show="order_list.length > 0" v-for="order in order_list" :key="order.order_id">
-                            <div class="line"></div>
-                            <div class="order_list_wrap">
-                                <div class="order_title">
-                                    <p>销售：{{order.referrer.nickname}}</p>
-                                    <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
-                                </div>
-                                <div class="order_info">
-                                    <div class="order_info_main">
-                                        <div><img :src="order.snapshot.images[0].file_path" alt=""></div>
-                                        <p>{{order.snapshot.goods.goods_title}}</p>
-                                        <span style="margin-right: 81px;">¥{{order.goods_price}}</span>
-                                        <span style="margin-right: 82px;">×{{order.buy_quantity}}</span>
-                                        <span>¥{{order.pay_amount}}</span>
-                                    </div>
-                                    <div class="status" v-if="order.status === 3">
-                                        &lt;!&ndash;<button>去发货</button>&ndash;&gt;
-                                        <img src="../../../assets/img/delivered@2x.png" alt="">
-                                    </div>
-                                </div>
-                                <div class="order_buyer">
-                                    <div class="order_buyer_info">
-                                        <img src="../../../assets/img/address_site.png" alt="">
-                                        <span>{{order.contact_name}}</span>
-                                        <span>{{order.contact_phone}}</span>
-                                        <span style="color: #999">{{order.city.name_relation.join('') + order.city.city_name + order.contact_address}}</span>
-                                    </div>
-                                    <p style="margin-left: 27px">备注：{{order.remark}}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="none_list" v-show="order_list.length < 1">
-                            <div>
-                                <img src="../../../assets/img/snail@2x.png" alt="">
-                                <p>暂无数据</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="paging" v-show="order_list.length > 0">
-                        <el-pagination
-                                background
-                                :hide-on-single-page="true"
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange(3)"
-                                @current-change="handleCurrentPageChange(3)">
-                        </el-pagination>
-                    </div>-->
+                    <orderList :order_list="order_list"></orderList>
                 </el-tab-pane>
 
-                <!--退款中-->
-                <el-tab-pane label="退款中" name="refund">
-                    <orderList :order_list="order_list" :my_info="my_info"></orderList>
-                    <!--<div class="all-wrap">
-                        <div class="second_nav">
-                            <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
-                        </div>
-                        <div class="no_line" v-show="order_list.length < 1"></div>
-                        <div class="order_list" v-show="order_list.length > 0" v-for="order in order_list" :key="order.order_id">
-                            <div class="line"></div>
-                            <div class="order_list_wrap">
-                                <div class="order_title">
-                                    <p>销售：{{order.referrer.nickname}}</p>
-                                    <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
-                                </div>
-                                <div class="order_info">
-                                    <div class="order_info_main">
-                                        <div><img :src="order.snapshot.images[0].file_path" alt=""></div>
-                                        <p>{{order.snapshot.goods.goods_title}}</p>
-                                        <span style="margin-right: 81px;">¥{{order.goods_price}}</span>
-                                        <span style="margin-right: 82px;">×{{order.buy_quantity}}</span>
-                                        <span>¥{{order.pay_amount}}</span>
-                                    </div>
-                                    <div class="status" v-if="order.status === 3">
-                                        &lt;!&ndash;<button>去发货</button>&ndash;&gt;
-                                        <img src="../../../assets/img/delivered@2x.png" alt="">
-                                    </div>
-                                </div>
-                                <div class="order_buyer">
-                                    <div class="order_buyer_info">
-                                        <img src="../../../assets/img/address_site.png" alt="">
-                                        <span>{{order.contact_name}}</span>
-                                        <span>{{order.contact_phone}}</span>
-                                        <span style="color: #999">{{order.city.name_relation.join('') + order.city.city_name + order.contact_address}}</span>
-                                    </div>
-                                    <p style="margin-left: 27px">备注：{{order.remark}}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="none_list" v-show="order_list.length < 1">
-                            <div>
-                                <img src="../../../assets/img/snail@2x.png" alt="">
-                                <p>暂无数据</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="paging" v-show="order_list.length > 0">
-                        <el-pagination
-                                background
-                                :hide-on-single-page="true"
-                                layout="prev, pager, next"
-                                prev-text="上一页"
-                                next-text="下一页"
-                                :pager-count='5'
-                                :total="searchParams.total"
-                                :current-page="searchParams.page"
-                                :page-size="searchParams.per_page"
-                                @size-change="handleSizeChange(3)"
-                                @current-change="handleCurrentPageChange(3)">
-                        </el-pagination>
-                    </div>-->
+                <!--售后中-->
+                <el-tab-pane label="售后中" name="service">
+                    <orderList :order_list="order_list"></orderList>
                 </el-tab-pane>
             </el-tabs>
+
             <div class="paging" v-show="order_list.length > 0">
                 <el-pagination
                         background
@@ -279,10 +45,14 @@
                         :total="searchParams.total"
                         :current-page="searchParams.page"
                         :page-size="searchParams.per_page"
-                        @size-change="handleSizeChange()"
-                        @current-change="handleCurrentPageChange()">
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentPageChange">
                 </el-pagination>
             </div>
+        </div>
+
+        <div v-if="isDelivery">
+            <delivery></delivery>
         </div>
     </div>
 </template>
@@ -290,31 +60,16 @@
 <script>
     /* eslint-disable */
     import orderList from './orderList'
+    import delivery from './delivery'
     import http from '../../../libs/http'
     export default {
         name: 'order',
-        props:{
-            user_info:{type:Object, default: null},
-        },
         components:{
-            orderList
+            orderList,delivery
         },
         data() {
             return {
                 activeName: 'all',
-                /*searchParams: {
-                    page: 1,
-                    total: 0,
-                    per_page: 15
-                },
-                second_nav:[
-                    {id:'1',name:'销售'},
-                    {id:'2',name:'商品'},
-                    {id:'3',name:'单价'},
-                    {id:'4',name:'数量'},
-                    {id:'5',name:'实付'},
-                    {id:'6',name:'状态'},
-                ],*/
                 searchParams: {
                     page: 1,
                     total: 0,
@@ -322,14 +77,11 @@
                 },
                 order_list:[],
                 active_index: 0,
-                my_info: null
-            };
+                orderId:null,
+                isDelivery:false
+            }
         },
         mounted(){
-            if(this.user_info){
-                this.my_info = this.user_info
-            }
-            console.log(this.user_info)
             this.apiGet('/api/user/info').then((res) => {
                 if (res.type !== 2) {
                     this.$message({
@@ -358,7 +110,7 @@
                 this.searchParams.total = 0;
                 this.searchParams.per_page = 15;
                 if (tab.index === '0') {
-                    this.initialize();
+                    this.initialize(null);
                 }
                 if (tab.index === '1') {
                     this.initialize(2);
@@ -369,17 +121,21 @@
                 if (tab.index === '3') {
                     this.initialize(3);
                 }
+                console.log(tab.index)
+                if (tab.index === '4') {
+                    this.initialize(-1);
+                }
             },
 
             //数据接口
             initialize(status){
-                if (status|| (status === 0)) {
+                if (status || (status == 0)) {
                     this.apiGet('/api/order/paginate' + '?status=' + status, this.searchParams).then((res) => {
                         this.order_list = res.data;
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
-                        console.log(this.order_list)
+                        console.log(res)
                     });
                 } else {
                     this.apiGet('/api/order/paginate', this.searchParams).then((res) => {
@@ -387,21 +143,29 @@
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
-                        console.log(this.order_list)
+                        console.log(res)
                     })
                 }
+            },
+
+            handleGoDelivery(id){
+                console.log('a')
+                this.isDelivery = true
+                this.orderId = id
             },
 
             handleSizeChange(per_page) {
                 this.searchParams.per_page = per_page;
                 if(this.active_index === '0'){
-                    this.initialize();
+                    this.initialize(null);
                 }else if(this.active_index === '1'){
                     this.initialize(2);
                 }else if(this.active_index === '2'){
                     this.initialize(0);
-                }else if(this.active_index === '2'){
+                }else if(this.active_index === '3'){
                     this.initialize(3);
+                }else if(this.active_index === '4'){
+                    this.initialize(-1);
                 }
                 document.getElementById('app').scrollTo(0,0)
 
@@ -409,13 +173,15 @@
             handleCurrentPageChange(page) {
                 this.searchParams.page = page;
                 if(this.active_index === '0'){
-                    this.initialize();
+                    this.initialize(null);
                 }else if(this.active_index === '1'){
                     this.initialize(2);
                 }else if(this.active_index === '2'){
                     this.initialize(0);
-                }else if(this.active_index === '2'){
+                }else if(this.active_index === '3'){
                     this.initialize(3);
+                }else if(this.active_index === '4'){
+                    this.initialize(-1);
                 }
                 document.getElementById('app').scrollTo(0,0)
             },
@@ -452,9 +218,10 @@
                 display: inline-block;
                 vertical-align: middle;
             }
-            span:nth-child(2){
+            p{
                 font-size: 20px;
                 color: #4D4D4D;
+                cursor: pointer;
             }
         }
         .order_main{
@@ -479,6 +246,10 @@
                     span{
                         margin-left: 83px;
                     }
+                    span:nth-child(1){
+                        margin-left: 124px;
+                        margin-right: 70px;
+                    }
                 }
                 .no_line{
                     width: 100%;
@@ -500,7 +271,7 @@
                     }
                     .order_list_wrap{
                         width: 100%;
-                        padding: 25px 11px 25px 38px;
+                        padding: 25px 11px 25px 25px;
                         font-size: 13px;
                         color: #4D4D4D;
                         text-align: left;
@@ -530,12 +301,12 @@
                                 p{
                                     align-self: center;
                                     display: inline-block;
-                                    width: 143px;
+                                    width: 190px;
                                     word-break: break-word;
-                                    margin-right: 53px;
                                     line-height: 17px;
                                 }
                                 span{
+                                    text-align: center;
                                     align-self: center;
                                 }
                             }
@@ -543,20 +314,11 @@
                                 align-self: center;
                                 width: 136px;
                                 text-align: right;
-                                button{
-                                    background:rgba(255,255,255,1);
-                                    border:1px solid rgba(235, 235, 235, 1);
-                                    border-radius:8px;
-                                    width: 100%;
-                                    height: 100%;
-                                    line-height: 27px;
-                                    color:rgba(36,191,255,1);
-                                    font-size: 12px;
-                                }
-                                botton:hover{
-                                    background:rgba(36,191,255,1);
-                                    color: white;
-                                }
+                                p{
+                                    text-align: center;
+                                    color: #24BFFF;
+                                    font-size: 14px;
+                                };
                                 img{
                                     width: 58px;
                                     margin-right: 27px;
@@ -566,15 +328,53 @@
                         .order_buyer{
                             width: 100%;
                             text-align: left;
-                            .order_buyer_info{
-                                margin-bottom: 13px;
-                                img{
-                                    width: 10px;
-                                }
-                                span{
-                                    margin-left: 17px;
+                            display: flex;
+                            justify-content: space-between;
+                            .order_buyer_basic{
+                                .order_buyer_info{
+                                    margin-bottom: 13px;
+                                    img{
+                                        width: 10px;
+                                    }
+                                    span{
+                                        margin-left: 17px;
+                                    }
                                 }
                             }
+                            .order_buyer_coc{
+                                .status{
+                                    width: 125px;
+                                    display: flex;
+                                    font-size: 14px;
+                                    text-align: center;
+                                    flex-direction: column;
+                                    .connect{
+                                        height: 29px;
+                                        color: #808080;
+                                        cursor: pointer;
+                                        line-height: 29px;
+                                        border-radius:15px;
+                                        margin-bottom: 16px;
+                                        background:rgba(255,255,255,1);
+                                        border:1px solid rgba(230, 230, 230, 1);
+                                    }
+                                    .delivery{
+                                        color: #24BFFF;
+                                        height:29px;
+                                        line-height: 29px;
+                                        background:rgba(247,253,255,1);
+                                        border:1px solid rgba(36, 191, 255, 1);
+                                        border-radius:15px;
+                                        cursor: pointer;
+                                    }
+                                    .delivery:hover{
+                                        background:rgba(36,191,255,1);
+                                        color: white;
+                                    }
+                                }
+
+                            }
+
                         }
                     }
                     .order_list_wrap:nth-last-child(1){

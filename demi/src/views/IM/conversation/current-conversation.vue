@@ -90,6 +90,7 @@
                 return false
             }
             this.user_id = sessionStorage.getItem('userID');
+
         },
         updated() {
             this.keepMessageListOnButtom()
@@ -159,11 +160,15 @@
                 return this.toAccount
             },
             showMessageSendBox() {
-                if(this.currentConversation.conversationID.split('C2C')[1] !== 'dominator'){
-                    return (this.currentConversation.type !== this.TIM.TYPES.CONV_SYSTEM) || (this.detail && !this.detail.dominator) || (!this.detail)
+                console.log(this.currentConversation)
+                if(this.currentConversation.type !== this.TIM.TYPES.CONV_SYSTEM){
+                    if(this.currentConversation.conversationID.split('C2C')[1] !== 'dominator'){
+                        return (this.currentConversation.type !== this.TIM.TYPES.CONV_SYSTEM) || (this.detail && !this.detail.dominator) || (!this.detail)
+                    }
                 }else{
                     return false
                 }
+
             }
         },
         methods: {

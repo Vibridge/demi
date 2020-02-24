@@ -52,7 +52,7 @@
                     <span>职位管理</span>
                     <span>全职岗位</span>
                 </div>
-                <p>兼职岗位</p>
+                <p>任务</p>
             </div>
             <div class="post_list">
                 <ul v-show="work_list3 && work_list3.length > 0">

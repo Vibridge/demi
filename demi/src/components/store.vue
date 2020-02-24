@@ -117,6 +117,9 @@
                 this.over = false;
                 this.$router.push({
                     name: path,
+                    query:{
+                        store:true
+                    }
                 });
             }
         },
