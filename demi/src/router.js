@@ -129,12 +129,12 @@ const router = new Router({
                     component: () => import('./views/B_index/goods/create_goods_info.vue')
                 },
 
+
                 {
                     path: '/B_index/B_person/goods_massage',
                     name: 'goods_massage',
                     meta: {title: 'goodsMassage',parent:'B_person'},
                     component: () => import('./views/B_index/goods_massage/index.vue')
-
                 },
 
                 {
@@ -162,6 +162,14 @@ const router = new Router({
                     meta: {title: 'create_task',parent:'create'},
                     component: () => import('./views/create/task_create/index.vue')
                 },
+
+                {
+                    path: '/B_index/B_person/order_info',
+                    name: 'order_info',
+                    meta: {title: 'order_info',parent:'info'},
+                    component: () => import('./views/orderInfo/index.vue')
+                },
+
                 {
                     path: '/B_index/B_person/withdraw',
                     name: 'withdraw',

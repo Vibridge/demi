@@ -108,7 +108,7 @@
         <router-view v-if="!IsShow"/>
 
         <!--//底部内容渲染-->
-        <bottom v-if="this.IsShow"></bottom>
+        <bottom v-if="this.IsShow || this.$route.name == 'order_info'"></bottom>
 
         <div class="customer" v-if="showCustomer" @click="handleCustomer">
             <el-badge :value="customer && customer.unreadCount" :hidden="customer && customer.unreadCount < 1"

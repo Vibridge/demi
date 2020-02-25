@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="task_list_wrap" v-for="task in this.taskList" :key="task.task_order_id">
+        <div class="task_list_wrap" v-for="task in taskList" :key="task.task_order_id">
             <div class="task_list_info">
                 <div class="task_title">
                     <p>{{task.task_title}}</p>
@@ -30,11 +30,11 @@
                         已销售：0</p>
                 </div>
                 <div class="task_operate" v-if="task.status === 0">
-                    <button @click="handleRefuse(this.index,task.task_order_id,task.user.user_id)"
+                    <button @click="handleRefuse(index,task.task_order_id,task.user.user_id)"
                             class="first active_over">拒绝
                     </button>
                     <button v-if="parseInt(task.snapshot.front_money) <= 0"
-                            @click="handlePass(this.index,task.task_order_id,task.user.user_id)">通过
+                            @click="handlePass(index,task.task_order_id,task.user.user_id)">通过
                     </button>
                     <button v-if="parseInt(task.snapshot.front_money)>0"
                             @click="pay()">通过&支付定金

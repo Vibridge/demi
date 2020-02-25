@@ -52,7 +52,7 @@
         </div>
 
         <div v-if="isDelivery">
-            <delivery></delivery>
+            <delivery :id="orderId" @on-handle-list="handleBackList"></delivery>
         </div>
     </div>
 </template>
@@ -109,22 +109,7 @@
                 this.searchParams.page = 1;
                 this.searchParams.total = 0;
                 this.searchParams.per_page = 15;
-                if (tab.index === '0') {
-                    this.initialize(null);
-                }
-                if (tab.index === '1') {
-                    this.initialize(2);
-                }
-                if (tab.index === '2') {
-                    this.initialize(0);
-                }
-                if (tab.index === '3') {
-                    this.initialize(3);
-                }
-                console.log(tab.index)
-                if (tab.index === '4') {
-                    this.initialize(-1);
-                }
+                this.handleDate()
             },
 
             //数据接口
@@ -135,7 +120,6 @@
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
-                        console.log(res)
                     });
                 } else {
                     this.apiGet('/api/order/paginate', this.searchParams).then((res) => {
@@ -143,19 +127,20 @@
                         this.searchParams.page = parseInt(res.current_page);
                         this.searchParams.total = parseInt(res.total);
                         this.searchParams.per_page = parseInt(res.per_page);
-                        console.log(res)
                     })
                 }
             },
 
             handleGoDelivery(id){
-                console.log('a')
-                this.isDelivery = true
+                this.isDelivery = true;
                 this.orderId = id
             },
+            handleBackList(){
+                this.isDelivery = false;
+                this.handleDate()
+            },
 
-            handleSizeChange(per_page) {
-                this.searchParams.per_page = per_page;
+            handleDate(){
                 if(this.active_index === '0'){
                     this.initialize(null);
                 }else if(this.active_index === '1'){
@@ -167,22 +152,17 @@
                 }else if(this.active_index === '4'){
                     this.initialize(-1);
                 }
+            },
+
+            handleSizeChange(per_page) {
+                this.searchParams.per_page = per_page;
+                this.handleDate()
                 document.getElementById('app').scrollTo(0,0)
 
             },
             handleCurrentPageChange(page) {
                 this.searchParams.page = page;
-                if(this.active_index === '0'){
-                    this.initialize(null);
-                }else if(this.active_index === '1'){
-                    this.initialize(2);
-                }else if(this.active_index === '2'){
-                    this.initialize(0);
-                }else if(this.active_index === '3'){
-                    this.initialize(3);
-                }else if(this.active_index === '4'){
-                    this.initialize(-1);
-                }
+                this.handleDate()
                 document.getElementById('app').scrollTo(0,0)
             },
 

@@ -4,14 +4,10 @@
             <div class="second_nav">
                 <span v-for="label in second_nav" :key="label.id">{{label.name}}</span>
             </div>
-            <div class="no_line" v-show="!order_list"></div>
+            <div class="no_line" v-show="order_list.length<1"></div>
             <div class="order_list" v-show="order_list" v-for="order in order_list" :key="order.order_id">
                 <div class="line"></div>
-                <div class="order_list_wrap">
-                    <!--<div class="order_title">
-                        <p>销售：{{order.contact_name}}</p>
-                        <p v-if="order.logistics">{{order.logistics.name}}：{{order.logistics_no}}</p>
-                    </div>-->
+                <div class="order_list_wrap" @click="handleOrderInfo(order.order_id)">
                     <div class="order_info">
                         <div class="order_info_main" v-for="good in order.goods">
                             <div><img :src="$config.baseUrl + good.cover_path" alt=""></div>
@@ -127,28 +123,13 @@
                     </div>
                 </div>
             </div>
-            <div class="none_list" v-show="!order_list">
+            <div class="none_list" v-show="order_list.length<1">
                 <div>
                     <img src="../../../assets/img/snail@2x.png" alt="">
                     <p>暂无数据</p>
                 </div>
             </div>
         </div>
-        <!--<div class="paging" v-show="order_list.length > 0">
-            <el-pagination
-                    background
-                    :hide-on-single-page="true"
-                    layout="prev, pager, next"
-                    prev-text="上一页"
-                    next-text="下一页"
-                    :pager-count='5'
-                    :total="searchParams.total"
-                    :current-page="searchParams.page"
-                    :page-size="searchParams.per_page"
-                    @size-change="handleSizeChange()"
-                    @current-change="handleCurrentPageChange()">
-            </el-pagination>
-        </div>-->
 
     </div>
 
@@ -169,12 +150,6 @@
                     {id:'5',name:'实付'},
                     {id:'6',name:'状态'},
                 ],
-                /*searchParams: {
-                    page: 1,
-                    total: 0,
-                    per_page: 15
-                },*/
-
             }
         },
         mounted(){
@@ -183,31 +158,15 @@
         methods:{
             handleDelivery(id){
                 this.$emit('on-handle-delivery',id)
-            }
-            /*handleSizeChange(per_page) {
-                this.searchParams.per_page = per_page;
-                if(this.active_index === '0'){
-                    this.initialize();
-                }else if(this.active_index === '1'){
-                    this.initialize(2,0);
-                }else if(this.active_index === '2'){
-                    this.initialize(0, 1);
-                }else if(this.active_index === '2'){
-                    this.initialize(3,0);
-                }
             },
-            handleCurrentPageChange(page) {
-                this.searchParams.page = page;
-                if(this.active_index === '0'){
-                    this.initialize();
-                }else if(this.active_index === '1'){
-                    this.initialize(2,0);
-                }else if(this.active_index === '2'){
-                    this.initialize(0, 1);
-                }else if(this.active_index === '2'){
-                    this.initialize(3,0);
-                }
-            },*/
+            handleOrderInfo(id){
+                this.$router.push({
+                    name: 'order_info',
+                    query:{
+                        id:id
+                    }
+                })
+            }
         }
     }
 </script>

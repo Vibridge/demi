@@ -68,7 +68,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="goods_table" v-if="tableData.length > 0">
+                    <div class="goods_table" v-if="only.length > 0">
                         <div class="table_title">
                             <p>宝贝销售规格 <span>在标题栏中输入或选择内容可以进行筛选和批量填充</span></p>
                             <el-button type="primary" size="small" @click="handleFill">批量填充</el-button>
@@ -476,9 +476,9 @@
                 //更新时商品的sku
                 isUpdateSku: [],
 
-                isSelectSku:[],
+                isSelectSku: [],
 
-                only:[]
+                only: []
             };
         },
         computed: {
@@ -531,7 +531,7 @@
             },
 
             //返回选择类目
-            handleBackSelect(){
+            handleBackSelect() {
                 this.$router.push({
                     name: 'create_goods',
                 });
@@ -541,6 +541,7 @@
             handleAddAttr(index) {
                 this.custom_attr[index].values.push(this.custom[index]);
                 this.custom[index] = ''
+
             },
 
             //批量填充
@@ -607,7 +608,7 @@
                                 this.$set(this.sku_commission, i, this.commission)
                             }
                             this.commission = null
-                        } else if ((parseInt(this.sale) && (parseInt(this.commission)) >  parseInt(this.sale))) {
+                        } else if ((parseInt(this.sale) && (parseInt(this.commission)) > parseInt(this.sale))) {
                             this.$message.error('佣金不能大于商品价格')
                         } else if (!this.sale && has > 0) {
                             for (let i = 0; i < has; i++) {
@@ -644,21 +645,21 @@
             //sku
             handleSelectAttr(item) {
                 let length = this.isSelectSku.length;
-                if(length > 0){
+                if (length > 0) {
                     let add = false;
                     let index = 0
-                    for(let i = 0;i<length;i++){
-                        if(this.isSelectSku[i] === item){
+                    for (let i = 0; i < length; i++) {
+                        if (this.isSelectSku[i] === item) {
                             add = true
                             index = i
                         }
                     }
-                    if(!add){
+                    if (!add) {
                         this.isSelectSku.push(item)
-                    }else{
-                        this.isSelectSku.splice(index,1)
+                    } else {
+                        this.isSelectSku.splice(index, 1)
                     }
-                }else{
+                } else {
                     this.isSelectSku.push(item)
                 }
                 this.tableData = [];
@@ -679,31 +680,44 @@
                 if (length > 0) {
                     let has = this.only.length;
                     let hasIndex = false;
-                    for(let h = 0;h<has;h++){
-                        if(this.only[h].title == this.checkList[index].title){
+                    for (let h = 0; h < has; h++) {
+                        if (this.only[h].title == this.checkList[index].title) {
                             hasIndex = true
                         }
                     }
-                    if(!hasIndex){
+                    if (!hasIndex) {
                         this.only.push(this.checkList[index])
                     }
-                   /* if(index != 0){
-                        this.only = this.checkList
-                    }else{
-                        this.only.push(this.checkList[index])
-                    }*/
+                    /* if(index != 0){
+                         this.only = this.checkList
+                     }else{
+                         this.only.push(this.checkList[index])
+                     }*/
                     for (let i = 0; i < length; i++) {
                         if (index < all_length - 1) {
                             data[index] = this.checkList[index].values[i];
                             this.handleSku(index + 1, data)
-                        } else {
+                        }/* else {
                             let subItem = [...data, this.checkList[index].values[i]];
                             this.tableData.push(subItem);
+                        }*/
+                    }
+                } else {
+                    if(index != 0){
+                        if([...data].length> 0){
+                            let array = [];
+                            for (let i = 0; i < [...data].length; i++) {
+                                if ([...data][i]) {
+                                    array.push([...data][i]);
+                                }
+                            }
+                            this.tableData.push([...array]);
+                            // this.tableData.push([...data]);
                         }
                     }
-                }else{
-                    if(index != 0){
-                        this.tableData.push([...data]);
+
+                    if(index < all_length - 1){
+                        this.handleSku(index + 1, [])
                     }
                 }
                 if (this.tableData.length > 0) {
@@ -940,10 +954,10 @@
                 if (this.goods_price || this.goods_salary || this.goods_no || this.goods_inventory) {
                     data.is_sku = 0
                 }
-                if(this.goods_no){
+                if (this.goods_no) {
                     data.goods_no = this.goods_no;
                 }
-                if(this.real_video_path){
+                if (this.real_video_path) {
                     data.video_path = this.real_video_path
                     data.video_cover = this.cover
                 }
@@ -1144,9 +1158,9 @@
 
                                 let onlySku = this.checkList.length;
 
-                                for(let o = 0;o<onlySku;o++){
+                                for (let o = 0; o < onlySku; o++) {
                                     let has = this.checkList[o].values.length;
-                                    if(has > 0){
+                                    if (has > 0) {
                                         this.only.push(this.checkList[o])
                                     }
                                 }
