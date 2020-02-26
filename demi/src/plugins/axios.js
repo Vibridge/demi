@@ -1,65 +1,33 @@
-"use strict";
+import axios from 'axios';
 
-import Vue from 'vue';
-import axios from "axios";
+axios.defaults.retry = 4;
+axios.defaults.retryDelay = 1000;
+axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
+	var config = err.config;
+	// If config does not exist or the retry option is not set, reject
+	if(!config || !config.retry) return Promise.reject(err);
 
-// Full config:  https://github.com/axios/axios#request-config
-// axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+	// Set the variable for keeping track of the retry count
+	config.__retryCount = config.__retryCount || 0;
 
-let config = {
-	baseUrl: 'http://produce.jmzhipin.com',
-	// baseURL: process.env.baseURL || process.env.apiUrl || ""
-	// timeout: 60 * 1000, // Timeout
-	// withCredentials: true, // Check cross-site Access-Control
-};
-
-const _axios = axios.create({
-	baseURL: config.baseUrl,
-	timeout: 5000,
-});
-
-_axios.interceptors.request.use(
-	function(config) {
-		// Do something before request is sent
-		return config;
-	},
-	function(error) {
-		// Do something with request error
-		return Promise.reject(error);
+	// Check if we've maxed out the total number of retries
+	if(config.__retryCount >= config.retry) {
+		// Reject with the error
+		return Promise.reject(err);
 	}
-);
 
-// Add a response interceptor
-_axios.interceptors.response.use(
-	function(response) {
-		// Do something with response data
-		return response;
-	},
-	function(error) {
-		// Do something with response error
-		return Promise.reject(error);
-	}
-);
+	// Increase the retry count
+	config.__retryCount += 1;
 
-Plugin.install = function(Vue, options) {
-	Vue.axios = _axios;
-	window.axios = _axios;
-	Object.defineProperties(Vue.prototype, {
-		axios: {
-			get() {
-				return _axios;
-			}
-		},
-		$axios: {
-			get() {
-				return _axios;
-			}
-		},
+	// Create new promise to handle exponential backoff
+	var backoff = new Promise(function(resolve) {
+		setTimeout(function() {
+			resolve();
+		}, config.retryDelay || 1);
 	});
-};
 
-Vue.use(Plugin)
-
-export default Plugin;
+	// Return the promise in which recalls axios to retry the request
+	return backoff.then(function() {
+		return axios(config);
+	});
+});

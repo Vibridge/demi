@@ -101,13 +101,15 @@
                                                 v-model.trim="sale"
                                                 size="mini"
                                                 type='number'
+                                                @change="handleInputChange(scope.$index)"
                                                 placeholder="价格（元）"/>
                                     </template>
                                     <template slot-scope="scope">
                                         <el-input
                                                 v-model.trim="sku_sale[scope.$index]"
                                                 size="mini"
-                                                :change="handleInputChange(scope.$index)"
+                                                type='number'
+                                                @change="handleInputChange(scope.$index)"
                                                 placeholder="价格（元）"/>
                                     </template>
                                 </el-table-column>
@@ -117,13 +119,15 @@
                                                 v-model.trim="sum"
                                                 size="mini"
                                                 type='number'
+                                                @change="handleInputChange(scope.$index)"
                                                 placeholder="数量（件）"/>
                                     </template>
                                     <template slot-scope="scope">
                                         <el-input
                                                 v-model.trim="sku_sum[scope.$index]"
                                                 size="mini"
-                                                :change="handleInputChange(scope.$index)"
+                                                type='number'
+                                                @change="handleInputChange(scope.$index)"
                                                 placeholder="数量（件）"/>
                                     </template>
                                 </el-table-column>
@@ -133,13 +137,15 @@
                                                 v-model.trim="commission"
                                                 size="mini"
                                                 type='number'
+                                                @change="handleInputChange(scope.$index)"
                                                 placeholder="佣金（元）"/>
                                     </template>
                                     <template slot-scope="scope">
                                         <el-input
                                                 v-model.trim="sku_commission[scope.$index]"
                                                 size="mini"
-                                                :change="handleInputChange(scope.$index)"
+                                                type='number'
+                                                @change="handleInputChange(scope.$index)"
                                                 placeholder="佣金（元）"/>
                                     </template>
                                 </el-table-column>
@@ -148,13 +154,14 @@
                                         <el-input
                                                 v-model.trim="code"
                                                 size="mini"
+                                                @change="handleInputChange(scope.$index)"
                                                 placeholder="商品编码"/>
                                     </template>
                                     <template slot-scope="scope">
                                         <el-input
                                                 v-model.trim="sku_code[scope.$index]"
                                                 size="mini"
-                                                :change="handleInputChange(scope.$index)"
+                                                @change="handleInputChange(scope.$index)"
                                                 placeholder="商品编码"/>
                                     </template>
                                 </el-table-column>
@@ -548,6 +555,7 @@
             handleFill() {
                 if (this.tableData) {
                     //价格
+                    let tableLength = this.tableData.length
                     if (this.sale) {
                         let none = true;
                         let lessThan = [];
@@ -562,8 +570,8 @@
                         }
                         let has = lessThan.length;
                         if ((parseInt(this.commission) && (parseInt(this.commission) < parseInt(this.sale))) || (!this.commission && none)) {
-                            let length = this.sku_sale.length;
-                            for (let i = 0; i < length; i++) {
+                            // let length = this.sku_sale.length;
+                            for (let i = 0; i < tableLength; i++) {
                                 this.$set(this.sku_sale, i, this.sale)
                             }
                             this.sale = '';
@@ -581,8 +589,8 @@
 
                     //数量
                     if (this.sum) {
-                        let length = this.sku_sum.length;
-                        for (let i = 0; i < length; i++) {
+                        // let length = this.sku_sum.length;
+                        for (let i = 0; i < tableLength; i++) {
                             this.$set(this.sku_sum, i, this.sum)
                         }
                         this.sum = ''
@@ -603,8 +611,8 @@
                         }
                         let has = lessThan.length;
                         if ((parseInt(this.sale) && (parseInt(this.commission) < parseInt(this.sale))) || (!this.sale && none)) {
-                            let length = this.sku_commission.length;
-                            for (let i = 0; i < length; i++) {
+                            // let length = this.sku_commission.length;
+                            for (let i = 0; i < tableLength; i++) {
                                 this.$set(this.sku_commission, i, this.commission)
                             }
                             this.commission = null
@@ -622,8 +630,8 @@
 
                     //编号
                     if (this.code) {
-                        let length = this.sku_code.length;
-                        for (let i = 0; i < length; i++) {
+                        // let length = this.sku_code.length;
+                        for (let i = 0; i < tableLength; i++) {
                             this.$set(this.sku_code, i, this.code)
                         }
                         this.code = ''
@@ -639,6 +647,18 @@
                         this.$set(this.sku_commission, i, null)
                     }
                 }
+               /* let createSku = this.isCreateSku.length;
+                if (createSku > 0) {
+                    for (let k = 0; k < createSku; k++) {
+                        for (let i in this.isCreateSku[k]) {
+                            this.isCreateSku[k][i].price = this.sku_sale[k]
+                            this.isCreateSku[k][i].salary = this.sku_commission[k]
+                            this.isCreateSku[k][i].inventory = this.sku_sum[k]
+                            this.isCreateSku[k][i].goods_no = this.sku_code[k]
+                        }
+                    }
+                }
+                console.log(this.isCreateSku)*/
 
             },
 
@@ -697,14 +717,14 @@
                         if (index < all_length - 1) {
                             data[index] = this.checkList[index].values[i];
                             this.handleSku(index + 1, data)
-                        }/* else {
+                        } else {
                             let subItem = [...data, this.checkList[index].values[i]];
                             this.tableData.push(subItem);
-                        }*/
+                        }
                     }
                 } else {
-                    if(index != 0){
-                        if([...data].length> 0){
+                    if (index != 0) {
+                        if ([...data].length > 0) {
                             let array = [];
                             for (let i = 0; i < [...data].length; i++) {
                                 if ([...data][i]) {
@@ -715,12 +735,12 @@
                             // this.tableData.push([...data]);
                         }
                     }
-
-                    if(index < all_length - 1){
+                    if (index < all_length - 1) {
                         this.handleSku(index + 1, [])
                     }
                 }
-                if (this.tableData.length > 0) {
+
+                /*if (this.tableData.length > 0) {
                     let table = this.tableData.length;
                     for (let i = 0; i < table; i++) {
                         this.$set(this.sku_sale, i, '');
@@ -728,7 +748,7 @@
                         this.$set(this.sku_commission, i, '');
                         this.$set(this.sku_code, i, '')
                     }
-                }
+                }*/
 
             },
             handleSkuAttrId(index) {
@@ -1033,6 +1053,7 @@
                     }
 
                 }
+                let sku_edit = this.sku_array.length
                 let createSku = this.isCreateSku.length;
                 console.log(this.sku_array)
                 if (createSku > 0) {
@@ -1053,7 +1074,7 @@
             tableData() {
                 if (this.tableData) {
                     this.sku_array = [];
-                    this.isCreateSku = []
+                    // this.isCreateSku = []
                     let length = this.tableData.length;
                     for (let i = 0; i < length; i++) {
                         let length2 = this.tableData[i].length;
@@ -1083,7 +1104,37 @@
                                 }
                             }
                         }
-                    }
+                    } /*else {
+                        if (sku_edit > 0) {
+                            let isEditSku = {};
+                            for (let i = 0; i < sku_edit; i++) {
+                                isEditSku = {};
+                                isEditSku[this.sku_array[i]] = {
+                                    'price': this.sku_sale[i],
+                                    'inventory': this.sku_sum[i],
+                                    'salary': this.sku_commission[i],
+                                    'goods_no': this.sku_code[i],
+                                };
+                                this.isCreateSku.push(isEditSku);
+                            }
+                        };
+                        console.log(this.isCreateSku)
+                        /!*let createSku = this.isCreateSku.length;
+                        if (createSku > 0) {
+                            for (let y = 0; y < sku_edit; y++) {
+                                for (let k = 0; k < createSku; k++) {
+                                    for (let i in this.isCreateSku[k]) {
+                                        if (i == this.sku_array[y]) {
+                                            this.$set(this.sku_sale, y, this.isCreateSku[k][i].price);
+                                            this.$set(this.sku_commission, y, this.isCreateSku[k][i].salary);
+                                            this.$set(this.sku_sum, y, this.isCreateSku[k][i].inventory);
+                                            this.$set(this.sku_code, y, this.isCreateSku[k][i].goods_no);
+                                        }
+                                    }
+                                }
+                            }
+                        }*!/
+                    }*/
                 }
             },
             goods_info() {
