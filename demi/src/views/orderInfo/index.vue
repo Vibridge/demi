@@ -144,6 +144,14 @@
             <div class="pay_price">
                 <p>退款金额：<span>{{order_info && order_info.pay_amount}}</span></p>
             </div>
+            <p class="note">请处理退款申请</p>
+            <p class="note1">请尽快联系买家协商退款事宜</p>
+            <div class="order_coc">
+                <div class="agree" v-if="order_info && order_info.status == '7'">同意申请</div>
+                <div class="agree" v-if="order_info && order_info.status == '8'">同意退款</div>
+                <div class="reduce" v-if="order_info && order_info.status == '7'">拒绝申请</div>
+                <div class="connect" @click="handleMes(order_info.user_id)">联系买家</div>
+            </div>
         </div>
 
     </div>
@@ -275,6 +283,15 @@
                 this.$router.push({
                     name: path
                 })
+            },
+            handleMes(id){
+                let data = {};
+                data.recipient = id;
+                data.type = 4;
+                this.$router.push({
+                    name: "IM",
+                    params: {id: JSON.stringify(data)}
+                });
             }
         },
         mixins:[http]
@@ -581,6 +598,8 @@
                     border-bottom 1px solid #CCCCCC
         .pay_price
             text-align right
+            margin-right 60px
+            margin-bottom 29px
             p
                 color #333333
                 font-size 20px
@@ -588,4 +607,34 @@
                 span
                     color #F4333C
                     font-size 30px
+        .note
+            color #000
+            font-size 20px
+            margin-bottom 11px
+        .note1
+            color #999999
+            font-size 14px
+            margin-right 60px
+            margin-bottom 15px
+            padding-bottom 15px
+            border-bottom 1px solid #CCCCCC
+        .order_coc
+            display flex
+            padding-bottom 21px
+            .agree,.reduce,.connect
+                width:136px;
+                height:29px;
+                color #FFFFFF
+                line-height 29px
+                text-align center
+                margin-right 30px
+                border-radius:15px;
+                background:rgba(51,204,255,1);
+                border:1px solid rgba(36, 191, 255, 1);
+            .reduce,.connect
+                color #666666
+                background:rgba(255,255,255,1);
+                border:1px solid rgba(153,153,153,1);
+
+
 </style>

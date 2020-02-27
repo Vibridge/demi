@@ -346,7 +346,7 @@
                                      v-if="detail_info && detail_info.favorites">
                                 <span>收藏</span>
                             </button>
-                            <button>和他聊聊</button>
+                            <button @click="handleMsg(detail_info.user.user_id,detail_info.ability_id)">和他聊聊</button>
                         </div>
                     </div>
                 </div>

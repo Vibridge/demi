@@ -66,11 +66,19 @@ export default {
     data = sessionStorage.getItem('id');
     if (data) {
       let userID = JSON.parse(data).recipient + 'a';
-      let a = {
-        type: JSON.parse(data).type,
-        recipient: JSON.parse(data).recipient,
-        foreign_key: JSON.parse(data).foreign_key
-      };
+      let a;
+      if(JSON.parse(data).foreign_key){
+        a = {
+          type: JSON.parse(data).type,
+          recipient: JSON.parse(data).recipient,
+          foreign_key: JSON.parse(data).foreign_key
+        };
+      }else{
+        a = {
+          type: JSON.parse(data).type,
+          recipient: JSON.parse(data).recipient,
+        };
+      }
       this.apiPost('/converse/create', a).then((res) => {
         sessionStorage.removeItem('id');
         if (res) {
