@@ -519,6 +519,9 @@
         computed: {
             //是否是左边导航
             IsShow() {
+                if(!this.user_info.shop && this.$route.path == '/B_index/B_person/create/goods'){
+                    this.initialize()
+                }
                 if (this.$route.path == '/B_index/Detail') {
                     document.getElementById('app').style.overflow = 'hidden';
                 } else {

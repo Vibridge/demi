@@ -172,6 +172,10 @@
                 }else{
                     return this.activeName
                 }
+                if(this.$route.query.id){
+                    this.orderId = this.$route.query.id;
+                    this.isDelivery = true;
+                }
             }
         },
         mixins:[http]
