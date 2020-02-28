@@ -10,27 +10,27 @@
 
                 <!--全部-->
                 <el-tab-pane label="全部" name="all">
-                    <orderList :order_list="order_list" @on-handle-delivery="handleGoDelivery"></orderList>
+                    <orderList :order_list="order_list" @on-handle-delivery="handleGoDelivery" @on-handle-update="handleDate"></orderList>
                 </el-tab-pane>
 
                 <!--已付款-->
                 <el-tab-pane label="已付款" name="paid">
-                    <orderList :order_list="order_list" @on-handle-delivery="handleGoDelivery"></orderList>
+                    <orderList :order_list="order_list" @on-handle-delivery="handleGoDelivery" @on-handle-update="handleDate"></orderList>
                 </el-tab-pane>
 
                 <!--未付款-->
                 <el-tab-pane label="未付款" name="unpaid">
-                    <orderList :order_list="order_list"></orderList>
+                    <orderList :order_list="order_list" @on-handle-update="handleDate"></orderList>
                 </el-tab-pane>
 
                 <!--已发货-->
                 <el-tab-pane label="已发货" name="shipped">
-                    <orderList :order_list="order_list"></orderList>
+                    <orderList :order_list="order_list" @on-handle-update="handleDate"></orderList>
                 </el-tab-pane>
 
                 <!--售后中-->
                 <el-tab-pane label="售后中" name="service">
-                    <orderList :order_list="order_list"></orderList>
+                    <orderList :order_list="order_list" @on-handle-update="handleDate"></orderList>
                 </el-tab-pane>
             </el-tabs>
 

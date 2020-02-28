@@ -215,6 +215,7 @@
     import config from '../../config'
     import {forEach} from "../../libs/tools";
     const baseUrl = config.baseUrl;
+    import axios from 'axios'
     // import {handleMap} from '../../libs/Amap'
     // import config from '../libs/http';
     // const suffixUrl = config.suffixUrl;

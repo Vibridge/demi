@@ -15,16 +15,16 @@
         <img class="avatar" v-if="currentConversation.conversationID.split('C2C')[1] === 'dominator'"
              src="../../../assets/img/notification.png" alt="">
 
-        <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id)"
+        <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id) && messageDetail.type != 4"
              :src="messageDetail.recipient.avatar" alt="">
 
-        <img class="avatar" v-if="isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id)"
+        <img class="avatar" v-if="isMine && (message.from !== 'dominator') && messageDetail.sender && (messageDetail.sender.user_id == user_id) && messageDetail.type != 4"
              :src="messageDetail.sender.avatar" alt="">
 
-        <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id)"
+        <img class="avatar" v-if="!isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id) && messageDetail.type != 4"
              :src="messageDetail.sender.avatar" alt="">
 
-        <img class="avatar" v-if="isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id)"
+        <img class="avatar" v-if="isMine && (message.from !== 'dominator') && messageDetail.recipient && (messageDetail.recipient.user_id == user_id) && messageDetail.type != 4"
              :src="messageDetail.recipient.avatar" alt="">
 
       </div>

@@ -7,14 +7,15 @@
       <img src="../../../assets/img/icon-more-friend@2x.png" alt="">
     </div>
     <div class="nav">
-      <div>企业用户</div>
-      <div>
-
+      <div class="company">
+        <div>企业用户</div>
+        <p class="space"></p>
       </div>
-      <div>个人用户</div>
-      <div>
-
+      <div class="person">
+        <div>个人用户</div>
+        <p class="space"></p>
       </div>
+
     </div>
     <div class="friend-list-container" :class="{'default': !hasFriend}">
       <div v-if="hasFriend">
@@ -29,10 +30,15 @@
 <script>
     import {mapState} from 'vuex'
     import FriendItem from './friend-item.vue'
-
+    import http from '../../../libs/http'
     export default {
         components: {
             FriendItem
+        },
+        mounted(){
+            this.apiGet('api/friend/lists').then((res)=>{
+              console.log(res)
+            })
         },
         computed: {
             ...mapState({
@@ -41,7 +47,8 @@
             hasFriend() {
                 return this.friendList.length > 0
             }
-        }
+        },
+      mixins:[http]
     }
 </script>
 
@@ -66,6 +73,19 @@
         /*padding: 23px 20px;*/
         font-size: 14px;
         color: #999;
+    .nav
+      display flex;
+      .company,.person
+        width 50%;
+        height 50px
+        color #999999
+        font-size 18px
+        line-height 50px
+        .space
+          width:57px;
+          height:3px;
+          margin 0 auto
+          background:rgba(46,213,255,1);
     img
       width 30px
       height 30px

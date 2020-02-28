@@ -73,51 +73,51 @@
                         </div>
                         <div class="order_buyer_coc">
                             <div class="status" v-if="order.status === 0">
-                                <div class="connect">联系买家</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
                             </div>
 
                             <div class="status" v-if="order.status === 1">
-                                <div class="connect">联系买家</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
                             </div>
 
                             <div class="status" v-if="(order.status === 2)">
-                                <div class="connect">联系买家</div>
-                                <div class="delivery" @click="handleDelivery(order.order_id)">去发货</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
+                                <div class="delivery" v-on:click.stop="handleDelivery(order.order_id)">去发货</div>
                             </div>
 
                             <div class="status" v-if="order.status === 6">
-                                <div class="connect">联系买家</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
                             </div>
 
                             <div class="status" v-if="order.status === 7">
-                                <div class="connect">确认申请</div>
-                                <div class="connect">联系买家</div>
+                                <div class="connect" v-on:click.stop="handleOrderUpdate(order.order_id,8)">确认申请</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
                             </div>
 
                             <div class="status" v-if="order.status === 8">
-                                <div class="connect">确认退款</div>
-                                <div class="connect">联系买家</div>
+                                <div class="connect" v-on:click.stop="handleOrderUpdate(order.order_id,11)">确认退款</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
                             </div>
 
                             <div class="status" v-if="order.status === 9">
-                                <div class="connect">联系买家</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
                             </div>
 
                             <div class="status" v-if="order.status === 10">
                                 <div class="connect">确认退款</div>
-                                <div class="connect">联系买家</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
                             </div>
 
                             <div class="status" v-if="order.status === 11">
-                                <div class="connect">联系买家</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
                             </div>
 
                             <div class="status" v-if="order.status === 12">
-                                <div class="connect">联系买家</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
                             </div>
 
                             <div class="status" v-if="order.status === 13">
-                                <div class="connect">联系买家</div>
+                                <div class="connect" v-on:click.stop="handleMes(order.user_id,'a')">联系买家</div>
                             </div>
                         </div>
                     </div>
@@ -164,6 +164,23 @@
                     name: 'order_info',
                     query:{
                         id:id
+                    }
+                })
+            },
+            handleMes(id,card){
+                let data = {};
+                data.recipient = id;
+                data.type = 4;
+                data.card = card
+                this.$router.push({
+                    name: "IM",
+                    params: {id: JSON.stringify(data)}
+                });
+            },
+            handleOrderUpdate(id,status){
+                this.apiPost('api/order/update/' + id,{status:status}).then((res)=>{
+                    if(res){
+                        this.$emit('on-handle-update')
                     }
                 })
             }

@@ -76,7 +76,7 @@ export default {
       }else{
         a = {
           type: JSON.parse(data).type,
-          recipient: JSON.parse(data).recipient,
+          account: JSON.parse(data).recipient + JSON.parse(data).card,
         };
       }
       this.apiPost('/converse/create', a).then((res) => {

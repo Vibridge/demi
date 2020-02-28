@@ -47,7 +47,7 @@
                 <span v-if="order_info && order_info.status == '12'">根据平台相关规定资金将在本平台冻结<span style="color: #F4333C;font-size:14px">{{handleTime(order_info.logistics_at,15)}}</span>后解冻到账</span>
                 <div class="status_coc">
                     <p class="delivery" v-if="order_info && order_info.status == '2'" @click="handleDelivery(order_info.order_id)">去发货</p>
-                    <p class="connect">联系买家</p>
+                    <p class="connect" @click="handleMes(order_info.user_id,'a')">联系买家</p>
                 </div>
             </div>
 
@@ -97,19 +97,34 @@
         </div>
         <div v-if="order_info.status == '7' || order_info.status == '8' || order_info.status == '10'">
             <div class="space_wrap">
-                <div class="space"></div>
-                <div class="second_space">
-                    <div class="triangle"></div>
+                <div :class="order_info && order_info.status == '11' ? 'space_inner active_status_space' : 'space_inner'">
                     <div class="space"></div>
+                    <p>退款完毕</p>
                 </div>
-                <div class="second_space">
-                    <div class="triangle"></div>
-                    <div class="space"></div>
+                <div class="space_inner">
+                    <div class="second_space">
+                        <div :class="order_info && (order_info.status == '8' || order_info.status == '10') ? 'triangle active_status_space' : order_info && order_info.status > 8 ? 'triangle over_status_space' : 'triangle'"></div>
+                        <div :class="order_info && (order_info.status == '8' || order_info.status == '10') ? 'space active_status_space' : order_info && order_info.status > 8 ? 'space over_status_space' : 'space'"></div>
+                    </div>
+                    <p>卖家确认退款</p>
                 </div>
-                <div class="second_space">
-                    <div class="triangle"></div>
-                    <div class="space"></div>
+                <div class="space_inner">
+                    <div class="second_space">
+                        <div :class="order_info && order_info.status == '7' ? 'triangle active_status_space' : order_info && order_info.status > 7 ? 'triangle over_status_space' : 'triangle'"></div>
+                        <div :class="order_info && order_info.status == '7' ? 'space active_status_space' : order_info && order_info.status > 7 ? 'space over_status_space' : 'space'"></div>
+                    </div>
+                    <p>卖家处理退款</p>
                 </div>
+
+                <div class="space_inner">
+                    <div class="second_space">
+                        <div class="triangle over_status_space"></div>
+                        <div class="space over_status_space"></div>
+                    </div>
+                    <p>买家发起退款</p>
+                </div>
+
+
             </div>
             <p class="info">退款信息</p>
             <p class="uploadTime">申请时间：{{order_info && order_info.after_sale && order_info.after_sale.created_at}}</p>
@@ -147,11 +162,25 @@
             <p class="note">请处理退款申请</p>
             <p class="note1">请尽快联系买家协商退款事宜</p>
             <div class="order_coc">
-                <div class="agree" v-if="order_info && order_info.status == '7'">同意申请</div>
-                <div class="agree" v-if="order_info && order_info.status == '8'">同意退款</div>
+                <div class="agree" v-if="order_info && order_info.status == '7'" @click="handleOrderUpdate(order_info.order_id,8)">同意申请</div>
+                <div class="agree" v-if="order_info && (order_info.status == '8' || order_info.status == '10')" @click="handleOrderUpdate(order_info.order_id,11)">同意退款</div>
                 <div class="reduce" v-if="order_info && order_info.status == '7'">拒绝申请</div>
-                <div class="connect" @click="handleMes(order_info.user_id)">联系买家</div>
+                <div class="connect" @click="handleMes(order_info.user_id,'a')">联系买家</div>
             </div>
+            <div style="padding-bottom: 43px">
+                <p class="history">协商历史</p>
+                <div class="history_title">
+                    <p>买家</p>
+                    <p>{{order_info && order_info.after_sale.created_at}}</p>
+                </div>
+                <p class="reason">退款原因：{{order_info && order_info.after_sale.message}}</p>
+                <div class="history_title" v-if="order_info && order_info.status == '9'">
+                    <p>卖家</p>
+                    <p>{{order_info && order_info.after_sale.created_at}}</p>
+                </div>
+                <p class="reason" v-if="order_info && order_info.status == '9'">拒绝原因：{{order_info && order_info.after_sale.message}}</p>
+            </div>
+
         </div>
 
     </div>
@@ -177,6 +206,9 @@
         methods:{
             getRouterData(){
                 this.id = this.$route.query.id;
+                this.initialization()
+            },
+            initialization(){
                 this.apiGet('api/order/info/' + this.id).then((res)=>{
                     console.log(res)
                     if(res){
@@ -284,14 +316,23 @@
                     name: path
                 })
             },
-            handleMes(id){
+            handleMes(id,card){
                 let data = {};
                 data.recipient = id;
                 data.type = 4;
+                data.card = card
                 this.$router.push({
                     name: "IM",
                     params: {id: JSON.stringify(data)}
                 });
+            },
+            handleOrderUpdate(id,status){
+                this.apiPost('api/order/update/' + id,{status:status}).then((res)=>{
+                    console.log(res)
+                    if(res){
+                        this.initialization()
+                    }
+                })
             }
         },
         mixins:[http]
@@ -380,6 +421,7 @@
                 .connect
                     width:136px;
                     height:29px;
+                    cursor pointer
                     line-height 29px
                     text-align center
                     border-radius:15px;
@@ -498,22 +540,55 @@
         .space_wrap
             display flex
             margin-bottom 19px
-            .space
-                width:185px;
-                color #FFFFFF
-                font-size 16px
-                border: 15px solid rgba(228,228,228,1);
-                border-right: 15px solid transparent;
-            .second_space
-                display flex
-                .triangle
-                    margin-left -25px
-                    border 15px solid transparent
-                    border-right: 15px solid rgba(228,228,228,1)
-            .second_space:last-child
-                .space
-                    border-right: 15px solid rgba(228,228,228,1);
 
+            .space_inner
+                position relative
+               /* .active_status_space
+                    border-color: rgba(255,0,0,1)!important;*/
+                /*.over_status_space
+                    border-color: #FF9999;*/
+                .space
+                    width:185px;
+                    color #FFFFFF
+                    font-size 16px
+                    border: 15px solid rgba(228,228,228,1);
+                    border-right: 15px solid transparent;
+                .space.active_status_space
+                    border: 15px solid rgba(255,0,0,1)!important;
+                    border-right: 15px solid transparent!important;
+                .second_space
+                    display flex
+                    .triangle
+                        margin-left -25px
+                        border 15px solid transparent
+                        border-right: 15px solid rgba(228,228,228,1)
+                    .space
+                        width:185px;
+                        color #FFFFFF
+                        font-size 16px
+                        border: 15px solid rgba(228,228,228,1);
+                        border-right: 15px solid transparent;
+                    .triangle.over_status_space
+                        border-right: 15px solid #FF9999!important
+                    .space.over_status_space
+                        border: 15px solid #FF9999!important;
+                        border-right: 15px solid transparent!important;
+                    .triangle.active_status_space
+                        border-right: 15px solid rgba(255,0,0,1)!important
+                    .space.active_status_space
+                        border: 15px solid rgba(255,0,0,1)!important;
+                        border-right: 15px solid transparent!important;
+                p
+                    position absolute
+                    top 50%
+                    left 50%
+                    color #FFFFFF
+                    font-size 16px
+                    transform translate3d(-50%,-50%,0)
+            .space_inner:last-child
+                .second_space
+                    .space.over_status_space
+                        border-right: 15px solid #FF9999!important;
         .info
             color #000000
             font-size 20px
@@ -625,6 +700,7 @@
                 width:136px;
                 height:29px;
                 color #FFFFFF
+                cursor pointer
                 line-height 29px
                 text-align center
                 margin-right 30px
@@ -637,4 +713,25 @@
                 border:1px solid rgba(153,153,153,1);
 
 
+        .history
+            color #000000
+            font-size 20px
+            margin-bottom 20px
+        .history_title
+            display flex
+            margin-bottom 20px
+            p:nth-child(1)
+                color #333333
+                font-size 18px
+                align-self center
+                margin-right 19px
+            p:nth-child(2)
+                color #CCCCCC
+                font-size 14px
+                line-height 17px
+                align-self center
+        .reason
+            color #333333
+            font-size 18px
+            margin-bottom 26px
 </style>
