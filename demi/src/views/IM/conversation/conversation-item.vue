@@ -102,7 +102,6 @@ export default {
 
   computed: {
     date() {
-      console.log(this.newList)
       if (
               !this.conversation.lastMessage ||
               !this.conversation.lastMessage.lastTime

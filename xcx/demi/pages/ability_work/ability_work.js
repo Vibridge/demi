@@ -36,7 +36,7 @@ Page({
           let commission = 0
           if(length > 1){
             for (let i = 0; i < length; i++) {
-              array.push(parseInt(res.goods[i].price))
+              array.push(parseInt(res.goods[i].salary))
             }
             array.sort(function (a, b) {
               return a - b

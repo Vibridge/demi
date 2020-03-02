@@ -31,9 +31,7 @@ export default {
       ]
     }
   },
-  mounted(){
-    console.log(this.group)
-  },
+  mounted(){},
   methods: {
     handleGroupClick() {
       const conversationID = `GROUP${this.group.groupID}`

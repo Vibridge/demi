@@ -7,14 +7,14 @@ var handleCommisson = function handleCommisson(array){
       var price = 0
       if (length > 1) {
         for (var i = 0; i < length; i++) {
-          commission.push(parseInt(array[i].price))
+          commission.push(parseInt(array[i].salary))
         }
         commission.sort(function(a,b){
           return a - b
         })
         price = commission[0] + '-' + commission[length - 1]
       } else {
-        commission.push(parseInt(array[0].price))
+        commission.push(parseInt(array[0].salary))
         console.log(length)
         price = commission[0]
       }
