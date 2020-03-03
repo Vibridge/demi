@@ -1,0 +1,6 @@
+/**app.wxss**/
+.container {
+  overflow-x: hidden;
+  margin: 129rpx auto 0 auto;
+  font-family:PingFang-SC-Medium;
+}

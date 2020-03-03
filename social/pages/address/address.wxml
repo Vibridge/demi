@@ -1,0 +1,17 @@
+<view>
+  <!-- 搜索框 -->
+  <view class='search'>
+    <view class="header_search">
+      <mp-searchbar bindselectresult="selectResult" search="{{search}}"></mp-searchbar>
+    </view>
+    <!-- <view class='search_box'> -->
+    <!-- <image src='../asset/img/address_icon.png' class='search_image'></image> -->
+    <!-- <input type='text' confirm-type="search" class='search_input' placeholder='搜索地点' placeholder-class='input_placeholder' bindinput="bindInputSchool" ></input> -->
+    <!-- </view> -->
+  </view>
+
+  <view class='btn2' wx:for="{{pois}}" wx:key="" bindtap='BackTap' data-item='{{index}}'>
+    <view>{{item.title}}</view>
+    <view class='hint'>{{item.address}}</view>
+  </view>
+</view>

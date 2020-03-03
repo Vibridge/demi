@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "toolTag": "../components/toolTag/toolTag",
+    "mp-searchbar": "../components/searchbar/searchbar",
+    "mp-icon": "../../components/icon/icon"
+  },
+  "navigationStyle": "custom"
+}

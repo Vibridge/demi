@@ -1,0 +1,71 @@
+/* 头部地址样式 */
+.header_address{
+  display: flex;
+  padding: 34rpx 36rpx;
+}
+
+.address_icon{
+  width: 28rpx;
+  align-self: center;
+  margin-right: 12rpx;
+}
+
+.address_info{
+  font-weight:500;
+  font-size: 34rpx;
+  align-self: center;
+  margin-right: 9rpx;
+  color:rgba(51,51,51,1);
+}
+
+/* 头部搜索 */
+.header_search{
+  width:690rpx;
+  height:66rpx;
+  line-height: 66rpx;
+  border-radius:12rpx;
+  margin: 0 auto 3rpx auto;
+  background:rgba(242,242,242,1);
+}
+/* 店铺分类 */
+.store_classify{
+  display: flex;
+  padding: 0 30rpx;
+  justify-content: space-around;
+}
+
+.store_info{
+  display: flex;
+  margin: 39rpx 0;
+  flex-direction: column;
+}
+.store_logo{
+  width:80rpx;
+  height:80rpx;
+  border-radius:50%;
+  align-self: center;
+  margin-bottom: 14rpx;
+  background:rgba(255,226,0,1);
+}
+
+.store_name{
+  color:#333333;
+  font-size: 24rpx;
+  align-self: center;
+}
+/* 商品分類 */
+.goods_classify{
+  overflow-x: scroll; 
+  overflow-y: hidden; 
+  padding-left: 30px;
+}
+.goods_label{
+  display: inline;
+  font-size: 22rpx;
+  color: #999999;
+  margin-right: 24rpx;
+}
+.active_goods{
+  color: #333333!important;
+  font-size: 30rpx!important;
+}

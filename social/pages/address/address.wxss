@@ -1,0 +1,8 @@
+.header_search{
+  width:690rpx;
+  height:66rpx;
+  line-height: 66rpx;
+  border-radius:12rpx;
+  margin: 0 auto 3rpx auto;
+  background:rgba(242,242,242,1);
+}

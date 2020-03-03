@@ -1,0 +1,27 @@
+<!--index.wxml-->
+<toolTag prop-a="true" title="小区" />
+<view class="container">
+  <!-- 头部地址 -->
+  <view class="header_address">
+    <image class="address_icon" mode='widthFix' src="../asset/img/address_icon.png"></image>
+    <text class="address_info">广州市番禺区星光大道38号</text>
+    <mp-icon icon="arrow" size="{{11}}"></mp-icon>
+  </view>
+  <!-- 头部搜索 -->
+  <view class="header_search">
+    <mp-searchbar bindselectresult="selectResult" search="{{search}}"></mp-searchbar>
+  </view>
+  <!-- 店铺分类 -->
+  <view class="store_classify">
+    <view class="store_info" wx:for="{{store_list}}" wx:for-item="item" wx:key="{{item.id}}">
+      <!-- <image class="store_logo" src=""></image> -->
+      <view class="store_logo"></view>
+      <text class="store_name">{{item.name}}</text>
+    </view>
+  </view>
+  <!-- 商品分類 -->
+  <view class="goods_classify">
+    <wxs module="test" src="./sidebar.wxs"></wxs>
+    <view data-width="{{windowWidth}}" bindtouchmove="{{test.touchmove}}" bindtouchend="{{test.touchend}}" bindtouchstart="{{test.touchstart}}" class="goods_label" wx:for="{{goods_list}}" wx:for-item="good" wx:key="{{good.id}}">{{good.name}}</view>
+  </view>
+</view>
