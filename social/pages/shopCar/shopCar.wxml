@@ -1,4 +1,9 @@
 <toolTag prop-b="true" prop-c="true" title="小区" />
-<view>
-  <view></view>
+<view class="container">
+  <view class="car_list">
+    <view>
+      
+    </view>
+  </view>
+  <cover-view class="bottom">a</cover-view>
 </view>

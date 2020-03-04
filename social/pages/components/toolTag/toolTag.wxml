@@ -8,5 +8,6 @@
       <!-- <image mode="aspectFit" src="../../asset/img/icon_return@2x.png"></image> -->
     </view>
     <view class="title">{{title}}</view>
+    <view></view>
   </view>
 </view>

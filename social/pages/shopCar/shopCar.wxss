@@ -1,0 +1,13 @@
+.car_list{
+  padding: 30rpx;
+  background: #F9F9F9;
+}
+.bottom{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 10000;
+  height: 98rpx;
+  width: 100%;
+  background: #fff;
+}

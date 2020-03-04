@@ -9,15 +9,13 @@
   z-index:1000
 }
 .second{
-  width: 100%;
   display: flex;
+  padding: 0 30rpx;
   text-align: center;
-  justify-content: flex-start;
-  margin-left: 10rpx;
+  justify-content: space-between;
 }
 .back{
   align-self: center;
-  margin-left: 30rpx;
 }
 /* .second image{
   padding-left: 15rpx;
@@ -28,8 +26,6 @@
 } */
 .title{
   width: 300rpx;
-  margin-left:15rpx;
-  margin-top:-8rpx;
   font-size:32rpx;
   font-weight:bold;
   overflow: hidden;
