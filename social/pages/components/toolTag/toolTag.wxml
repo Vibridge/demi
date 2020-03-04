@@ -3,8 +3,9 @@
     <text>{{title}}</text>
   </view>
   <view class="second" wx:if="{{isSecond}}">
-    <view bindtap="back">
-      <image mode="aspectFit" src="../../asset/img/icon_return@2x.png"></image>
+    <view class="back" bindtap="back">
+      <mp-icon icon="back" size="{{10}}"></mp-icon>
+      <!-- <image mode="aspectFit" src="../../asset/img/icon_return@2x.png"></image> -->
     </view>
     <view class="title">{{title}}</view>
   </view>

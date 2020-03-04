@@ -11,19 +11,21 @@
 .second{
   width: 100%;
   display: flex;
+  text-align: center;
   justify-content: flex-start;
   margin-left: 10rpx;
 }
-.second view{
-  align-self: center
+.back{
+  align-self: center;
+  margin-left: 30rpx;
 }
-.second image{
+/* .second image{
   padding-left: 15rpx;
   padding-top: 25rpx;
   padding-right: 15rpx;
   width:30rpx;
   height:40rpx
-}
+} */
 .title{
   width: 300rpx;
   margin-left:15rpx;

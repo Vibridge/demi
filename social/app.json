@@ -2,7 +2,9 @@
   "pages": [
     "pages/index/index",
     "pages/logs/logs",
-    "pages/address/address"
+    "pages/address/address",
+    "pages/search/search",
+    "pages/shopCar/shopCar"
   ],
   "tabBar": {
     "custom": true,
@@ -23,7 +25,7 @@
         "text": "店铺"
       },
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/shopCar/shopCar",
         "iconPath": "pages/asset/img/index_nav.png",
         "selectedIconPath": "pages/asset/img/index_nav_in.png",
         "text": "购物车"

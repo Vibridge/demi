@@ -62,9 +62,10 @@
 					"scene": null
 				},
 				{
-					"id": -1,
-					"name": "pages/address/address",
-					"pathName": "pages/address/address",
+					"id": 1,
+					"name": "pages/shopCar/shopCar",
+					"pathName": "pages/shopCar/shopCar",
+					"query": "",
 					"scene": null
 				}
 			]

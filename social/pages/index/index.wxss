@@ -22,10 +22,18 @@
 .header_search{
   width:690rpx;
   height:66rpx;
-  line-height: 66rpx;
+  padding: 0 46rpx;
   border-radius:12rpx;
+  box-sizing: border-box;
   margin: 0 auto 3rpx auto;
   background:rgba(242,242,242,1);
+}
+
+.header_search text{
+  color: #999999;
+  font-size: 26rpx;
+  margin-left: 10rpx;
+  line-height: 66rpx;
 }
 /* 店铺分类 */
 .store_classify{
@@ -36,9 +44,10 @@
 
 .store_info{
   display: flex;
-  margin: 39rpx 0;
+  margin: 39rpx 0 7rpx 0;
   flex-direction: column;
 }
+
 .store_logo{
   width:80rpx;
   height:80rpx;
@@ -55,17 +64,107 @@
 }
 /* 商品分類 */
 .goods_classify{
-  overflow-x: scroll; 
-  overflow-y: hidden; 
-  padding-left: 30px;
+  width: auto;
+  display: flex;
+  flex-wrap:nowrap;
+  padding: 32rpx 0 32rpx 30rpx;
 }
 .goods_label{
-  display: inline;
-  font-size: 22rpx;
-  color: #999999;
+  position: relative;
   margin-right: 24rpx;
+  align-self: flex-end;
 }
+
+.good_label_name{
+	width: 90rpx;
+  font-size: 22rpx;
+  color:rgba(153,153,153,1);
+}
+
 .active_goods{
+  z-index: 2;
+  font-weight:bold;
+  font-family:PingFang SC;
+  width: 120rpx!important;
   color: #333333!important;
   font-size: 30rpx!important;
+}
+
+.good_avtive_bottom{
+  z-index: -1;
+  height:6rpx;
+  width:117rpx;
+  position: absolute;
+  bottom:0;
+  left:0;
+  border-radius:3rpx;
+  background:rgba(255,226,0,1);
+}
+
+.page-group-position{
+  position: fixed;
+  top:129rpx;
+  left:0;
+  background: #fff
+}
+/* 商品列表 */
+.goods_list{
+  padding: 0 30rpx;
+}
+
+.good_info{
+  width:690rpx;
+  height:259rpx;
+  display: flex;
+  border-radius:12rpx;
+  padding: 15rpx 25rpx;
+  margin-bottom: 30rpx;
+  box-sizing: border-box;
+  background:rgba(255,255,255,1);
+  box-shadow:0px 6rpx 13rpx 0px rgba(6,0,1,0.12);
+}
+
+.good_logo{
+  width:172rpx;
+  height:auto;
+  align-self: center;
+  border-radius:12px;
+  margin-right: 35rpx;
+}
+
+.good_main{
+  display: flex;
+  padding: 20rpx 0;
+  flex-direction: column;
+  justify-content:space-between;
+}
+
+.good_name{
+  font-weight:bold;
+  color: #333333;
+  font-size: 36rpx;
+  margin-bottom: 19rpx;
+  font-family:PingFang SC;
+}
+
+.good_sale_num{
+  color: #CCCCCC;
+  font-size: 24rpx;
+}
+
+.good_sale{
+  display: flex;
+  justify-content: space-between;
+}
+
+.good_price{
+  color: #F4333C;
+  font-size: 44rpx;
+  align-self: center;
+}
+
+.add_car_icon{
+  width:32rpx;
+  height:32rpx;
+  align-self: center;
 }

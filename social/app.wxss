@@ -1,6 +1,7 @@
 /**app.wxss**/
 .container {
+  font-weight:500;
   overflow-x: hidden;
+  font-family:PingFang SC;
   margin: 129rpx auto 0 auto;
-  font-family:PingFang-SC-Medium;
 }

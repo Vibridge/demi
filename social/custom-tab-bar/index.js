@@ -18,7 +18,7 @@ Component({
         "text": "店铺"
       },
       {
-        "pagePath": "../index/index",
+        "pagePath": "../shopCar/shopCar",
         "iconPath": "../pages/asset/img/index_nav.png",
         "selectedIconPath": "../pages/asset/img/index_nav_in.png",
         "text": "购物车"

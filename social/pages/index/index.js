@@ -1,7 +1,7 @@
 //index.js
 //获取应用实例
 const app = getApp()
-
+const height = wx.getSystemInfoSync().windowHeight
 Page({
   data: {
     store_list:[
@@ -19,19 +19,24 @@ Page({
       { name: '肉禽特价', id: 5 },
       { name: '肉禽特价', id: 6 },
       { name: '肉禽特价', id: 7 },
+      { name: '肉禽特价', id: 8 },
     ],
-    windowWidth: wx.getSystemInfoSync().windowWidth,
+    select_label:1,
+    height: height,
+    sticky: false,
   },
+
   //事件处理函数
   bindViewTap: function() {
     wx.navigateTo({
       url: '../logs/logs'
     })
   },
+
   onLoad: function () {
-    this.setData({
-      search: this.search.bind(this)
-    })
+    // this.setData({
+    //   search: this.search.bind(this)
+    // })
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -69,13 +74,25 @@ Page({
     }
   },
 
-  search: function (value) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve([{ text: '搜索结果', value: 1 }, { text: '搜索结果2', value: 2 }])
-      }, 200)
+  //滚动条监听
+  onPageScroll: function (e) {
+    //console.log('page scroll')
+  },
+
+  handleSelectLabel(e){
+    let id = e.currentTarget.dataset.id;
+    this.setData({
+      select_label:id
     })
   },
+
+  // search: function (value) {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       resolve([{ text: '搜索结果', value: 1 }, { text: '搜索结果2', value: 2 }])
+  //     }, 200)
+  //   })
+  // },
   getUserInfo: function(e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo
