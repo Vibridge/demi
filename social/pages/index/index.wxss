@@ -76,8 +76,8 @@
 }
 
 .good_label_name{
-	width: 90rpx;
-  font-size: 22rpx;
+	width: 117rpx;
+  font-size: 26rpx;
   color:rgba(153,153,153,1);
 }
 

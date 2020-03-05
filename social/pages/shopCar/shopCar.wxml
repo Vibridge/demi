@@ -1,9 +1,46 @@
-<toolTag prop-b="true" prop-c="true" title="小区" />
+<toolTag prop-b="true" prop-c="true" title="购物车" />
 <view class="container">
-  <view class="car_list">
-    <view>
-      
+  <!-- 列表 -->
+  <view class="car_wrap">
+    <!-- 单个店铺订单 -->
+    <view class="car_list" wx:for="{{5}}" wx:for-index="index" wx:key="index">
+      <!-- 单个店铺名称 -->
+      <view class="car_title">
+        <view class="title_info">
+          <!-- <view class="circle" catchtap=""></view> -->
+          <icon class="select" type="success" size="24" color="#FFE200"/>
+          <view class="name">{{items[0].name}}</view>
+          <mp-icon class="icon" icon="arrow" size="13"></mp-icon>
+        </view>
+        <mp-icon icon="delete" size="27" color="#CCCCCC"></mp-icon>
+      </view>
+      <!-- 商品 -->
+      <view class="good_info" wx:for="{{3}}" wx:for-index="index" wx:key="index">
+        <view class="circle"></view>
+        <!-- <icon class="select" type="success" size="24" color="#FFE200"/> -->
+        <image class="good_logo" mode="widthFix" src="../asset/img/add-car"></image>
+        <view class="good_basic">
+          <view class="good_name">
+            <text>东来顺 羔羊厚切肉卷500g</text>
+            <view>香草味</view>
+          </view>
+          <view class="good_sale">
+            <text>￥38.69</text>
+            <view>999</view>
+          </view>
+        </view>
+      </view>
     </view>
   </view>
-  <cover-view class="bottom">a</cover-view>
+<!-- 底部 -->
+  <view class="bottom">
+    <view class="sale_result">
+      <view class="circle"></view>
+      <!-- <icon class="select" type="success" size="24" color="#FFE200"/> -->
+      <text class="label1">全选</text>
+      <text class="label2">总计:</text>
+      <text class="label3">￥18967</text>
+    </view>
+    <view class="coc">结算</view>
+  </view>
 </view>

@@ -88,9 +88,7 @@
             }
         },
         // inject: ['reload'],
-        mounted() {
-            console.log(this.shopList)
-        },
+        mounted() {},
         methods: {
             handleSelectionChange(val) {
                 this.multipleSelection = val;

@@ -12,14 +12,14 @@
     <!-- 头部搜索 -->
     <navigator url="../search/search" hover-class="none">
       <view class="header_search">
-        <mp-icon class="search_icon" icon="search" size="{{24}}" color="#999999"></mp-icon>
+        <mp-icon class="search_icon" icon="search" size="24" color="#999999"></mp-icon>
         <text>搜索</text>
         <!-- <mp-searchbar bindselectresult="selectResult" search="{{search}}"></mp-searchbar> -->
       </view>
     </navigator>
     <!-- 店铺分类 -->
     <view class="store_classify">
-      <view class="store_info" wx:for="{{store_list}}" wx:for-item="item" wx:key="{{item.id}}">
+      <view class="store_info" wx:for="{{store_list}}" wx:for-item="item" wx:key="{{item.id}}" data-id="{{item.id}}" bindtap="handleStoreInfo">
         <!-- <image class="store_logo" src=""></image> -->
         <view class="store_logo"></view>
         <text class="store_name">{{item.name}}</text>
@@ -27,14 +27,12 @@
     </view>
 
     <!-- 商品分類 -->
-
     <view class="goods_classify">
       <view class="goods_label" wx:for="{{goods_list}}" wx:for-item="good" wx:key="{{good.id}}" data-id="{{good.id}}" bindtap="handleSelectLabel">
         <cover-view class="{{select_label === good.id ? 'active_goods good_label_name' : 'good_label_name'}}">{{good.name}}</cover-view>
         <view wx:if="{{select_label === good.id}}" class="good_avtive_bottom"></view>
       </view>
     </view>
-
 
     <!-- 商品列表 -->
     <view style="padding-bottom:98rpx">

@@ -25,6 +25,22 @@
                         </div>
                     </el-tab-pane>
                 </el-tabs>
+
+                <div class="paging">
+                    <el-pagination
+                            background
+                            :hide-on-single-page="true"
+                            layout="prev, pager, next"
+                            prev-text="上一页"
+                            next-text="下一页"
+                            :pager-count='5'
+                            :total="searchParams.total"
+                            :current-page="searchParams.page"
+                            :page-size="searchParams.per_page"
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentPageChange">
+                    </el-pagination>
+                </div>
             </div>
         </div>
     </div>
@@ -45,7 +61,12 @@
                 shopList:[],
                 active_index:0,
                 select_sum:0,
-                select_id:[]
+                select_id:[],
+                searchParams: {
+                    page: 1,
+                    total: 0,
+                    per_page: 15
+                },
             }
         },
         mounted() {
@@ -71,12 +92,18 @@
         methods:{
             initialize(id,status = '',name = ''){
                 if(status !== '' || name){
-                    this.apiGet('/api/goods/paginate?shop_id=' + id + '&status=' + status + '&keyword=' + name ).then((res)=>{
+                    this.apiGet('/api/goods/paginate?shop_id=' + id + '&status=' + status + '&keyword=' + name, this.searchParams ).then((res)=>{
                         this.shopList = res.data
+                        this.searchParams.page = parseInt(res.current_page);
+                        this.searchParams.total = parseInt(res.total);
+                        this.searchParams.per_page = parseInt(res.per_page);
                     })
                 }else{
-                    this.apiGet('/api/goods/paginate?shop_id=' + id).then((res)=>{
+                    this.apiGet('/api/goods/paginate?shop_id=' + id, this.searchParams).then((res)=>{
                         this.shopList = res.data
+                        this.searchParams.page = parseInt(res.current_page);
+                        this.searchParams.total = parseInt(res.total);
+                        this.searchParams.per_page = parseInt(res.per_page);
                     })
                 }
             },
@@ -101,6 +128,29 @@
                         this.select_id.push(data[i].goods_id)
                     }
                 }
+            },
+
+            handleSizeChange(per_page) {
+                this.searchParams.per_page = per_page;
+                if(this.active_index == 0){
+                    this.initialize(this.shop_info.shop_id,'')
+                }else if(this.active_index == 1){
+                    this.initialize(this.shop_info.shop_id,1)
+                }else if(this.active_index == 2){
+                    this.initialize(this.shop_info.shop_id,0)
+                }
+                document.getElementById('app').scrollTo(0,0)
+            },
+            handleCurrentPageChange(page) {
+                this.searchParams.page = page;
+                if(this.active_index == 0){
+                    this.initialize(this.shop_info.shop_id,'')
+                }else if(this.active_index == 1){
+                    this.initialize(this.shop_info.shop_id,1)
+                }else if(this.active_index == 2){
+                    this.initialize(this.shop_info.shop_id,0)
+                }
+                document.getElementById('app').scrollTo(0,0)
             },
         },
         mixins:[http]
@@ -131,4 +181,34 @@
                     .is-active
                         color #24BFFF!important
                         border-top 2px solid #24BFFF
+            .paging{
+                padding-top: 40px;
+                background:rgba(247,248,250,1);
+                .el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li{
+                    border-radius: 4px;
+                    font-size: 14px;
+                    background: #fff;
+                    color: #999999;
+                    margin: 0 7px;
+                }
+                .btn-prev{
+                    color: #999;
+                }
+                .btn-next{
+                    color: #4d4d4d;
+                }
+                .el-pagination.is-background .el-pager li:not(.disabled):hover{
+                    color: #409EFF;
+                }
+                .el-pagination.is-background .el-pager li:not(.disabled).active{
+                    background:rgba(36,191,255,1);
+                    color: #fff;
+                }
+
+                .el-pagination button, .el-pagination span:not([class*=suffix]){
+                    min-width: 64px;
+                    font-size: 14px;
+                    background: #fff;
+                }
+            }
 </style>

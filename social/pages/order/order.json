@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "toolTag": "../components/toolTag/toolTag",
+    "mp-icon": "../../components/icon/icon"
+  },
+  "navigationStyle": "custom"
+}

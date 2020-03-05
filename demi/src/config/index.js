@@ -8,8 +8,8 @@ export default {
     /**
      * @description 接口请求基础路径
      */
-    // baseUrl: 'http://produce.jmzhipin.com',
-    baseUrl: 'http://app.jmzhipin.com',
+    baseUrl: 'http://produce.jmzhipin.com',
+    // baseUrl: 'http://app.jmzhipin.com',
     suffixUrl: '/dominator',
 
     /**

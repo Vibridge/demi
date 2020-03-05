@@ -1,8 +1,6 @@
 var funcA = function (e, ins) {
   // console.log('source is', JSON.stringify(e))
   var scrollTop = e.detail.scrollTop
-  console.log('a')
-
   if (scrollTop > 100) {
     ins.selectComponent('.goods_classify').setStyle({
       // "background-color": 'black'

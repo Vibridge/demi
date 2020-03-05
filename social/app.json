@@ -4,7 +4,8 @@
     "pages/logs/logs",
     "pages/address/address",
     "pages/search/search",
-    "pages/shopCar/shopCar"
+    "pages/shopCar/shopCar",
+    "pages/order/order"
   ],
   "tabBar": {
     "custom": true,

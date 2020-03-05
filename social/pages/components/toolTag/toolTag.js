@@ -13,15 +13,6 @@ Component({
     propA:null,
     propB:null,
     propC: null,
-    select_id:{
-      type:Array,
-      value:[]
-    },
-    select:{
-      type:Array,
-      value:[]
-    },
-    
   },
   
   data: {
@@ -41,11 +32,9 @@ Component({
   },
   methods: {
     initData() {
-      IsIndex = this.data.propA;
-      IsSecond = this.data.propB
       this.setData({
-        isIndex: IsIndex,
-        isSecond:IsSecond
+        isIndex: this.data.propA,
+        isSecond: this.data.propB
       })
     },
     initLayout() {
@@ -56,45 +45,24 @@ Component({
       })
     },
     back(){
-      var id = this.data.select_id;
-      var select = this.data.select;
       var propC = this.data.propC;
       var propB = this.data.propB;
       if(propC){
         let that = this
-        wx.navigateBack({
-          delta: 1,
-          success(){
-            that.setData({
-              propC:null
-            })
-          }
-        })
-      } else if (propB && id.length > 0){
+        wx.switchTab({ url : '../index/index' })
+      } else if (propB){
         var pages = getCurrentPages();
         var currPage = pages[pages.length - 1];   //当前页面
         var prevPage = pages[pages.length - 2];  //上一个页面
         //直接调用上一个页面对象的setData()方法，把数据存到上一个页面中去
-        prevPage.setData({
-          industry_id: id,
-          industry_name: select
-        });
+        // prevPage.setData({
+        //   industry_id: id,
+        //   industry_name: select
+        // });
         wx.navigateBack({
           delta: 1
         })
-      } else if (propB && id.length < 1){
-        var pages = getCurrentPages();
-        var currPage = pages[pages.length - 1];   //当前页面
-        var prevPage = pages[pages.length - 2];  //上一个页面
-        //直接调用上一个页面对象的setData()方法，把数据存到上一个页面中去
-        prevPage.setData({
-          industry_id: [],
-          industry_name: []
-        });
-        wx.navigateBack({
-          delta: 1
-        })
-      }else{
+      } else{
         wx.navigateBack({
           delta: 1
         })

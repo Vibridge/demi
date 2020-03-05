@@ -86,6 +86,15 @@ Page({
     })
   },
 
+  handleStoreInfo(e){
+    
+    let id = e.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: '../order/order?id=' + id,
+    })
+    console.log(id);
+  },
+
   // search: function (value) {
   //   return new Promise((resolve, reject) => {
   //     setTimeout(() => {

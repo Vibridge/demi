@@ -26,8 +26,9 @@
 } */
 .title{
   width: 300rpx;
-  font-size:32rpx;
+  font-size:36rpx;
   font-weight:bold;
+  padding-right: 20rpx;
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
@@ -37,7 +38,7 @@
   width: 100%;
   text-align: center;
   /* margin-left:25rpx; */
-  font-size:32rpx;
+  font-size:36rpx;
   font-weight:bold;
   overflow: hidden;
   text-overflow:ellipsis;
