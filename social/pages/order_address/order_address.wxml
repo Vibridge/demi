@@ -1,0 +1,18 @@
+<view class="wrap">
+  <view class="address_main">
+    <view class="address_info">
+      <view>
+        <text class="name">林先生</text>
+        <text class="phone">12345678910</text>
+        <view class="address">番禺区星光大道30</view>
+      </view>
+      <image mode="widthFix" src="../asset/img/address_edit.png"></image>
+    </view>
+  </view>
+  <!-- 底部 -->
+  <view class="bottom">
+    <view class="coc">
+      新增地址
+    </view>
+  </view>
+</view>
