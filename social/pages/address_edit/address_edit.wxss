@@ -1,41 +1,45 @@
-.wrap{
-  height: 100%;
-  background:rgba(249,249,249,1);
+.form{
+  padding: 0 32rpx;
 }
 
-.address_main{
-  background: #ffffff;
-}
-
-.address_info{
+.label,.default{
   display: flex;
-  padding: 17rpx 0 15rpx;
-  margin: 0 33rpx 0 30rpx;
+  padding: 30rpx 0;
   justify-content: space-between;
   border-bottom: 1rpx solid #E4E4E4;
 }
 
-.name,.phone{
-  font-size: 32rpx;
-  color: #333333;
-  margin-right: 25rpx;
-}
-
-.address{
-  color:#CCCCCC;
+.title{
+  color:#666666;
   font-size: 28rpx;
-  margin-top: 9rpx;
-}
-
-navigator{
-  display: flex;
-}
-
-.address_info image{
-  width: 32rpx;
   align-self: center;
 }
 
+.edit{
+  display: flex;
+  align-self: center;
+}
+
+icon{
+  align-self: center;
+}
+
+.space{
+  width: 40rpx;
+  height: 40rpx;
+  align-self: center;
+}
+
+input{
+  width: 440rpx;
+  align-self: center;
+  margin-right: 49rpx;
+}
+
+switch{
+  width: 102rpx;
+  height: 54rpx;
+}
 /* 底部 */
 .bottom{
   left: 0;

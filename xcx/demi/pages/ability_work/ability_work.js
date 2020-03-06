@@ -43,7 +43,7 @@ Page({
             })
             commission = array[0] + '-' + array[length - 1]
           }else{
-            commission = array[0]
+            commission = res.goods[0].salary
           }
           this.setData({
             commission: commission

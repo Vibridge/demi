@@ -13,8 +13,8 @@
     </view>
     <view class="task_info">
       <view>
-        <text wx:if="{{task_info.goods}}" class="num">{{commission}}</text>
-        <text wx:if="{{!task_info.goods}}" class="num">{{task_info.payment_money}}</text>
+        <text wx:if="{{task_info.payment_method !== 3}}" class="num">{{commission}}</text>
+        <text wx:if="{{task_info.payment_method == 3}}" class="num">{{task_info.payment_money}}</text>
         <text class="unit">RMB</text>
       </view>
       <view class="task_title">{{task_info.task_title}}</view>
@@ -54,7 +54,7 @@
       </view>
     </view>
     <view class="line" style="height:2rpx"></view>
-    <view wx:if="{{task_info.goods !== null}}">
+    <view wx:if="{{task_info.payment_method !== 3}}">
       <view class="company_info">
         <view>公司店铺</view>
         <view>
@@ -66,7 +66,7 @@
         </view>
       </view>
     </view>
-    <view wx:if="{{task_info.goods !== null}}">
+    <view wx:if="{{task_info.payment_method !== 3}}">
       <view class="goods_list">
         <view class="goods_info" wx:for="{{goods_list}}" wx:for-item="item" wx:key="{{item.goods_id}}" data-id="{{item.goods_id}}" bindtap="handleGoods">
         <view class="commission">佣金: {{item.salary}}</view>
@@ -81,14 +81,14 @@
     <view wx:if="{{task_info.images.length > 0}}">
       <view class="pic">
         <view wx:if="{{task_info.goods === null}}"> 图片介绍</view>
-        <view wx:if="{{task_info.goods !== null}}">产品图片</view>
+        <view wx:if="{{task_info.payment_method !== 3}}">产品图片</view>
         <view>
           <image mode="widthFix" wx:for="{{task_info.images}}" wx:for-item="pic" wx:key="{{pic.file_id}}" src="{{pic.file_path}}"></image>
         </view>
       </view>
       <view class="line" style="height:2rpx"></view>
     </view>
-    <view wx:if="{{task_info.goods === null}}">
+    <view wx:if="{{task_info.payment_method == 3}}">
       <view class="address">
         <view>工作地址</view>
         <view>

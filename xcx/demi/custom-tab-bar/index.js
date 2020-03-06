@@ -36,13 +36,10 @@ Component({
           }
         }
       )
-      console.log('a')
-      console.log()
       wx.requestSubscribeMessage({
         tmplIds: ['eMN2ccAlUBVWEjE0-AokV9wARlUncKBnZd9eSHjAgOg'],
         success(res) {
           console.log(res)
-          console.log('a')
          }
       })
     }
