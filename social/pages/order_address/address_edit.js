@@ -54,8 +54,10 @@ Page({
     
   },
 
-  switch1Change(){
-
+  switch1Change(e){
+    this.setData({
+      switch1Checked:e.detail.value
+    })
   },
 
   handleInfo(e){

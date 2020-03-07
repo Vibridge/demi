@@ -31,7 +31,7 @@
             </view>
           </view>
         </view>
-        <mp-icon icon="arrow" size="20"></mp-icon>
+        <mp-icon icon="arrow" size="20" color="#4D4D4D"></mp-icon>
       </view>
     </navigator>
   </view>
@@ -52,11 +52,24 @@
         </view>
       </view>
     </view>
-    <view class="sale_result">
+    <view class="select_result">
       <text>共1件商品</text>
       <text>小计：</text>
       <text>38.69</text>
     </view>
+  </view>
+  <!-- 备注 -->
+  <view class="other">
+    <view class="paymethod">
+      <text>支付方式</text>
+      <text>微信支付</text>
+    </view>
+    <navigator url="./note" hover-class="none">
+      <view class="note">
+        <text>备注</text>
+        <mp-icon icon="arrow" size="14" color="#AAAAAA"></mp-icon>
+      </view>
+    </navigator>
   </view>
 
   <!-- 底部 -->

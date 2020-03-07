@@ -63,8 +63,8 @@
 				},
 				{
 					"id": 1,
-					"name": "pages/address_edit/address_edit",
-					"pathName": "pages/address_edit/address_edit",
+					"name": "pages/order/order",
+					"pathName": "pages/order/order",
 					"query": "",
 					"scene": null
 				}

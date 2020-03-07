@@ -6,7 +6,7 @@
         <text class="phone">12345678910</text>
         <view class="address">番禺区星光大道30</view>
       </view>
-      <navigator url="../address_edit/address_edit" hover-class="none">
+      <navigator url="./address_edit" hover-class="none">
         <image mode="widthFix" src="../asset/img/address_edit.png"></image>
       </navigator>
     </view>

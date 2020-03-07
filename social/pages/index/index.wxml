@@ -10,7 +10,7 @@
       <mp-icon icon="arrow" size="{{11}}"></mp-icon>
     </view>
     <!-- 头部搜索 -->
-    <navigator url="../search/search" hover-class="none">
+    <navigator url="./search" hover-class="none">
       <view class="header_search">
         <mp-icon class="search_icon" icon="search" size="24" color="#999999"></mp-icon>
         <text>搜索</text>

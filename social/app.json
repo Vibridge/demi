@@ -3,11 +3,12 @@
     "pages/index/index",
     "pages/logs/logs",
     "pages/address/address",
-    "pages/search/search",
+    "pages/index/search",
     "pages/shopCar/shopCar",
     "pages/order/order",
+    "pages/order/note",
     "pages/order_address/order_address",
-    "pages/address_edit/address_edit"
+    "pages/order_address/address_edit"
   ],
   "tabBar": {
     "custom": true,

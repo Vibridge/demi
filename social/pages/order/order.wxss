@@ -119,11 +119,11 @@
   font-size:30rpx;
   color:#333333;
   font-weight:bold;
+  line-height:31px;
 }
 
 .good_sku{
   font-size:24rpx;
-  margin-top: 19rpx;
   color:rgba(204,204,204,1);
 }
 
@@ -142,18 +142,39 @@
   color:rgba(204,204,204,1);
 }
 
-.sale_result{
+.select_result{
   font-size:26rpx;
   text-align: right;
   color:rgba(204,204,204,1);
 }
 
-.sale_result text:nth-child(1){
+.select_result text:nth-child(1){
   margin-right: 32rpx;
 }
 
-.sale_result text:nth-child(3){
+.select_result text:nth-child(3){
   color:#F4333C;
+}
+
+/* 备注 */
+.other{
+  padding: 0 30rpx;
+  margin-top: 30rpx;
+  background: #ffffff;
+}
+
+.paymethod,.note{
+  display: flex;
+  padding: 26rpx 0;
+  font-size: 32rpx;
+  color: #333333;
+  justify-content: space-between;
+}
+.paymethod{
+  border-bottom: 1rpx solid #E4E4E4
+}
+.paymethod text,.note text{
+  align-self: center;
 }
 
 /* 底部 */
