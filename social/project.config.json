@@ -63,8 +63,8 @@
 				},
 				{
 					"id": 1,
-					"name": "pages/order/order",
-					"pathName": "pages/order/order",
+					"name": "pages/order/note",
+					"pathName": "pages/order/note",
 					"query": "",
 					"scene": null
 				}

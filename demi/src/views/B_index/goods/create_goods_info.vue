@@ -109,7 +109,7 @@
                                                 v-model.trim="sku_sale[scope.$index]"
                                                 size="mini"
                                                 type='number'
-                                                @change="handleInputChange(scope.$index)"
+                                                @input="handleInputChange(scope.$index)"
                                                 placeholder="价格（元）"/>
                                     </template>
                                 </el-table-column>
@@ -127,7 +127,7 @@
                                                 v-model.trim="sku_sum[scope.$index]"
                                                 size="mini"
                                                 type='number'
-                                                @change="handleInputChange(scope.$index)"
+                                                @input="handleInputChange(scope.$index)"
                                                 placeholder="数量（件）"/>
                                     </template>
                                 </el-table-column>
@@ -145,7 +145,7 @@
                                                 v-model.trim="sku_commission[scope.$index]"
                                                 size="mini"
                                                 type='number'
-                                                @change="handleInputChange(scope.$index)"
+                                                @input="handleInputChange(scope.$index)"
                                                 placeholder="佣金（元）"/>
                                     </template>
                                 </el-table-column>
@@ -161,7 +161,7 @@
                                         <el-input
                                                 v-model.trim="sku_code[scope.$index]"
                                                 size="mini"
-                                                @change="handleInputChange(scope.$index)"
+                                                @input="handleInputChange(scope.$index)"
                                                 placeholder="商品编码"/>
                                     </template>
                                 </el-table-column>
@@ -647,6 +647,7 @@
                         this.$set(this.sku_commission, i, null)
                     }
                 }
+                console.log('a')
                /* let createSku = this.isCreateSku.length;
                 if (createSku > 0) {
                     for (let k = 0; k < createSku; k++) {
@@ -755,15 +756,17 @@
                 let all_length = this.checkList.length;
                 if (index < all_length) {
                     let length = this.checkList[index].values.length;
+                    console.log(this.checkList)
                     if (length > 0) {
                         for (let i = 0; i < length; i++) {
                             this.sku_attr_id.push(this.checkList[index].attribute_id);
                             this.sku_select_attr.push(this.checkList[index].values[i]);
-                            if (i === (length - 1)) {
-                                this.handleSkuAttrId(index + 1);
-                            }
+                            // if (i === (length - 1)) {
+                            //     this.handleSkuAttrId(index + 1);
+                            // }
                         }
                     }
+                    this.handleSkuAttrId(index + 1);
                 }
             },
 

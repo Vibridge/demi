@@ -1,1 +1,11 @@
-<view></view>
+<view class="note">
+  <textarea value="{{note}}" maxlength="50" bindinput="handleNote">
+    <text class="currentWordNumber">{{currentWordNumber|0}}/{{max}}</text>
+  </textarea>
+    <!-- 底部 -->
+  <view class="bottom">
+    <view class="coc">
+      确定
+    </view>
+  </view>
+</view>
