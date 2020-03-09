@@ -27,12 +27,17 @@
     </view>
 
     <!-- 商品分類 -->
-    <view class="goods_classify">
+    <mp-tabs tabs="{{goods_list}}" activeTab="{{activeTab}}" swiperClass="goods_classify weui-tabs-swiper" bindtabclick="onTabCLick" bindchange="onChange" activeClass="tab-bar-title__selected">
+      <block wx:for="{{goods_list}}" wx:key="id">
+        <view class="tab-content" slot="tab-content-{{index}}"> {{item.name}} </view>
+      </block>
+    </mp-tabs>
+    <!-- <view class="goods_classify">
       <view class="goods_label" wx:for="{{goods_list}}" wx:for-item="good" wx:key="{{good.id}}" data-id="{{good.id}}" bindtap="handleSelectLabel">
         <cover-view class="{{select_label === good.id ? 'active_goods good_label_name' : 'good_label_name'}}">{{good.name}}</cover-view>
         <view wx:if="{{select_label === good.id}}" class="good_avtive_bottom"></view>
       </view>
-    </view>
+    </view> -->
 
     <!-- 商品列表 -->
     <view style="padding-bottom:98rpx">
@@ -53,7 +58,7 @@
             </view>
           </view>
         </view>
-      </view>    
+      </view>
     </view>
 
   </view>

@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/mine/mine",
     "pages/logs/logs",
     "pages/address/address",
     "pages/index/search",
@@ -8,7 +9,8 @@
     "pages/order/order",
     "pages/order/note",
     "pages/order_address/order_address",
-    "pages/order_address/address_edit"
+    "pages/order_address/address_edit",
+    "pages/store/store"
   ],
   "tabBar": {
     "custom": true,
@@ -35,7 +37,7 @@
         "text": "购物车"
       },
       {
-        "pagePath": "pages/logs/logs",
+        "pagePath": "pages/mine/mine",
         "iconPath": "pages/asset/img/index_nav.png",
         "selectedIconPath": "pages/asset/img/index_nav_in.png",
         "text": "我的"

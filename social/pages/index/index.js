@@ -23,7 +23,8 @@ Page({
     ],
     select_label:1,
     height: height,
-    sticky: false,
+    // sticky: false,
+    activeTab: 0,
   },
 
   //事件处理函数
@@ -109,5 +110,15 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
+  },
+
+  onTabCLick(e) {
+    const index = e.detail.index
+    this.setData({ activeTab: index })
+  },
+
+  onChange(e) {
+    const index = e.detail.index
+    this.setData({ activeTab: index })
   }
 })

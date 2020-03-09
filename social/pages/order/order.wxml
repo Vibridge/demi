@@ -78,6 +78,6 @@
       <text class="label2">总计:</text>
       <text class="label3">￥18967</text>
     </view>
-    <view class="coc">确认支付</view>
+    <view class="coc" bindtap="handlePay">确认支付</view>
   </view>
 </view>

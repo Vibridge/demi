@@ -91,7 +91,7 @@
 .good_avtive_bottom{
   z-index: -1;
   height:6rpx;
-  width:117rpx;
+  width:134rpx;
   position: absolute;
   bottom:0;
   left:0;

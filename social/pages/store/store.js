@@ -4,15 +4,14 @@ Page({
    * 页面的初始数据
    */
   data: {
-    method:1,
-    note:''
+    
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    
   },
 
   /**
@@ -22,21 +21,11 @@ Page({
     
   },
 
-  select_method(e){
-    let method = e.currentTarget.dataset.select;
-    this.setData({
-      method: method
-    })
-  },
-  handlePay(){
-    console.log(this.data.note)
-  },
-
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    
   },
 
   /**

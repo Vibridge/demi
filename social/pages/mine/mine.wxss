@@ -1,0 +1,77 @@
+.container{
+  padding: 0 30rpx;
+}
+/* 个人信息 */
+.person_info{
+  display: flex;
+  padding: 26rpx 0;
+}
+
+.avator{
+  width:140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  align-self: center;
+  margin-right: 37rpx;
+}
+
+.name{
+  font-size:36rpx;
+  font-weight:bold;
+  align-self: center;
+  color:rgba(102,102,102,1);
+}
+/* icon */
+.title{
+  font-size:34rpx;
+  font-weight:bold;
+  margin-bottom: 4rpx;
+  color:rgba(0,0,0,1);
+}
+
+.icon_wrap{
+  display: flex;
+  padding: 26rpx 0;
+  justify-content: space-around;
+}
+
+.icon_list{
+  text-align: center
+}
+
+.icon_inner{
+  position: relative;
+}
+
+.icon{
+  width: 75rpx;
+  margin-bottom: 16rpx;
+}
+
+.badge{
+  position: absolute;
+  top:8rpx;
+  right: 11rpx;
+}
+
+.icon_name{
+  font-size:24rpx;
+  color:rgba(0,0,0,1);
+}
+/* space */
+.space{
+  height:30rpx;
+  background:rgba(249,249,249,1);
+}
+/* 其他 */
+.other_list{
+  display: flex;
+  padding: 30rpx 0;
+  justify-content: space-between
+}
+
+.other_title{
+  font-size:32rpx;
+  align-self: center;
+  color:rgba(0,0,0,1);
+}

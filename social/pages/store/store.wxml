@@ -1,0 +1,6 @@
+<toolTag prop-b="true" title="店铺名字" />
+<view class="container">
+  <view class="avator">
+    <image mode="widthFix" src="../asset/img/add-car.png"></image>
+  </view>
+</view>

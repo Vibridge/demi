@@ -24,7 +24,7 @@ Component({
         "text": "购物车"
       },
       {
-        "pagePath": "../logs/logs",
+        "pagePath": "../mine/mine",
         "iconPath": "../pages/asset/img/index_nav.png",
         "selectedIconPath": "../pages/asset/img/index_nav_in.png",
         "text": "我的"

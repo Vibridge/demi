@@ -1,0 +1,30 @@
+<toolTag prop-a="true" title="小区" />
+<view class="container">
+  <!-- 个人信息 -->
+  <view class="person_info">
+    <image class="avator" mode="widthFix" src="../asset/img/add-car.png"></image>
+    <text class="name">用户12345678</text>
+  </view>
+  <!-- icon -->
+  <view class="label">
+    <view class="title">订单列表</view>
+    <view class="icon_wrap">
+      <view class="icon_list" wx:for="{{icons}}" wx:for-item="item" wx:key="{{item.id}}">
+        <view class="icon_inner" slot="title">
+          <image class="icon" mode="widthFix" src="{{item.image}}"></image>
+          <mp-badge ext-class="badge"/>
+        </view>
+        <view class="icon_name">{{item.title}}</view>
+      </view>
+    </view>
+  </view>
+  <!-- space -->
+  <view class="space"></view>
+  <!-- 其他 -->
+  <view>
+    <view class="other_list" wx:for="{{others}}" wx:for-item="item" wx:key="index">
+      <view class="other_title">{{item.title}}</view>
+      <mp-icon icon="arrow" size="14" color="#AAAAAA"></mp-icon>
+    </view>
+  </view>
+</view>

@@ -34,13 +34,32 @@ Page({
     var value = e.detail.value;
     // 获取输入框内容的长度
     var len = parseInt(value.length);
-
+    this.setData({
+      note:value
+    })
+    console.log(this.data.note)
     //最多字数限制
     if (len > this.data.max) return;
     // 当输入框内容的长度大于最大长度限制（max)时，终止setData()的执行
     this.setData({
       currentWordNumber: len //当前字数  
     });
+  },
+
+  handleSumbit(){
+    var pages = getCurrentPages();
+    var currPage = pages[pages.length - 1];   //当前页面
+    var prevPage = pages[pages.length - 2];  //上一个页面
+
+    //直接调用上一个页面对象的setData()方法，把数据存到上一个页面中去
+
+    prevPage.setData({
+      note: this.data.note,
+    });
+    wx.navigateBack({
+      delta: 1,
+      success: function (res) { }
+    })
   },
 
   /**
