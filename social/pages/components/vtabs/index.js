@@ -130,6 +130,7 @@ Component({
                 var _this = this;
 
                 target.calcHeight(function (rect) {
+                  console.log(rect)
                     _this.data._contentHeight[target.data.tabIndex] = rect.height;
                     if (_this._calcHeightTimer) {
                         clearTimeout(_this._calcHeightTimer);

@@ -21,7 +21,7 @@
 
     <!-- 店铺分类 -->
     <view class="store_classify">
-      <view class="store_info" wx:for="{{store_list}}" wx:for-item="item" wx:key="{{item.id}}" data-id="{{item.id}}" bindtap="handleStoreInfo">
+      <view class="store_info" wx:for="{{store_list}}" wx:key="id" data-id="{{item.id}}" bindtap="handleStoreInfo">
         <!-- <image class="store_logo" src=""></image> -->
         <view class="store_logo"></view>
         <text class="store_name">{{item.name}}</text>
