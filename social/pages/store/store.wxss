@@ -1,9 +1,158 @@
+/* 店鋪頭像 */
 .avator{
   padding: 43rpx;
   text-align: center
 }
+
 .avator image{
   width:200rpx;
   height:200rpx;
   border-radius:12rpx;
+}
+/* 導航 */
+.nav{
+  width: 100%;
+  z-index: 2;
+  display: flex;
+  border-bottom: 1rpx solid #E4E4E4
+}
+
+.good,.store{
+  width: 50%;
+  padding: 30rpx 0;
+  color: #666666;
+  font-size: 26rpx;
+  text-align: center;
+  align-self: flex-end;
+}
+
+.active{
+  color: #333333;
+  padding: 28rpx 0;
+  font-size: 34rpx;
+  font-weight: bold;
+  border-bottom: 8rpx solid #FFE200 
+}
+
+.page-group-position{
+  position: fixed;
+  top:129rpx;
+  left:0;
+  background: #fff
+}
+/* 商品列表 */
+@import '../common.wxss';
+page{
+    background-color: #FFFFFF;
+    height: 100%;
+}
+
+.vtabs-content-item {
+    width: 100%;
+    padding:0 30rpx 30rpx;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ccc;
+}
+
+.wrap{
+  display: flex;
+  padding-top:30rpx;
+}
+
+.good_logo{
+  width:190rpx;
+  height:190rpx;
+  margin-right: 31rpx;
+  border-radius:12rpx;
+}
+
+.good_info{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between
+}
+
+.good_name{
+  font-size:30rpx;
+  font-weight:bold;
+  white-space: nowrap;
+  color:rgba(51,51,51,1);
+}
+
+.good_sale{
+  display: flex;
+  justify-content: space-between
+}
+
+.good_price{
+  font-size:30rpx;
+  color:rgba(51,51,51,1);
+}
+
+.decreate,.add{
+  width:32rpx;
+  height:32rpx;
+  border-radius:50%;
+  color: rgba(204,204,204,1);
+  border:1rpx solid rgba(204,204,204,1);
+}
+
+.add{
+  color: #ffffff;
+  background:rgba(255,226,0,1);
+  border:1rpx solid rgba(255,226,0,1);
+}
+
+.sum{
+  font-size:28rpx;
+  padding: 0 39rpx;
+  color:rgba(51,51,51,1);
+}
+/* 商家信息 */
+.store_info{
+  padding: 29rpx;
+}
+
+.detail{
+  display: flex;
+  padding: 29rpx 0;
+  justify-content: space-between;
+  border-bottom: 1rpx solid #E4E4E4;
+}
+
+.name{
+  font-size:32rpx;
+  font-weight:bold;
+  color:rgba(51,51,51,1);
+}
+
+.value{
+  font-size:32rpx;
+  color:rgba(153,153,153,1);
+}
+
+.detail:nth-child(2) .value{
+  color: #3AA6FF
+}
+/* 客服 */
+.custom{
+  position: fixed;
+  right: 9rpx;
+  bottom: 175rpx;
+}
+.custom image{
+  width: 132rpx;
+  height: 132rpx;
+}
+
+.inner{
+  position: relative
+}
+.badge{
+  position: absolute;
+  top:34rpx;
+  right:38rpx;
+}
+.weui-badge_dot{
+  padding: .3em!important;
 }

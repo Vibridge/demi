@@ -1,22 +1,24 @@
 <!--index.wxml-->
 <toolTag prop-a="true" title="小区" />
-<wxs module="stick" src="./stick-top.wxs"></wxs>
-<scroll-view bindscroll="{{stick.funcA}}" style='height:{{height}}px;' scroll-y>
+<wxs module="stick" src="../stick-top.wxs"></wxs>
+<!-- <scroll-view bindscroll="{{stick.funcA}}" style='height:{{height}}px;' scroll-y> -->
   <view class="container">
+
     <!-- 头部地址 -->
     <view class="header_address">
       <image class="address_icon" mode='widthFix' src="../asset/img/address_icon.png"></image>
       <text class="address_info">广州市番禺区星光大道38号</text>
       <mp-icon icon="arrow" size="{{11}}"></mp-icon>
     </view>
+
     <!-- 头部搜索 -->
     <navigator url="./search" hover-class="none">
       <view class="header_search">
         <mp-icon class="search_icon" icon="search" size="24" color="#999999"></mp-icon>
         <text>搜索</text>
-        <!-- <mp-searchbar bindselectresult="selectResult" search="{{search}}"></mp-searchbar> -->
       </view>
     </navigator>
+
     <!-- 店铺分类 -->
     <view class="store_classify">
       <view class="store_info" wx:for="{{store_list}}" wx:for-item="item" wx:key="{{item.id}}" data-id="{{item.id}}" bindtap="handleStoreInfo">
@@ -27,39 +29,39 @@
     </view>
 
     <!-- 商品分類 -->
-    <mp-tabs tabs="{{goods_list}}" activeTab="{{activeTab}}" swiperClass="goods_classify weui-tabs-swiper" bindtabclick="onTabCLick" bindchange="onChange" activeClass="tab-bar-title__selected">
-      <block wx:for="{{goods_list}}" wx:key="id">
-        <view class="tab-content" slot="tab-content-{{index}}"> {{item.name}} </view>
-      </block>
-    </mp-tabs>
+    <view class="good">
+      <mp-tabs tabs="{{goods_list}}" activeTab="{{activeTab}}" swiperClass="weui-tabs-swiper" bindtabclick="onTabCLick" bindchange="onChange" activeClass="tab-bar-title__selected">
+        <block wx:for="{{goods_list}}" wx:key="id">
+          <!-- 商品列表 -->
+          <view style="padding-bottom:98rpx" slot="tab-content-{{index}}">
+            <view class="goods_list" wx:for="{{5}}" wx:key="index">
+              <view class="good_info">
+                <image class="good_logo" mode="widthFix" src="../asset/img/add-car.png"></image>
+                <view class="good_main">
+                  <view class="good_basic">
+                    <view class="good_name">东来顺 羔羊厚切肉卷500g</view>
+                    <view class="good_sale_num">月售503</view>
+                  </view>
+                  <view class="good_sale">
+                    <view class="good_price">
+                      <text style="font-size:28rpx">￥</text>
+                      <text>38.69</text>
+                    </view>
+                    <image class="add_car_icon" mode="widthFix" src="../asset/img/add-car.png"></image>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </mp-tabs>
+    </view>
+
     <!-- <view class="goods_classify">
       <view class="goods_label" wx:for="{{goods_list}}" wx:for-item="good" wx:key="{{good.id}}" data-id="{{good.id}}" bindtap="handleSelectLabel">
         <cover-view class="{{select_label === good.id ? 'active_goods good_label_name' : 'good_label_name'}}">{{good.name}}</cover-view>
         <view wx:if="{{select_label === good.id}}" class="good_avtive_bottom"></view>
       </view>
     </view> -->
-
-    <!-- 商品列表 -->
-    <view style="padding-bottom:98rpx">
-      <view class="goods_list" wx:for="{{5}}" wx:for-index="index" wx:key="index">
-        <view class="good_info">
-          <image class="good_logo" mode="widthFix" src="../asset/img/add-car.png"></image>
-          <view class="good_main">
-            <view class="good_basic">
-              <view class="good_name">东来顺 羔羊厚切肉卷500g</view>
-              <view class="good_sale_num">月售503</view>
-            </view>
-            <view class="good_sale">
-              <view class="good_price">
-                <text style="font-size:28rpx">￥</text>
-                <text>38.69</text>
-              </view>
-              <image class="add_car_icon" mode="widthFix" src="../asset/img/add-car.png"></image>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
-
   </view>
-</scroll-view>
+<!-- </scroll-view> -->

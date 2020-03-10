@@ -1,20 +1,26 @@
 <view class="weui-tabs">
   <view class="weui-tabs-bar__wrp">
     <scroll-view scroll-x scroll-into-view="item_{{currentView}}">
-      <view class="weui-tabs-bar__content">
+      <view class="weui-tabs-bar__content goods_classify">
         <block wx:for="{{tabs}}" wx:key="title">
-          <view id="item_{{index}}" class="weui-tabs-bar__item" style="background-color: {{tabBackgroundColor}}; color: {{activeTab === index ? tabActiveTextColor : tabInactiveTextColor}};" bindtap="handleTabClick" data-index="{{index}}">
+          <!-- <view id="item_{{index}}" class="weui-tabs-bar__item" style="background-color: {{tabBackgroundColor}}; color: {{activeTab === index ? tabActiveTextColor : tabInactiveTextColor}};" bindtap="handleTabClick" data-index="{{index}}">
             <view class="weui-tabs-bar__title {{tabClass}} {{activeTab === index ? activeClass : ''}}" style="border-bottom-color: {{activeTab === index ? tabUnderlineColor : 'transparent'}}">
               <text class="">{{item.name}}</text>
             </view>
+          </view> -->
+          <view id="item_{{index}}" class="goods_label" bindtap="handleTabClick" data-index="{{index}}">
+            <cover-view class="{{activeTab === index ? 'active_goods good_label_name' : 'good_label_name'}}">{{item.name}}</cover-view>
+            <view wx:if="{{activeTab === index}}" class="good_avtive_bottom"></view>
           </view>
         </block>
       </view>
     </scroll-view>
   </view>
-  <swiper class="{{swiperClass}}" current="{{activeTab}}" duration="{{duration}}" bindchange="handleSwiperChange">
+  <swiper class="{{swiperClass}}" current="{{activeTab}}" style="height: {{clientHeight?clientHeight+'px':'auto'}}" duration="{{duration}}" bindchange="handleSwiperChange">
     <swiper-item wx:for="{{tabs}}" wx:key="title">
-      <slot name="tab-content-{{index}}"></slot>
+      <scroll-view scroll-y="{{true}}" style="height: {{clientHeight?clientHeight+'px':'auto'}}">
+        <slot name="tab-content-{{index}}"></slot>
+      </scroll-view>
     </swiper-item>
   </swiper>
 </view>

@@ -1,6 +1,57 @@
 <toolTag prop-b="true" title="店铺名字" />
-<view class="container">
-  <view class="avator">
-    <image mode="widthFix" src="../asset/img/add-car.png"></image>
+<wxs module="stick" src="../stick-top.wxs"></wxs>
+<scroll-view bindscroll="{{stick.funcA}}" style='height:{{height}}px;' scroll-y>
+  <view class="container">
+    <!-- 店鋪頭像 -->
+    <view class="avator">
+      <image mode="widthFix" src="../asset/img/add-car.png"></image>
+    </view>
+
+    <!-- 導航 -->
+    <view class="nav">
+      <view class="good" data-name="good" bindtap="handleChange">
+        <text class="{{active === 'good' ? 'active' : 'good'}}">商品</text>
+      </view>
+      <view class="store" data-name="store" bindtap="handleChange">
+        <text class="{{active === 'store' ? 'active' : 'store'}}">商家</text>
+      </view>
+    </view>
+    <!-- 商品列表 -->
+    <mp-vtabs wx:if="{{active === 'good'}}" vtabs="{{vtabs}}" activeTab="{{activeTab}}" bindtabclick="onTabCLick" bindchange="onChange" class="test">
+      <block wx:for="{{vtabs}}" wx:key="title">
+        <mp-vtabs-content tabIndex="{{index}}">
+          <view class="vtabs-content-item">
+            <view class="wrap" wx:for="{{2}}" wx:key="index">
+              <image class="good_logo" mode="widthFix" src="../asset/img/add-car.png"></image>
+              <view class="good_info">
+                <text class="good_name">东来顺 羔羊厚切肉卷 ...</text>
+                <view class="good_sale">
+                  <text class="good_price">￥45</text>
+                  <view>
+                    <text class="decreate">-</text>
+                    <text class="sum">1</text>
+                    <text class="add">+</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </mp-vtabs-content>
+      </block>
+    </mp-vtabs>
+    <!-- 商家信息 -->
+    <view class="store_info" wx:if="{{active === 'store'}}">
+      <view class="detail" wx:for="{{store_info}}" wx:key="id">
+        <text class="name">{{item.name}}</text>
+        <text class="value">{{item.value}}</text>
+      </view>
+    </view>
+    <!-- 客服 -->
+    <view class="custom">
+      <view class="inner">
+        <image mode="widthFix" src="../asset/img/custom.png"></image>
+        <mp-badge ext-class="badge" />
+      </view>
+    </view>
   </view>
-</view>
+</scroll-view>

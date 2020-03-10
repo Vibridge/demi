@@ -1,7 +1,10 @@
 {
   "usingComponents": {
     "toolTag": "../components/toolTag/toolTag",
-    "mp-icon": "../../components/icon/icon"
+    "mp-icon": "../components/icon/icon",
+    "mp-vtabs": "../components/vtabs/index",
+    "mp-vtabs-content": "../components/vtabs-content/index",
+    "mp-badge": "../../components/badge/badge"
   },
   "navigationStyle": "custom"
 }

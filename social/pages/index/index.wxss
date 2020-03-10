@@ -67,7 +67,7 @@
   width: auto;
   display: flex;
   flex-wrap:nowrap;
-  padding: 32rpx 0 32rpx 30rpx;
+  box-sizing: border-box;
 }
 .goods_label{
   position: relative;
@@ -89,12 +89,9 @@
 }
 
 .good_avtive_bottom{
-  z-index: -1;
   height:6rpx;
   width:134rpx;
-  position: absolute;
-  bottom:0;
-  left:0;
+  margin-top: -5rpx; 
   border-radius:3rpx;
   background:rgba(255,226,0,1);
 }
@@ -108,6 +105,7 @@
 /* 商品列表 */
 .goods_list{
   padding: 0 30rpx;
+  box-sizing: border-box;
 }
 
 .good_info{

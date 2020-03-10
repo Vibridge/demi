@@ -64,6 +64,15 @@ Page({
         }
       })
     }
+
+    var that = this
+    wx.getSystemInfo({
+      success: function (res) {
+        that.setData({
+          clientHeight: res.windowHeight
+        });
+      }
+    })
   },
 
   onShow:function(){
@@ -88,10 +97,9 @@ Page({
   },
 
   handleStoreInfo(e){
-    
     let id = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: '../order/order?id=' + id,
+      url: '../store/store?id=' + id,
     })
     console.log(id);
   },
@@ -120,5 +128,10 @@ Page({
   onChange(e) {
     const index = e.detail.index
     this.setData({ activeTab: index })
+    var that = this
+    console.log(e.detail.current)
+    that.setData({
+      'currentTab': e.detail.current
+    })
   }
 })

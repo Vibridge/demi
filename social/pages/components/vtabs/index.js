@@ -115,7 +115,8 @@ Component({
         currentView: 0,
         contentScrollTop: 0,
         _heightRecords: [],
-        _contentHeight: {}
+        _contentHeight: {},
+        height:0
     },
     observers: {
         activeTab: function activeTab(_activeTab) {
@@ -144,7 +145,12 @@ Component({
         }
     },
     lifetimes: {
-        attached: function attached() {}
+        attached: function attached() {
+          const height = wx.getSystemInfoSync().windowHeight
+          this.setData({
+            height:height
+          })
+        }
     },
     methods: {
         calcHeight: function calcHeight() {
