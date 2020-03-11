@@ -49,26 +49,29 @@ page{
 
 .vtabs-content-item {
     width: 100%;
+    padding-bottom: 30rpx;
     box-sizing: border-box;
     border-bottom: 1px solid #ccc;
 }
 
 .wrap{
   display: flex;
-  margin-top:30rpx;
-  padding:0 30rpx 30rpx;
+  padding:30rpx 30rpx 0;
+  /* margin-top:30rpx; */
   box-sizing: border-box;
 }
 
 .good_logo{
   width:190rpx;
   height:190rpx;
+  align-self: center;
   margin-right: 31rpx;
   border-radius:12rpx;
 }
 
 .good_info{
   display: flex;
+  height: 190rpx;
   flex-direction: column;
   justify-content: space-between
 }
@@ -87,19 +90,25 @@ page{
 
 .good_price{
   font-size:30rpx;
+  align-self: center;
   color:rgba(51,51,51,1);
 }
 
 .decreate,.add{
   width:32rpx;
   height:32rpx;
+  font-size: 20rpx;
   border-radius:50%;
+  align-self: center;
+  text-align: center;
+  line-height: 32rpx;
   color: rgba(204,204,204,1);
   border:1rpx solid rgba(204,204,204,1);
 }
 
 .add{
   color: #ffffff;
+  font-size: 30rpx;
   background:rgba(255,226,0,1);
   border:1rpx solid rgba(255,226,0,1);
 }
@@ -156,4 +165,75 @@ page{
 }
 .weui-badge_dot{
   padding: .3em!important;
+}
+
+/* 结算 */
+/* .space{
+  height: 130rpx
+} */
+.account{
+  width: 100%;
+  position: fixed;
+  bottom:0;
+  left:0;
+  height:98rpx;
+  display: flex;
+  padding-left: 30rpx;
+  background:#353235;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+.status{
+  display: flex;
+}
+
+.icon_status{
+  width:130rpx;
+  height:130rpx;
+  border-radius:50%;
+  text-align: center;
+  background:rgba(0,0,0,1);
+  transform: translateY(-32rpx);
+}
+
+.not_icon{
+  width: 69rpx;
+  padding-top: 24rpx;
+}
+
+.sale_sum{
+  position: absolute;
+  top:0;
+  right: 20rpx;
+}
+
+.sale_sum .weui-badge{
+  font-size: 22rpx;
+}
+.note{
+  font-size:28rpx;
+  margin-left: 21rpx;
+  align-self: center;
+  color:rgba(204,204,204,1);
+}
+
+.condition{
+  height: 100%;
+  font-size:36rpx;
+  padding: 0 37rpx;
+  align-self: center;
+  line-height: 98rpx;
+  background: #000000;
+  box-sizing: border-box;
+  color:rgba(255,226,0,1);
+}
+
+.settle{
+  color:#333333;
+  font-size:36rpx;
+  padding: 0 76rpx;
+  line-height: 98rpx;
+  box-sizing: border-box;
+  background:rgba(255,226,0,1);
 }

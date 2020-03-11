@@ -46,3 +46,84 @@
   overflow: hidden;
 }
 
+.store_info{
+  display: flex;
+  margin-bottom: 27rpx;
+}
+.store_name{
+  font-size:28rpx;
+  font-weight:bold;
+  align-self: center;
+  margin-right: 10rpx;
+  color:rgba(51,51,51,1);
+}
+
+.icon{
+  align-self: center
+}
+
+.good_info{
+  display: flex
+}
+
+.good_logo{
+  width: 200rpx;
+  height: 200rpx;
+  margin-right: 22rpx;
+}
+
+.good_info_wrap{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between
+}
+
+.good_name{
+  font-size:30rpx;
+  font-weight:bold;
+  line-height: 31rpx;
+  color:rgba(51,51,51,1);
+}
+
+.good_sku{
+  font-size:24rpx;
+  line-height:31px;
+  color:rgba(204,204,204,1);
+}
+
+.good_sale{
+  display: flex;
+  justify-content: space-between
+}
+
+.good_price{
+  font-size:32rpx;
+  align-self: center;
+  color:rgba(244,51,60,1);
+}
+
+.decreate,.add{
+  width:32rpx;
+  height:32rpx;
+  font-size: 20rpx;
+  border-radius:50%;
+  align-self: center;
+  text-align: center;
+  line-height: 32rpx;
+  color: rgba(204,204,204,1);
+  border:1rpx solid rgba(204,204,204,1);
+}
+
+.add{
+  color: #ffffff;
+  font-size: 30rpx;
+  background:rgba(255,226,0,1);
+  border:1rpx solid rgba(255,226,0,1);
+}
+
+.sum{
+  font-size:28rpx;
+  padding: 0 39rpx;
+  color:rgba(51,51,51,1);
+}

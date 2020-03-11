@@ -10,7 +10,8 @@
     "pages/order/note",
     "pages/order_address/order_address",
     "pages/order_address/address_edit",
-    "pages/store/store"
+    "pages/store/store",
+    "pages/store/im"
   ],
   "tabBar": {
     "custom": true,

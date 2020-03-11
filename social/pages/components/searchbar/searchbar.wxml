@@ -1,16 +1,38 @@
 <view class="weui-search-bar {{extClass}}">
-    <view class="weui-search-bar__form">
-        <view class="weui-search-bar__box">
-            <icon class="weui-icon-search_in-box" type="search" size="24"></icon>
-            <input type="text" class="weui-search-bar__input" placeholder="{{placeholder}}" value="{{value}}" bindblur="inputBlur" bindinput="inputChange" />
-            <view class="weui-icon-clear" wx:if="{{value.length > 0}}" bindtap="clearInput">
-                <icon type="clear" size="16"></icon>
-            </view>
-        </view>
+  <view class="weui-search-bar__form">
+    <view class="weui-search-bar__box">
+      <icon class="weui-icon-search_in-box" type="search" size="24"></icon>
+      <input type="text" class="weui-search-bar__input" placeholder="{{placeholder}}" value="{{value}}" bindblur="inputBlur" bindinput="inputChange" />
+      <view class="weui-icon-clear" wx:if="{{value.length > 0}}" bindtap="clearInput">
+        <icon type="clear" size="16"></icon>
+      </view>
     </view>
+  </view>
 </view>
 <mp-cells class="searchbar-result  {{extClass}}" wx:if="{{result.length > 0}}">
-    <mp-cell bindtap="selectResult" data-index="{{index}}" wx:for="{{result}}" hover>
-        <view>{{item.text}}</view>
-    </mp-cell>
+  <mp-cell bindtap="selectResult" data-index="{{index}}" wx:for="{{result}}" wx:key="index" hover>
+    <view class="result_wrap">
+      <view class="store_info">
+        <text class="store_name">士多店</text>
+        <mp-icon class="icon" icon="arrow" size="13"></mp-icon>
+      </view>
+      <view class="good_info">
+        <image class="good_logo" mode="aspectFit" src="../../asset/img/add-car.png"></image>
+        <view class="good_info_wrap">
+          <view>
+            <text class="good_name">东来顺 羔羊厚切肉卷500g</text>
+            <view class="good_sku">香草味</view>
+          </view>
+          <view class="good_sale">
+            <text class="good_price">￥45</text>
+            <view style="display:flex">
+              <view class="decreate">一</view>
+              <view class="sum">1</view>
+              <view class="add">十</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </mp-cell>
 </mp-cells>

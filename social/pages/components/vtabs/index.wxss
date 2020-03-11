@@ -5,8 +5,9 @@
 }
 
 .weui-vtabs-bar__wrp {
-  width: 110px;
+  width: auto;
   height: 100%;
+  
 }
 
 .weui-vtabs-bar__scrollview {
@@ -14,33 +15,34 @@
 }
 
 .weui-vtabs-bar__content {
-  width: 110px;
+  width: auto;
   height: 100%;
 }
 
 .weui-vtabs-bar__item {
-  display: inline-block;
-  width: 110px;
-  height: 55px;
-  border-left: 4px solid transparent;
+  width: auto;
+  height: 98rpx;
+  display: block;
+  border-left: 8rpx solid transparent;
 }
 
 .weui-vtabs-bar__title {
-  box-sizing: border-box;
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  white-space: nowrap;
+  padding: 0 50rpx;
   overflow: hidden;
+  font-size: 28rpx;
+  white-space: nowrap;
+  align-items: center;
+  box-sizing: border-box;
+  justify-content: center;
 }
 
 .weui-vtabs-content__wrp {
-  overflow: hidden;
   flex: 1;
   height: 100%;
+  overflow: hidden;
 }
 
 .weui-vtabs-content__scrollview {

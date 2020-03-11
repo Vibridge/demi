@@ -4,17 +4,14 @@ Page({
    * 页面的初始数据
    */
   data: {
-    inputShowed: false,
-    inputVal: ""
+    
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.setData({
-      search: this.search.bind(this)
-    })
+    
   },
 
   /**
@@ -29,16 +26,6 @@ Page({
    */
   onShow: function () {
     
-  },
-  search: function (value) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve([{ text: '搜索结果', value: 1 }, { text: '搜索结果2', value: 2 }])
-      }, 200)
-    })
-  },
-  selectResult: function (e) {
-    console.log('select result', e.detail)
   },
 
   /**
