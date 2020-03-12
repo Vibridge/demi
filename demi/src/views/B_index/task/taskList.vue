@@ -10,7 +10,7 @@
                 <div class="task_buyer">
                     <div class="task_buyer_info">
                         <div>
-                            <img :src="task.user.avatar" alt="">
+                            <img v-if="task.user.avatar" :src="task.user.avatar" alt="">
                         </div>
                         <div>
                             <p>{{task.user.nickname}}</p>

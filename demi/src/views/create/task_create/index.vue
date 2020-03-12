@@ -66,13 +66,13 @@
                 is_Edit:false,
                 history_list:{},
                 history_id:null,
+                path:'work'
             }
         },
         mounted() {
 
             this.$nextTick(() =>{
                 this.getRouterData();
-
             });
             this.apiGet('/api/user/info').then((res) => {
                 if (res.type === 2) {
@@ -104,10 +104,14 @@
             },
             backWork(){
                 sessionStorage.removeItem('task');
+                let name = "task_work";
+                if(this.path != 'work'){
+                    name = 'release'
+                }
                 this.$router.push({
-                    name: "work",
+                    name: this.path,
                     params: {
-                        activeName: 'task_work'
+                        activeName: name
                     }
                 });
             },
@@ -153,11 +157,16 @@
                                 this.sale = true;
                             }
                         }
+                        if(this.task_edit.path){
+                            this.path = this.$route.params.path
+                        }
                     }
                 }
-                console.log(this.$route.params)
                 if(this.$route.params.type){
                     this.sale = true
+                }
+                if(this.$route.params.path){
+                    this.path = this.$route.params.path
                 }
             },
 

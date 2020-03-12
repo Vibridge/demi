@@ -21,19 +21,23 @@
       <block wx:for="{{vtabs}}" wx:key="title">
         <mp-vtabs-content tabIndex="{{index}}">
           <view class="vtabs-content-item">
-            <view class="wrap" wx:for="{{2}}" wx:key="index">
-              <image class="good_logo" mode="aspectFit" src="../asset/img/add-car.png"></image>
-              <view class="good_info">
-                <text class="good_name">东来顺 羔羊厚切肉卷 ...</text>
-                <view class="good_sale">
-                  <text class="good_price">￥45</text>
-                  <view style="display:flex">
-                    <view class="decreate">一</view>
-                    <view class="sum">1</view>
-                    <view class="add">十</view>
+            <view wx:for="{{2}}" wx:key="index">
+              <navigator url="./good_info" hover-class="none">
+                <view class="wrap">
+                  <image class="good_logo" mode="aspectFit" src="../asset/img/add-car.png"></image>
+                  <view class="good_info">
+                    <text class="good_name">东来顺 羔羊厚切肉卷 ...</text>
+                    <view class="good_sale">
+                      <text class="good_price">￥45</text>
+                      <view style="display:flex">
+                        <view class="decreate">一</view>
+                        <view class="sum">1</view>
+                        <view class="add">十</view>
+                      </view>
+                    </view>
                   </view>
                 </view>
-              </view>
+              </navigator>
             </view>
           </view>
         </mp-vtabs-content>
