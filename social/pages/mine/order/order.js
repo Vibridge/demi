@@ -4,26 +4,14 @@ Page({
    * 页面的初始数据
    */
   data: {
-    items: [
-      { name: '士多店', value: '1' },
-      { name: '宠物店', value: '2' },
-      { name: '奶茶店', value: '3' },
-      { name: '快餐店', value: '4' },
-      { name: '药店', value: '5' },
-      { name: 'FRA', value: '法国' },
-    ],
-    select:[]
+    
   },
-  
+
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
     
-  },
-
-  radioChange: function (e) {
-    console.log('radio发生change事件，携带value值为：', e.detail.value)
   },
 
   /**
@@ -37,12 +25,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if (typeof this.getTabBar === 'function' &&
-      this.getTabBar()) {
-      this.getTabBar().setData({
-        selected: 1
-      })
-    }
+    
   },
 
   /**

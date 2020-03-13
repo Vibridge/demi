@@ -1,3 +1,38 @@
 <toolTag prop-b="true" title="店铺名字" />
 <view class="container">
+  <image class="good_image" mode="widthFix" src="../asset/img/add-car.png"></image>
+  <view class="good_info">
+    <view class="good_name">东来顺 羔羊厚切肉卷</view>
+    <view class="sale">
+      <view class="price">￥45</view>
+      <view style="display:flex">
+        <view class="decreate">一</view>
+        <view class="sum">1</view>
+        <view class="add">十</view>
+      </view>
+    </view>
+  </view>
+  <!-- 客服 -->
+  <navigator url="./im" hover-class="none">
+    <view class="custom">
+      <view class="inner">
+        <image mode="widthFix" src="../asset/img/custom.png"></image>
+        <mp-badge ext-class="badge" />
+      </view>
+    </view>
+  </navigator>
+  <!-- 结算 -->
+  <view class="account">
+    <view class="status">
+      <view class="icon_status">
+        <!-- <image mode="widthFix" class="not_icon" src="../asset/img/sale_not.png"></image> -->
+        <image mode="widthFix" class="not_icon" src="../asset/img/sale_has.png"></image>
+        <mp-badge class="sale_sum" content="8" />
+      </view>
+      <text class="note">￥1.65</text>
+    </view>
+
+    <!-- <view class="condition">10块起送</view> -->
+    <view class="settle">结算</view>
+  </view>
 </view>

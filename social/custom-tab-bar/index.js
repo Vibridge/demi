@@ -11,12 +11,12 @@ Component({
         "selectedIconPath": "../pages/asset/img/index_nav_in.png",
         "text": "首页"
       },
-      {
-        "pagePath": "../logs/logs",
-        "iconPath": "../pages/asset/img/index_nav.png",
-        "selectedIconPath": "../pages/asset/img/index_nav_in.png",
-        "text": "店铺"
-      },
+      // {
+      //   "pagePath": "../logs/logs",
+      //   "iconPath": "../pages/asset/img/index_nav.png",
+      //   "selectedIconPath": "../pages/asset/img/index_nav_in.png",
+      //   "text": "店铺"
+      // },
       {
         "pagePath": "../shopCar/shopCar",
         "iconPath": "../pages/asset/img/index_nav.png",
