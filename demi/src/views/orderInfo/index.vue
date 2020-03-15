@@ -73,6 +73,7 @@
                     <div class="good_info">
                         <div class="good_info_nav">
                             <p class="name">宝贝</p>
+                            <p class="sku">商品属性</p>
                             <p class="status">状态</p>
                             <p class="price">单价</p>
                             <p class="num">数量</p>
@@ -84,6 +85,7 @@
                                 </div>
                                 <p class="good_title">{{item.title}}</p>
                             </div>
+                            <div class="good_sku">{{item.sku_mark}}</div>
                             <div class="good_status">{{handleStatusText(order_info.status)}}</div>
                             <div class="good_price">{{item.price}}</div>
                             <div class="good_quantity">{{item.quantity}}</div>
@@ -486,15 +488,15 @@
                         background-color #f2fafc
                         border-bottom:1px solid rgba(204,204,204,1);
                         .name
-                            width 269px
-                        .price,.status
-                            width 180px
+                            width 254px
+                        .price,.status,.sku
+                            width 130px
                         .num
-                            width 253px
+                            width 238px
                     .good_list
                         display flex
                         .good_basic
-                            width 269px
+                            width 254px
                             display flex;
                             padding 15px 0
                             justify-content center
@@ -511,8 +513,8 @@
                                 color #4D4D4D
                                 font-size 13px
                                 line-height 20px
-                        .good_status,.good_price
-                            width 180px
+                        .good_status,.good_price,.good_sku
+                            width 130px
                             display flex
                             padding 15px 0
                             text-align center
@@ -521,7 +523,7 @@
                             border-right 1px solid #CCCCCC
                             border-bottom 1px solid #CCCCCC
                         .good_quantity
-                            width 253px
+                            width 238px
                             display flex
                             padding 15px 0
                             text-align center

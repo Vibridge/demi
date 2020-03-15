@@ -973,10 +973,10 @@
                 };
                 if (this.tableData) {
                     data.is_sku = 1;
-                }
-                if (this.goods_price || this.goods_salary || this.goods_no || this.goods_inventory) {
+                }else if (this.goods_price || this.goods_salary || this.goods_no || this.goods_inventory) {
                     data.is_sku = 0
                 }
+
                 if (this.goods_no) {
                     data.goods_no = this.goods_no;
                 }
