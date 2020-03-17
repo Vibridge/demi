@@ -1,10 +1,23 @@
 <template>
+
     <div class="friend-list-container">
         <div class="header-bar">
             <div class="friend-search-bar">
                 好友列表
             </div>
-            <img src="../../../assets/img/icon-more-friend@2x.png" alt="">
+            <el-popover
+                    width="200"
+                    popper-class="search"
+                    placement="bottom-end"
+                    trigger="click">
+                <div>
+                    <el-input v-model="search">
+                        <el-button slot="append" icon="el-icon-search"></el-button>
+                    </el-input>
+                </div>
+
+                <img slot="reference" src="../../../assets/img/icon-more-friend@2x.png" alt="">
+            </el-popover>
         </div>
         <div class="nav">
             <div class="company" @click="handleCompany">
@@ -40,6 +53,7 @@
             return {
                 active: 'company',
                 friendList:[],
+                search:''
             }
         },
         mounted() {
@@ -72,6 +86,9 @@
             handleCompany(){
                 this.active = 'company';
                 this.initialize('company');
+            },
+            handleSearch(){
+
             }
         },
         computed: {
@@ -133,5 +150,7 @@
             height 30px
             cursor: pointer;
 
-
+        .el-input
+            border none;
+            margin 10px;
 </style>
