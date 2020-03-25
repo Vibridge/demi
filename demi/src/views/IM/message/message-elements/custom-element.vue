@@ -19,6 +19,7 @@
 
 <script>
 import MessageBubble from '../message-bubble'
+import http from '../../../../libs/http'
 export default {
   name: 'CustomElement',
   props: {
@@ -32,7 +33,8 @@ export default {
   },
   data(){
     return{
-      operator:''
+      operator:'',
+      name:''
     }
   },
   components: {
@@ -55,14 +57,21 @@ export default {
   methods: {
     translateCustomMessage(payload) {
       if (payload.data === 'group_create') {
-        return `${payload.extension}`
+        
+        this.apiGet('/api/user/info?user_id=' + payload.extension.match(/\d*/)).then((res)=>{
+            console.log(res)
+            this.name = res.nickname
+        })
+        console.log(this.name)
+        return this.name + '创建了群组'
       }
       if(payload.data === 'message'){
         return `${payload.description}`
       }
       return `${payload.description}`
     }
-  }
+  },
+  mixins:[http]
 }
 </script>
 

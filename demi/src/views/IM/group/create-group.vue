@@ -15,9 +15,9 @@
           <el-option label="AVChatRoom" value="AVChatRoom"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="群头像地址">
+      <!-- <el-form-item label="群头像地址">
         <el-input v-model="form.avatar"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="群简介">
         <el-input type="textarea" v-model="form.introduction" :maxlength="240"></el-input>
       </el-form-item>
@@ -31,8 +31,16 @@
           <el-radio label="DisableApply">禁止加群</el-radio>
         </el-radio-group>
       </el-form-item>
+
       <el-form-item label="群成员列表">
-        <el-select
+        <el-cascader
+          :options="options"
+          :props="props"
+          :clearable="true"
+          :show-all-levels="false"
+          @change="handleSearchUser"
+        ></el-cascader>
+        <!-- <el-select
           v-model="form.memberList"
           default-first-option
           multiple
@@ -44,7 +52,7 @@
           placeholder="请输入群成员 userID"
         >
           <el-option v-for="item in options" :key="item" :label="item" :value="item"></el-option>
-        </el-select>
+        </el-select> -->
       </el-form-item>
     </el-form>
     <div slot="footer">
@@ -55,25 +63,33 @@
 </template>
 
 <script>
+import http from '../../../libs/http'
 export default {
   data() {
     return {
       form: {
-        groupID: '',
-        name: '',
-        type: 'Private',
-        avatar: '',
-        introduction: '',
-        notification: '',
-        joinOption: 'FreeAccess',
+        groupID: "",
+        name: "",
+        type: "Private",
+        avatar: "",
+        introduction: "",
+        notification: "",
+        joinOption: "FreeAccess",
         memberList: []
       },
-      options: [],
+      options: [
+        { label: "企业用户", value: 1, children: [] },
+        { label: "个人用户", value: 2, children: [] }
+      ],
+      props: { multiple: true ,emitPath:false},
       loading: false,
       rules: {
-        name: [{ required: true, message: '请输入群名称', trigger: 'blur' }]
+        name: [{ required: true, message: "请输入群名称", trigger: "blur" }]
       }
-    }
+    };
+  },
+  mounted(){
+    this.initialize()
   },
   computed: {
     joinOptionDisabled() {
@@ -81,49 +97,80 @@ export default {
         this.TIM.TYPES.GRP_PRIVATE,
         this.TIM.TYPES.GRP_CHATROOM,
         this.TIM.TYPES.GRP_AVCHATROOM
-      ].includes(this.form.type)
+      ].includes(this.form.type);
     }
   },
+
   methods: {
+    initialize() {
+      this.apiGet("api/friend/lists").then(res => {
+        if (res) {
+          console.log(res);
+          let length = res.length;
+          for (let i = 0; i < length; i++) {
+            if (parseInt(res[i].friend.user_step) >= 1) {
+              let item = {
+                label:res[i].friend.nickname + ' ' +  res[i].friend.phone,
+                value:res[i].friend.user_id + 'a'
+              }
+              this.options[1].children.push(item);
+            }
+            if (parseInt(res[i].friend.enterprise_step) == 5) {
+              let item = {
+                label:res[i].friend.agency.company_name + ' ' +  res[i].friend.phone,
+                value:res[i].friend.user_id + 'b'
+              }
+              this.options[0].children.push(item);
+            }
+          }
+          console.log(this.options);
+        }
+      });
+    },
     onSubmit(ref) {
       this.$refs[ref].validate(valid => {
         if (!valid) {
-          return false
+          return false;
         }
-        this.createGroup()
-      })
+        this.createGroup();
+      });
     },
     closeCreateGroupModel() {
-      this.$store.commit('updateCreateGroupModelVisible', false)
+      this.$store.commit("updateCreateGroupModelVisible", false);
     },
     createGroup() {
-      this.tim.createGroup(this.getOptions()).then((res) => {
-        console.log(res)
-        this.closeCreateGroupModel()
-      })
+      this.tim.createGroup(this.getOptions()).then(res => {
+        console.log(res);
+        this.closeCreateGroupModel();
+      });
     },
     getOptions() {
       let options = {
         ...this.form,
         memberList: this.form.memberList.map(userID => ({ userID }))
+      };
+      if (["Private", "AVChatRoom"].includes(this.form.type)) {
+        delete options.joinOption;
       }
-      if (['Private', 'AVChatRoom'].includes(this.form.type)) {
-        delete options.joinOption
-      }
-      console.log(options)
-      return options
+      console.log(options);
+      return options;
     },
-    handleSearchUser(userID) {
-      if (userID !== '') {
-        this.loading = true
-        this.tim.getUserProfile({ userIDList: [userID] }).then(({ data }) => {
-          this.options = data.map(item => item.userID)
-          this.loading = false
-        })
-      }
+    // handleSearchUser(userID) {
+    //   if (userID !== "") {
+    //     this.loading = true;
+    //     this.tim.getUserProfile({ userIDList: [userID] }).then(({ data }) => {
+    //       this.options = data.map(item => item.userID);
+    //       this.loading = false;
+    //     });
+    //   }
+    // }
+    handleSearchUser(value) {
+      console.log(value)
+      this.form.memberList=value
     }
-  }
-}
+  },
+  mixins:[http]
+};
 </script>
 
 <style lang="stylus" scoped>

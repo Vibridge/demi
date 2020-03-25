@@ -8,10 +8,10 @@
         >
             <div class="chat-wrapper">
                 <el-row>
-                    <el-col :xs="10" :sm="10" :md="8" :lg="8" :xl="7">
+                    <el-col :xs="12" :sm="12" :md="10" :lg="10" :xl="9">
                         <side-bar/>
                     </el-col>
-                    <el-col :xs="14" :sm="14" :md="16" :lg="16" :xl="17">
+                    <el-col :xs="12" :sm="12" :md="14" :lg="14" :xl="15">
                         <current-conversation :work_label="work_label"/>
                     </el-col>
                 </el-row>
