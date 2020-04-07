@@ -231,7 +231,7 @@
                 form: {
                     task_title: '',
                     payment_money: null,
-                    front_money: null,
+                    front_money: 0,
                     payment_method: '完工结 [普通任务只支持完工结]',
                     quantity_max: null,
                     type_label: '',
@@ -693,6 +693,8 @@
                         status: 1,
                         video_path: this.real_video_path,
                         video_cover: this.cover,
+                        description: this.form.describes,
+                        front_money: this.form.front_money
                     };
                     if (this.invoice) {
                         data.is_invoice = 1;

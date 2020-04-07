@@ -7,16 +7,19 @@ Component({
     time: 60,
     text: "获取验证码",
     yzm: "",
-    select: null
+    select: null,
+    user_id: null
   },
   properties: {
-    propA: null
+    propA: null,
+    propB: null,
   },
   methods: {
     initData() {
       var select = this.data.propA
       this.setData({
-        select: select
+        select: select,
+        user_id: this.data.propB
       })
     },
     handlePhone: function(e) {
@@ -97,6 +100,7 @@ Component({
           mode: "sms",
           phone: phone,
           captcha: yzm,
+          agent: this.data.user_id,
           sign_id: app.globalData.sign_id,
         }
         if(formid){
