@@ -26,27 +26,27 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    
+    this.setData({
+      index: 1,
+      level: 1,
+      img_level: null,
+      task_list: []
+    })
+    this.handleList(1);
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    
+   
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.setData({
-      index:1,
-      level:1,
-      img_level: null,
-      task_list:[]
-    })
-    this.handleList(1);
+    
     if (typeof this.getTabBar === 'function' &&
       this.getTabBar()) {
       this.getTabBar().setData({
@@ -59,7 +59,6 @@ Page({
   handleList(page){
     var current_page = 0;
     var last_page = 0;
-    
     var task_list = this.data.task_list
     common.http(util.baseUrl + '/api/task/paginate?page=' + page, 'get', function (res) {
       if(res){

@@ -89,9 +89,10 @@
     </view>
   </view>
   <view class="des">
-    <text>工作描述</text>
+    <text>自我介绍</text>
     <view id="des">
-      <textarea maxlength="500" placeholder-class="input"	 placeholder=" 可描述你的工作技能、岗位职责、特长等等.." bindinput="bindTextAreainput"/>
+      <view wx-if="{{showView}}" bindtap="handleShowText">{{des}}</view>
+      <textarea wx-if="{{!showView}}" maxlength="500" placeholder-class="input"	auto-focus="{{autoFocus}}" value="{{des}}" placeholder=" 可描述你的工作技能、岗位职责、特长等等.." bindinput="bindTextAreainput" bindblur	="handleShowView"/>
       <view class="limit">
         <text id="limit_cursor">{{cursor}}</text>
         <text id="limit_length">/500</text>

@@ -27,6 +27,8 @@ Page({
     show_video: null,
     video: "上传视频简历",
     download:false,
+    showView:false,
+    autoFocus:false
   },
   onLoad: function(option) {
     console.log(option)
@@ -211,6 +213,20 @@ Page({
       success: function(res) {
         console.log(res)
       }
+    })
+  },
+
+  handleShowView(){
+    this.setData({
+      showView:true,
+      autoFocus:false
+    })
+  },
+
+  handleShowText(){
+    this.setData({
+      showView: false,
+      autoFocus: true
     })
   },
 
