@@ -15,11 +15,11 @@
                         注意：带 * 的内容，在确认发布后将不能修改
                     </p>
                     <el-form ref="form" :model="form" label-width="92px">
-                        <el-form-item label="* 职位名称：">
-                            <el-input v-model="form.task_title" placeholder="请输入职位名称" maxlength="30"
+                        <el-form-item label="* 任务名称：">
+                            <el-input v-model="form.task_title" placeholder="请输入任务名称" maxlength="30"
                                       :show-word-limit="true"></el-input>
                         </el-form-item>
-                        <el-form-item label="职位类型：">
+                        <el-form-item label="任务类型：">
                             <el-cascader :options="type_list" :show-all-levels="false"
                                          v-model="form.type_label"
                                          :props="{ label:'name', value:'label_id'}"
@@ -74,7 +74,7 @@
                                          @change="handleProvince"></el-cascader>
                             <p class="edit_show" v-if="(isUpdata || isHistory) && !city_tree">{{this.cityName}}</p>
                         </el-form-item>
-                        <el-form-item label="职位描述：">
+                        <el-form-item label="任务描述：">
                             <el-input
                                     type="textarea"
                                     :rows="10"
@@ -679,23 +679,31 @@
                             }
                         }
                     }
+                    
                     var data;
+                    let quantity_max = parseInt(this.form.quantity_max)
+                    let payment_money = parseInt(this.form.payment_money)
+                    let front_money = parseInt(this.form.front_money)
                     data = {
                         task_title: this.form.task_title,
                         type_label_id: this.type_label,
-                        quantity_max: this.form.quantity_max,
+                        quantity_max: quantity_max,
                         payment_method: 3,
                         unit: '元',
-                        payment_money: this.form.payment_money,
+                        payment_money: payment_money,
                         industry_arr: this.industry_arr,
-                        city_id: this.form.city[1],
-                        image_arr: this.form.image_arr,
+                        city_id: this.form.city[0],
                         status: 1,
-                        video_path: this.real_video_path,
-                        video_cover: this.cover,
                         description: this.form.describes,
-                        front_money: this.form.front_money
+                        front_money: front_money
                     };
+                    if(this.real_video_path){
+                        data.video_path = this.real_video_path,
+                        data.video_cover = this.cover
+                    }
+                    if(this.form.image_arr.length > 0){
+                        data.image_arr = this.form.image_arr
+                    }
                     if (this.invoice) {
                         data.is_invoice = 1;
                         data.title = this.title;

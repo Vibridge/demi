@@ -11,7 +11,7 @@
     "animate.css": "^3.7.2",
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
-    "cos-js-sdk-v5": "^0.5.20",
+    "cos-js-sdk-v5": "^0.5.26",
     "element-ui": "^2.13.0",
     "js-cookie": "^2.2.0",
     "less": "^3.9.0",
