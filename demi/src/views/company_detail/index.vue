@@ -513,17 +513,17 @@ export default {
 
     uploadPicFile() {
       // 创建表单对象
-      let form = new FormData();
+      let formData = new FormData();
       // 后端接受参数 ，可以接受多个参数
       let length = this.files.length;
       for (let i = 0; i < length; i++) {
-        form.append("files[]", this.files[i].raw);
+        formData.append("files[]", this.files[i].raw);
       }
       console.log(this.files);
-      this.apiPost("/file/uploads", form).then(res => {
+      this.apiPost("/file/uploads", formData).then(res => {
         if (res) {
           this.form.image_path = res;
-          // console.log(this.form.image_path)
+          console.log(this.form.image_path)
         } else {
           this.form.image_path = [];
         }
@@ -540,10 +540,12 @@ export default {
           // console.log(res)
           if (res) {
             this.$message.success("删除成功");
-            this.edPic = [];
             this.handleInfo();
           }
         });
+      }else{
+        this.form.image_path = []
+        this.uploadPicFile()
       }
     },
 
